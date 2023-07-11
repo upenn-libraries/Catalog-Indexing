@@ -1,0 +1,22 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  host: localhost
+  port: 5432
+  username: postgres
+  password: password
+  database: catalog_indexing_development
+
+test:
+  <<: *default
+  database: catalog_indexing_test
+
+production:
+  <<: *default
+  database: catalog_indexing_production
+  username: catalog_indexing
+  password: <%= ENV["CATALOG_INDEXING_DATABASE_PASSWORD"] %>
