@@ -161,7 +161,8 @@ title = "gitlab gitleaks config"
             ''':secret_access_key''',
             '''require_master_key''',
             '''storage_access_key''',
-            '''POSTGRES_PASSWORD: password'''
+            '''POSTGRES_PASSWORD: password''',
+            '''uniqueKey'''
         ]
 
 [[rules]]
