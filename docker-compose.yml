@@ -19,7 +19,7 @@ services:
     command:
       - bash
       - "-c"
-      - "precreate-core catalog_dev /catalog_config; precreate-core catalog_test /catalog_config; solr-foreground;"
+      - "precreate-core catalog_dev /solr/config; precreate-core catalog_test /solr/config; solr-foreground;"
 volumes:
   db_data:
   solr_data:
