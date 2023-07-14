@@ -12,7 +12,7 @@ services:
   solrcloud:
     image: solr:9
     ports:
-      - "9983:9983"
+      - "8983:8983"
     volumes:
       - solrcloud_data:/var/solr
     entrypoint:

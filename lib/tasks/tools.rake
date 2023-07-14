@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+
+namespace :tools do
+  desc 'Initialize project, including Solr collections and database'
+  task start: :environment do
+    puts 'Starting Solr and Database services...'
+    system('docker-compose up -d')
+    puts 'Setting up basic auth for Solr...' # TODO: only run if needed...
+    system('docker exec -it catalog-indexing_solrcloud_1 solr auth enable -credentials catalog:catalog')
+    solr_admin = Solr::Admin.new
+    unless solr_admin.collection_exists?(name: 'catalog-dev')
+      puts 'Uploading configset from solr/conf'
+      solr_admin.upload_config
+      puts 'Creating catalog-dev and catalog-test collections'
+      solr_admin.create_collection(name: 'catalog-dev')
+      solr_admin.create_collection(name: 'catalog-test')
+    end
+    # Wait until postgres is ready before creating database.
+    until system('docker-compose exec -u postgres postgres pg_isready')
+      # Create databases, if they aren't present.
+      system('rake db:create')
+
+      # Migrate test and development databases
+      system('RAILS_ENV=development rake db:migrate')
+      system('RAILS_ENV=test rake db:migrate')
+    end
+
+  end
+
+  task stop: :environment do
+    system('docker-compose stop')
+  end
+
+  task clean: :environment do
+    system('docker-compose down --volumes')
+  end
+end
