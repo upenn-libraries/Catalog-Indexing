@@ -35,7 +35,7 @@ class PennMarcIndexer < Traject::Indexer
   def identifier_fields
     define_field :id, :identifier_mmsid
     define_field :oclc_id_ss, :identifier_oclc_id
-    # define_field :isbn_isxn # TODO: this parsing is defined in FranklinIndexer...
+    define_field :isbn_isxn
   end
 
   def facet_fields

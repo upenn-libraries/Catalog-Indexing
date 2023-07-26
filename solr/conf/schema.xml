@@ -288,16 +288,19 @@
   </fieldType>
   -->
 
-  <!-- TODO: isxn type, no need for BillD class -->
-<!--  <fieldtype name="isxn" class="solr.TextField">-->
-<!--    <analyzer>-->
-<!--      <tokenizer class="solr.KeywordTokenizerFactory"/>-->
-<!--      <filter class="solr.PatternReplaceFilterFactory" pattern="\(.*\)" replacement="" replace="all"/>-->
-<!--      <filter class="solr.LowerCaseFilterFactory"/>-->
-<!--      <filter class="solr.PatternReplaceFilterFactory" pattern="[^0-9x]" replacement="" replace="all"/>-->
-<!--      <filter class="solr.LengthFilterFactory" min="8" max="15"/>-->
-<!--    </analyzer>-->
-<!--  </fieldtype>-->
+  <!--  isxn type from Franklin config -->
+  <!-- TODO: is this suitable for display? -->
+  <fieldtype name="isxn" class="solr.TextField">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.PatternReplaceFilterFactory" pattern="\(.*\)" replacement="" replace="all"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.PatternReplaceFilterFactory" pattern="[^0-9x]" replacement="" replace="all"/>
+      <filter class="solr.LengthFilterFactory" min="8" max="15"/>
+    </analyzer>
+  </fieldtype>
+  <dynamicField name="*_isxn" type="isxn" indexed="true" stored="true" multiValued="true" />
+
 
 
   <!-- TODO: XML type - CJK handling appears here... -->
