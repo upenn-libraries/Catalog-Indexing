@@ -15,16 +15,17 @@ namespace :tools do
       solr_admin.create_collection(name: 'catalog-dev')
       solr_admin.create_collection(name: 'catalog-test')
     end
-    # Wait until postgres is ready before creating database.
-    until system('docker-compose exec -u postgres postgres pg_isready')
-      # Create databases, if they aren't present.
-      system('rails db:create')
 
-      # Migrate test and development databases
-      system('RAILS_ENV=development rake db:migrate')
-      system('RAILS_ENV=test rake db:migrate')
+    # Create databases, if they aren't present.
+    begin
+      ActiveRecord::Base.connection
+    rescue ActiveRecord::NoDatabaseError
+      ActiveRecord::Tasks::DatabaseTasks.create_current
     end
 
+    # Migrate test and development databases
+    system('RAILS_ENV=development rake db:migrate')
+    system('RAILS_ENV=test rake db:migrate')
   end
 
   task stop: :environment do
