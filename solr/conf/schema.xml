@@ -288,16 +288,19 @@
   </fieldType>
   -->
 
-  <!-- TODO: isxn type, no need for BillD class -->
-<!--  <fieldtype name="isxn" class="solr.TextField">-->
-<!--    <analyzer>-->
-<!--      <tokenizer class="solr.KeywordTokenizerFactory"/>-->
-<!--      <filter class="solr.PatternReplaceFilterFactory" pattern="\(.*\)" replacement="" replace="all"/>-->
-<!--      <filter class="solr.LowerCaseFilterFactory"/>-->
-<!--      <filter class="solr.PatternReplaceFilterFactory" pattern="[^0-9x]" replacement="" replace="all"/>-->
-<!--      <filter class="solr.LengthFilterFactory" min="8" max="15"/>-->
-<!--    </analyzer>-->
-<!--  </fieldtype>-->
+  <!--  isxn type from Franklin config -->
+  <!-- TODO: is this suitable for display? -->
+  <fieldtype name="isxn" class="solr.TextField">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.PatternReplaceFilterFactory" pattern="\(.*\)" replacement="" replace="all"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.PatternReplaceFilterFactory" pattern="[^0-9x]" replacement="" replace="all"/>
+      <filter class="solr.LengthFilterFactory" min="8" max="15"/>
+    </analyzer>
+  </fieldtype>
+  <dynamicField name="*_isxn" type="isxn" indexed="true" stored="true" multiValued="true" />
+
 
 
   <!-- TODO: XML type - CJK handling appears here... -->
@@ -328,33 +331,37 @@
 <!--    </analyzer>-->
 <!--  </fieldtype>-->
 
-  <!-- TODO:  "search" type from Franklin config -->
-<!--  <fieldType name="search" class="solr.TextField" positionIncrementGap="100">-->
-<!--    <analyzer type="query">-->
-<!--      <charFilter class="solr.ICUNormalizer2CharFilterFactory" name="nfkc"/> &lt;!&ndash; no case folding initially &ndash;&gt;-->
+  <!-- "search" type from Franklin config - CJK handling here also -->
+  <fieldType name="search_franklin" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="query">
+      <charFilter class="solr.ICUNormalizer2CharFilterFactory" form="nfkc"/> <!-- no case folding initially -->
 <!--      <charFilter class="solr.ICUTransformCharFilterFactory" id="Traditional-Simplified"/>-->
 <!--      <charFilter class="solr.ICUTransformCharFilterFactory" id="Katakana-Hiragana" assumeExternalUnicodeNormalization="true"/>-->
-<!--      <tokenizer class="solr.ICUTokenizerFactory" rulefiles="Latn:Latin-dont-break-on-hyphens.rbbi,Zyyy:Latin-dont-break-on-hyphens.rbbi"/>-->
-<!--      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>-->
+      <tokenizer class="solr.ICUTokenizerFactory" rulefiles="Latn:Latin-dont-break-on-hyphens.rbbi,Zyyy:Latin-dont-break-on-hyphens.rbbi"/>
+<!--      <filter class="solr.ICUTransformFilterFactory" id="Traditional-Simplified"/>-->
+<!--      <filter class="solr.ICUTransformFilterFactory" id="Katakana-Hiragana"/>-->
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
 <!--      <filter class="solr.SynonymGraphFilterFactory" synonyms="protwords.txt" ignoreCase="true" expand="true"/>-->
 <!--      <filter class="solr.WordDelimiterGraphFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="1" splitOnCaseChange="1" preserveOriginal="1" stemEnglishPossessive="1" protected="protwords.txt"/>-->
-<!--      <filter class="solr.ICUFoldingFilterFactory"/>-->
-<!--    </analyzer>-->
-<!--    <analyzer type="index">-->
-<!--      <charFilter class="solr.ICUNormalizer2CharFilterFactory" name="nfkc"/> &lt;!&ndash; no case folding initially &ndash;&gt;-->
+      <filter class="solr.ICUFoldingFilterFactory"/>
+    </analyzer>
+    <analyzer type="index">
+      <charFilter class="solr.ICUNormalizer2CharFilterFactory" form="nfkc"/> <!-- no case folding initially -->
 <!--      <charFilter class="solr.ICUTransformCharFilterFactory" id="Traditional-Simplified"/>-->
 <!--      <charFilter class="solr.ICUTransformCharFilterFactory" id="Katakana-Hiragana" assumeExternalUnicodeNormalization="true"/>-->
-<!--      <tokenizer class="solr.ICUTokenizerFactory" rulefiles="Latn:Latin-dont-break-on-hyphens.rbbi,Zyyy:Latin-dont-break-on-hyphens.rbbi"/>-->
-<!--      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>-->
+      <tokenizer class="solr.ICUTokenizerFactory" rulefiles="Latn:Latin-dont-break-on-hyphens.rbbi,Zyyy:Latin-dont-break-on-hyphens.rbbi"/>
+<!--      <filter class="solr.ICUTransformFilterFactory" id="Traditional-Simplified"/>-->
+<!--      <filter class="solr.ICUTransformFilterFactory" id="Katakana-Hiragana"/>-->
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
 <!--      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>-->
 <!--      <filter class="solr.WordDelimiterGraphFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="1" splitOnCaseChange="1" preserveOriginal="1" stemEnglishPossessive="0" protected="protwords.txt"/>-->
-<!--      <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>-->
-<!--      <filter class="solr.ICUFoldingFilterFactory"/>-->
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      <filter class="solr.ICUFoldingFilterFactory"/>
 <!--      <filter class="solr.FlattenGraphFilterFactory"/>-->
-<!--      <filter class="solr.ReversedWildcardFilterFactory" withOriginal="true" maxPosAsterisk="3" maxPosQuestion="2" maxFractionAsterisk="0.33"/>-->
+      <filter class="solr.ReversedWildcardFilterFactory" withOriginal="true" maxPosAsterisk="3" maxPosQuestion="2" maxFractionAsterisk="0.33"/>
 <!--      <filter class="solr.PositionLengthOrderTokenFilterFactory" indexLookahead="true"/>-->
-<!--    </analyzer>-->
-<!--  </fieldType>-->
+    </analyzer>
+  </fieldType>
 
   <!-- TODO: "ssort" field from Franklin config -->
 <!--  <fieldType name="ssort" class="solr.TextField" positionIncrementGap="0" omitNorms="true" sortMissingLast="true">-->

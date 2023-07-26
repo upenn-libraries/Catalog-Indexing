@@ -66,6 +66,8 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    addressable (2.8.4)
+      public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     bindex (0.8.1)
     bootsnap (1.16.0)
@@ -79,13 +81,31 @@ GEM
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
+    domain_name (0.5.20190701)
+      unf (>= 0.0.5, < 1.0.0)
+    dot-properties (0.1.4)
+      bundler (>= 2.2.33)
     erubi (1.12.0)
     faraday (2.7.10)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
+    ffi (1.15.5)
+    ffi-compiler (1.0.1)
+      ffi (>= 1.0.0)
+      rake
     globalid (1.1.0)
       activesupport (>= 5.0)
+    hashie (5.0.0)
+    http (5.1.1)
+      addressable (~> 2.8)
+      http-cookie (~> 1.0)
+      http-form_data (~> 2.2)
+      llhttp-ffi (~> 0.4.0)
+    http-cookie (1.0.5)
+      domain_name (~> 0.5)
+    http-form_data (2.3.0)
+    httpclient (2.8.3)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.6.0)
@@ -98,6 +118,9 @@ GEM
       railties (>= 6.0.0)
     json (2.6.3)
     library_stdnums (1.6.0)
+    llhttp-ffi (0.4.0)
+      ffi-compiler (~> 1.0)
+      rake (~> 13.0)
     loofah (2.21.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -110,6 +133,8 @@ GEM
       rexml
       scrub_rb (>= 1.0.1, < 2)
       unf
+    marc-fastxmlwriter (1.1.0)
+      marc (~> 1.0)
     marcel (1.0.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
@@ -141,6 +166,7 @@ GEM
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
+    public_suffix (5.0.1)
     puma (5.6.6)
       nio4r (~> 2.0)
     racc (1.7.1)
@@ -214,10 +240,22 @@ GEM
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     scrub_rb (1.0.1)
+    slop (4.10.1)
     stimulus-rails (1.2.1)
       railties (>= 6.0.0)
     thor (1.2.2)
     timeout (0.4.0)
+    traject (3.8.1)
+      concurrent-ruby (>= 0.8.0)
+      dot-properties (>= 0.1.1)
+      hashie (>= 3.1, < 6)
+      http (>= 3.0, < 6)
+      httpclient (~> 2.5)
+      marc (~> 1.0)
+      marc-fastxmlwriter (~> 1.0)
+      nokogiri (~> 1.9)
+      slop (~> 4.0)
+      yell
     turbo-rails (1.4.0)
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
@@ -243,6 +281,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    yell (2.2.2)
     zeitwerk (2.6.8)
 
 PLATFORMS
@@ -262,6 +301,7 @@ DEPENDENCIES
   rails (~> 7.0.6)
   rubyzip
   stimulus-rails
+  traject
   turbo-rails
   tzinfo-data
   upennlib-rubocop

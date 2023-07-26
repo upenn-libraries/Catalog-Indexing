@@ -185,12 +185,14 @@ title = "gitlab gitleaks config"
     description = "Global Allowlists"
     commits = [
         '''23aca5c9ed821b6d463c19de7153f7fcb1f221ae''',
-        '''a9b300db8389f4a2ec29516dab3a4bb5dbbe49af'''
+        '''a9b300db8389f4a2ec29516dab3a4bb5dbbe49af''',
+        '''00e3fc38dc9d58421839842f0b80bfc890520296'''
     ]
     files = [
         '''(.*?)(bin|csv|doc|gif|jpg|md|pdf)$''',
         '''\.gitleaks\.toml''',
-        '''services/solr/config.rb '''
+        '''services/solr/config.rb ''',
+        '''solr/conf/*.rbbi'''
     ]
     regexes = [
         # Values set by Ansible variables
