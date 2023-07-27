@@ -7,18 +7,19 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.2.2'
 
 gem 'bootsnap', require: false
-gem 'cssbundling-rails'
+gem 'bootstrap', '~> 5.2.3'
+gem 'bootstrap_form', '~> 5.0'
 gem 'faraday'
-gem 'jsbundling-rails'
+gem 'importmap-rails'
 gem 'pennmarc'
 gem 'pg', '~> 1.1'
-gem 'propshaft'
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 7.0.6'
 gem 'rubyzip'
+gem 'sassc-rails'
+gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'traject'
-gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'upennlib-rubocop'
 

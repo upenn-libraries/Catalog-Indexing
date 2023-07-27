@@ -4,5 +4,6 @@
 
 import { application } from "./application"
 
-import HelloController from "./hello_controller"
-application.register("hello", HelloController)
+// MK removed the HelloController, but left this here as an example for future controllers
+// import HelloController from "./hello_controller"
+// application.register("hello", HelloController)

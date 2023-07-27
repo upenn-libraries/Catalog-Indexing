@@ -69,14 +69,21 @@ GEM
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
+    autoprefixer-rails (10.4.13.0)
+      execjs (~> 2)
     bindex (0.8.1)
     bootsnap (1.16.0)
       msgpack (~> 1.2)
+    bootstrap (5.2.3)
+      autoprefixer-rails (>= 9.1.0)
+      popper_js (>= 2.11.6, < 3)
+      sassc-rails (>= 2.0.0)
+    bootstrap_form (5.2.3)
+      actionpack (>= 6.0)
+      activemodel (>= 6.0)
     builder (3.2.4)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
-    cssbundling-rails (1.2.0)
-      railties (>= 6.0.0)
     date (3.3.3)
     debug (1.8.0)
       irb (>= 1.5.0)
@@ -87,6 +94,7 @@ GEM
     dot-properties (0.1.4)
       bundler (>= 2.2.33)
     erubi (1.12.0)
+    execjs (2.8.1)
     faraday (2.7.10)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
@@ -109,11 +117,12 @@ GEM
     httpclient (2.8.3)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
+    importmap-rails (1.2.1)
+      actionpack (>= 6.0.0)
+      railties (>= 6.0.0)
     io-console (0.6.0)
     irb (1.7.1)
       reline (>= 0.3.0)
-    jsbundling-rails (1.1.2)
-      railties (>= 6.0.0)
     json (2.6.3)
     library_stdnums (1.6.0)
     llhttp-ffi (0.4.0)
@@ -159,11 +168,7 @@ GEM
       marc (~> 1.2)
       nokogiri (~> 1.15)
     pg (1.5.3)
-    propshaft (0.7.0)
-      actionpack (>= 7.0.0)
-      activesupport (>= 7.0.0)
-      rack
-      railties (>= 7.0.0)
+    popper_js (2.11.7)
     public_suffix (5.0.1)
     puma (5.6.6)
       nio4r (~> 2.0)
@@ -254,11 +259,27 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
+    sassc (2.4.0)
+      ffi (~> 1.9)
+    sassc-rails (2.1.2)
+      railties (>= 4.0.0)
+      sassc (>= 2.0)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
     scrub_rb (1.0.1)
     slop (4.10.1)
+    sprockets (4.2.0)
+      concurrent-ruby (~> 1.0)
+      rack (>= 2.2.4, < 4)
+    sprockets-rails (3.4.2)
+      actionpack (>= 5.2)
+      activesupport (>= 5.2)
+      sprockets (>= 3.0.0)
     stimulus-rails (1.2.1)
       railties (>= 6.0.0)
     thor (1.2.2)
+    tilt (2.2.0)
     timeout (0.4.0)
     traject (3.8.1)
       concurrent-ruby (>= 0.8.0)
@@ -271,10 +292,6 @@ GEM
       nokogiri (~> 1.9)
       slop (~> 4.0)
       yell
-    turbo-rails (1.4.0)
-      actionpack (>= 6.0.0)
-      activejob (>= 6.0.0)
-      railties (>= 6.0.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unf (0.1.4)
@@ -304,20 +321,21 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
-  cssbundling-rails
+  bootstrap (~> 5.2.3)
+  bootstrap_form (~> 5.0)
   debug
   faraday
-  jsbundling-rails
+  importmap-rails
   pennmarc
   pg (~> 1.1)
-  propshaft
   puma (~> 5.0)
   rails (~> 7.0.6)
   rspec-rails (~> 6.0.0)
   rubyzip
+  sassc-rails
+  sprockets-rails
   stimulus-rails
   traject
-  turbo-rails
   tzinfo-data
   upennlib-rubocop
   web-console
