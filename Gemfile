@@ -9,7 +9,6 @@ ruby '3.2.2'
 gem 'bootsnap', require: false
 gem 'cssbundling-rails'
 gem 'faraday'
-gem 'jbuilder'
 gem 'jsbundling-rails'
 gem 'pennmarc'
 gem 'pg', '~> 1.1'
