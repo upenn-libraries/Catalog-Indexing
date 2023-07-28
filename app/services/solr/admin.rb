@@ -61,7 +61,7 @@ module Solr
                             action: 'CREATE',
                             name: name,
                             numShards: config.num_shards,
-                            "collection.configName": configset)
+                            'collection.configName': configset)
       check_resp(resp)
     end
 
@@ -69,13 +69,13 @@ module Solr
       resp = connection.get(Config::COLLECTION_PATH,
                             action: 'MODIFYCOLLECTION',
                             collection: config.collection_name,
-                            "collection.configName": config.configset_name)
+                            'collection.configName': config.configset_name)
       check_resp(resp)
     end
 
     def upload_config
       resp = connection.post(Config::CONFIG_PATH) do |req|
-        req.params = { "action": 'UPLOAD', "name": config.configset_name }
+        req.params = { action: 'UPLOAD', name: config.configset_name }
         req.headers['Content-Type'] = 'octect/stream'
         req.body = raw_data
       end
