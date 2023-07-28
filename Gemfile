@@ -26,6 +26,7 @@ gem 'upennlib-rubocop', require: false
 group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails', '~> 6.0.0'
+  gem 'webmock'
 end
 
 group :development do
