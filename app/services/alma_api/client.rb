@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module AlmaApi
+  # Simple API Client using Faraday to get Alma Bib records
   class Client
     MAX_BIBS_GET = 50 # 100 is Alma API max
 
@@ -21,15 +22,15 @@ module AlmaApi
     # @return [Faraday::Connection]
     def faraday
       @faraday ||= begin
-       options = { request: {} } # TODO: configure timeouts, etc.
-       Faraday.new(url: 'https://api-na.hosted.exlibrisgroup.com', **options) do |config|
-         config.request :authorization, :apikey, Rails.application.credentials.alma_api_key
-         config.request :json
-         config.response :raise_error
-         config.response :logger, Rails.logger, headers: true, bodies: true, log_level: :debug do |fmt|
-           fmt.filter(/^(Authorization: ).*$/i, '\1[REDACTED]')
-         end
-         config.adapter :net_http
+        options = { request: {} } # TODO: configure timeouts, etc.
+        Faraday.new(url: 'https://api-na.hosted.exlibrisgroup.com', **options) do |config|
+          config.request :authorization, :apikey, Rails.application.credentials.alma_api_key
+          config.request :json
+          config.response :raise_error
+          config.response :logger, Rails.logger, headers: true, bodies: true, log_level: :debug do |fmt|
+            fmt.filter(/^(Authorization: ).*$/i, '\1[REDACTED]')
+          end
+          config.adapter :net_http
         end
       end
     end

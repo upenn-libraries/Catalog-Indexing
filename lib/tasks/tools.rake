@@ -28,10 +28,12 @@ namespace :tools do
     system('RAILS_ENV=test rake db:migrate')
   end
 
+  desc 'Stops running containers'
   task stop: :environment do
     system('COMPOSE_PROJECT_NAME=catalog-indexing docker-compose stop')
   end
 
+  desc 'Removes containers and volumes'
   task clean: :environment do
     system('COMPOSE_PROJECT_NAME=catalog-indexing docker-compose down --volumes')
   end
