@@ -22,10 +22,10 @@ module AlmaApi
       begin
         faraday.get('/almaws/v1/bibs', query).body
       rescue Faraday::Error => e
-        # alma_bibs_error(e) => {error_code:, error_message:}
-        # error_code ||= e.response.status
-        # error_message ||= 'Error when requesting Alma Api'
-        raise Error
+        alma_bibs_error(e) => {error_code:, error_message:}
+        error_code ||= e.response.status
+        error_message ||= 'Error when requesting Alma Api'
+        raise Error, "#{error_code}: #{error_message}"
       end
     end
 
