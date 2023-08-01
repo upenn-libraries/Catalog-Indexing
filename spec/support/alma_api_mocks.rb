@@ -47,22 +47,25 @@ module AlmaApiMocks
   # @param [String] bib_ids comma separated mms ids of alma bibliographic record
   # @param [Integer] status_code http response error status code
   # @return [WebMock::RequestStub]
-  def stub_alma_api_bib_response_error(bib_ids, status_code)
+  def stub_alma_api_bib_http_error(bib_ids, status_code)
     stub_request(
       :get,
       "https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs?expand=p_avail,e_avail&format=json&mms_id=#{bib_ids}"
     )
       .to_return(status: status_code,
-                 body: JSON.generate({
-                                       errorsExist: true,
-                                       errorList: {
-                                         error: [
-                                           {
-                                             errorCode: '401652',
-                                             errorMessage: 'General Error - An error has occurred'
-                                           }
-                                         ]
-                                       }
-                                     }))
+                 body: api_bib_mock_error)
+  end
+
+  # @return [String]
+  def api_bib_mock_error
+    JSON.generate({
+                    errorsExist: true,
+                    errorList: {
+                      error: [{
+                        errorCode: '401652',
+                        errorMessage: 'General Error - An error has occurred'
+                      }]
+                    }
+                  })
   end
 end

@@ -17,7 +17,7 @@ describe AlmaApi::Client do
     end
 
     context 'with response with status 4xx-5xx' do
-      before { stub_alma_api_bib_response_error(bib_id, '404') }
+      before { stub_alma_api_bib_http_error(bib_id, '404') }
 
       it 'raises the expected error message' do
         parsed_response_body = JSON.parse(client.bibs(bib_id))
