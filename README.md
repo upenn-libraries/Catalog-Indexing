@@ -15,3 +15,11 @@ Stopping services:
 Cleaning up:
 
 ```rake tools:clean```
+
+### Sidekiq
+
+You can start sidekiq in development using:
+
+```ruby
+bundle exec sidekiw
+```
