@@ -20,10 +20,10 @@ describe AlmaApi::Client do
       before { stub_alma_api_bib_http_error(bib_id) }
 
       it 'raises the expected error message' do
-        # need to mock alma_bibs_errors method
+        allow(client).to receive(:alma_bibs_error).and_return(error_code: '401652', error_message: 'General Error')
         expect {
           client.bibs(bib_id)
-        }.to raise_error(AlmaApi::Client::Error)
+        }.to raise_error(AlmaApi::Client::Error, '401652: General Error')
       end
     end
 
