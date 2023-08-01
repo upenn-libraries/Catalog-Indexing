@@ -40,4 +40,10 @@ describe AlmaApi::Client do
       end
     end
   end
+
+  describe '.alma_bibs_error' do
+    it 'returns expected value' do
+      skip
+    end
+  end
 end
