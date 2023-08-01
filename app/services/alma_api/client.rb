@@ -4,13 +4,18 @@ module AlmaApi
   # Simple API Client using Faraday to get Alma Bib records
   class Client
     MAX_BIBS_GET = 50 # 100 is Alma API max
+    class Error < StandardError; end
 
     # Get Alma API response for provided MMS IDs, up to value of MAX_BIBS_GET
+    # See https://developers.exlibrisgroup.com/alma/apis/docs/bibs/R0VUIC9hbG1hd3MvdjEvYmlicw
     # @todo: return JSON or XML?
     # @param [Array<String>] mmsids
     # @return [Object]
     def bibs(mmsids)
-      raise if mmsids.length > MAX_BIBS_GET # TODO: or just trim and handle validation elsewhere?
+      # TODO: or just trim and handle validation elsewhere?
+      if mmsids.length > MAX_BIBS_GET
+        raise Error, "Too many mms ids provided, exceeds the maximum allowed #{MAX_BIBS_GET}."
+      end
 
       query = { mms_id: Array.wrap(mmsids).join(','), expand: 'p_avail,e_avail', format: 'json' }
       faraday.get('/almaws/v1/bibs', query).body
