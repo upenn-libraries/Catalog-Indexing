@@ -18,7 +18,15 @@ module AlmaApi
       end
 
       query = { mms_id: Array.wrap(mmsids).join(','), expand: 'p_avail,e_avail', format: 'json' }
-      faraday.get('/almaws/v1/bibs', query).body
+
+      begin
+        faraday.get('/almaws/v1/bibs', query).body
+      rescue Faraday::Error => e
+        # alma_bibs_error(e) => {error_code:, error_message:}
+        # error_code ||= e.response.status
+        # error_message ||= 'Error when requesting Alma Api'
+        raise Error
+      end
     end
 
     private
@@ -38,6 +46,13 @@ module AlmaApi
           config.adapter :net_http
         end
       end
+    end
+
+    # retrieve error code and message from alma api error response
+    # @return [Hash]
+    def alma_bibs_error(error)
+      alma_error = error.response.body('errorList', 'error')&.first
+      { error_code: alma_error&.dig('errorCode'), error_message: alma_error&.dig('errorMessage') }
     end
   end
 end
