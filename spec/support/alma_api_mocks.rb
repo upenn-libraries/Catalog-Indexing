@@ -45,15 +45,12 @@ module AlmaApiMocks
   end
 
   # @param [String] bib_ids comma separated mms ids of alma bibliographic record
-  # @param [Integer] status_code http response error status code
   # @return [WebMock::RequestStub]
-  def stub_alma_api_bib_http_error(bib_ids, status_code)
+  def stub_alma_api_bib_http_error(bib_ids)
     stub_request(
       :get,
       "https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs?expand=p_avail,e_avail&format=json&mms_id=#{bib_ids}"
-    )
-      .to_return(status: status_code,
-                 body: api_bib_mock_error)
+    ).to_raise(Faraday::Error)
   end
 
   # @return [String]

@@ -17,11 +17,13 @@ describe AlmaApi::Client do
     end
 
     context 'with response with status 4xx-5xx' do
-      before { stub_alma_api_bib_http_error(bib_id, '404') }
+      before { stub_alma_api_bib_http_error(bib_id) }
 
       it 'raises the expected error message' do
-        parsed_response_body = JSON.parse(client.bibs(bib_id))
-        expect(parsed_response_body['errorsExist']).to be true
+        # need to mock alma_bibs_errors method
+        expect {
+          client.bibs(bib_id)
+        }.to raise_error(AlmaApi::Client::Error)
       end
     end
 
