@@ -9,11 +9,10 @@ describe AlmaApi::Client do
     let(:marc_xml) { 'test' }
 
     context 'with a successful request' do
-
       before { stub_alma_api_bibs_request(bib_ids, marc_xml) }
 
       it 'returns the response body' do
-        expect(client.bibs(bib_ids)).to eq ('test')
+        expect(client.bibs(bib_ids)).to eq('test')
       end
     end
 
