@@ -22,10 +22,10 @@ module AlmaApi
       begin
         faraday.get('/almaws/v1/bibs', query).body
       rescue Faraday::Error => e
-        error = alma_bibs_error(e)
-        error_code = error.fetch('errorCode', e.response.status)
-        error_message = error.fetch('errorMessage', 'Something went wrong when requesting Alma Api')
-        raise Error, "#{error_code}: #{error_message}"
+        alma_error = alma_bibs_error(e)
+        alma_error_code = alma_error.fetch('errorCode', nil)
+        alma_error_message = alma_error.fetch('errorMessage', nil)
+        raise Error, "Could not retrieve bibs requested. #{alma_error_code} #{alma_error_message}".strip
       end
     end
 
@@ -51,7 +51,8 @@ module AlmaApi
     # retrieve error code and message from alma api error response
     # @return [Hash]
     def alma_bibs_error(error)
-      error&.response&.body('errorList', 'error')&.first || {}
+      body = JSON.parse(error.response_body) if error.response_body
+      body&.dig('errorList', 'error')&.first || {}
     end
   end
 end
