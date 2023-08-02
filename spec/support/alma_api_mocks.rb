@@ -58,6 +58,7 @@ module AlmaApiMocks
     ).to_raise(Faraday::Error.new('some exception', { body: body }))
   end
 
+  # Mock alma api bib error
   # @return [String]
   def alma_api_bibs_mock_error
     JSON.generate({
