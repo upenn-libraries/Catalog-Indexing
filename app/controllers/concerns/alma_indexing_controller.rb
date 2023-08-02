@@ -10,7 +10,7 @@ class AlmaIndexingController < ApplicationController
       # send IDs to alma
       redirect_to root_path, notice: 'Success!'
     else
-      redirect_to root_path, alert: "Number of MMS IDs exceeds the limit (#{AlmaApi::Client::MAX_BIBS_GET})"
+      redirect_to root_path, alert: "Number of MMS IDs (#{ids.length}) exceeds the limit (#{AlmaApi::Client::MAX_BIBS_GET})"
     end
   end
 end
