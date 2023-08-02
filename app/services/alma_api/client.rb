@@ -15,7 +15,7 @@ module AlmaApi
     def bibs(mmsids)
       # TODO: or just trim and handle validation elsewhere?
       if mmsids.length > MAX_BIBS_GET
-        raise Error, "Too many mms ids provided, exceeds the maximum allowed #{MAX_BIBS_GET}."
+        raise Error, "Too many MMS IDs provided, exceeds the maximum allowed of #{MAX_BIBS_GET}."
       end
 
       query = { mms_id: Array.wrap(mmsids).join(','), expand: 'p_avail,e_avail', format: 'json' }
