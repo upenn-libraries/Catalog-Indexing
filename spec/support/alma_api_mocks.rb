@@ -14,7 +14,7 @@ module AlmaApiMocks
     ).to_return(body: alma_marc_xml)
   end
 
-  # @param [String] bib_ids list of mms ids of alma bibliographic record
+  # @param [Array<String>] bib_ids list of mms ids of alma bibliographic record
   # @param [String] alma_marc_xml MARC XML of given record
   # @return [WebMock::RequestStub]
   def stub_alma_api_bibs_request(bib_ids, alma_marc_xml)
@@ -26,6 +26,7 @@ module AlmaApiMocks
       .to_return(status: 200, body: alma_marc_xml)
   end
 
+  # @param [Array<String>] bib_ids list of mms ids of alma bibliographic record
   # @return [WebMock::RequestStub]
   def stub_alma_api_bibs_not_found(bib_ids)
     bib_ids = Array.wrap(bib_ids).join(',')
@@ -47,7 +48,7 @@ module AlmaApiMocks
                  body: 'this is not valid XML')
   end
 
-  # @param [String] bib_ids list of mms ids of alma bibliographic record
+  # @param [Array<String>] bib_ids list of mms ids of alma bibliographic record
   # @param [String] body the body of the http response
   # @return [WebMock::RequestStub]
   def stub_alma_api_bibs_http_error(bib_ids, body)
