@@ -7,7 +7,8 @@ module AlmaApi
     class Error < StandardError; end
 
     # Get Alma API response for provided MMS IDs, up to value of MAX_BIBS_GET
-    # See https://developers.exlibrisgroup.com/alma/apis/docs/bibs/R0VUIC9hbG1hd3MvdjEvYmlicw
+    # See https://developers.exlibrisgroup.com/alma/apis/docs/bibs/R0VUIC9hbG1hd3MvdjEvYmlicw for alma bibs api
+    # documentation
     # @todo: return JSON or XML?
     # @param [Array<String>] mmsids
     # @return [Object]
@@ -48,7 +49,12 @@ module AlmaApi
       end
     end
 
-    # retrieve error code and message from alma api error response
+    # Retrieve error code and message from alma api error response
+    # We configured Faraday to automatically raise exceptions on 4xx-5xx responses. Alma Api errors are passed to these
+    # exceptions, and located in the body of the Faraday::Error response object.
+    # See https://developers.exlibrisgroup.com/alma/apis/docs/bibs/R0VUIC9hbG1hd3MvdjEvYmlicw for alma bibs api error
+    # structure
+    # @param [Faraday::Error] error
     # @return [Hash]
     def alma_bibs_error(error)
       body = JSON.parse(error.response_body) if error.response_body
