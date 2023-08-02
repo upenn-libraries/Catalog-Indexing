@@ -46,7 +46,7 @@ describe AlmaApi::Client do
         expect {
           client.bibs(bib_ids)
         }.to raise_error(AlmaApi::Client::Error,
-                         'Too many mms ids provided, exceeds the maximum allowed 50.')
+                         'Too many MMS IDs provided, exceeds the maximum allowed of 50.')
       end
     end
   end
