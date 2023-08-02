@@ -21,5 +21,7 @@ Cleaning up:
 You can start sidekiq in development using:
 
 ```ruby
-bundle exec sidekiw
+bundle exec sidekiq
 ```
+
+This is not *required*, but is a good idea if you want to app to function as expected during development. Running the sidekiq process is not needed to run the test suite.
