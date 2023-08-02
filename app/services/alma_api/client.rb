@@ -13,7 +13,6 @@ module AlmaApi
     # @param [Array<String>] mmsids
     # @return [Object]
     def bibs(mmsids)
-      # TODO: or just trim and handle validation elsewhere?
       if mmsids.length > MAX_BIBS_GET
         raise Error, "Too many MMS IDs provided, exceeds the maximum allowed of #{MAX_BIBS_GET}."
       end
