@@ -4,16 +4,29 @@ module AlmaApi
   # Simple API Client using Faraday to get Alma Bib records
   class Client
     MAX_BIBS_GET = 50 # 100 is Alma API max
+    class Error < StandardError; end
 
     # Get Alma API response for provided MMS IDs, up to value of MAX_BIBS_GET
+    # See https://developers.exlibrisgroup.com/alma/apis/docs/bibs/R0VUIC9hbG1hd3MvdjEvYmlicw for alma bibs api
+    # documentation
     # @todo: return JSON or XML?
     # @param [Array<String>] mmsids
     # @return [Object]
     def bibs(mmsids)
-      raise if mmsids.length > MAX_BIBS_GET # TODO: or just trim and handle validation elsewhere?
+      if mmsids.length > MAX_BIBS_GET
+        raise Error, "Too many MMS IDs provided, exceeds the maximum allowed of #{MAX_BIBS_GET}."
+      end
 
       query = { mms_id: Array.wrap(mmsids).join(','), expand: 'p_avail,e_avail', format: 'json' }
-      faraday.get('/almaws/v1/bibs', query).body
+
+      begin
+        faraday.get('/almaws/v1/bibs', query).body
+      rescue Faraday::Error => e
+        alma_error = alma_bibs_error(e)
+        alma_error_code = alma_error.fetch('errorCode', nil)
+        alma_error_message = alma_error.fetch('errorMessage', nil)
+        raise Error, "Could not retrieve bibs requested. #{alma_error_code} #{alma_error_message}".strip
+      end
     end
 
     private
@@ -33,6 +46,18 @@ module AlmaApi
           config.adapter :net_http
         end
       end
+    end
+
+    # Retrieve error code and message from alma api error response
+    # We configured Faraday to automatically raise exceptions on 4xx-5xx responses. Alma Api errors are passed to these
+    # exceptions, and located in the body of the Faraday::Error response object.
+    # See https://developers.exlibrisgroup.com/alma/apis/docs/bibs/R0VUIC9hbG1hd3MvdjEvYmlicw for alma bibs api error
+    # structure
+    # @param [Faraday::Error] error
+    # @return [Hash]
+    def alma_bibs_error(error)
+      body = JSON.parse(error.response_body) if error.response_body
+      body&.dig('errorList', 'error')&.first || {}
     end
   end
 end
