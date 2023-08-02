@@ -10,7 +10,6 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'webmock/rspec'
 
-
 # Only allow localhost connections when running tests.
 WebMock.disable_net_connect!(allow_localhost: true)
 
