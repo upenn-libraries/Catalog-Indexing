@@ -19,7 +19,7 @@ describe AlmaApi::Client do
     context 'when receiving 4xx-5xx response with alma api error in payload' do
       before { stub_alma_api_bibs_http_error(bib_ids, alma_api_bibs_mock_error) }
 
-      it 'raises the expected error message' do
+      it 'raises error with the expected message' do
         expect {
           client.bibs(bib_ids)
         }.to raise_error(AlmaApi::Client::Error,
@@ -27,17 +27,17 @@ describe AlmaApi::Client do
       end
     end
 
-    context 'when receiving error without alma api in payload' do
+    context 'when rescuing error without alma api in payload' do
       before { stub_alma_api_bibs_http_error(bib_ids, nil) }
 
-      it 'raises the expected error message' do
+      it 'raises error with the expected message' do
         expect {
           client.bibs(bib_ids)
         }.to raise_error(AlmaApi::Client::Error, 'Could not retrieve bibs requested.')
       end
     end
 
-    context 'when mmsids exceeds maximum allowed' do
+    context 'when bib ids exceeds maximum allowed' do
       let(:bib_ids) { (0..50).to_a }
 
       before { stub_alma_api_bibs_request(bib_ids, marc_xml) }
