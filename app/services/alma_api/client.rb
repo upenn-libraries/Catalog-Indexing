@@ -22,9 +22,9 @@ module AlmaApi
       begin
         faraday.get('/almaws/v1/bibs', query).body
       rescue Faraday::Error => e
-        alma_bibs_error(e) => {error_code:, error_message:}
-        error_code ||= e.response.status
-        error_message ||= 'Error when requesting Alma Api'
+        error = alma_bibs_error(e)
+        error_code = error.fetch('errorCode', e.response.status)
+        error_message = error.fetch('errorMessage', 'Something went wrong when requesting Alma Api')
         raise Error, "#{error_code}: #{error_message}"
       end
     end
@@ -51,8 +51,7 @@ module AlmaApi
     # retrieve error code and message from alma api error response
     # @return [Hash]
     def alma_bibs_error(error)
-      alma_error = error.response.body('errorList', 'error')&.first
-      { error_code: alma_error&.dig('errorCode'), error_message: alma_error&.dig('errorMessage') }
+      error&.response&.body('errorList', 'error')&.first || {}
     end
   end
 end
