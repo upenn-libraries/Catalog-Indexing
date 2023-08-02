@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe AlmaApi::Client do
+  include AlmaApiMocks
 
   describe '.bibs' do
     let(:client) { described_class.new }
