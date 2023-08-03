@@ -5,14 +5,14 @@ describe AlmaApi::Client do
 
   describe '.bibs' do
     let(:client) { described_class.new }
-    let(:bib_ids) { %w[sample_bib another_bib] }
-    let(:marc_xml) { 'test' }
+    let(:bib_ids) { %w[99123456 99456789] }
+    let(:response) { '{}' }
 
     context 'with a successful request' do
-      before { stub_alma_api_bibs_request(bib_ids, marc_xml) }
+      before { stub_alma_api_bibs_request(bib_ids, response) }
 
       it 'returns the response body' do
-        expect(client.bibs(bib_ids)).to eq('test')
+        expect(client.bibs(bib_ids)).to eq JSON.parse(response)
       end
     end
 
@@ -40,7 +40,7 @@ describe AlmaApi::Client do
     context 'when bib ids exceeds maximum allowed' do
       let(:bib_ids) { (0..50).to_a }
 
-      before { stub_alma_api_bibs_request(bib_ids, marc_xml) }
+      before { stub_alma_api_bibs_request(bib_ids, response) }
 
       it 'raises error' do
         expect {

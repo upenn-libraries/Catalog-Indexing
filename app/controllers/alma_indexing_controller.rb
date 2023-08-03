@@ -6,6 +6,7 @@ class AlmaIndexingController < ApplicationController
   def process_ids
     ids = params[:mms_ids].squish.split(/,\s*|,/)
     if ids.length <= AlmaApi::Client::MAX_BIBS_GET
+      IndexByIdentifiers.perform_inline ids # TODO: see how well inline runs...
       # send IDs to alma
       redirect_to root_path, notice: 'Success!'
     else

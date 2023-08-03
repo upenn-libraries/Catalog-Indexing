@@ -12,10 +12,11 @@ class PennMarcIndexer < Traject::Indexer
   # shortcut for defining a simple field
   # TODO: modify PennMARC to use "default" mappers so they need not be specified here
   def define_field(name, parser_method = nil)
-    raise unless name && parser_method
-    raise unless parser.respond_to? parser_method.to_sym
+    parser_signal = parser_method || name
+    # raise unless parser.respond_to? parser_signal.to_sym # TODO this is raising and odd exception, possibly because parser does method_missing magic
 
-    to_field(name.to_s) { |record, acc| acc << parser.public_send((parser_method || name).to_sym, record) }
+    # TODO: revise PennMARC to never expect a second param for a helper? or use named params only? or rething this magic
+    to_field(name.to_s) { |record, acc| acc << parser.public_send(parser_signal.to_sym, record) }
   end
 
   def parser
@@ -35,7 +36,7 @@ class PennMarcIndexer < Traject::Indexer
   def identifier_fields
     define_field :id, :identifier_mmsid
     define_field :oclc_id_ss, :identifier_oclc_id
-    define_field :isbn_isxn
+    define_field :isbn_isxn, :identifier_isxn_search
   end
 
   def facet_fields
