@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'sidekiq/testing'
 
 RSpec.describe TestJob, type: :job do
   it 'can be enqueued' do
