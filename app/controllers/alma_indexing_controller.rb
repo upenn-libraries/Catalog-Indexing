@@ -4,8 +4,7 @@ class AlmaIndexingController < ApplicationController
   def index; end
 
   def process_ids
-    ids = params[:mms_ids].split(", ")
-    ids.length <= AlmaApi::Client::MAX_BIBS_GET ? puts("success: #{ids.inspect}") : puts('failure!')
+    ids = params[:mms_ids].squish.split(/,\s*|,/)
     if ids.length <= AlmaApi::Client::MAX_BIBS_GET
       # send IDs to alma
       redirect_to root_path, notice: 'Success!'
