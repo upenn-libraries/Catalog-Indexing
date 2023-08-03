@@ -17,6 +17,7 @@ gem 'puma', '~> 5.0'
 gem 'rails', '~> 7.0.6'
 gem 'rubyzip'
 gem 'sassc-rails'
+gem 'sidekiq', '~> 7'
 gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'traject'
@@ -26,6 +27,7 @@ gem 'upennlib-rubocop', require: false
 group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'rspec-rails', '~> 6.0.0'
+  gem 'webmock'
 end
 
 group :development do

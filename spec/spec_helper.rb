@@ -16,6 +16,11 @@
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  # Ensure Sidekiq queue is clear before all specs
+  config.before do
+    Sidekiq::Worker.clear_all
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

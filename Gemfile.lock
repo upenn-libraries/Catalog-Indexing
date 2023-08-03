@@ -83,6 +83,9 @@ GEM
       activemodel (>= 6.0)
     builder (3.2.4)
     concurrent-ruby (1.2.2)
+    connection_pool (2.4.1)
+    crack (0.4.5)
+      rexml
     crass (1.0.6)
     date (3.3.3)
     debug (1.8.0)
@@ -105,6 +108,7 @@ GEM
       rake
     globalid (1.1.0)
       activesupport (>= 5.0)
+    hashdiff (1.0.1)
     hashie (5.0.0)
     http (5.1.1)
       addressable (~> 2.8)
@@ -208,6 +212,8 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
+    redis-client (0.15.0)
+      connection_pool
     regexp_parser (2.8.0)
     reline (0.3.6)
       io-console (~> 0.5)
@@ -270,6 +276,11 @@ GEM
       sprockets-rails
       tilt
     scrub_rb (1.0.1)
+    sidekiq (7.1.2)
+      concurrent-ruby (< 2)
+      connection_pool (>= 2.3.0)
+      rack (>= 2.2.4)
+      redis-client (>= 0.14.0)
     slop (4.10.1)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
@@ -312,6 +323,10 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
+    webmock (3.18.1)
+      addressable (>= 2.8.0)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -320,6 +335,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  arm64-darwin-22
   x86_64-linux
 
 DEPENDENCIES
@@ -336,12 +352,14 @@ DEPENDENCIES
   rspec-rails (~> 6.0.0)
   rubyzip
   sassc-rails
+  sidekiq (~> 7)
   sprockets-rails
   stimulus-rails
   traject
   tzinfo-data
   upennlib-rubocop
   web-console
+  webmock
 
 RUBY VERSION
    ruby 3.2.2p53
