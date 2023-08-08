@@ -198,7 +198,7 @@ title = "gitlab gitleaks config"
         '''\.gitleaks\.toml''',
         '''services/solr/config.rb ''',
         '''solr/conf/*.rbbi''',
-        '''spec/support/alma_api_mock.rb'''
+        '''spec/support/alma_api_mocks.rb'''
     ]
     regexes = [
         # Values set by Ansible variables
