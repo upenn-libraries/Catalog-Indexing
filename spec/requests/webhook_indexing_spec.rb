@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'WebhookIndexing' do
+RSpec.describe 'Webhook Indexing requests' do
   let(:bib_updated_json) do
     {
       'id' => '3235071115491107182',
