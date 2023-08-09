@@ -2,7 +2,7 @@
 
 # Listens for and handles Alma Webhooks
 class WebhookIndexingController < ApplicationController
-  before_action :validate, only: [:handle_bib_action]
+  before_action :validate, only: [:listen]
 
   # echo challenge phrase back to Alma
   def challenge
@@ -10,12 +10,12 @@ class WebhookIndexingController < ApplicationController
   end
 
   # listens for and handles webhook events
-  def handle_bib_action
+  def listen
     payload = JSON.parse(request.body.string)
     action = payload['action']
     case action
     when 'BIB'
-      bib(payload)
+      handle_bib_action(payload)
     when 'JOB_UPDATED'
       # do something
     else
@@ -28,7 +28,7 @@ class WebhookIndexingController < ApplicationController
   # Handles alma webhook bib actions
   # @param [Hash] payload action-specific data received from alma webhook post request
   # @return [TrueClass]
-  def bib(payload)
+  def handle_bib_action(payload)
     # marc_xml = payload.dig 'bib', 'anies'
     # TODO: respect "suppress_from_publishing"?
     case payload.dig 'event', 'value'
