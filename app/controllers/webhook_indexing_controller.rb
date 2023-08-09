@@ -2,15 +2,15 @@
 
 # Listens for and handles Alma Webhooks
 class WebhookIndexingController < ApplicationController
-  before_action :validate, only: [:listen]
+  before_action :validate, only: [:handle_bib_action]
 
   # echo challenge phrase back to Alma
   def challenge
     render json: challenge_params
   end
 
-  # listens for and routes webhook events to appropriate handler
-  def listen
+  # listens for and handles webhook events
+  def handle_bib_action
     payload = JSON.parse(request.body.string)
     action = payload['action']
     case action
@@ -25,6 +25,9 @@ class WebhookIndexingController < ApplicationController
 
   private
 
+  # Handles alma webhook bib actions
+  # @param [Hash] payload action-specific data received from alma webhook post request
+  # @return [TrueClass]
   def bib(payload)
     # marc_xml = payload.dig 'bib', 'anies'
     # TODO: respect "suppress_from_publishing"?
@@ -43,7 +46,8 @@ class WebhookIndexingController < ApplicationController
     end
   end
 
-  # validate the signature header based on webhook secret and the request body content to ensure request came from Alma
+  # Determines if the alma webhook signature header is valid to ensure request came from Alma
+  # @return [Boolean]
   def valid_signature?
     hmac = OpenSSL::HMAC.new ENV.fetch('ALMA_WEBHOOK'), OpenSSL::Digest.new('sha256')
     hmac.update request.body.string
@@ -51,6 +55,8 @@ class WebhookIndexingController < ApplicationController
     signature == Base64.strict_encode64(hmac.digest)
   end
 
+  # Validates alma webhook post requests
+  # @return [Boolean]
   def validate
     valid_signature? || head(:unauthorized)
   end
