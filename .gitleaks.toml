@@ -192,7 +192,8 @@ title = "gitlab gitleaks config"
         '''f8619aa2eddf08bf755a39e89ae5a4b77b034339''',
         '''4eb345b3e673449bf1e48bd743808ee0e8049d06''',
         '''b263f927db8fbfffcc323a52ea871cf9b0085550''',
-        '''19154d3b4249e323290de47246dd958cc28008c4'''
+        '''19154d3b4249e323290de47246dd958cc28008c4''',
+        '''94b797ef8a65428fb00c431ab7e2723502cd6617'''
     ]
     files = [
         '''(.*?)(bin|csv|doc|gif|jpg|md|pdf)$''',
@@ -207,5 +208,7 @@ title = "gitlab gitleaks config"
         # Values set by environment variables
         '''ENV\[['"][\S]+['"]\]''',
         # AWS Secrets Manager resource for vault password
-        '''AnsibleVaultPassword'''
+        '''AnsibleVaultPassword''',
+        '''solr_username''',
+        '''solr_password'''
     ]
