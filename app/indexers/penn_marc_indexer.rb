@@ -4,19 +4,29 @@
 class PennMarcIndexer < Traject::Indexer
   configure do
     settings do
-      # TODO: settings
+      provide 'solr.update_url', Solr::Config.new.update_url
+      provide 'solr_writer.batch_size', ENV.fetch('SOLR_WRITER_BATCH_SIZE', 250)
+      provide 'solr_writer.thread_pool', ENV.fetch('SOLR_WRITER_THREAD_POOL', 2)
+
+      provide 'solr_writer.commit_on_close', true
     end
     define_all_fields
   end
 
-  # shortcut for defining a simple field
-  # TODO: modify PennMARC to use "default" mappers so they need not be specified here
+  # shortcut for defining a simple field with appropriate handling for return type
+  # see: https://rubydoc.info/gems/traject/3.5.0/file/doc/indexing_rules.md
   def define_field(name, parser_method = nil)
     parser_signal = parser_method || name
-    # raise unless parser.respond_to? parser_signal.to_sym # TODO this is raising and odd exception, possibly because parser does method_missing magic
+    raise ArgumentError unless parser.respond_to? parser_signal.to_sym
 
-    # TODO: revise PennMARC to never expect a second param for a helper? or use named params only? or rething this magic
-    to_field(name.to_s) { |record, acc| acc << parser.public_send(parser_signal.to_sym, record) }
+    to_field(name.to_s) do |record, acc|
+      parser_output = parser.public_send(parser_signal.to_sym, record)
+      if parser_output.respond_to?(:each)
+        acc.concat(parser_output)
+      else
+        acc << parser_output
+      end
+    end
   end
 
   def parser
@@ -36,7 +46,7 @@ class PennMarcIndexer < Traject::Indexer
   def identifier_fields
     define_field :id, :identifier_mmsid
     define_field :oclc_id_ss, :identifier_oclc_id
-    define_field :isbn_isxn, :identifier_isxn_search
+    # define_field :isbn_isxn, :identifier_isxn_search
   end
 
   def facet_fields
@@ -54,7 +64,7 @@ class PennMarcIndexer < Traject::Indexer
     define_field :title_search
     define_field :subject_search
     define_field :genre_search
-    define_field :isxn_search
+    define_field :isxn_search, :identifier_isxn_search
   end
 
   def sort_fields

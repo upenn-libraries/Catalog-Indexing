@@ -16,10 +16,11 @@ class IndexByIdentifiers
     # TODO: but Alma response say this is UTF-16?? but with 16 set here i get "XML parsing error: Document labelled UTF-16 but has UTF-8 content"
     io = StringIO.new "<?xml version=\"1.0\" encoding=\"UTF-8\"?><collection>#{docs.join}</collection>"
 
-    PennMarcIndexer.new.process_with(
+    indexer = PennMarcIndexer.new
+    indexer.process_with(
       MARC::XMLReader.new(io, parser: :nokogiri, ignore_namespace: true),
-      # CatalogWriter.new({}) # writer: outputs hashes/json/whatev - in the end, JSON for Solr
-      Traject::ArrayWriter.new
+      CatalogWriter.new(indexer.settings) # writer: outputs hashes/json/whatev - in the end, JSON for Solr
+      # Traject::ArrayWriter.new
       # on_skipped: handle_skipped_record_proc,
       # rescue_with: rescue_error_proc
     )

@@ -1,3 +1,14 @@
+GIT
+  remote: https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git
+  revision: ce9dfed06410d311fd94e742085c6391fa595bb9
+  branch: parser_magic_fix_3
+  specs:
+    pennmarc (1.0.0)
+      activesupport (~> 7)
+      library_stdnums (~> 1.6)
+      marc (~> 1.2)
+      nokogiri (~> 1.15)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -168,11 +179,6 @@ GEM
     parallel (1.23.0)
     parser (3.2.2.1)
       ast (~> 2.4.1)
-    pennmarc (1.0.0)
-      activesupport (~> 7)
-      library_stdnums (~> 1.6)
-      marc (~> 1.2)
-      nokogiri (~> 1.15)
     pg (1.5.3)
     popper_js (2.11.7)
     public_suffix (5.0.1)
@@ -345,7 +351,7 @@ DEPENDENCIES
   debug
   faraday
   importmap-rails
-  pennmarc
+  pennmarc!
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.6)
