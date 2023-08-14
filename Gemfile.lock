@@ -107,6 +107,23 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dot-properties (0.1.4)
       bundler (>= 2.2.33)
+    dry-core (1.0.1)
+      concurrent-ruby (~> 1.0)
+      zeitwerk (~> 2.6)
+    dry-events (1.0.1)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0, < 2)
+    dry-matcher (0.10.0)
+      dry-core (~> 1.0)
+    dry-monads (1.6.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0, < 2)
+      zeitwerk (~> 2.6)
+    dry-transaction (0.15.0)
+      dry-core (~> 1.0)
+      dry-events (~> 1.0)
+      dry-matcher (~> 0.10)
+      dry-monads (~> 1.6)
     erubi (1.12.0)
     execjs (2.8.1)
     faraday (2.7.10)
@@ -349,6 +366,7 @@ DEPENDENCIES
   bootstrap (~> 5.2.3)
   bootstrap_form (~> 5.0)
   debug
+  dry-transaction
   faraday
   importmap-rails
   pennmarc!

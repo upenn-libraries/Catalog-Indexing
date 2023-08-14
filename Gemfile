@@ -9,6 +9,7 @@ ruby '3.2.2'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 5.2.3'
 gem 'bootstrap_form', '~> 5.0'
+gem 'dry-transaction'
 gem 'faraday'
 gem 'importmap-rails'
 gem 'pennmarc', git: 'https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git', branch: 'parser_magic_fix_3'
