@@ -1,6 +1,6 @@
 GIT
   remote: https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git
-  revision: ce9dfed06410d311fd94e742085c6391fa595bb9
+  revision: 07a74fa46fe7ad5a6442225a36236da0d7238839
   branch: parser_magic_fix_3
   specs:
     pennmarc (1.0.0)
