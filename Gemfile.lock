@@ -1,14 +1,3 @@
-GIT
-  remote: https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git
-  revision: 07a74fa46fe7ad5a6442225a36236da0d7238839
-  branch: parser_magic_fix_3
-  specs:
-    pennmarc (1.0.0)
-      activesupport (~> 7)
-      library_stdnums (~> 1.6)
-      marc (~> 1.2)
-      nokogiri (~> 1.15)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -189,13 +178,18 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.15.3-arm64-darwin)
+    nokogiri (1.15.4-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.3-x86_64-linux)
+    nokogiri (1.15.4-x86_64-linux)
       racc (~> 1.4)
     parallel (1.23.0)
     parser (3.2.2.1)
       ast (~> 2.4.1)
+    pennmarc (1.0.1)
+      activesupport (~> 7)
+      library_stdnums (~> 1.6)
+      marc (~> 1.2)
+      nokogiri (~> 1.15)
     pg (1.5.3)
     popper_js (2.11.7)
     public_suffix (5.0.1)
@@ -369,7 +363,7 @@ DEPENDENCIES
   dry-transaction
   faraday
   importmap-rails
-  pennmarc!
+  pennmarc (~> 1)
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.6)
