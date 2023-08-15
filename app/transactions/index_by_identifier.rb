@@ -12,19 +12,28 @@ class IndexByIdentifier
 
   private
 
+  # Get MARCXML from Alma API, strip XML doctype declaration
+  # @param [Array<String>] identifiers
+  # @return [Dry::Monads::Result]
   def retrieve_marcxml(identifiers:)
     response = AlmaApi::Client.new.bibs identifiers
     docs = response['bib']&.filter_map do |bib_data|
       marcxml = bib_data['anies'].first
       marcxml.gsub('<?xml version="1.0" encoding="UTF-16"?>', '')
     end
-
     Success docs: docs
+  rescue StandardError => e
+    Failure e
   end
 
+  # Shove MARCXML into a XML string for a MARCXMLReader to parse into MARC::Record objects
+  # @param [Hash] args
+  # @return [Dry::Monads::Result]
   def prepare_marcxml(args)
     io = StringIO.new "<?xml version=\"1.0\" encoding=\"UTF-8\"?><collection>#{args[:docs].join}</collection>"
 
     Success(io: io)
+  rescue StandardError => e
+    Failure e
   end
 end

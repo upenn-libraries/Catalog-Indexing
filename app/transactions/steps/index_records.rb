@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Steps
   class IndexRecords
     include Dry::Monads[:result]
@@ -11,10 +13,9 @@ module Steps
         CatalogWriter.new(indexer.settings),
         close_writer: true
       )
-      Success()
+      Success(true)
     rescue StandardError => e
-      # TODO: wat
-      raise e
+      Failure(e)
     end
   end
 end

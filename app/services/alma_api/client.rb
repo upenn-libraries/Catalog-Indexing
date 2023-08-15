@@ -3,7 +3,7 @@
 module AlmaApi
   # Simple API Client using Faraday to get Alma Bib records
   class Client
-    MAX_BIBS_GET = 50 # 100 is Alma API max
+    MAX_BIBS_GET = 100 # 100 is Alma API max
     class Error < StandardError; end
 
     # Get Alma API response for provided MMS IDs, up to value of MAX_BIBS_GET
