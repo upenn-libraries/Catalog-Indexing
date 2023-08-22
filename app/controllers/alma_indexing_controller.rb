@@ -21,7 +21,7 @@ class AlmaIndexingController < ApplicationController
   def validate_mmsids
     alert = if mms_ids.length > AlmaApi::Client::MAX_BIBS_GET
               "Number of MMS IDs (#{mms_ids.length}) exceeds the limit (#{AlmaApi::Client::MAX_BIBS_GET})"
-            elsif mms_ids.length.zero?
+            elsif mms_ids.empty?
               'No MMS IDs provided'
             end
     if alert
@@ -31,4 +31,3 @@ class AlmaIndexingController < ApplicationController
     true
   end
 end
-

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Transaction container
 class Container
   extend Dry::Core::Container::Mixin
 

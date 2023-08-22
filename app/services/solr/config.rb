@@ -41,7 +41,6 @@ module Solr
       "http://#{solr_username}:#{solr_password}@#{solr_host}:#{solr_port}/solr/#{collection}"
     end
 
-    # TODO: this might end up being the same as `query_url` but maybe not
     def update_url(collection: collection_name)
       "http://#{solr_username}:#{solr_password}@#{solr_host}:#{solr_port}/solr/#{collection}/update/json"
     end
