@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Steps
+  # Step to index an IO stream via Traject
   class IndexRecords
     include Dry::Monads[:result]
 

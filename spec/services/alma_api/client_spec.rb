@@ -38,7 +38,7 @@ describe AlmaApi::Client do
     end
 
     context 'when bib ids exceeds maximum allowed' do
-      let(:bib_ids) { (0..50).to_a }
+      let(:bib_ids) { '9979201969103681' * 50 }
 
       before { stub_alma_api_bibs_request(bib_ids, response) }
 
@@ -46,7 +46,7 @@ describe AlmaApi::Client do
         expect {
           client.bibs(bib_ids)
         }.to raise_error(AlmaApi::Client::Error,
-                         'Too many MMS IDs provided, exceeds the maximum allowed of 50.')
+                         'Too many MMS IDs provided, exceeds the maximum allowed of 100.')
       end
     end
   end

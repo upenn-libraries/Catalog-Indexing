@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe TestJob, type: :job do
   it 'can be enqueued' do
     expect {
