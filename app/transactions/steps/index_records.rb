@@ -5,7 +5,7 @@ module Steps
   class IndexRecords
     include Dry::Monads[:result]
 
-    # @param [Array|String] records
+    # @param [IO | StringIO] io
     # @param [Traject::Indexer] indexer
     # @return [Traject::Writer]
     def call(io:, indexer: PennMarcIndexer.new)
