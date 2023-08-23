@@ -18,8 +18,7 @@ class IndexByIdentifier
   def retrieve_marcxml(identifiers:)
     response = AlmaApi::Client.new.bibs identifiers
     docs = response['bib']&.filter_map do |bib_data|
-      marcxml = bib_data['anies'].first
-      marcxml.gsub('<?xml version="1.0" encoding="UTF-16"?>', '')
+      bib_data['anies'].first
     end
     Success docs: docs
   rescue StandardError => e
@@ -30,7 +29,8 @@ class IndexByIdentifier
   # @param [Hash] args
   # @return [Dry::Monads::Result]
   def prepare_marcxml(args)
-    io = StringIO.new "<?xml version=\"1.0\" encoding=\"UTF-8\"?><collection>#{args[:docs].join}</collection>"
+    xml = args[:docs].join.gsub('<?xml version="1.0" encoding="UTF-16"?>', '')
+    io = StringIO.new "<?xml version=\"1.0\" encoding=\"UTF-8\"?><collection>#{xml}</collection>"
 
     Success(io: io)
   rescue StandardError => e
