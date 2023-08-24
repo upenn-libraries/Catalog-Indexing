@@ -87,12 +87,12 @@ RSpec.describe 'Webhook Indexing requests' do
 
   context 'when receiving get request' do
     it 'successfully responds' do
-      get webhook_indexing_path, params: { challenge: 'test' }
+      get webhook_challenge_path, params: { challenge: 'test' }
       expect(response).to have_http_status :ok
     end
 
     it 'echos a challenge param' do
-      get webhook_indexing_path, params: { challenge: 'test' }
+      get webhook_challenge_path, params: { challenge: 'test' }
       challenge = response.parsed_body
       expect(challenge).to eq({ 'challenge' => 'test' })
     end
@@ -102,37 +102,37 @@ RSpec.describe 'Webhook Indexing requests' do
     before { allow(ENV).to receive(:fetch).with('ALMA_WEBHOOK').and_return('test') }
 
     it 'validates message integrity' do
-      post webhook_indexing_path, params: unexpected_action_json, headers: { 'X-Exl-Signature': 'baaaaaaad' }
+      post webhook_listen_path, params: unexpected_action_json, headers: { 'X-Exl-Signature': 'baaaaaaad' }
       expect(response).to have_http_status :unauthorized
     end
 
     it 'handles validated bib updated events' do
       headers = { 'X-Exl-Signature': 'R7NdTOCOnEAfVhicWhYjEeluE9TZZM6Nusu7A4S7hQU=' }
-      post webhook_indexing_path, params: bib_updated_json, headers: headers
+      post webhook_listen_path, params: bib_updated_json, headers: headers
       expect(response).to have_http_status :ok
     end
 
     it 'handles validated bib added events' do
       headers = { 'X-Exl-Signature': 'kQJotW9Ru0Ug2ZFM9jkhnOH0TAF3dzbrp+Vi7Oggvwg=' }
-      post webhook_indexing_path, params: bib_added_json, headers: headers
+      post webhook_listen_path, params: bib_added_json, headers: headers
       expect(response).to have_http_status :ok
     end
 
     it 'handles validated bib deleted events' do
       headers = { 'X-Exl-Signature': '8hFmGtFrxz9UY6VgFhwFd6uDmruyZdDCgSFfIQlBMLM=' }
-      post webhook_indexing_path, params: bib_deleted_json, headers: headers
+      post webhook_listen_path, params: bib_deleted_json, headers: headers
       expect(response).to have_http_status :ok
     end
 
     it 'handles validated requests with unexpected action' do
       headers = { 'X-Exl-Signature': 'PabrhAvogIlxlHWHrwh0VRybGvrRmJX+RQVbBkYAGdI=' }
-      post webhook_indexing_path, params: unexpected_action_json, headers: headers
+      post webhook_listen_path, params: unexpected_action_json, headers: headers
       expect(response).to have_http_status :bad_request
     end
 
     it 'handles validated requests with unexpected bib event' do
       headers = { 'X-Exl-Signature': '4RkSNlOHBlQGQvhvF+R+z43D0M/xzg4pHex5FJfq+3o=' }
-      post webhook_indexing_path, params: unexpected_bib_event_json, headers: headers
+      post webhook_listen_path, params: unexpected_bib_event_json, headers: headers
       expect(response).to have_http_status :bad_request
     end
   end

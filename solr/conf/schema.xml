@@ -301,6 +301,10 @@
   </fieldtype>
   <dynamicField name="*_isxn" type="isxn" indexed="true" stored="true" multiValued="true" />
 
+  <!-- Important Indexer types -->
+  <dynamicField name="*_facet" type="string" indexed="true" stored="false" multiValued="true" />
+  <dynamicField name="*_search" type="text_general" indexed="true" stored="false" multiValued="true" />
+  <dynamicField name="*_sort" type="text_gen_sort" indexed="true" stored="false" multiValued="false" />
 
 
   <!-- TODO: XML type - CJK handling appears here... -->
@@ -393,20 +397,21 @@
        (empty by default), and down cases.  At query time only, it
        also applies synonyms.
   -->
+<!-- TODO: can't use SPI lookups with some of these: see https://issues.apache.org/jira/browse/SOLR-16203 -->
   <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
     <analyzer type="index">
       <tokenizer name="standard"/>
-      <filter name="stop" ignoreCase="true" words="stopwords.txt" />
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
       <!-- in this example, we will only use synonyms at query time
-      <filter name="synonymGraph" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter name="solr.SynonymGraphFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
       <filter name="flattenGraph"/>
       -->
       <filter name="lowercase"/>
     </analyzer>
     <analyzer type="query">
       <tokenizer name="standard"/>
-      <filter name="stop" ignoreCase="true" words="stopwords.txt" />
-      <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt" />
+      <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
       <filter name="lowercase"/>
     </analyzer>
   </fieldType>
@@ -425,13 +430,13 @@
   <fieldType name="text_gen_sort" class="solr.SortableTextField" positionIncrementGap="100" multiValued="true">
     <analyzer type="index">
       <tokenizer name="standard"/>
-      <filter name="stop" ignoreCase="true" words="stopwords.txt" />
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt" />
       <filter name="lowercase"/>
     </analyzer>
     <analyzer type="query">
       <tokenizer name="standard"/>
-      <filter name="stop" ignoreCase="true" words="stopwords.txt" />
-      <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+      <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt" />
+      <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
       <filter name="lowercase"/>
     </analyzer>
   </fieldType>
