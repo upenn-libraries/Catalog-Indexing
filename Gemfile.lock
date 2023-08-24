@@ -96,6 +96,23 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dot-properties (0.1.4)
       bundler (>= 2.2.33)
+    dry-core (1.0.1)
+      concurrent-ruby (~> 1.0)
+      zeitwerk (~> 2.6)
+    dry-events (1.0.1)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0, < 2)
+    dry-matcher (0.10.0)
+      dry-core (~> 1.0)
+    dry-monads (1.6.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0, < 2)
+      zeitwerk (~> 2.6)
+    dry-transaction (0.15.0)
+      dry-core (~> 1.0)
+      dry-events (~> 1.0)
+      dry-matcher (~> 0.10)
+      dry-monads (~> 1.6)
     erubi (1.12.0)
     execjs (2.8.1)
     faraday (2.7.10)
@@ -149,7 +166,7 @@ GEM
     marcel (1.0.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
-    minitest (5.18.1)
+    minitest (5.19.0)
     msgpack (1.7.1)
     net-imap (0.3.6)
       date
@@ -161,14 +178,14 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.15.3-arm64-darwin)
+    nokogiri (1.15.4-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.3-x86_64-linux)
+    nokogiri (1.15.4-x86_64-linux)
       racc (~> 1.4)
     parallel (1.23.0)
     parser (3.2.2.1)
       ast (~> 2.4.1)
-    pennmarc (0.0.2)
+    pennmarc (1.0.1)
       activesupport (~> 7)
       library_stdnums (~> 1.6)
       marc (~> 1.2)
@@ -217,7 +234,10 @@ GEM
     regexp_parser (2.8.0)
     reline (0.3.6)
       io-console (~> 0.5)
-    rexml (3.2.5)
+    rexml (3.2.6)
+    rsolr (2.5.0)
+      builder (>= 2.1.2)
+      faraday (>= 0.9, < 3, != 2.0.0)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.3)
@@ -343,12 +363,14 @@ DEPENDENCIES
   bootstrap (~> 5.2.3)
   bootstrap_form (~> 5.0)
   debug
+  dry-transaction
   faraday
   importmap-rails
-  pennmarc
+  pennmarc (~> 1)
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.6)
+  rsolr
   rspec-rails (~> 6.0.0)
   rubyzip
   sassc-rails
