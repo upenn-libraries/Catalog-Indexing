@@ -38,6 +38,7 @@ describe Sftp::Client do
   end
 
   describe '#download' do
+    let(:publish_file) { Sftp::PublishFile.new('test.xml.tar.gz') }
     let(:sftp_downloader) { instance_double(Net::SFTP::Operations::Download) }
 
     before do
@@ -46,20 +47,20 @@ describe Sftp::Client do
     end
 
     it 'runs the Net::SFTP event loop to ensure the file downloads' do
-      client.download(Sftp::PublishFile.new('test'))
+      client.download(publish_file)
       expect(sftp_session).to have_received(:download)
       expect(sftp_downloader).to have_received(:wait)
     end
 
     it "doesn't run the Net::SFTP event loop when wait parameter is false" do
-      client.download(Sftp::PublishFile.new('test'), wait: false)
+      client.download(publish_file, wait: false)
       expect(sftp_session).to have_received(:download)
       expect(sftp_downloader).not_to have_received(:wait)
     end
 
     it 'raises an error when it fails to download the file' do
       allow(sftp_session).to receive(:download).and_raise(Net::SFTP::Exception)
-      expect { client.download(Sftp::PublishFile.new('test.xml.tar.gz')) }.to raise_error(
+      expect { client.download(publish_file) }.to raise_error(
         Sftp::Client::Error,
         'Could not download file from sftp server: Net::SFTP::Exception'
       )
@@ -92,6 +93,7 @@ describe Sftp::Client do
   end
 
   describe '#delete' do
+    let(:publish_file) { Sftp::PublishFile.new('test.xml.tar.gz') }
     let(:sftp_request) { instance_double(Net::SFTP::Request) }
 
     before do
@@ -100,14 +102,14 @@ describe Sftp::Client do
     end
 
     it 'deletes a file from remote directory' do
-      client.delete(Sftp::PublishFile.new('test.xml.tar.gz'))
+      client.delete(publish_file)
       expect(sftp_session).to have_received(:remove)
       expect(sftp_request).to have_received(:wait)
     end
 
     it 'raises an error when it fails to delete file from remote directory' do
       allow(sftp_session).to receive(:remove).and_raise(Net::SFTP::Exception)
-      expect { client.delete(Sftp::PublishFile.new('test.xml.tar.gz')) }.to raise_error(
+      expect { client.delete(publish_file) }.to raise_error(
         Sftp::Client::Error,
         'Could not delete file on sftp server: Net::SFTP::Exception'
       )
