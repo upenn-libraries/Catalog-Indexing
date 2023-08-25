@@ -14,10 +14,9 @@ module Sftp
       @remote_path ||= File.join(Sftp::Client::ROOT, name)
     end
 
-    # @param [String] dir local directory of alma publish files
     # @return [String] path on local storage
-    def local_path(dir: 'storage')
-      @local_path ||= Rails.root.join(dir, name).to_s
+    def local_path
+      @local_path ||= Rails.root.join('storage', name).to_s
     end
 
     # @return [Boolean]
