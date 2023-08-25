@@ -16,6 +16,8 @@ module Sftp
       @files ||= sftp.dir.glob(ROOT, matching).map do |entry|
         PublishFile.new(entry.name)
       end
+    rescue RuntimeError => e
+      raise Error, "Could not list files on the sftp server: #{e.message}"
     end
 
     # download single file from sftp server
@@ -29,8 +31,8 @@ module Sftp
         return download unless wait
 
         download.wait
-      rescue Net::SFTP::Exception => e
-        raise Error "Could not download file from sftp server: #{e.message}"
+      rescue RuntimeError => e
+        raise Error, "Could not download file from sftp server: #{e.message}"
       end
     end
 
@@ -45,14 +47,14 @@ module Sftp
     # delete file on sftp server
     def delete(publish_file)
       sftp.remove(publish_file.remote_path).wait
-    rescue Net::SFTP::Exception => e
-      raise Error "Could not delete file on sftp server: #{e.message}"
+    rescue RuntimeError => e
+      raise Error, "Could not delete file on sftp server: #{e.message}"
     end
 
     def sftp
       @sftp ||= Net::SFTP.start(HOST, sftp_username, password: sftp_password)
-    rescue Net::SSH::RuntimeError => e
-      raise Error "Could not connect to sftp server: #{e.message}"
+    rescue RuntimeError => e
+      raise Error, "Could not connect to sftp server: #{e.message}"
     end
 
     private
