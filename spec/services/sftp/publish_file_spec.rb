@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe Sftp::PublishFile do
-
   let(:file_name) { 'test.xml.tar.gz' }
   let(:publish_file) { described_class.new(file_name) }
 
@@ -29,7 +28,8 @@ describe Sftp::PublishFile do
     end
 
     it 'returns true when file exists in local storage' do
-      publish_file.local_path(dir: 'spec/fixtures/alma_publish_file')
+      tempfile = Tempfile.create(file_name, Rails.root.join('storage'))
+      publish_file = described_class.new(File.basename(tempfile.path))
       expect(publish_file).to be_downloaded
     end
   end
