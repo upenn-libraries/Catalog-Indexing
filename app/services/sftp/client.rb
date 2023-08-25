@@ -10,9 +10,10 @@ module Sftp
     class Error < StandardError; end
 
     # list alma publish files on sftp server
+    # @param [String] matching prefix to match files in directory
     # @return [Array<Sftp::PublishFile>] list of PublishFile objects
-    def files
-      @files ||= sftp.dir.glob(ROOT, '*.xml.tar.gz').map do |entry|
+    def files(matching:)
+      @files ||= sftp.dir.glob(ROOT, matching).map do |entry|
         PublishFile.new(entry.name)
       end
     end
