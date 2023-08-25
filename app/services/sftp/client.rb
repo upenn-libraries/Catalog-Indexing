@@ -35,9 +35,10 @@ module Sftp
     end
 
     # download all files alma published on sftp server in parallel
+    # @param [String] matching prefix to match files in directory
     # @return [Array <Net::SFTP::Operations::Download>]
-    def download_all
-      downloads = files.map { |publish_file| download(publish_file, wait: false) }
+    def download_all(matching:)
+      downloads = files(matching: matching).map { |publish_file| download(publish_file, wait: false) }
       downloads.each(&:wait)
     end
 
