@@ -192,15 +192,15 @@ title = "gitlab gitleaks config"
         '''f8619aa2eddf08bf755a39e89ae5a4b77b034339''',
         '''4eb345b3e673449bf1e48bd743808ee0e8049d06''',
         '''b263f927db8fbfffcc323a52ea871cf9b0085550''',
-        '''19154d3b4249e323290de47246dd958cc28008c4'''
+        '''19154d3b4249e323290de47246dd958cc28008c4''',
+        '''9ba94101342e12725d5790c45ad11ee0238e887a'''
     ]
     files = [
         '''(.*?)(bin|csv|doc|gif|jpg|md|pdf)$''',
         '''\.gitleaks\.toml''',
         '''services/solr/config.rb ''',
         '''solr/conf/*.rbbi''',
-        '''spec/support/alma_api_mocks.rb''',
-        '''app/services/sftp/client.rb'''
+        '''spec/support/alma_api_mocks.rb'''
     ]
     regexes = [
         # Values set by Ansible variables
