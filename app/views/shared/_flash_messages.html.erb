@@ -1,5 +1,5 @@
 <% flash.each do |k, v| %>
-  <% type = (k == :alert) ? :primary : :warning %>
+  <% type = k.to_sym == :alert ? :warning : :primary %>
   <div class="row">
     <div class="col-sm-12">
       <div class="alert alert-<%= type %> alert-dismissible fade show" role="alert">
