@@ -9,25 +9,25 @@ module Sftp
     ROOT = '/recordstoalma/bibexport'
     class Error < StandardError; end
 
-    # list alma publish files on sftp server
+    # list files on sftp server that match pattern
     # @param [String] matching prefix to match files in directory
-    # @return [Array<Sftp::PublishFile>] list of PublishFile objects
+    # @return [Array<Sftp::File>] list of Sftp::File objects
     def files(matching:)
       @files ||= sftp.dir.glob(ROOT, matching).map do |entry|
-        PublishFile.new(entry.name)
+        Sftp::File.new(entry.name)
       end
     rescue RuntimeError => e
       raise Error, "Could not list files on the sftp server: #{e.message}"
     end
 
     # download single file from sftp server
-    # @param [publish_file] publish_file
+    # @param [Sftp::File]
     # @param [TrueClass | FalseClass] wait determines whether to run the event loop, allowing the download to progress
     # @return [Net::SFTP::Operations::Download]
-    def download(publish_file, wait: true)
-      File.truncate(publish_file.local_path, 0) if publish_file.downloaded?
+    def download(file, wait: true)
+      ::File.truncate(file.local_path, 0) if file.downloaded?
       begin
-        download = sftp.download(publish_file.remote_path, publish_file.local_path)
+        download = sftp.download(file.remote_path, file.local_path)
         return download unless wait
 
         download.wait
@@ -36,17 +36,18 @@ module Sftp
       end
     end
 
-    # download all files alma published on sftp server in parallel
+    # download all matching files on sftp server in parallel
     # @param [String] matching prefix to match files in directory
     # @return [Array <Net::SFTP::Operations::Download>]
     def download_all(matching:)
-      downloads = files(matching: matching).map { |publish_file| download(publish_file, wait: false) }
+      downloads = files(matching: matching).map { |file| download(file, wait: false) }
       downloads.each(&:wait)
     end
 
     # delete file on sftp server
-    def delete(publish_file)
-      sftp.remove(publish_file.remote_path).wait
+    # @param [Sftp::File]
+    def delete(file)
+      sftp.remove(file.remote_path).wait
     rescue RuntimeError => e
       raise Error, "Could not delete file on sftp server: #{e.message}"
     end

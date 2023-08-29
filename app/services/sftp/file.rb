@@ -2,7 +2,7 @@
 
 module Sftp
   # Interface to work with Alma files published on sftp server
-  class PublishFile
+  class File
     attr_reader :name
 
     def initialize(name)
@@ -11,7 +11,7 @@ module Sftp
 
     # @return [String] path on remote storage
     def remote_path
-      @remote_path ||= File.join(Sftp::Client::ROOT, name)
+      @remote_path ||= ::File.join(Sftp::Client::ROOT, name)
     end
 
     # @return [String] path on local storage
@@ -21,7 +21,7 @@ module Sftp
 
     # @return [Boolean]
     def downloaded?
-      File.exist?(local_path)
+      ::File.exist?(local_path)
     end
   end
 end
