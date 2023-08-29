@@ -12,7 +12,7 @@ namespace :tools do
       puts 'Uploading configset from solr/conf'
       solr_admin.upload_config
       puts 'Creating catalog-dev and catalog-test collections'
-      solr_admin.create_collection(name: 'catalog-dev')
+      solr_admin.create_collection(name: 'catalog-development')
       solr_admin.create_collection(name: 'catalog-test')
     end
 

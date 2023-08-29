@@ -37,8 +37,12 @@ module Solr
       "#{url}#{COLLECTION_PATH}"
     end
 
-    def query_url
-      "http://#{solr_username}:#{solr_password}@#{solr_host}:#{solr_port}/solr/#{collection_name}"
+    def query_url(collection: collection_name)
+      "http://#{solr_username}:#{solr_password}@#{solr_host}:#{solr_port}/solr/#{collection}"
+    end
+
+    def update_url(collection: collection_name)
+      "http://#{solr_username}:#{solr_password}@#{solr_host}:#{solr_port}/solr/#{collection}/update/json"
     end
 
     def dir
@@ -46,7 +50,7 @@ module Solr
     end
 
     def collection_name
-      ENV.fetch('SOLR_COLLECTION', "catalog_#{Rails.env}")
+      ENV.fetch('SOLR_COLLECTION', "catalog-#{Rails.env}")
     end
 
     def num_shards

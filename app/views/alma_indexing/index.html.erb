@@ -1,18 +1,8 @@
-<%= bootstrap_form_tag url: '/process' do |form| %>
+<%= bootstrap_form_tag url: process_ids_path do |form| %>
   <div class="container">
     <div class="row justify-content-center pt-5">
       <div class="col-md-6">
-
-        <% if flash.notice %>
-          <div class="alert alert-success" role="alert">
-            <%= flash.notice %>
-          </div>
-        <% elsif flash.alert %>
-          <div class="alert alert-danger" role="alert">
-            <%= flash.alert %>
-          </div>
-        <% end %>
-
+        <h1 class="pb-2">Index by Identifier</h1>
         <%= form.text_area :mms_ids, label: 'MMS IDs', control_col: 'col-sm-4' %>
         <%= form.submit "Submit", class: "btn btn-primary" %>
       </div>

@@ -3,7 +3,7 @@
 module AlmaApi
   # Simple API Client using Faraday to get Alma Bib records
   class Client
-    MAX_BIBS_GET = 50 # 100 is Alma API max
+    MAX_BIBS_GET = 100 # 100 is Alma API max
     class Error < StandardError; end
 
     # Get Alma API response for provided MMS IDs, up to value of MAX_BIBS_GET
@@ -17,10 +17,10 @@ module AlmaApi
         raise Error, "Too many MMS IDs provided, exceeds the maximum allowed of #{MAX_BIBS_GET}."
       end
 
-      query = { mms_id: Array.wrap(mmsids).join(','), expand: 'p_avail,e_avail', format: 'json' }
-
+      filtered_mmsids = Array.wrap(mmsids.select { |id| valid_mmsid?(id) })
+      query = { mms_id: filtered_mmsids.join(','), expand: 'p_avail,e_avail', format: 'json' }
       begin
-        faraday.get('/almaws/v1/bibs', query).body
+        JSON.parse(faraday.get('/almaws/v1/bibs', query).body)
       rescue Faraday::Error => e
         alma_error = alma_bibs_error(e)
         alma_error_code = alma_error.fetch('errorCode', nil)
@@ -58,6 +58,11 @@ module AlmaApi
     def alma_bibs_error(error)
       body = JSON.parse(error.response_body) if error.response_body
       body&.dig('errorList', 'error')&.first || {}
+    end
+
+    # Alma MMS IDs start with 99 (to indicate a Bib record)
+    def valid_mmsid?(mmsid)
+      mmsid.starts_with?('99')
     end
   end
 end
