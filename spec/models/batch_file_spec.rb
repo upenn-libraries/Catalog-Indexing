@@ -16,4 +16,10 @@ describe BatchFile do
     expect(file.valid?).to be false
     expect(file.errors[:path].join).to include "can't be blank"
   end
+
+  it 'can have multiple error messages' do
+    messages = %w[One Two]
+    file = build(:batch_file, error_messages: messages)
+    expect(file.error_messages).to eq messages
+  end
 end

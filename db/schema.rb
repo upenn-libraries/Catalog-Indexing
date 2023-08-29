@@ -20,14 +20,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_25_184448) do
     t.string "status"
     t.datetime "started_at"
     t.datetime "completed_at"
-    t.text "error_messages"
+    t.string "error_messages", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["publish_job_id"], name: "index_batch_files_on_publish_job_id"
   end
 
   create_table "publish_jobs", force: :cascade do |t|
-    t.string "target_collections", array: true
+    t.string "target_collections", default: [], array: true
     t.string "status"
     t.string "alma_source"
     t.string "initiated_by"

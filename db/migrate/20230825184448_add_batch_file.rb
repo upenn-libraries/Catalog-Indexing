@@ -9,7 +9,7 @@ class AddBatchFile < ActiveRecord::Migration[7.0]
       t.string :status
       t.datetime :started_at
       t.datetime :completed_at
-      t.text :error_messages
+      t.string :error_messages, array: true, default: []
       t.timestamps
     end
   end
