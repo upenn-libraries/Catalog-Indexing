@@ -52,6 +52,7 @@ module Sftp
       raise Error, "Could not delete file on sftp server: #{e.message}"
     end
 
+    # connect to sftp server
     def sftp
       @sftp ||= Net::SFTP.start(HOST, sftp_username, password: sftp_password)
     rescue RuntimeError => e
