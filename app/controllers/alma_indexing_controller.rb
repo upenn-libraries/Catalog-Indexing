@@ -25,7 +25,7 @@ class AlmaIndexingController < ApplicationController
               'No MMS IDs provided'
             end
     if alert
-      redirect_to(by_id_path, alert: alert)
+      redirect_to(index_by_id_path, alert: alert)
       false
     end
     true
