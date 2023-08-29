@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+# Represent a completed Publish Job from Alma
+class PublishJob < ApplicationRecord
+  include Statuses
+
+  module Sources
+    PRODUCTION = 'production'
+    SANDBOX = 'sandbox'
+    ALL = [PRODUCTION, SANDBOX].freeze
+  end
+
+  has_many :batch_files, dependent: :destroy
+
+  validates :alma_source, inclusion: Sources::ALL, presence: true
+  validates :full, presence: true
+end
