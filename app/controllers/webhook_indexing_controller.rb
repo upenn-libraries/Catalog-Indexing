@@ -16,8 +16,9 @@ class WebhookIndexingController < ApplicationController
     case action
     when 'BIB'
       handle_bib_action(payload)
-    when 'JOB_UPDATED'
-      # do something
+    when 'JOB_END'
+      ProcessPublishJob.perform_async(request.body.string)
+      head :ok
     else
       head(:bad_request)
     end
@@ -51,7 +52,7 @@ class WebhookIndexingController < ApplicationController
   def valid_signature?
     hmac = OpenSSL::HMAC.new ENV.fetch('ALMA_WEBHOOK'), OpenSSL::Digest.new('sha256')
     hmac.update request.body.string
-    signature =  request.get_header('X-Exl-Signature') || request.get_header('HTTP_X_EXL_SIGNATURE')
+    signature = request.get_header('X-Exl-Signature') || request.get_header('HTTP_X_EXL_SIGNATURE')
     signature == Base64.strict_encode64(hmac.digest)
   end
 
