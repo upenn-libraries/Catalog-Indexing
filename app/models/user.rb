@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A User
+# a user
 class User < ApplicationRecord
   devise :rememberable, :timeoutable
   if Rails.env.development?
