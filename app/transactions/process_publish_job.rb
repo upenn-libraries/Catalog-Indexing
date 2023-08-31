@@ -40,7 +40,7 @@ class ProcessPublishJob
     return Failure("No files downloaded from SFTP server using glob: #{files_prefix}") unless sftp_files.any?
 
     Success(publish_job: publish_job, sftp_files: sftp_files)
-  rescue Sftp::Error => e
+  rescue Sftp::Client::Error => e
     Failure("Problem retrieving files from SFTP server: #{e.message}")
   end
 
