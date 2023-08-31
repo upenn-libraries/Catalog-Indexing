@@ -7,7 +7,7 @@ class AlmaIndexingController < ApplicationController
   def index; end
 
   def process_ids
-    IndexByIdentifiers.perform_async mms_ids
+    IndexByIdentifiersJob.perform_async mms_ids
     redirect_to root_path, notice: 'Indexing job enqueued.'
   end
 

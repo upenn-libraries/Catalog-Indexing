@@ -59,7 +59,7 @@ RSpec.describe 'Webhook Indexing requests' do
       headers = { 'X-Exl-Signature': 'e0ooQk9/vgmpK/RmdfMUz7jK0HIQkk4YDDP5dYHq+KY=' }
       post webhook_listen_path, params: json_fixture('job_end_success'), headers: headers
       expect(response).to have_http_status :ok
-      expect(ProcessPublishJob.jobs.size).to eq 1
+      expect(PublishJobProcessJob.jobs.size).to eq 1
     end
 
     it 'handles validated requests with unexpected action' do

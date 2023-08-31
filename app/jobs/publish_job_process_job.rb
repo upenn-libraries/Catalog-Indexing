@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Index to Solr with MMS IDs, via Alma API and Traject
-class ProcessPublishJob
+class PublishJobProcessJob
   include Sidekiq::Job
 
   # @param [String] webhook_body
@@ -13,10 +13,10 @@ class ProcessPublishJob
     # build out publish - step
     publish = PublishJob.create(
       status: PublishJob::Statuses::PENDING,
-      alma_source: PublishJob::Sources::PRODUCTION, # TODO: how to know if sandbox?
+      alma_source: PublishJob::Sources::PRODUCTION, # TODO: how to know if sandbox? somehow in the webhook body?
       webhook_body: webhook_body,
       started_at: Time.zone.now,
-      target_collections: Array.wrap(Solr::Config.collection_name), # TODO: how to know if otherwise? or multiple? a more dynamic config is needed
+      target_collections: Array.wrap(Solr::Config.collection_name), # TODO: how to know if otherwise? or multiple? e.g., ConfigService.full_dump_target_collections
       initiated_by: parsed_webhook_body.dig('job_instance', 'submitted_by', 'desc')
     )
 

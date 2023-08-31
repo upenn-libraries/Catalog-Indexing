@@ -17,7 +17,7 @@ class WebhookIndexingController < ApplicationController
     when 'BIB'
       handle_bib_action(payload)
     when 'JOB_END'
-      ProcessPublishJob.perform_async(request.body.string)
+      PublishJobProcessJob.perform_async(request.body.string)
       head :ok
     else
       head(:bad_request)
