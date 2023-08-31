@@ -36,12 +36,15 @@ module Sftp
       end
     end
 
+    # @todo i altered this to return the Sftp::File, did i slow the method down?
     # download all matching files on sftp server in parallel
     # @param [String] matching prefix to match files in directory
-    # @return [Array <Net::SFTP::Operations::Download>]
+    # @return [Array <Sftp::File>]
     def download_all(matching:)
-      downloads = files(matching: matching).map { |file| download(file, wait: false) }
-      downloads.each(&:wait)
+      files(matching: matching).map do |file|
+        download(file, wait: true)
+        file
+      end
     end
 
     # delete file on sftp server

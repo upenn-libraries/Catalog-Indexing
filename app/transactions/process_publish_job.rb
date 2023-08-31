@@ -11,13 +11,13 @@ class ProcessPublishJob
   step :download_all_files
   step :create_batch_files
   step :enqueue_batch_file_jobs
-  step :update_process_job
+  step :update_publish_job
 
   # @param [String] webhook_body
   # @return [Dry::Monads::Result]
   def initialize_publish_job(webhook_body:)
     parsed_webhook_body = JSON.parse(webhook_body)
-    publish_job = create_publish_job(parsed_webhook_body)
+    publish_job = create_publish_job(webhook_body, parsed_webhook_body.dig('job_instance', 'submitted_by', 'desc'))
     unless (files_date = parsed_webhook_body.dig('job_instance', 'status_date'))
       Failure("Problem getting status date from webhook response for PublishJob ##{publish_job.id}")
     end
@@ -52,7 +52,7 @@ class ProcessPublishJob
       BatchFile.create!(
         publish_job_id: publish_job.id,
         path: ftp_file.local_path,
-        status: BatchFile::Statuses::PENDING
+        status: Statuses::PENDING
       )
     rescue StandardError => e
       # Notify -> problem with batch file preparation: #{e.message}, store notice on publish_job? fail job?
@@ -66,7 +66,7 @@ class ProcessPublishJob
   # @return [Dry::Monads::Result]
   def enqueue_batch_file_jobs(publish_job:, batch_files:)
     batch_files.each_slice(500) do |slice|
-      ProcessBulkFileJob.perform_bulk slice.map(&:id)
+      ProcessBulkFileJob.perform_bulk [slice.map(&:id)]
     end
 
     Success(publish_job: publish_job)
@@ -75,7 +75,7 @@ class ProcessPublishJob
   # @param [PublishJob] publish_job
   # @return [Dry::Monads::Result]
   def update_publish_job(publish_job:)
-    publish_job.status = PublishJob::Statuses::IN_PROGRESS
+    publish_job.status = Statuses::IN_PROGRESS
     publish_job.save
 
     # Notify -> "PublishJob ##{publish_job.id} off and running!"
@@ -85,12 +85,13 @@ class ProcessPublishJob
 
   private
 
-  # @param [Hash] parsed_webhook_body
+  # @param [String] webhook_body
+  # @param [String] job_submitter
   # @return [PublishJob]
-  def create_publish_job(parsed_webhook_body)
-    PublishJob.create!(status: PublishJob::Statuses::PENDING, started_at: Time.zone.now,
+  def create_publish_job(webhook_body, job_submitter)
+    PublishJob.create!(status: Statuses::PENDING, started_at: Time.zone.now,
                        alma_source: PublishJob::Sources::PRODUCTION, webhook_body: webhook_body,
-                       target_collections: Array.wrap(Solr::Config.collection_name),
-                       initiated_by: parsed_webhook_body.dig('job_instance', 'submitted_by', 'desc'))
+                       target_collections: Array.wrap(Solr::Config.new.collection_name),
+                       initiated_by: job_submitter)
   end
 end

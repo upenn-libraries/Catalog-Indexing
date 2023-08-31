@@ -6,7 +6,7 @@ class PublishJobProcessJob
 
   # @param [String] webhook_body
   def perform(webhook_body)
-    outcome = ProcessPublishJob.call(webhook_body: webhook_body)
+    outcome = ProcessPublishJob.new.call(webhook_body: webhook_body)
     outcome.success?
     # Notify based on failure outcomes?
   end
