@@ -12,6 +12,9 @@
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="http://localhost:8983" target="_blank">Solr Admin UI</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.starts_with?(users_path) %>" aria-current="page" href="<%= users_path %>">Users</a>
+        </li>
       </ul>
       <ul class="navbar-nav ms-auto">
         <% if user_signed_in? %>
