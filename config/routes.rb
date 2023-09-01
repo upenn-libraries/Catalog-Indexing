@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 
   root to: redirect('/login')
 
+  resources :users, except: %w[new create edit update destroy]
+
   scope :indexing do
     get 'by-id', to: 'alma_indexing#index', as: 'index_by_id'
     post 'process', to: 'alma_indexing#process_ids', as: 'process_ids'
