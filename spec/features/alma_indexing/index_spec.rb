@@ -4,7 +4,7 @@ describe 'the alma indexing process' do
   end
 
   it 'succeeds with valid IDs' do
-    fill_in "MMS IDs", with: '1987342, 1239874'
+    fill_in 'MMS IDs', with: '1987342, 1239874'
     click_on 'Submit'
 
     expect(find('div.alert')).to have_text 'Indexing job enqueued.'
