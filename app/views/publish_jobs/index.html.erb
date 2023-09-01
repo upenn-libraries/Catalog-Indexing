@@ -1,0 +1,29 @@
+<h2>Publishing Jobs</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Started</th>
+      <th scope="col">Status</th>
+      <th scope="col">Batch Files</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @publish_jobs.each do |job| %>
+    <tr>
+      <th scope="row">
+        <%= link_to job.id, publish_job_path(job) %>
+      </th>
+      <td><%= job.started_at %></td>
+      <td>
+        <span class="badge bg-primary rounded-pill">
+          <%= job.status.titleize %>
+        </span>
+      </td>
+      <td><%= job.batch_files.length %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

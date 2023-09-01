@@ -10,6 +10,9 @@
           <a class="nav-link <%= 'active' if request.path.starts_with?(index_by_id_path) %>" aria-current="page" href="<%= index_by_id_path %>">Index by Identifier</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link <%= 'active' if request.path.starts_with?(publish_jobs_path) %>" aria-current="page" href="<%= publish_jobs_path %>">Publish Jobs</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" aria-current="page" href="http://localhost:8983" target="_blank">Solr Admin UI</a>
         </li>
       </ul>
