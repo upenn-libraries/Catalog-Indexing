@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe 'Webhook Indexing requests' do
-  let(:user) { create(:user) }
-
-  before { sign_in user }
-
   context 'when receiving get request' do
     it 'successfully responds' do
       get webhook_challenge_path, params: { challenge: 'test' }
