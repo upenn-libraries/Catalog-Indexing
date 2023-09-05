@@ -14,4 +14,10 @@ class PublishJob < ApplicationRecord
 
   validates :alma_source, inclusion: Sources::ALL, presence: true
   validates :full, presence: true
+  validates :webhook_body, presence: true
+
+  # @return [String, nil]
+  def alma_job_identifier
+    webhook_body.dig('job_instance', 'id')
+  end
 end

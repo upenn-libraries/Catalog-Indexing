@@ -24,6 +24,12 @@ describe PublishJob do
     expect(publish.errors[:alma_source].join).to include 'is not included'
   end
 
+  it 'requires a webhook_body' do
+    publish = build(:publish_job, webhook_body: nil)
+    expect(publish.valid?).to be false
+    expect(publish.errors[:webhook_body].join).to include "can't be blank"
+  end
+
   it 'requires a full? value' do
     publish = build(:publish_job, full: nil)
     expect(publish.valid?).to be false

@@ -7,7 +7,7 @@ describe ProcessPublishJob do
   let(:sftp_client) { instance_double Sftp::Client }
 
   before do
-    allow(sftp_client).to receive(:download_all).and_return(sftp_files)
+    allow(sftp_client).to receive(:files).and_return(sftp_files)
     allow(Sftp::Client).to receive(:new).and_return(sftp_client)
   end
 
@@ -18,6 +18,8 @@ describe ProcessPublishJob do
         [Sftp::File.new('all_ub_ah_b_2023090100_12345678900000_new_001.xml.tar.gz')]
       end
       let(:outcome) { transaction.call(webhook_body: webhook_response) }
+
+      before { allow(sftp_client).to receive(:download) }
 
       it 'is successful' do
         expect(outcome).to be_success
@@ -63,16 +65,16 @@ describe ProcessPublishJob do
 
     context 'with an unexpected SFTP error' do
       let(:webhook_response) { json_fixture 'job_end_success' }
-      let(:sftp_files) { [] }
+      let(:sftp_files) { ['dummy_file'] }
 
       before do
-        allow(sftp_client).to receive(:download_all).and_raise Sftp::Client::Error
+        allow(sftp_client).to receive(:download).and_raise Sftp::Client::Error
       end
 
       it 'returns a failure monad with appropriate message' do
         outcome = transaction.call webhook_body: webhook_response
         expect(outcome).to be_failure
-        expect(outcome.failure).to include('Problem retrieving files')
+        expect(outcome.failure).to include('Problem processing SFTP file')
       end
     end
   end

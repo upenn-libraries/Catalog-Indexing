@@ -7,14 +7,14 @@
   <dd><%= @publish_job.status %></dd>
   <dt>Source</dt>
   <dd><%= @publish_job.alma_source %></dd>
-  <dt>Initiated By</dt>
-  <dd><%= @publish_job.initiated_by %></dd>
   <dt>Full?</dt>
   <dd><%= @publish_job.full %></dd>
   <dt>Webhook Body</dt>
-  <dd><%= JSON.pretty_generate(
-            JSON.parse(@publish_job.webhook_body)
-          ) if @publish_job.webhook_body.present? %></dd>
+  <dd>
+    <pre>
+      <%= @publish_job.webhook_body %>
+    </pre>
+  </dd>
   <dt>Started At</dt>
   <dd><%= @publish_job.started_at %></dd>
   <dt>Completed At</dt>

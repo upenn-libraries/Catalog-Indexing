@@ -12,7 +12,7 @@ class PublishJobsController < ApplicationController
 
   def destroy
     # TODO: under what conditions should we allow #destroy? only if completed? this would end up destroying all child
-    #       BatchFiles, which might end up deleting files from local storage and/or SFTP server
+    #       BatchFiles, which could end up deleting files from local storage and/or SFTP server
     @publish_job.destroy
   end
 

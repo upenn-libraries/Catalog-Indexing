@@ -8,21 +8,19 @@ class ProcessPublishJob
   include Dry::Transaction(container: Container)
 
   step :initialize_publish_job
-  step :download_all_files
-  step :create_batch_files
-  step :enqueue_batch_file_jobs
+  step :initialize_sftp_session
+  step :get_sftp_files
   step :update_publish_job
+  step :process_sftp_files
 
   # @param [String] webhook_body
   # @return [Dry::Monads::Result]
   def initialize_publish_job(webhook_body:)
-    parsed_webhook_body = JSON.parse(webhook_body)
-    publish_job = create_publish_job(webhook_body, parsed_webhook_body.dig('job_instance', 'submitted_by', 'desc'))
-    unless (files_date = parsed_webhook_body.dig('job_instance', 'status_date'))
-      Failure("Problem getting status date from webhook response for PublishJob ##{publish_job.id}")
-    end
-
-    Success(publish_job: publish_job, files_date: files_date)
+    webhook_data = JSON.parse webhook_body
+    publish_job = PublishJob.create!(status: Statuses::PENDING, started_at: Time.zone.now,
+                                     alma_source: PublishJob::Sources::PRODUCTION, webhook_body: webhook_data,
+                                     target_collections: Array.wrap(Solr::Config.new.collection_name))
+    Success(publish_job: publish_job)
   rescue JSON::JSONError => e
     Failure("Problem parsing webhook response: #{e.message}")
   rescue ActiveRecord::RecordInvalid => e
@@ -30,68 +28,72 @@ class ProcessPublishJob
   end
 
   # @param [PublishJob] publish_job
-  # @param [String] files_date
+  def initialize_sftp_session(publish_job:)
+    sftp_session = Sftp::Client.new
+    Success(publish_job: publish_job, sftp_session: sftp_session)
+  rescue Sftp::Client::Error => e
+    Failure("Problem connecting to the SFTP server: #{e.message}")
+  end
+
+  # get Sftp::File objects via dir entries/glob
+  # @param [PublishJob] publish_job
+  # @param [Sftp::Client] sftp_session
   # @return [Dry::Monads::Result]
-  def download_all_files(publish_job:, files_date:, sftp_client: Sftp::Client.new)
-    status_date = DateTime.parse(files_date)
-    files_prefix = "all_ub_ah_b_#{status_date.strftime('%Y%m%d')}*.xml.tar.gz" # make prefix configurable
-    sftp_files = sftp_client.download_all matching: files_prefix
+  def get_sftp_files(publish_job:, sftp_session:)
+    sftp_files = sftp_session.files matching: publish_job.alma_job_identifier
+    if sftp_files.empty?
+      return Failure("No files downloaded for Alma Publishing job with ID: #{publish_job.alma_job_identifier}")
+    end
 
-    return Failure("No files downloaded from SFTP server using glob: #{files_prefix}") unless sftp_files.any?
-
-    Success(publish_job: publish_job, sftp_files: sftp_files)
+    Success(publish_job: publish_job, sftp_session: sftp_session, sftp_files: sftp_files)
   rescue Sftp::Client::Error => e
     Failure("Problem retrieving files from SFTP server: #{e.message}")
   end
 
+  # Files are ready to process, update PublishJob to IN_PROGRESS
+  # @todo use AASM instead?
   # @param [PublishJob] publish_job
+  # @param [Sftp::Client] sftp_session
   # @param [Array<Sftp::File>] sftp_files
   # @return [Dry::Monads::Result]
-  def create_batch_files(publish_job:, sftp_files:)
-    batch_files = sftp_files.map do |ftp_file|
-      BatchFile.create!(
-        publish_job_id: publish_job.id,
-        path: ftp_file.local_path,
-        status: Statuses::PENDING
-      )
-    rescue StandardError => e
-      # Notify -> problem with batch file preparation: #{e.message}, store notice on publish_job? fail job?
-      next
-    end
-    Success(publish_job: publish_job, batch_files: batch_files)
-  end
-
-  # @param [PublishJob] publish_job
-  # @param [Array<BatchFile>] batch_files
-  # @return [Dry::Monads::Result]
-  def enqueue_batch_file_jobs(publish_job:, batch_files:)
-    batch_files.each_slice(500) do |slice|
-      ProcessBulkFileJob.perform_bulk [slice.map(&:id)]
-    end
-
-    Success(publish_job: publish_job)
-  end
-
-  # @param [PublishJob] publish_job
-  # @return [Dry::Monads::Result]
-  def update_publish_job(publish_job:)
+  def update_publish_job(publish_job:, sftp_session:, sftp_files:)
     publish_job.status = Statuses::IN_PROGRESS
     publish_job.save
 
     # Notify -> "PublishJob ##{publish_job.id} off and running!"
 
+    Success(publish_job: publish_job, sftp_session: sftp_session, sftp_files: sftp_files)
+  end
+
+  # In batches, build BatchFile objects and enqueue processing jobs
+  # @param [PublishJob] publish_job
+  # @param [Sftp::Client] sftp_session
+  # @param [Array<Sftp::File>] sftp_files
+  # @return [Dry::Monads::Result]
+  def process_sftp_files(publish_job:, sftp_session:, sftp_files:)
+    sftp_files.each_slice(25) do |slice|
+      slice.map do |file|
+        sftp_session.download file, wait: true
+      end
+      build_and_enqueue_build_files(publish_job, slice)
+    end
     Success(publish_job: publish_job)
+  rescue StandardError => e
+    publish_job.status = Statuses::FAILED # TODO: how would this be done with AASM?
+    publish_job.save
+    Failure("Problem processing SFTP file for Publish Job (ID: #{publish_job.id}): #{e.message}")
   end
 
   private
 
-  # @param [String] webhook_body
-  # @param [String] job_submitter
-  # @return [PublishJob]
-  def create_publish_job(webhook_body, job_submitter)
-    PublishJob.create!(status: Statuses::PENDING, started_at: Time.zone.now,
-                       alma_source: PublishJob::Sources::PRODUCTION, webhook_body: webhook_body,
-                       target_collections: Array.wrap(Solr::Config.new.collection_name),
-                       initiated_by: job_submitter)
+  # @param [PublishJob] publish_job
+  # @param [Array<Sftp::File>] sftp_files
+  def build_and_enqueue_build_files(publish_job, sftp_files)
+    batch_file_jobs_params = sftp_files.map do |sftp_file|
+      batch_file = BatchFile.create!(publish_job_id: publish_job.id, path: sftp_file.local_path,
+                                     status: Statuses::PENDING)
+      Array.wrap(batch_file.id)
+    end
+    ProcessBulkFileJob.perform_bulk(batch_file_jobs_params)
   end
 end
