@@ -28,9 +28,10 @@ describe Sftp::File do
     end
 
     it 'returns true when file exists in local storage' do
-      tempfile = Tempfile.create(file_name, Rails.root.join('storage'))
-      file = described_class.new(File.basename(tempfile.path))
-      expect(file).to be_downloaded
+      Tempfile.create(file_name, Rails.root.join('storage')) do |tempfile|
+        file = described_class.new(File.basename(tempfile.path))
+        expect(file).to be_downloaded
+      end
     end
   end
 end
