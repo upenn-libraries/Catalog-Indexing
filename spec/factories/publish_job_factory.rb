@@ -6,7 +6,11 @@ FactoryBot.define do
     status { Statuses::PENDING }
     alma_source { PublishJob::Sources::PRODUCTION }
     full { true }
-    webhook_body { {} }
+    webhook_body do
+      { 'job_instance' => {
+        'id' => '12345678'
+      } }
+    end
 
     factory :publish_job_with_files do
       transient do

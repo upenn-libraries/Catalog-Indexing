@@ -73,5 +73,11 @@ RSpec.describe 'Webhook Indexing requests' do
       post webhook_listen_path, params: unexpected_bib_event_json, headers: headers
       expect(response).to have_http_status :bad_request
     end
+
+    it 'handles requests resulting in JSON parsing errors' do
+      headers = { 'X-Exl-Signature': 'Va+tT44R3GjbLKPFhD8usw9zMCfzZn+MejOv9dGN9hY=' }
+      post webhook_listen_path, params: 'invalid JSON', headers: headers
+      expect(response).to have_http_status :unprocessable_entity
+    end
   end
 end

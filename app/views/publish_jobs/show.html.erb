@@ -12,7 +12,7 @@
   <dt>Webhook Body</dt>
   <dd>
     <pre>
-      <%= @publish_job.webhook_body %>
+      <%= JSON.pretty_generate @publish_job.webhook_body %>
     </pre>
   </dd>
   <dt>Started At</dt>

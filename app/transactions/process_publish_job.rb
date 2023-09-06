@@ -40,7 +40,7 @@ class ProcessPublishJob
   # @param [Sftp::Client] sftp_session
   # @return [Dry::Monads::Result]
   def get_sftp_files(publish_job:, sftp_session:)
-    sftp_files = sftp_session.files matching: publish_job.alma_job_identifier
+    sftp_files = sftp_session.files matching: /#{publish_job.alma_job_identifier}/
     if sftp_files.empty?
       return Failure("No files downloaded for Alma Publishing job with ID: #{publish_job.alma_job_identifier}")
     end
@@ -65,16 +65,15 @@ class ProcessPublishJob
     Success(publish_job: publish_job, sftp_session: sftp_session, sftp_files: sftp_files)
   end
 
-  # In batches, build BatchFile objects and enqueue processing jobs
+  # In batches, download files, build BatchFile objects and enqueue processing jobs
   # @param [PublishJob] publish_job
   # @param [Sftp::Client] sftp_session
   # @param [Array<Sftp::File>] sftp_files
   # @return [Dry::Monads::Result]
   def process_sftp_files(publish_job:, sftp_session:, sftp_files:)
-    sftp_files.each_slice(25) do |slice|
-      slice.map do |file|
-        sftp_session.download file, wait: true
-      end
+    sftp_files.each_slice(20) do |slice|
+      downloads = slice.map { |file| sftp_session.download(file, wait: false) }
+      downloads.each(&:wait) # SFTP downloads occur concurrently here
       build_and_enqueue_build_files(publish_job, slice)
     end
     Success(publish_job: publish_job)

@@ -11,6 +11,10 @@ describe ProcessPublishJob do
     allow(Sftp::Client).to receive(:new).and_return(sftp_client)
   end
 
+  after do
+    Sidekiq::Worker.clear_all
+  end
+
   describe '#call' do
     context 'with valid webhook response body' do
       let(:webhook_response) { json_fixture 'job_end_success' }
