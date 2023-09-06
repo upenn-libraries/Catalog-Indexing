@@ -1,19 +1,23 @@
-describe 'the alma indexing process' do
-  before do
-    visit index_by_id_path
-  end
+# frozen_string_literal: true
 
-  it 'succeeds with valid IDs' do
-    fill_in 'MMS IDs', with: '1987342, 1239874'
-    click_on 'Submit'
+describe 'Alma Indexing Index Page' do
+  context 'when submitting IDs' do
+    before do
+      visit index_by_id_path
+    end
 
-    expect(find('div.alert')).to have_text 'Indexing job enqueued.'
-  end
+    it 'succeeds with valid IDs' do
+      fill_in 'MMS IDs', with: '1987342, 1239874'
+      click_on 'Submit'
 
-  it 'fails with invalid IDs' do
-    fill_in 'MMS IDs', with: 'test, ' * 101
-    click_on 'Submit'
+      expect(find('div.alert')).to have_text 'Indexing job enqueued.'
+    end
 
-    expect(find('div.alert')).to have_text 'Number of MMS IDs (101) exceeds the limit (100)'
+    it 'fails with invalid IDs' do
+      fill_in 'MMS IDs', with: 'test, ' * 101
+      click_on 'Submit'
+
+      expect(find('div.alert')).to have_text 'Number of MMS IDs (101) exceeds the limit (100)'
+    end
   end
 end
