@@ -32,6 +32,8 @@ group :development, :test do
   gem 'factory_bot_rails', '~> 6.0'
   gem 'rspec-rails', '~> 6.0.0'
   gem 'webmock'
+  gem 'capybara'
+  gem 'selenium-webdriver'
 end
 
 group :development do
