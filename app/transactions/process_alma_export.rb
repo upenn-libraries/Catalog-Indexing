@@ -51,18 +51,15 @@ class ProcessAlmaExport
   end
 
   # Files are ready to process, update AlmaExport to IN_PROGRESS
-  # @todo use AASM instead?
   # @param [AlmaExport] alma_export
-  # @param [Sftp::Client] sftp_session
-  # @param [Array<Sftp::File>] sftp_files
   # @return [Dry::Monads::Result]
-  def update_alma_export(alma_export:, sftp_session:, sftp_files:)
+  def update_alma_export(alma_export:, **args)
     alma_export.status = Statuses::IN_PROGRESS
     alma_export.save
 
     # Notify -> "AlmaExport ##{alma_export.id} off and running!"
 
-    Success(alma_export: alma_export, sftp_session: sftp_session, sftp_files: sftp_files)
+    Success(alma_export: alma_export, **args)
   end
 
   # In batches, download files, build BatchFile objects and enqueue processing jobs
