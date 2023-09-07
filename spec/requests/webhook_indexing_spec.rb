@@ -30,7 +30,10 @@ RSpec.describe 'Webhook Indexing requests' do
   end
 
   context 'when receiving POST request' do
-    before { allow(ENV).to receive(:fetch).with('ALMA_WEBHOOK').and_return('test') }
+    before do
+      allow(ENV).to receive(:fetch).with('ALMA_WEBHOOK').and_return('test')
+      allow(ENV).to receive(:fetch).with('SOLR_COLLECTION', 'catalog-test').and_return(nil)
+    end
 
     it 'validates message integrity' do
       post webhook_listen_path, params: unexpected_action_json, headers: { 'X-Exl-Signature': 'baaaaaaad' }

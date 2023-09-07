@@ -15,17 +15,21 @@ class WebhookIndexingController < ApplicationController
     handle_action_type(payload)
   rescue JSON::ParserError => _e
     head(:unprocessable_entity)
+  rescue ActiveRecord::RecordInvalid => _e
+    # TODO: Notify of error
+    head(:internal_server_error)
   end
 
   private
 
-  # @param [String] payload
+  # @param [Hash] payload
+  # @return [TrueClass]
   def handle_action_type(payload)
     case payload['action']
     when 'BIB'
       handle_bib_action(payload)
     when 'JOB_END'
-      handle_job_action
+      handle_job_action(payload)
     else
       head(:bad_request)
     end
@@ -52,8 +56,13 @@ class WebhookIndexingController < ApplicationController
     end
   end
 
-  def handle_job_action
-    ProcessAlmaExportJob.perform_async(request.body.string)
+  # @param [Hash] payload
+  # @return [TrueClass]
+  def handle_job_action(payload)
+    alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
+                                     webhook_body: payload,
+                                     target_collections: Array.wrap(Solr::Config.new.collection_name))
+    ProcessAlmaExportJob.perform_async(alma_export.id)
     head :ok
   end
 

@@ -10,7 +10,10 @@ describe ProcessAlmaExport do
   end
 
   describe '#call' do
+    let(:alma_export) { create(:alma_export, webhook_body: JSON.parse(json_fixture('job_end_success'))) }
     let(:sftp_client) { instance_double Sftp::Client }
+    let(:sftp_files) { [] }
+    let(:outcome) { transaction.call(alma_export_id: alma_export.id) }
 
     before do
       allow(sftp_client).to receive(:files).and_return(sftp_files)
@@ -21,7 +24,6 @@ describe ProcessAlmaExport do
       let(:sftp_files) do
         [Sftp::File.new('all_ub_ah_b_2023090100_12345678900000_new_001.xml.tar.gz')]
       end
-      let(:outcome) { transaction.call(webhook_body: json_fixture('job_end_success')) }
 
       before do
         downloader = instance_double(Net::SFTP::Operations::Download)
@@ -49,30 +51,36 @@ describe ProcessAlmaExport do
       end
     end
 
-    context 'with bad webhook response' do
-      let(:webhook_response) { 'bad' }
-      let(:sftp_files) { [] }
+    context 'with a bad AlmaExport identifier' do
+      before do
+        allow(AlmaExport).to receive(:find).and_raise ActiveRecord::RecordNotFound
+      end
 
       it 'returns a failure monad with appropriate message' do
-        outcome = transaction.call webhook_body: webhook_response
         expect(outcome).to be_failure
-        expect(outcome.failure).to include('Problem parsing webhook response')
+        expect(outcome.failure).to include('does not exist')
+      end
+    end
+
+    context 'with a AlmaExport not in PENDING status' do
+      let(:alma_export) do
+        create(:alma_export, status: Statuses::IN_PROGRESS, webhook_body: JSON.parse(json_fixture('job_end_success')))
+      end
+
+      it 'returns a failure monad with appropriate message' do
+        expect(outcome).to be_failure
+        expect(outcome.failure).to include("must be in 'pending' state")
       end
     end
 
     context 'with no files matching on SFTP server' do
-      let(:webhook_response) { json_fixture 'job_end_success' }
-      let(:sftp_files) { [] }
-
       it 'returns a failure monad with appropriate message' do
-        outcome = transaction.call webhook_body: webhook_response
         expect(outcome).to be_failure
         expect(outcome.failure).to include('No files downloaded')
       end
     end
 
     context 'with an unexpected SFTP error' do
-      let(:webhook_response) { json_fixture 'job_end_success' }
       let(:sftp_files) { ['dummy_file'] }
 
       before do
@@ -80,7 +88,6 @@ describe ProcessAlmaExport do
       end
 
       it 'returns a failure monad with appropriate message' do
-        outcome = transaction.call webhook_body: webhook_response
         expect(outcome).to be_failure
         expect(outcome.failure).to include('Problem processing SFTP file')
       end

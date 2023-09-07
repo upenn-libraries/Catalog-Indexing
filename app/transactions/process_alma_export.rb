@@ -7,24 +7,25 @@ require 'dry/transaction'
 class ProcessAlmaExport
   include Dry::Transaction(container: Container)
 
-  step :initialize_alma_export
+  step :load_alma_export
   step :initialize_sftp_session
   step :get_sftp_files
   step :update_alma_export
   step :process_sftp_files
 
-  # @param [String] webhook_body
+  # @param [String] alma_export_id
   # @return [Dry::Monads::Result]
-  def initialize_alma_export(webhook_body:)
-    webhook_data = JSON.parse webhook_body
-    alma_export = AlmaExport.create!(status: Statuses::PENDING, started_at: Time.zone.now,
-                                     alma_source: AlmaExport::Sources::PRODUCTION, webhook_body: webhook_data,
-                                     target_collections: Array.wrap(Solr::Config.new.collection_name))
+  def load_alma_export(alma_export_id:)
+    alma_export = AlmaExport.find alma_export_id
+    unless alma_export.status == Statuses::PENDING
+      return Failure("AlmaExport with ID #{alma_export_id} is in #{alma_export.status}. It must be in 'pending' state.")
+    end
+
     Success(alma_export: alma_export)
   rescue JSON::JSONError => e
     Failure("Problem parsing webhook response: #{e.message}")
-  rescue ActiveRecord::RecordInvalid => e
-    Failure("Invalid AlmaExport attributes: #{e.message}")
+  rescue ActiveRecord::RecordNotFound => _e
+    Failure("AlmaExport record with ID #{alma_export_id} does not exist.")
   end
 
   # @param [AlmaExport] alma_export
@@ -55,6 +56,7 @@ class ProcessAlmaExport
   # @return [Dry::Monads::Result]
   def update_alma_export(alma_export:, **args)
     alma_export.status = Statuses::IN_PROGRESS
+    alma_export.started_at = Time.zone.now
     alma_export.save
 
     # Notify -> "AlmaExport ##{alma_export.id} off and running!"
