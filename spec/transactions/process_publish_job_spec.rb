@@ -32,8 +32,8 @@ describe ProcessPublishJob do
         expect(outcome).to be_success
       end
 
-      it 'enqueues the right number of ProcessBulkFileJobs' do
-        expect { outcome }.to change { ProcessBulkFileJob.jobs.count }.by sftp_files.count
+      it 'enqueues the right number of ProcessBatchFileJobs' do
+        expect { outcome }.to change { ProcessBatchFileJob.jobs.count }.by sftp_files.count
       end
 
       it 'creates BatchFiles' do

@@ -93,6 +93,6 @@ class ProcessPublishJob
                                      status: Statuses::PENDING)
       Array.wrap(batch_file.id)
     end
-    ProcessBulkFileJob.perform_bulk(batch_file_jobs_params)
+    ProcessBatchFileJob.perform_bulk(batch_file_jobs_params)
   end
 end
