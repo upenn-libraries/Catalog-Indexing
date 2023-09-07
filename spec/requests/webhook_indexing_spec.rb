@@ -12,10 +12,6 @@ RSpec.describe 'Webhook Indexing requests' do
       'bib' => { 'mms_id' => '9977795539303681', 'anies' => [] } }.to_json
   end
 
-  after do
-    Sidekiq::Worker.clear_all
-  end
-
   context 'when receiving GET request' do
     it 'successfully responds' do
       get webhook_challenge_path, params: { challenge: 'test' }

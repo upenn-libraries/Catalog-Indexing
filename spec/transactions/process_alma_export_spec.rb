@@ -5,10 +5,6 @@ describe ProcessAlmaExport do
 
   let(:transaction) { described_class.new }
 
-  after do
-    Sidekiq::Worker.clear_all
-  end
-
   describe '#call' do
     let(:alma_export) { create(:alma_export, webhook_body: JSON.parse(json_fixture('job_end_success'))) }
     let(:sftp_client) { instance_double Sftp::Client }
