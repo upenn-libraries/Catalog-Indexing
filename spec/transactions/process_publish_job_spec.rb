@@ -4,18 +4,19 @@ describe ProcessPublishJob do
   include FixtureHelpers
 
   let(:transaction) { described_class.new }
-  let(:sftp_client) { instance_double Sftp::Client }
-
-  before do
-    allow(sftp_client).to receive(:files).and_return(sftp_files)
-    allow(Sftp::Client).to receive(:new).and_return(sftp_client)
-  end
 
   after do
     Sidekiq::Worker.clear_all
   end
 
   describe '#call' do
+    let(:sftp_client) { instance_double Sftp::Client }
+
+    before do
+      allow(sftp_client).to receive(:files).and_return(sftp_files)
+      allow(Sftp::Client).to receive(:new).and_return(sftp_client)
+    end
+
     context 'with valid webhook response body' do
       let(:sftp_files) do
         [Sftp::File.new('all_ub_ah_b_2023090100_12345678900000_new_001.xml.tar.gz')]
@@ -83,6 +84,31 @@ describe ProcessPublishJob do
         expect(outcome).to be_failure
         expect(outcome.failure).to include('Problem processing SFTP file')
       end
+    end
+  end
+
+  describe '#files_matching_regex' do
+    let(:files) do
+      [
+        '.', '..', # returned by dir.entries command, ignore
+        'prefix_2023010100_123456789_new_1.xml.tar.gz',
+        'prefix_2023010100_123456789_new_23.xml.tar.gz',
+        'prefix_2023010100_123456789_new_900.xml.tar.gz',
+        'prefix_2023010100_123456789_new_1.zip', # wrong extension
+        'prefix_2023010100_555555555_new_1.xml.tar.gz', # wrong job id
+       ]
+    end
+
+    it 'can be used to select only the desired files' do
+      regex = transaction.files_matching_regex('123456789')
+      expect(files.grep(regex)).to eq %w[prefix_2023010100_123456789_new_1.xml.tar.gz
+                                         prefix_2023010100_123456789_new_23.xml.tar.gz
+                                         prefix_2023010100_123456789_new_900.xml.tar.gz]
+    end
+
+    it 'returns no files if a blank parameter is provided' do
+      regex = transaction.files_matching_regex(nil)
+      expect(files.grep(regex)).to be_empty
     end
   end
 end

@@ -40,7 +40,7 @@ class ProcessPublishJob
   # @param [Sftp::Client] sftp_session
   # @return [Dry::Monads::Result]
   def get_sftp_files(publish_job:, sftp_session:)
-    sftp_files = sftp_session.files matching: /#{publish_job.alma_job_identifier}/
+    sftp_files = sftp_session.files matching: files_matching_regex(publish_job.alma_job_identifier)
     if sftp_files.empty?
       return Failure("No files downloaded for Alma Publishing job with ID: #{publish_job.alma_job_identifier}")
     end
@@ -81,6 +81,13 @@ class ProcessPublishJob
     publish_job.status = Statuses::FAILED # TODO: how would this be done with AASM?
     publish_job.save
     Failure("Problem processing SFTP file for Publish Job (ID: #{publish_job.id}): #{e.message}")
+  end
+
+  # Return a regex suitable for matching only the output files of the specified FULL PUBLISH job
+  # @param [String] alma_job_identifier
+  # @return [Regexp]
+  def files_matching_regex(alma_job_identifier)
+    /_#{alma_job_identifier}_new_\d+.xml.tar.gz/
   end
 
   private

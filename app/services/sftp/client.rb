@@ -19,11 +19,11 @@ module Sftp
     end
 
     # list files on sftp server that match pattern, returning Sftp::File objects
-    # @param [Regexp] matching prefix to match files in directory
+    # @param [Regexp] matching regex to match files in directory
     # @return [Array<Sftp::File>] list of Sftp::File objects
     def files(matching:)
       sftp.dir.entries(ROOT).filter_map do |entry|
-        Sftp::File.new(entry.name) if desired_file?(entry.name, matching)
+        Sftp::File.new(entry.name) if entry.name.match?(matching)
       end
     rescue RuntimeError => e
       raise Error, "Could not list files on the sftp server: #{e.message}"
@@ -54,14 +54,6 @@ module Sftp
     end
 
     private
-
-    # Determine if a file in the SFTP directory is desired in this operation
-    # @param [String] file_name
-    # @param [Regexp] matching regex
-    # @return [Boolean]
-    def desired_file?(file_name, matching)
-      file_name.match?(matching) && file_name.ends_with?('.xml.tar.gz')
-    end
 
     # @return [String]
     def sftp_username
