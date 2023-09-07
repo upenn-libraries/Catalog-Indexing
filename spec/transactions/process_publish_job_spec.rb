@@ -17,13 +17,16 @@ describe ProcessPublishJob do
 
   describe '#call' do
     context 'with valid webhook response body' do
-      let(:webhook_response) { json_fixture 'job_end_success' }
       let(:sftp_files) do
         [Sftp::File.new('all_ub_ah_b_2023090100_12345678900000_new_001.xml.tar.gz')]
       end
-      let(:outcome) { transaction.call(webhook_body: webhook_response) }
+      let(:outcome) { transaction.call(webhook_body: json_fixture('job_end_success')) }
 
-      before { allow(sftp_client).to receive(:download) }
+      before do
+        downloader = instance_double(Net::SFTP::Operations::Download)
+        allow(sftp_client).to receive(:download).and_return(downloader)
+        allow(downloader).to receive(:wait).and_return(downloader)
+      end
 
       it 'is successful' do
         expect(outcome).to be_success
