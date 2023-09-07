@@ -1,4 +1,4 @@
-<h2>Publishing Jobs</h2>
+<h2>Alma Exports</h2>
 
 <table class="table">
   <thead>
@@ -11,18 +11,18 @@
     </tr>
   </thead>
   <tbody>
-  <% @publish_jobs.each do |job| %>
+  <% @alma_exports.each do |export| %>
     <tr>
       <th scope="row">
-        <%= link_to job.id, publish_job_path(job) %>
+        <%= link_to export.id, alma_export_path(export) %>
       </th>
-      <td><%= job.started_at %></td>
+      <td><%= export.started_at %></td>
       <td>
         <span class="badge bg-primary rounded-pill">
-          <%= job.status.titleize %>
+          <%= export.status.titleize %>
         </span>
       </td>
-      <td><%= job.batch_files.length %></td>
+      <td><%= export.batch_files.length %></td>
     </tr>
   <% end %>
   </tbody>

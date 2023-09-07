@@ -1,33 +1,33 @@
-<h2>Publish Job: <%= @publish_job.id %></h2>
+<h2>Alma Export: <%= @alma_export.id %></h2>
 
 <dl>
   <dt>ID</dt>
-  <dd><%= @publish_job.id %></dd>
+  <dd><%= @alma_export.id %></dd>
   <dt>Status</dt>
-  <dd><%= @publish_job.status %></dd>
+  <dd><%= @alma_export.status %></dd>
   <dt>Source</dt>
-  <dd><%= @publish_job.alma_source %></dd>
+  <dd><%= @alma_export.alma_source %></dd>
   <dt>Full?</dt>
-  <dd><%= @publish_job.full %></dd>
+  <dd><%= @alma_export.full %></dd>
   <dt>Webhook Body</dt>
   <dd>
     <pre>
-      <%= JSON.pretty_generate @publish_job.webhook_body %>
+      <%= JSON.pretty_generate @alma_export.webhook_body %>
     </pre>
   </dd>
   <dt>Started At</dt>
-  <dd><%= @publish_job.started_at %></dd>
+  <dd><%= @alma_export.started_at %></dd>
   <dt>Completed At</dt>
-  <dd><%= @publish_job.completed_at || 'Not Completed' %></dd>
+  <dd><%= @alma_export.completed_at || 'Not Completed' %></dd>
   <dt>Created At</dt>
-  <dd><%= @publish_job.created_at %></dd>
+  <dd><%= @alma_export.created_at %></dd>
   <dt>Updated At</dt>
-  <dd><%= @publish_job.started_at %></dd>
+  <dd><%= @alma_export.started_at %></dd>
 </dl>
 
 <h3>Batch Files</h3>
 
-<% if @publish_job.batch_files.empty? %>
+<% if @alma_export.batch_files.empty? %>
   <p>No batch files</p>
 <% else %>
   <table class="table">
@@ -43,7 +43,7 @@
       <th scope="col">Updated At</th>
     </tr>
     </thead>
-  <% @publish_job.batch_files.each do |file| %>
+  <% @alma_export.batch_files.each do |file| %>
     <tbody>
     <tr>
       <th scope="row"><%= file.id %></th>

@@ -7,8 +7,8 @@ describe BatchFile do
 
   it_behaves_like 'statuses'
 
-  it 'has one PublishJob' do
-    expect(batch_file.publish_job).to be_a PublishJob
+  it 'has one AlmaExport' do
+    expect(batch_file.alma_export).to be_a AlmaExport
   end
 
   it 'requires a path' do

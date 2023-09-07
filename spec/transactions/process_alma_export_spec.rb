@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ProcessPublishJob do
+describe ProcessAlmaExport do
   include FixtureHelpers
 
   let(:transaction) { described_class.new }
@@ -38,14 +38,14 @@ describe ProcessPublishJob do
       end
 
       it 'creates BatchFiles' do
-        publish_job = outcome.success[:publish_job]
-        expect(publish_job.batch_files.count).to eq sftp_files.count
+        alma_export = outcome.success[:alma_export]
+        expect(alma_export.batch_files.count).to eq sftp_files.count
       end
 
-      it 'set the right attributes on the PublishJob' do
-        publish_job = outcome.success[:publish_job]
-        expect(publish_job.status).to eq Statuses::IN_PROGRESS
-        expect(publish_job.started_at).to be_present
+      it 'set the right attributes on the AlmaExport' do
+        alma_export = outcome.success[:alma_export]
+        expect(alma_export.status).to eq Statuses::IN_PROGRESS
+        expect(alma_export.started_at).to be_present
       end
     end
 
@@ -95,8 +95,8 @@ describe ProcessPublishJob do
         'prefix_2023010100_123456789_new_23.xml.tar.gz',
         'prefix_2023010100_123456789_new_900.xml.tar.gz',
         'prefix_2023010100_123456789_new_1.zip', # wrong extension
-        'prefix_2023010100_555555555_new_1.xml.tar.gz', # wrong job id
-       ]
+        'prefix_2023010100_555555555_new_1.xml.tar.gz' # wrong job id
+      ]
     end
 
     it 'can be used to select only the desired files' do

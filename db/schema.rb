@@ -10,23 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_05_225232) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_07_174713) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "batch_files", force: :cascade do |t|
-    t.bigint "publish_job_id"
-    t.string "path"
-    t.string "status"
-    t.datetime "started_at"
-    t.datetime "completed_at"
-    t.string "error_messages", default: [], array: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["publish_job_id"], name: "index_batch_files_on_publish_job_id"
-  end
-
-  create_table "publish_jobs", force: :cascade do |t|
+  create_table "alma_exports", force: :cascade do |t|
     t.string "target_collections", default: [], array: true
     t.string "status"
     t.string "alma_source"
@@ -38,5 +26,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_05_225232) do
     t.jsonb "webhook_body"
   end
 
-  add_foreign_key "batch_files", "publish_jobs"
+  create_table "batch_files", force: :cascade do |t|
+    t.bigint "alma_export_id"
+    t.string "path"
+    t.string "status"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.string "error_messages", default: [], array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["alma_export_id"], name: "index_batch_files_on_alma_export_id"
+  end
+
+  add_foreign_key "batch_files", "alma_exports"
 end

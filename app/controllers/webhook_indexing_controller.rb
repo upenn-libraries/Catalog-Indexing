@@ -53,7 +53,7 @@ class WebhookIndexingController < ApplicationController
   end
 
   def handle_job_action
-    PublishJobProcessJob.perform_async(request.body.string)
+    ProcessAlmaExportJob.perform_async(request.body.string)
     head :ok
   end
 

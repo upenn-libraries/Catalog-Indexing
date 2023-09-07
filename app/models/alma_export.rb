@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-# Represent a completed Publish Job from Alma
-class PublishJob < ApplicationRecord
+# Represent a completed Export from Alma. Alma Exports have a 1:1 relation to the running of an Alma Publishing job.
+# This entity contains information about the job and information about the target Solr collections for the indexing of
+# the exported records.
+class AlmaExport < ApplicationRecord
   include Statuses
 
   module Sources
