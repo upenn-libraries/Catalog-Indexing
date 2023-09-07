@@ -7,9 +7,6 @@ class DeviseCreateUsers < ActiveRecord::Migration[7.0]
       t.boolean :active, null: false, default: true
       t.timestamps null: false
 
-      # rememberable
-      t.datetime :remember_created_at
-
       # omniauthable
       t.string :provider
       t.string :uid
