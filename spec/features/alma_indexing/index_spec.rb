@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 describe 'Alma Indexing Index Page' do
+  let(:user) { create(:user) }
+
   context 'when submitting IDs' do
     before do
+      sign_in user
       visit index_by_id_path
     end
 
