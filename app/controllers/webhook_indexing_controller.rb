@@ -12,18 +12,28 @@ class WebhookIndexingController < ApplicationController
   # listens for and handles webhook events
   def listen
     payload = JSON.parse(request.body.string)
-    action = payload['action']
-    case action
+    handle_action_type(payload)
+  rescue JSON::ParserError => _e
+    head(:unprocessable_entity)
+  rescue ActiveRecord::RecordInvalid => _e
+    # TODO: Notify of error
+    head(:internal_server_error)
+  end
+
+  private
+
+  # @param [Hash] payload
+  # @return [TrueClass]
+  def handle_action_type(payload)
+    case payload['action']
     when 'BIB'
       handle_bib_action(payload)
-    when 'JOB_UPDATED'
-      # do something
+    when 'JOB_END'
+      handle_job_action(payload)
     else
       head(:bad_request)
     end
   end
-
-  private
 
   # Handles alma webhook bib actions
   # @param [Hash] payload action-specific data received from alma webhook post request
@@ -46,13 +56,24 @@ class WebhookIndexingController < ApplicationController
     end
   end
 
+  # @param [Hash] payload
+  # @return [TrueClass]
+  def handle_job_action(payload)
+    alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
+                                     webhook_body: payload,
+                                     target_collections: Array.wrap(Solr::Config.new.collection_name))
+    ProcessAlmaExportJob.perform_async(alma_export.id)
+    head :ok
+  end
+
   # Determines if the alma webhook signature header is valid to ensure request came from Alma
   # @return [Boolean]
   def valid_signature?
     hmac = OpenSSL::HMAC.new ENV.fetch('ALMA_WEBHOOK'), OpenSSL::Digest.new('sha256')
     hmac.update request.body.string
-    signature =  request.get_header('X-Exl-Signature') || request.get_header('HTTP_X_EXL_SIGNATURE')
-    signature == Base64.strict_encode64(hmac.digest)
+    signature = request.get_header('X-Exl-Signature') || request.get_header('HTTP_X_EXL_SIGNATURE')
+    encoded_digest = Base64.strict_encode64(hmac.digest)
+    signature == encoded_digest
   end
 
   # Validates alma webhook post requests

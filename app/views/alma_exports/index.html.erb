@@ -1,0 +1,29 @@
+<h2>Alma Exports</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Started</th>
+      <th scope="col">Status</th>
+      <th scope="col">Batch Files</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @alma_exports.each do |export| %>
+    <tr>
+      <th scope="row">
+        <%= link_to export.id, alma_export_path(export) %>
+      </th>
+      <td><%= export.started_at %></td>
+      <td>
+        <span class="badge bg-primary rounded-pill">
+          <%= export.status.titleize %>
+        </span>
+      </td>
+      <td><%= export.batch_files.length %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

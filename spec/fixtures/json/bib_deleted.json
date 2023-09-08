@@ -1,0 +1,48 @@
+{
+  "id": "3229093755673699933",
+  "action": "BIB",
+  "institution": {
+    "value": "01UPENN_INST",
+    "desc": "University of Pennsylvania"
+  },
+  "time":"2020-08-17T15:21:45.747Z",
+  "event": {
+    "value": "BIB_DELETED",
+    "desc": "BIB record deleted"
+  },
+  "bib": {
+    "mms_id": "9977111307103681",
+    "record_format": "marc21",
+    "linked_record_id": {
+      "value": "993780000000297684",
+      "type": "CZ"
+    },
+    "title": "IFPRI Discussion Papers",
+    "author": null,
+    "issn": null,
+    "isbn": null,
+    "network_number": ["(CKB)3780000000297684","(EXLCZ)993780000000297684"],
+    "publisher_const": "International Food Policy Research Institute",
+    "holdings": {
+      "value": "",
+      "link": "/almaws/v1/bibs/9977111307103681/holdings"
+    },
+    "created_by": "NON_SFX_CREATOR",
+    "created_date": "2017-05-14Z",
+    "last_modified_by": "System",
+    "last_modified_date": "2020-08-17Z",
+    "suppress_from_publishing": "false",
+    "suppress_from_external_search": "false",
+    "sync_with_oclc": "BIBS",
+    "sync_with_libraries_australia": "NONE",
+    "originating_system": "NON_SFX",
+    "originating_system_id": "993780000000297684",
+    "anies": ["__XML__"],
+    "requests": null,
+    "link": null
+  },
+  "holding": null,
+  "item": null,
+  "portfolio": null,
+  "representation": null
+}

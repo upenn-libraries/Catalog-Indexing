@@ -39,6 +39,10 @@ group :development, :test do
   gem 'selenium-webdriver'
 end
 
+group :test do
+  gem 'rspec-sidekiq'
+end
+
 group :development do
   gem 'web-console'
 end

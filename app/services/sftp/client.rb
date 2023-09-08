@@ -7,14 +7,24 @@ module Sftp
   class Client
     HOST = 'move.library.upenn.edu'
     ROOT = '/recordstoalma/bibexport'
+
     class Error < StandardError; end
 
-    # list files on sftp server that match pattern
-    # @param [String] matching prefix to match files in directory
+    attr_reader :sftp
+
+    def initialize
+      @sftp = Net::SFTP.start(HOST, sftp_username, password: sftp_password)
+    rescue RuntimeError => e
+      raise Error, "Could not connect to sftp server: #{e.message}"
+    end
+
+    # list files on sftp server that match pattern, returning Sftp::File objects
+    # @todo eliminate matching param and have consumers filter returned entries (see usage in ProcessAlmaExport)
+    # @param [Regexp] matching regex to match files in directory
     # @return [Array<Sftp::File>] list of Sftp::File objects
     def files(matching:)
-      @files ||= sftp.dir.glob(ROOT, matching).map do |entry|
-        Sftp::File.new(entry.name)
+      sftp.dir.entries(ROOT).filter_map do |entry|
+        Sftp::File.new(entry.name) if entry.name.match?(matching)
       end
     rescue RuntimeError => e
       raise Error, "Could not list files on the sftp server: #{e.message}"
@@ -36,14 +46,6 @@ module Sftp
       end
     end
 
-    # download all matching files on sftp server in parallel
-    # @param [String] matching prefix to match files in directory
-    # @return [Array <Net::SFTP::Operations::Download>]
-    def download_all(matching:)
-      downloads = files(matching: matching).map { |file| download(file, wait: false) }
-      downloads.each(&:wait)
-    end
-
     # delete file on sftp server
     # @param [Sftp::File]
     def delete(file)
@@ -52,23 +54,16 @@ module Sftp
       raise Error, "Could not delete file on sftp server: #{e.message}"
     end
 
-    # connect to sftp server
-    def sftp
-      @sftp ||= Net::SFTP.start(HOST, sftp_username, password: sftp_password)
-    rescue RuntimeError => e
-      raise Error, "Could not connect to sftp server: #{e.message}"
-    end
-
     private
 
-    # @return String
+    # @return [String]
     def sftp_username
-      @sftp_username ||= Rails.application.credentials.sftp_username
+      Rails.application.credentials.sftp_username
     end
 
-    # @return String
+    # @return [String]
     def sftp_password
-      @sftp_password ||= Rails.application.credentials.sftp_password
+      Rails.application.credentials.sftp_password
     end
   end
 end

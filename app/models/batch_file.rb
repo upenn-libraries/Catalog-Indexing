@@ -4,7 +4,7 @@
 class BatchFile < ApplicationRecord
   include Statuses
 
-  belongs_to :publish_job
+  belongs_to :alma_export
 
   validates :status, inclusion: Statuses::ALL, presence: true
   validates :path, presence: true

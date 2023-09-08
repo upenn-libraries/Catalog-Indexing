@@ -10,12 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_30_161455) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_07_174713) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "alma_exports", force: :cascade do |t|
+    t.string "target_collections", default: [], array: true
+    t.string "status"
+    t.string "alma_source"
+    t.boolean "full", default: true, null: false
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "webhook_body"
+  end
+
   create_table "batch_files", force: :cascade do |t|
-    t.bigint "publish_job_id"
+    t.bigint "alma_export_id"
     t.string "path"
     t.string "status"
     t.datetime "started_at"
@@ -23,20 +35,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_161455) do
     t.string "error_messages", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["publish_job_id"], name: "index_batch_files_on_publish_job_id"
-  end
-
-  create_table "publish_jobs", force: :cascade do |t|
-    t.string "target_collections", default: [], array: true
-    t.string "status"
-    t.string "alma_source"
-    t.string "initiated_by"
-    t.boolean "full", default: true, null: false
-    t.text "webhook_body"
-    t.datetime "started_at"
-    t.datetime "completed_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.index ["alma_export_id"], name: "index_batch_files_on_alma_export_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -50,5 +49,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_161455) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
-  add_foreign_key "batch_files", "publish_jobs"
+  add_foreign_key "batch_files", "alma_exports"
 end
