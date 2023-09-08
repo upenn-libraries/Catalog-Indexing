@@ -1,0 +1,11 @@
+<h1>User Summary</h1>
+  <dl class="row">
+    <dt class="col-sm-3">Email:</dt>
+    <dd class="col-sm-9"><%= @user.email %></dd>
+
+    <dt class="col-sm-3">Date Created:</dt>
+    <dd class="col-sm-9"><%= @user.created_at.strftime('%B %d, %Y %I:%M %p') %></dd>
+
+    <dt class="col-sm-3">Active Status:</dt>
+    <dd class="col-sm-9"><%= @user.active ? 'Active' : 'Inactive' %></dd>
+  </dl>

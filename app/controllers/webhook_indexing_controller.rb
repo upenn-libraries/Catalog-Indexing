@@ -2,8 +2,8 @@
 
 # Listens for and handles Alma Webhooks
 class WebhookIndexingController < ApplicationController
+  skip_before_action :authenticate_user!
   before_action :validate, only: [:listen]
-
   # echo challenge phrase back to Alma
   def challenge
     render json: challenge_params

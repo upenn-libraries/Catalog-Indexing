@@ -43,6 +43,10 @@ Dir[Rails.root.join('spec/{support}/**/*.rb')].each { |f| require f }
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
+  # RSpec Devise helpers
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Devise::Test::IntegrationHelpers, type: :feature
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = Rails.root.join('spec/fixtures')
 
