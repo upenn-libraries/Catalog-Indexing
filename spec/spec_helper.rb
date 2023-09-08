@@ -15,6 +15,9 @@
 # it.
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+require 'capybara/rspec'
+
 RSpec.configure do |config|
   # Ensure Sidekiq queue is clear before all specs
   config.before do
