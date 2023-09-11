@@ -40,7 +40,7 @@ module Solr
     end
 
     def all_collections
-      config_sets
+      collections
     end
 
     def collection_exists?(name: config.collection_name)
