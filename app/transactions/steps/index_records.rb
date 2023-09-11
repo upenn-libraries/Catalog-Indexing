@@ -7,16 +7,16 @@ module Steps
 
     # @param [IO | StringIO] io
     # @param [Traject::Indexer] indexer
-    # @return [Traject::Writer]
-    def call(io:, indexer: PennMarcIndexer.new)
+    # @return [Dry::Monads::Result]
+    def call(io:, indexer: PennMarcIndexer.new, **args)
       indexer.process_with(
         MARC::XMLReader.new(io, parser: :nokogiri, ignore_namespace: true),
         CatalogWriter.new(indexer.settings),
         close_writer: true
       )
-      Success(true)
+      Success(**args)
     rescue StandardError => e
-      Failure(e)
+      Failure("Failure while indexing: #{e.message}")
     end
   end
 end
