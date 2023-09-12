@@ -1,0 +1,51 @@
+<h2>Batch File: <%= @batch_file.id %></h2>
+<div class="pb-2">
+  Belongs to Alma Export: <%= link_to @alma_export.id, alma_export_path(@alma_export) %>
+</div>
+
+<div class="table-responsive">
+  <table class="table">
+    <tbody>
+    <tr>
+      <th scope="row">ID</th>
+      <td><%= @batch_file.id %></td>
+    </tr>
+    <tr>
+      <th scope="row">Path</th>
+      <td><%= @batch_file.path %></td>
+    </tr>
+    <tr>
+      <th scope="row">Status</th>
+      <td><%= @batch_file.status %></td>
+    </tr>
+    <tr>
+      <th scope="row">Errors</th>
+      <td>
+        <% if @batch_file.error_messages.any? %>
+          <ul>
+            <% @batch_file.error_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Started At</th>
+      <td><%= @batch_file.started_at %></td>
+    </tr>
+    <tr>
+      <th scope="row">Completed At</th>
+      <td><%= @batch_file.completed_at %></td>
+    </tr>
+    <tr>
+      <th scope="row">Created At</th>
+      <td><%= @batch_file.created_at %></td>
+    </tr>
+    <tr>
+      <th scope="row">Updated At</th>
+      <td><%= @batch_file.updated_at %></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
