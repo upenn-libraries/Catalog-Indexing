@@ -22,4 +22,32 @@ class AlmaExport < ApplicationRecord
   def alma_job_identifier
     webhook_body.dig('job_instance', 'id')
   end
+
+  # query to see if all associated BatchFiles are in a completed state (completed, completed with errors, failed)
+  def all_batch_files_finished?
+    all_unique_batch_file_statuses.none? { |status| status.in? Statuses::INCOMPLETE_STATUSES }
+  end
+
+  # set to appropriate completed status and save
+  # @return [TrueClass]
+  def set_completion_status!
+    return unless all_batch_files_finished?
+
+    new_status = if all_unique_batch_file_statuses == [Statuses::FAILED]
+                   Statuses::FAILED
+                 elsif all_unique_batch_file_statuses == [Statuses::COMPLETED]
+                   Statuses::COMPLETED
+                 else
+                   Statuses::COMPLETED_WITH_ERRORS
+                 end
+    self.status = new_status
+    save!
+  end
+
+  private
+
+  # @return [Array<String>]
+  def all_unique_batch_file_statuses
+    batch_files.distinct.pluck(:status)
+  end
 end

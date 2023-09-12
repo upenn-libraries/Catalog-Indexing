@@ -10,6 +10,8 @@ module Statuses
   COMPLETED_WITH_ERRORS = 'completed with errors'
   FAILED = 'failed'
   ALL = [PENDING, IN_PROGRESS, COMPLETED, COMPLETED_WITH_ERRORS, FAILED].freeze
+  INCOMPLETE_STATUSES = [PENDING, IN_PROGRESS].freeze
+  PROBLEM_STATUSES = [COMPLETED_WITH_ERRORS, FAILED].freeze
 
   included do
     validates :status, inclusion: Statuses::ALL, presence: true

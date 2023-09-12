@@ -42,4 +42,54 @@ describe AlmaExport do
     expect(export.valid?).to be true
     expect(export.target_collections).to eq target_collections
   end
+
+  describe '#set_completion_status!' do
+    let(:alma_export) { create(:alma_export, *traits) }
+
+    before { alma_export.set_completion_status! }
+
+    context 'with a radically failed AlmaExport' do
+      let(:traits) { [:with_files_all_failed] }
+
+      it 'sets a status of FAILED' do
+        expect(alma_export.status).to eq Statuses::FAILED
+      end
+    end
+
+    context 'with a radically successful AlmaExport' do
+      let(:traits) { [:with_files_all_completed] }
+
+      it 'sets a status of COMPLETED' do
+        expect(alma_export.status).to eq Statuses::COMPLETED
+      end
+    end
+
+    context 'with an AlmaExport with mixed processing outcomes' do
+      let(:traits) { [:with_files_some_failed] }
+
+      it 'sets a status of COMPLETED WITH ERRORS' do
+        expect(alma_export.status).to eq Statuses::COMPLETED_WITH_ERRORS
+      end
+    end
+  end
+
+  describe '#all_batch_files_finished?' do
+    let(:alma_export) { create(:alma_export, *traits) }
+
+    context 'with BatchFile records that are incomplete' do
+      let(:traits) { [:with_files_all_incomplete] }
+
+      it 'returns false' do
+        expect(alma_export.all_batch_files_finished?).to be false
+      end
+    end
+
+    context 'with a BatchFile record that are all finished' do
+      let(:traits) { [:with_files_all_completed] }
+
+      it 'returns true' do
+        expect(alma_export.all_batch_files_finished?).to be true
+      end
+    end
+  end
 end
