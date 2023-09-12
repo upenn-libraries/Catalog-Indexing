@@ -73,7 +73,7 @@ class ProcessAlmaExport
     sftp_files.each_slice(20) do |slice|
       downloads = slice.map { |file| sftp_session.download(file, wait: false) }
       downloads.each(&:wait) # SFTP downloads occur concurrently here
-      build_and_enqueue_build_files(alma_export, slice)
+      build_and_enqueue_batch_files(alma_export, slice)
     end
     Success(alma_export: alma_export)
   rescue StandardError => e
@@ -93,7 +93,7 @@ class ProcessAlmaExport
 
   # @param [AlmaExport] alma_export
   # @param [Array<Sftp::File>] sftp_files
-  def build_and_enqueue_build_files(alma_export, sftp_files)
+  def build_and_enqueue_batch_files(alma_export, sftp_files)
     batch_file_jobs_params = sftp_files.map do |sftp_file|
       batch_file = BatchFile.create!(alma_export_id: alma_export.id, path: sftp_file.local_path,
                                      status: Statuses::PENDING)
