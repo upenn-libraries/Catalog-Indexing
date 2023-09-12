@@ -6,6 +6,8 @@ module Solr
   # Rudely appropriating PSU's delightful:
   # https://github.com/psu-libraries/scholarsphere/blob/develop/lib/scholarsphere/solr_admin.rb
   class Admin
+    class Error < StandardError; end
+
     def self.reset
       conf = new
       conf.delete_all_collections
