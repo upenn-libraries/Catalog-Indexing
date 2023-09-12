@@ -1,0 +1,42 @@
+<h2>Batch Files for Alma Export: <%= @alma_export.id %></h2>
+
+<% if @batch_files.empty? %>
+  <p>No batch files</p>
+<% else %>
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">File Path</th>
+      <th scope="col">Status</th>
+      <th scope="col">Error Messages</th>
+      <th scope="col">Started At</th>
+      <th scope="col">Completed At</th>
+      <th scope="col">Created At</th>
+      <th scope="col">Updated At</th>
+    </tr>
+    </thead>
+    <% @batch_files.each do |file| %>
+      <tbody>
+      <tr>
+        <th scope="row"><%= link_to file.id, alma_export_batch_file_path(@alma_export, file.id) %></th>
+        <td><%= file.path %></td>
+        <td><%= file.status %></td>
+        <td>
+          <% if file.error_messages.any? %>
+            <ul>
+              <% file.error_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </td>
+        <td><%= file.started_at %></td>
+        <td><%= file.completed_at %></td>
+        <td><%= file.created_at %></td>
+        <td><%= file.updated_at %></td>
+      </tr>
+      </tbody>
+    <% end %>
+  </table>
+<% end %>
