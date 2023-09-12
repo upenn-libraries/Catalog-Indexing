@@ -92,7 +92,15 @@ module Solr
 
     # Gets a response object, if it's status code is not 200, we emit the body and bail
     def check_resp(resp)
-      raise resp.body unless resp.status == 200
+      return if resp.status == 200
+
+      begin
+        body = JSON.parse(resp.body)
+      rescue JSON::ParserError => _e
+        raise Error, 'Request to Solr failed.'
+      end
+      raise Error,
+            "Request to Solr failed with code #{body&.dig('error', 'code')}: #{body&.dig('error', 'msg')}"
     end
 
     def connection
