@@ -11,7 +11,7 @@ module Sftp
 
     # @return [String] path on remote storage
     def remote_path
-      @remote_path ||= ::File.join(Sftp::Client::ROOT, name)
+      @remote_path ||= ::File.join(Settings.sftp_root, name)
     end
 
     # @return [String] path on local storage
