@@ -46,7 +46,7 @@ describe 'Batch Files Show Page' do
     end
 
     it 'displays completed_at' do
-      within('tr.completed_at') do
+      within('tr.completed-at') do
         expect(page).to have_text(batch_file.completed_at)
       end
     end
