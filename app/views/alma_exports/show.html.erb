@@ -1,29 +1,51 @@
 <h2>Alma Export: <%= @alma_export.id %></h2>
 
-<dl>
-  <dt>ID</dt>
-  <dd><%= @alma_export.id %></dd>
-  <dt>Status</dt>
-  <dd><%= @alma_export.status %></dd>
-  <dt>Source</dt>
-  <dd><%= @alma_export.alma_source %></dd>
-  <dt>Full?</dt>
-  <dd><%= @alma_export.full %></dd>
-  <dt>Webhook Body</dt>
-  <dd>
-    <pre>
-      <%= JSON.pretty_generate @alma_export.webhook_body %>
-    </pre>
-  </dd>
-  <dt>Started At</dt>
-  <dd><%= @alma_export.started_at %></dd>
-  <dt>Completed At</dt>
-  <dd><%= @alma_export.completed_at || 'Not Completed' %></dd>
-  <dt>Created At</dt>
-  <dd><%= @alma_export.created_at %></dd>
-  <dt>Updated At</dt>
-  <dd><%= @alma_export.started_at %></dd>
-</dl>
+<div class="table_responsive">
+  <table class="table">
+    <tbody>
+    <tr class="id">
+      <th scope="row">ID</th>
+      <td><%= @alma_export.id %></td>
+    </tr>
+    <tr class="status">
+      <th scope="row">Status</th>
+      <td><%= @alma_export.status %></td>
+    </tr>
+    <tr class="source">
+      <th scope="row">Source</th>
+      <td><%= @alma_export.alma_source %></td>
+    </tr>
+    <tr class="full">
+      <th scope="row">Full?</th>
+      <td><%= @alma_export.full %></td>
+    </tr>
+    <tr class="webhook-body">
+      <th scope="row">Webhook Body</th>
+      <td>
+        <pre>
+          <%= JSON.pretty_generate @alma_export.webhook_body %>
+        </pre>
+      </td>
+    </tr>
+    <tr class="started-at">
+      <th scope="row">Started At</th>
+      <td><%= @alma_export.started_at %></td>
+    </tr>
+    <tr class="completed-at">
+      <th scope="row">Completed At</th>
+      <td><%= @alma_export.completed_at || 'Not Completed' %></td>
+    </tr>
+    <tr class="created-at">
+      <th scope="row">Created At</th>
+      <td><%= @alma_export.created_at %></td>
+    </tr>
+    <tr class="started-at">
+      <th scope="row">Started At</th>
+      <td><%= @alma_export.started_at %></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 
 <% unless @alma_export.batch_files.empty? %>
   <%= link_to "Show Batch Files", alma_export_batch_files_path(@alma_export), class: 'btn btn-primary' %>
