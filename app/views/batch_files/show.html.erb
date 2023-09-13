@@ -6,19 +6,19 @@
 <div class="table-responsive">
   <table class="table">
     <tbody>
-    <tr>
+    <tr class="id">
       <th scope="row">ID</th>
       <td><%= @batch_file.id %></td>
     </tr>
-    <tr>
+    <tr class="path">
       <th scope="row">Path</th>
-      <td><%= @batch_file.path %></td>
+      <td ><%= @batch_file.path %></td>
     </tr>
-    <tr>
+    <tr class="status">
       <th scope="row">Status</th>
-      <td><%= @batch_file.status %></td>
+      <td ><%= @batch_file.status %></td>
     </tr>
-    <tr>
+    <tr class="errors">
       <th scope="row">Errors</th>
       <td>
         <% if @batch_file.error_messages.any? %>
@@ -30,19 +30,19 @@
         <% end %>
       </td>
     </tr>
-    <tr>
+    <tr class="started-at">
       <th scope="row">Started At</th>
       <td><%= @batch_file.started_at %></td>
     </tr>
-    <tr>
+    <tr class="completed-at">
       <th scope="row">Completed At</th>
       <td><%= @batch_file.completed_at %></td>
     </tr>
-    <tr>
+    <tr class="created-at">
       <th scope="row">Created At</th>
       <td><%= @batch_file.created_at %></td>
     </tr>
-    <tr>
+    <tr class="updated-at">
       <th scope="row">Updated At</th>
       <td><%= @batch_file.updated_at %></td>
     </tr>
