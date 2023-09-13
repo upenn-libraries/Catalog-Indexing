@@ -12,7 +12,7 @@
   </thead>
   <tbody>
   <% @alma_exports.each do |export| %>
-    <tr>
+    <tr class="alma-export">
       <th scope="row">
         <%= link_to export.id, alma_export_path(export) %>
       </th>
