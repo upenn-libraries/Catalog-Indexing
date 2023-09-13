@@ -38,7 +38,7 @@ describe Solr::Admin do
       expect(admin).to be_configset_exists
     end
 
-    it 'returns false if configset exists' do
+    it 'returns false if configset does not exist' do
       allow(admin).to receive(:config_sets).and_return(%w[_default])
       expect(admin).not_to be_configset_exists
     end
@@ -59,7 +59,7 @@ describe Solr::Admin do
       allow(admin).to receive(:delete_configset).with('another_configset').and_return(nil)
     end
 
-    it 'deletes all the configsetsexcept _default' do
+    it 'deletes all the configsets except _default' do
       expect(admin.delete_all_configsets).to contain_exactly(nil, nil)
       expect(admin).to have_received(:delete_configset).twice
     end
