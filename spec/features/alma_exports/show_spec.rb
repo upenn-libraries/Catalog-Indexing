@@ -53,7 +53,7 @@ describe 'Alma Export Show Page' do
     end
 
     it 'displays created_at' do
-      within('tr.updated-at') do
+      within('tr.created-at') do
         expect(page).to have_text(alma_export.created_at)
       end
     end
