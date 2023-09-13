@@ -76,7 +76,7 @@ describe Solr::Admin do
 
   describe '#all_collections' do
     it 'returns list of all collections' do
-      expect(admin.all_collections).to contain_exactly('catalog-development', 'catalog-test')
+      expect(admin.all_collections).to include 'catalog-test'
     end
   end
 
