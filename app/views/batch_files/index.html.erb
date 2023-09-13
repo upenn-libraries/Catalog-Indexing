@@ -18,7 +18,7 @@
     </thead>
     <% @batch_files.each do |file| %>
       <tbody>
-      <tr>
+      <tr class="batch-file">
         <th scope="row"><%= link_to file.id, alma_export_batch_file_path(@alma_export, file.id) %></th>
         <td><%= file.path %></td>
         <td><%= file.status %></td>
