@@ -11,14 +11,14 @@ class ProcessBatchFile
   step :validate_batch_file
   step :prepare_indexer
   step :decompress_file
-  step :index_records, from: 'traject.index_records'
+  step :index_records, with: 'traject.index_records'
   step :clean_up
   step :check_alma_export
 
   # @param [String] batch_file_id
   # @return [Dry::Monads::Result]
   def load_batch_file(batch_file_id:)
-    batch_file = AlmaExport.find batch_file_id
+    batch_file = BatchFile.find batch_file_id
     Success(batch_file: batch_file)
   rescue ActiveRecord::RecordNotFound => _e
     Failure("BatchFile record with ID #{batch_file_id} does not exist.")
@@ -28,7 +28,7 @@ class ProcessBatchFile
   # @returns [Dry::Monads::Result]
   def validate_batch_file(batch_file:)
     unless batch_file.status == Statuses::PENDING
-      return Failure("BatchFile with ID #{batch_file_id} is in #{batch_file.status}. It must be in 'pending' state.")
+      return Failure("BatchFile with ID #{batch_file.id} is in #{batch_file.status} state. It must be in 'pending' state.")
     end
 
     # check for presence of file

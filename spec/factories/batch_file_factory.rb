@@ -15,6 +15,10 @@ FactoryBot.define do
       started_at { 1.hour.ago }
     end
 
+    trait :with_file do
+      path { Tempfile.new.path } # TODO: does this persist long enough
+    end
+
     trait(:failed) { status { Statuses::FAILED } }
     trait(:completed) { status { Statuses::COMPLETED } }
     trait(:completed_with_errors) { status { Statuses::COMPLETED_WITH_ERRORS } }
