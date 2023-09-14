@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Alma Export Show Page' do
+describe 'Alma Export Index Page' do
   let(:user) { create(:user) }
 
   before { sign_in user }
