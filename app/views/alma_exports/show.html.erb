@@ -19,14 +19,6 @@
       <th scope="row">Full?</th>
       <td><%= @alma_export.full %></td>
     </tr>
-    <tr class="webhook-body">
-      <th scope="row">Webhook Body</th>
-      <td>
-        <pre>
-          <%= JSON.pretty_generate @alma_export.webhook_body %>
-        </pre>
-      </td>
-    </tr>
     <tr class="started-at">
       <th scope="row">Started At</th>
       <td><%= @alma_export.started_at || 'Not Started' %></td>
@@ -42,6 +34,14 @@
     <tr class="updated-at">
       <th scope="row">Updated At</th>
       <td><%= @alma_export.updated_at %></td>
+    </tr>
+    <tr class="webhook-body">
+      <th scope="row">Webhook Body</th>
+      <td>
+        <pre>
+          <%= JSON.pretty_generate @alma_export.webhook_body %>
+        </pre>
+      </td>
     </tr>
     </tbody>
   </table>
