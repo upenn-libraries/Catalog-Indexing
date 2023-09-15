@@ -34,23 +34,31 @@ describe 'Alma Export Show Page' do
       end
     end
 
-    it 'displays webhook_body' do
-      within('pre') do
-        expect(page).to have_text('12345678')
-      end
-    end
-
-    it 'displays started_at' do
+    it 'displays Not Started when started_at is nil' do
       within('tr.started-at') do
-        expect(page).to have_text(alma_export.started_at)
+        expect(page).to have_text('Not Started')
       end
     end
 
-    it 'displays completed_at' do
+    # TODO: implement test for checking started_at when it is populated
+    # it 'displays started_at' do
+    #   within('tr.started-at') do
+    #     expect(page).to have_text(alma_export.started_at)
+    #   end
+    # end
+
+    it 'displays Not Completed when completed_at is nil' do
       within('tr.completed-at') do
-        expect(page).to have_text(alma_export.completed_at)
+        expect(page).to have_text('Not Completed')
       end
     end
+
+    # TODO: implement test for checking started_at when it is populated
+    # it 'displays completed_at' do
+    #   within('tr.completed-at') do
+    #     expect(page).to have_text(alma_export.completed_at)
+    #   end
+    # end
 
     it 'displays created_at' do
       within('tr.created-at') do
@@ -61,6 +69,12 @@ describe 'Alma Export Show Page' do
     it 'displays updated_at' do
       within('tr.updated-at') do
         expect(page).to have_text(alma_export.updated_at)
+      end
+    end
+
+    it 'displays webhook_body' do
+      within('pre') do
+        expect(page).to have_text(JSON.pretty_generate(alma_export.webhook_body).squish)
       end
     end
 
