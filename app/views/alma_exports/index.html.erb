@@ -13,16 +13,16 @@
   <tbody>
   <% @alma_exports.each do |export| %>
     <tr class="alma-export">
-      <th scope="row">
+      <th scope="row" class="id">
         <%= link_to export.id, alma_export_path(export) %>
       </th>
-      <td><%= export.started_at %></td>
-      <td>
+      <td class="started-at"><%= export.started_at %></td>
+      <td class="status">
         <span class="badge bg-primary rounded-pill">
           <%= export.status.titleize %>
         </span>
       </td>
-      <td><%= export.batch_files.length %></td>
+      <td class="batch-files"><%= export.batch_files.length %></td>
     </tr>
   <% end %>
   </tbody>
