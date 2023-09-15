@@ -23,13 +23,53 @@ describe 'Batch Files Index Page' do
       within(first('th.id')) { expect(page).to have_link(alma_export.batch_files.first.id) }
     end
 
-    # displays path
-    # displays status
-    # displays errors messages (when none)
-    # displays errors messages (when populated)
-    # displays started_at
-    # displays completed_at
-    # displays created_at
-    # displays updated_at
+    it 'displays path' do
+      within(first('td.path')) { expect(page).to have_text(batch_file.path) }
+    end
+
+    it 'displays status' do
+      within(first('td.status')) { expect(page).to have_text(batch_file.status.capitalize) }
+    end
+
+    it 'displays "None" when there are no errors' do
+      within(first('td.errors')) { expect(page).to have_text('None') }
+    end
+
+    # Todo Implement spec for displaying batch file with errors
+    # it 'displays errors' do
+    #   within('td.errors') do
+    #     expect(page).to have_text(batch_file.errors)
+    #   end
+    # end
+
+    it 'displays "Not Started" when batch file started-at is nil' do
+      within(first('td.started-at')) { expect(page).to have_text('Not Started') }
+    end
+
+    # Todo Implement spec for displaying batch file started-at when it's not nil
+    # it 'displays started-at' do
+    #   within('td.started-at') do
+    #     expect(page).to have_text(batch_file.started_at)
+    #   end
+    # end
+
+    it 'displays "Not Completed" when batch file started-at is nil' do
+      within(first('td.completed-at')) { expect(page).to have_text('Not Completed') }
+    end
+
+    # Todo Implement spec for displaying batch file completed-at when it's not nil
+    # it 'displays completed-at' do
+    #   within('td.completed-at') do
+    #     expect(page).to have_text(batch_file.completed-at)
+    #   end
+    # end
+
+    it 'displays created-at' do
+      within(first('td.created-at')) { expect(page).to have_text(batch_file.created_at) }
+    end
+
+    it 'displays updated-at' do
+      within(first('td.updated-at')) { expect(page).to have_text(batch_file.updated_at) }
+    end
   end
 end
