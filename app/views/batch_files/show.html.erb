@@ -27,16 +27,18 @@
               <li><%= message %></li>
             <% end %>
           </ul>
-        <% end %>
+        <% else %>
+        None
+          <% end %>
       </td>
     </tr>
     <tr class="started-at">
       <th scope="row">Started At</th>
-      <td><%= @batch_file.started_at %></td>
+      <td><%= @batch_file.started_at || 'Not Started'%></td>
     </tr>
     <tr class="completed-at">
       <th scope="row">Completed At</th>
-      <td><%= @batch_file.completed_at %></td>
+      <td><%= @batch_file.completed_at || 'Not Completed' %></td>
     </tr>
     <tr class="created-at">
       <th scope="row">Created At</th>
