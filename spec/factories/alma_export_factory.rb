@@ -12,12 +12,13 @@ FactoryBot.define do
       } }
     end
 
-    factory :alma_export_with_files do
+    factory :alma_export_with_files do |ae|
       transient do
         files_count { 2 }
       end
-      batch_files do
-        Array.new(files_count) { association(:batch_file) }
+
+      after(:create) do |alma_export, evaluator|
+        FactoryBot.create_list(:batch_file, evaluator.files_count, alma_export: alma_export)
       end
     end
   end
