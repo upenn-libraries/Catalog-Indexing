@@ -12,7 +12,7 @@ FactoryBot.define do
       } }
     end
 
-    factory :alma_export_with_files do |ae|
+    factory :alma_export_with_files do
       transient do
         files_count { 2 }
       end
