@@ -33,10 +33,10 @@
             None
           <% end %>
         </td>
-        <td><%= file.started_at || 'Not Started' %></td>
-        <td><%= file.completed_at || 'Not Completed' %></td>
-        <td><%= file.created_at %></td>
-        <td><%= file.updated_at %></td>
+        <td class="started-at"><%= file.started_at || 'Not Started' %></td>
+        <td class="completed-at"><%= file.completed_at || 'Not Completed' %></td>
+        <td class="created-at"><%= file.created_at %></td>
+        <td class="updated-at"><%= file.updated_at %></td>
       </tr>
       </tbody>
     <% end %>
