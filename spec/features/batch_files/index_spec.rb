@@ -20,7 +20,7 @@ describe 'Batch Files Index Page' do
     end
 
     it 'displays IDs' do
-      within(first('th.id')) { expect(page).to have_link(alma_export.batch_files.first.id) }
+      within(first('th.id')) { expect(page).to have_link(batch_file.id.to_s) }
     end
 
     it 'displays path' do

@@ -15,7 +15,7 @@ describe 'Alma Export Index Page' do
     end
 
     it 'displays IDs' do
-      within('th.id') { expect(page).to have_link(alma_export.id) }
+      within('th.id') { expect(page).to have_link(alma_export.id.to_s) }
     end
 
     it 'displays Not Started when started_at is nil' do
