@@ -14,21 +14,26 @@ describe 'Alma Export Index Page' do
       expect(page).to have_css('tr.alma-export', count: AlmaExport.count)
     end
 
-    it 'shows IDs' do
+    it 'displays IDs' do
       within('th.id') { expect(page).to have_link(alma_export.id) }
     end
 
-    it 'shows Not Stared when AlmaExport started_at is nil' do
+    it 'displays Not Started when started_at is nil' do
       within('td.started-at') { expect(page).to have_text('Not Started') }
     end
 
     # TODO: implement test for checking started_at when it is populated
+    # it 'displays started_at' do
+    #   within('tr.started-at') do
+    #     expect(page).to have_text(alma_export.started_at)
+    #   end
+    # end
 
-    it 'shows status' do
+    it 'displays status' do
       within('td.status') { expect(page).to have_text(alma_export.status.capitalize) }
     end
 
-    it 'shows batch file count' do
+    it 'displays batch file count' do
       within('td.batch-files') { expect(page).to have_text(alma_export.batch_files.count) }
     end
   end
