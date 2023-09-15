@@ -7,6 +7,7 @@ describe 'Batch Files Index Page' do
 
   context 'when viewing batch files' do
     let(:alma_export) { create(:alma_export_with_files) }
+    let(:batch_file) { alma_export.batch_files.first }
 
     before { visit alma_export_batch_files_path(alma_export) }
 
