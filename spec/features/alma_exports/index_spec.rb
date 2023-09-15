@@ -6,7 +6,7 @@ describe 'Alma Export Index Page' do
   before { sign_in user }
 
   context 'when viewing Alma Exports' do
-    let(:alma_export) { create(:alma_export_with_files) }
+    let!(:alma_export) { create(:alma_export) }
 
     before { visit alma_exports_path }
 
@@ -15,19 +15,21 @@ describe 'Alma Export Index Page' do
     end
 
     it 'shows IDs' do
-      expect(page).to have_css('th.id', count: AlmaExport.count)
+      within('th.id') { expect(page).to have_link(alma_export.id) }
     end
 
-    it 'shows started_at' do
-      expect(page).to have_css('td.started-at', count: AlmaExport.count)
+    it 'shows Not Stared when AlmaExport started_at is nil' do
+      within('td.started-at') { expect(page).to have_text('Not Started') }
     end
+
+    # TODO: implement test for checking started_at when it is populated
 
     it 'shows status' do
-      expect(page).to have_css('td.status', count: AlmaExport.count)
+      within('td.status') { expect(page).to have_text(alma_export.status.capitalize) }
     end
 
     it 'shows batch file count' do
-      expect(page).to have_css('td.batch-files', count: AlmaExport.count)
+      within('td.batch-files') { expect(page).to have_text(alma_export.batch_files.count) }
     end
   end
 end
