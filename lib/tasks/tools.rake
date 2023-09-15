@@ -40,6 +40,7 @@ namespace :tools do
 
   desc 'Generates some alma exports'
   task generate_sample_alma_exports: :environment do
-    FactoryBot.create(:alma_export_with_files)
+    FactoryBot.create_list(:alma_export, 5)
+    FactoryBot.create_list(:alma_export_with_files, 5)
   end
 end
