@@ -21,4 +21,3 @@ class BatchFilesController < ApplicationController
     @batch_file = @alma_export.batch_files.find(params[:id])
   end
 end
-
