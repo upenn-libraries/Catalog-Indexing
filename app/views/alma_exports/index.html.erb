@@ -22,7 +22,7 @@
           <%= export.status.titleize %>
         </span>
       </td>
-      <td class="batch-files"><%= export.batch_files.length %></td>
+      <td class="batch-files"><%= link_to export.batch_files.length, alma_export_batch_files_path(export) %></td>
     </tr>
   <% end %>
   </tbody>
