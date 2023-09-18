@@ -5,15 +5,12 @@ require 'net/sftp'
 module Sftp
   # API for interacting with SFTP server that stores Alma publish files
   class Client
-    HOST = 'move.library.upenn.edu'
-    ROOT = '/recordstoalma/bibexport'
-
     class Error < StandardError; end
 
     attr_reader :sftp
 
     def initialize
-      @sftp = Net::SFTP.start(HOST, sftp_username, password: sftp_password)
+      @sftp = Net::SFTP.start(sftp_host, sftp_username, password: sftp_password)
     rescue RuntimeError => e
       raise Error, "Could not connect to sftp server: #{e.message}"
     end
@@ -23,7 +20,7 @@ module Sftp
     # @param [Regexp] matching regex to match files in directory
     # @return [Array<Sftp::File>] list of Sftp::File objects
     def files(matching:)
-      sftp.dir.entries(ROOT).filter_map do |entry|
+      sftp.dir.entries(sftp_root).filter_map do |entry|
         Sftp::File.new(entry.name) if entry.name.match?(matching)
       end
     rescue RuntimeError => e
@@ -64,6 +61,16 @@ module Sftp
     # @return [String]
     def sftp_password
       Rails.application.credentials.sftp_password
+    end
+
+    # @return [String]
+    def sftp_host
+      Settings.sftp_host
+    end
+
+    # @return [String]
+    def sftp_root
+      Settings.sftp_root
     end
   end
 end
