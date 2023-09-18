@@ -41,14 +41,15 @@ class ProcessBatchFile
     Success(batch_file: batch_file)
   end
 
+  # @param [BatchFile] batch_file
   def prepare_indexer(batch_file:)
-    alma_export = batch_file.alma_export # for target_collections...
-    indexer = PennMarcIndexer.new # TODO: specify settings (target collection(s), etc.) different from those defined in the indexer itself?
-
+    settings = { 'solr_writer.target_collections' => batch_file.alma_export.target_collections }
+    indexer = PennMarcIndexer.new(settings)
     Success(batch_file: batch_file, indexer: indexer)
   end
 
   # @param [BatchFile] batch_file
+  # @param [Traject::Indexer] indexer
   # @returns [Dry::Monads::Result]
   def decompress_file(batch_file:, indexer:, **args)
     io = File.open(batch_file.path) do |file|
@@ -62,7 +63,6 @@ class ProcessBatchFile
   end
 
   # Indexer Step...
-  # TODO: how to configure indexer step to write to > 1 collection? use a modified writer class?
   # TODO: how to rescue/record errors from indexer step that should not stop processing? Consider custom Yell logger?
 
   # @param [BatchFile] batch_file

@@ -16,7 +16,7 @@ FactoryBot.define do
     end
 
     trait :with_file do
-      path { Tempfile.new.path } # TODO: does this persist long enough
+      path { Rails.root.join('spec/fixtures/files/test.xml.tar.gz') }
     end
 
     trait(:failed) { status { Statuses::FAILED } }

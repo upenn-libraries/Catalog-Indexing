@@ -3,12 +3,12 @@
 module Solr
   # Thin wrapper for RSolr commands
   class QueryClient
-    attr_accessor :solr
+    attr_accessor :solr, :collection
 
     def initialize(collection: nil)
       config = Config.new
-      collection ||= config.collection_name
-      @solr = RSolr.connect(url: config.query_url(collection: collection))
+      @collection ||= config.collection_name
+      @solr = RSolr.connect(url: config.query_url(collection: @collection))
     end
 
     # Perform a query

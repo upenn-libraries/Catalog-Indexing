@@ -36,7 +36,12 @@ describe ProcessBatchFile do
     end
 
     context 'with a problem during file decompression' do
+      let(:batch_file) { create(:batch_file, :with_file) }
 
+      xit 'returns a Failure monad with the appropriate message' do
+        expect(outcome).to be_failure
+        expect(outcome.failure).to include
+      end
     end
   end
 end
