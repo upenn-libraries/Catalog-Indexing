@@ -7,9 +7,23 @@
       <th scope="row">ID</th>
       <td><%= @alma_export.id %></td>
     </tr>
+    <tr class="target-collections">
+      <th scope="row">Target Collections</th>
+      <td>
+        <% if @alma_export.target_collections.any? %>
+          <ul>
+            <% @alma_export.target_collections.each do |collection| %>
+              <li><%= collection %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          None
+        <% end %>
+      </td>
+    </tr>
     <tr class="status">
       <th scope="row">Status</th>
-      <td><%= @alma_export.status %></td>
+      <td><%= @alma_export.status.capitalize %></td>
     </tr>
     <tr class="source">
       <th scope="row">Source</th>
@@ -17,7 +31,7 @@
     </tr>
     <tr class="full">
       <th scope="row">Full?</th>
-      <td><%= @alma_export.full %></td>
+      <td><%= @alma_export.full.to_s.capitalize %></td>
     </tr>
     <tr class="started-at">
       <th scope="row">Started At</th>
