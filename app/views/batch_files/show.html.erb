@@ -3,51 +3,31 @@
   Belongs to Alma Export: <%= link_to @alma_export.id, alma_export_path(@alma_export) %>
 </div>
 
-<div class="table-responsive">
-  <table class="table">
-    <tbody>
-    <tr class="id">
-      <th scope="row">ID</th>
-      <td><%= @batch_file.id %></td>
-    </tr>
-    <tr class="path">
-      <th scope="row">Path</th>
-      <td ><%= @batch_file.path %></td>
-    </tr>
-    <tr class="status">
-      <th scope="row">Status</th>
-      <td ><%= @batch_file.status.capitalize %></td>
-    </tr>
-    <tr class="errors">
-      <th scope="row">Errors</th>
-      <td>
-        <% if @batch_file.error_messages.any? %>
-          <ul>
-            <% @batch_file.error_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        <% else %>
-        None
-          <% end %>
-      </td>
-    </tr>
-    <tr class="started-at">
-      <th scope="row">Started At</th>
-      <td><%= @batch_file.started_at || 'Not Started' %></td>
-    </tr>
-    <tr class="completed-at">
-      <th scope="row">Completed At</th>
-      <td><%= @batch_file.completed_at || 'Not Completed' %></td>
-    </tr>
-    <tr class="created-at">
-      <th scope="row">Created At</th>
-      <td><%= @batch_file.created_at %></td>
-    </tr>
-    <tr class="updated-at">
-      <th scope="row">Updated At</th>
-      <td><%= @batch_file.updated_at %></td>
-    </tr>
-    </tbody>
-  </table>
-</div>
+<dl class="batch-file-list">
+  <dt>ID</dt>
+  <dd class="id"><%= @batch_file.id %></dd>
+  <dt>Path</dt>
+  <dd class="path"><%= @batch_file.path %></dd>
+  <dt>Status</dt>
+  <dd class="status"><%= @batch_file.status.capitalize %></dd>
+  <dt>Errors</dt>
+  <dd class="errors">
+    <% if @batch_file.error_messages.any? %>
+      <ul>
+        <% @batch_file.error_messages.each do |message| %>
+          <li class="error-message"><%= message %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      None
+    <% end %>
+  </dd>
+  <dt>Started At</dt>
+  <dd class="started-at"><%= @batch_file.started_at || 'Not Started' %></dd>
+  <dt>Completed At</dt>
+  <dd class="completed-at"><%= @batch_file.completed_at || 'Not Completed' %></dd>
+  <dt>Created At</dt>
+  <dd class="created-at"><%= @batch_file.created_at %></dd>
+  <dt>Updated At</dt>
+  <dd class="updated-at"><%= @batch_file.updated_at %></dd>
+</dl>
