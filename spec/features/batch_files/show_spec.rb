@@ -6,8 +6,9 @@ describe 'Batch Files Show Page' do
   before { sign_in user }
 
   context 'when viewing batch files' do
-    let(:alma_export) { create(:alma_export_with_files) }
-    let(:batch_file) { alma_export.batch_files.first }
+    let(:alma_export) { create(:alma_export) }
+    let(:batch_file) { create(:batch_file, alma_export: alma_export, **additional_values) }
+    let(:additional_values) { {} }
 
     before { visit alma_export_batch_file_path(alma_export, batch_file) }
 
@@ -16,65 +17,78 @@ describe 'Batch Files Show Page' do
     end
 
     it 'displays ID' do
-      within('tr.id') do
-        expect(page).to have_text(batch_file.id)
+      within('.batch-file-list') do
+        expect(find('.id')).to have_text(batch_file.id)
       end
     end
 
     it 'displays path' do
-      within('tr.path') do
-        expect(page).to have_text(batch_file.path)
+      within('.batch-file-list') do
+        expect(find('.path')).to have_text(batch_file.path)
       end
     end
 
     it 'displays status' do
-      within('tr.status') do
-        expect(page).to have_text(batch_file.status)
+      within('.batch-file-list') do
+        expect(find('.status')).to have_text(batch_file.status.capitalize)
+      end
+    end
+
+    context 'with additional information' do
+      let(:additional_values) do
+        {
+          error_messages: ['example error'],
+          started_at: 1.hour.ago,
+          completed_at: Time.current
+        }
+      end
+
+      it 'displays errors' do
+        within('.batch-file-list') do
+          expect(first('.error-message')).to have_text(batch_file.error_messages.first)
+        end
+      end
+
+      it 'displays started_at' do
+        within('.batch-file-list') do
+          expect(find('.started-at')).to have_text(batch_file.started_at)
+        end
+      end
+
+      it 'displays completed_at' do
+        within('.batch-file-list') do
+          expect(find('.completed-at')).to have_text(batch_file.completed_at)
+        end
       end
     end
 
     it 'displays "None" when there are no errors' do
-      within(first('tr.errors')) { expect(page).to have_text('None') }
+      within('.batch-file-list') do
+        expect(find('.errors')).to have_text('None')
+      end
     end
-
-    # Todo Implement spec for displaying batch file with errors
-    # it 'displays errors' do
-    #   within('tr.errors') do
-    #     expect(page).to have_text(batch_file.error_messages.first)
-    #   end
-    # end
 
     it 'displays "Not Started" when batch file started-at is nil' do
-      within(first('tr.started-at')) { expect(page).to have_text('Not Started') }
+      within('.batch-file-list') do
+        expect(find('.started-at')).to have_text('Not Started')
+      end
     end
-
-    # Todo Implement spec for displaying batch file started-at when it's not nil
-    # it 'displays started_at' do
-    #   within('tr.started-at') do
-    #     expect(page).to have_text(batch_file.started_at)
-    #   end
-    # end
 
     it 'displays "Not Completed" when batch file started-at is nil' do
-      within(first('tr.completed-at')) { expect(page).to have_text('Not Completed') }
+      within('.batch-file-list') do
+        expect(find('.completed-at')).to have_text('Not Completed')
+      end
     end
 
-    # Todo Implement spec for displaying batch file completed-at when it's not nil
-    # it 'displays completed_at' do
-    #   within('tr.completed-at') do
-    #     expect(page).to have_text(batch_file.completed_at)
-    #   end
-    # end
-
     it 'displays created_at' do
-      within('tr.created-at') do
-        expect(page).to have_text(batch_file.created_at)
+      within('.batch-file-list') do
+        expect(find('.created-at')).to have_text(batch_file.created_at)
       end
     end
 
     it 'displays updated_at' do
-      within('tr.updated-at') do
-        expect(page).to have_text(batch_file.updated_at)
+      within('.batch-file-list') do
+        expect(find('.updated-at')).to have_text(batch_file.updated_at)
       end
     end
   end
