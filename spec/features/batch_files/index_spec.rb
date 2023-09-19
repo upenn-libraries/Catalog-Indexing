@@ -6,8 +6,9 @@ describe 'Batch Files Index Page' do
   before { sign_in user }
 
   context 'when viewing batch files' do
-    let(:alma_export) { create(:alma_export_with_files) }
-    let(:batch_file) { alma_export.batch_files.first }
+    let(:alma_export) { create(:alma_export) }
+    let!(:batch_file) { create(:batch_file, alma_export: alma_export, **additional_values) }
+    let(:additional_values) { {} }
 
     before { visit alma_export_batch_files_path(alma_export) }
 
@@ -16,60 +17,78 @@ describe 'Batch Files Index Page' do
     end
 
     it 'lists all batch files' do
-      expect(page).to have_css('tr.batch-file', count: alma_export.batch_files.count)
+      within('.batch-file-table') do
+        expect(page).to have_css('.batch-file-row', count: alma_export.batch_files.count)
+      end
     end
 
     it 'displays IDs' do
-      within(first('th.id')) { expect(page).to have_link(batch_file.id.to_s) }
+      within(first('.batch-file-row')) do
+        expect(find('.id')).to have_link(batch_file.id.to_s)
+      end
     end
 
     it 'displays path' do
-      within(first('td.path')) { expect(page).to have_text(batch_file.path) }
+      within(first('.batch-file-row')) do
+        expect(find('.path')).to have_text(batch_file.path)
+      end
     end
 
     it 'displays status' do
-      within(first('td.status')) { expect(page).to have_text(batch_file.status.capitalize) }
+      within(first('.batch-file-row')) do
+        expect(find('.status')).to have_text(batch_file.status.capitalize)
+      end
     end
 
-    it 'displays "None" when there are no errors' do
-      within(first('td.errors')) { expect(page).to have_text('None') }
+    it 'displays errors' do
+      within(first('.batch-file-row')) do
+        expect(find('.errors')).to have_text(batch_file.error_messages.count)
+      end
     end
 
-    # Todo Implement spec for displaying batch file with errors
-    # it 'displays errors' do
-    #   within('td.errors') do
-    #     expect(page).to have_text(batch_file.errors)
-    #   end
-    # end
+    context 'with additional values' do
+      let(:additional_values) do
+        {
+          started_at: 1.hour.ago,
+          completed_at: Time.current
+        }
+      end
+
+      it 'displays started-at' do
+        within(first('.batch-file-row')) do
+          expect(find('.started-at')).to have_text(batch_file.started_at)
+        end
+      end
+
+      it 'displays completed-at' do
+        within(first('.batch-file-row')) do
+          expect(find('.completed-at')).to have_text(batch_file.completed_at)
+        end
+      end
+    end
 
     it 'displays "Not Started" when batch file started-at is nil' do
-      within(first('td.started-at')) { expect(page).to have_text('Not Started') }
+      within(first('.batch-file-row')) do
+        expect(find('.started-at')).to have_text('Not Started')
+      end
     end
-
-    # Todo Implement spec for displaying batch file started-at when it's not nil
-    # it 'displays started-at' do
-    #   within('td.started-at') do
-    #     expect(page).to have_text(batch_file.started_at)
-    #   end
-    # end
 
     it 'displays "Not Completed" when batch file started-at is nil' do
-      within(first('td.completed-at')) { expect(page).to have_text('Not Completed') }
+      within(first('.batch-file-row')) do
+        expect(find('.completed-at')).to have_text('Not Completed')
+      end
     end
 
-    # Todo Implement spec for displaying batch file completed-at when it's not nil
-    # it 'displays completed-at' do
-    #   within('td.completed-at') do
-    #     expect(page).to have_text(batch_file.completed-at)
-    #   end
-    # end
-
     it 'displays created-at' do
-      within(first('td.created-at')) { expect(page).to have_text(batch_file.created_at) }
+      within(first('.batch-file-row')) do
+        expect(find('.created-at')).to have_text(batch_file.created_at)
+      end
     end
 
     it 'displays updated-at' do
-      within(first('td.updated-at')) { expect(page).to have_text(batch_file.updated_at) }
+      within(first('.batch-file-row')) do
+        expect(find('.updated-at')).to have_text(batch_file.updated_at)
+      end
     end
   end
 end
