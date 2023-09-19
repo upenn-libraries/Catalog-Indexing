@@ -3,7 +3,7 @@
 <% if @batch_files.empty? %>
   <p>No batch files</p>
 <% else %>
-  <table class="table">
+  <table class="table batch-file-table">
     <thead>
     <tr>
       <th scope="col">ID</th>
@@ -18,21 +18,11 @@
     </thead>
     <% @batch_files.each do |file| %>
       <tbody>
-      <tr class="batch-file">
+      <tr class="batch-file-row">
         <th scope="row" class="id"><%= link_to file.id, alma_export_batch_file_path(@alma_export, file.id) %></th>
         <td class="path"><%= file.path %></td>
         <td class="status"><%= file.status.capitalize %></td>
-        <td class="errors">
-          <% if file.error_messages.any? %>
-            <ul>
-              <% file.error_messages.each do |message| %>
-                <li><%= message %></li>
-              <% end %>
-            </ul>
-          <% else %>
-            None
-          <% end %>
-        </td>
+        <td class="errors"><%= link_to file.error_messages.count, alma_export_batch_file_path(@alma_export, file.id) %></td>
         <td class="started-at"><%= file.started_at || 'Not Started' %></td>
         <td class="completed-at"><%= file.completed_at || 'Not Completed' %></td>
         <td class="created-at"><%= file.created_at %></td>
