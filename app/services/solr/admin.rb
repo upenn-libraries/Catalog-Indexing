@@ -84,6 +84,10 @@ module Solr
       check_resp(resp)
     end
 
+    def rsolr_conn(collection_name)
+      @solr ||= RSolr.connect connection, :url => connection_with_collection(collection_name)
+    end
+
     private
 
     def raw_data
@@ -111,6 +115,11 @@ module Solr
         # faraday.request :multipart
         faraday.adapter :net_http
       end
+    end
+
+    def connection_with_collection(collection_name)
+      connection_url = connection.url_prefix.to_s
+      connection_url + "solr/#{collection_name}"
     end
 
     def config_sets

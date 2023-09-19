@@ -42,6 +42,7 @@ end
 
 group :test do
   gem 'rspec-sidekiq'
+  gem 'rspec-solr'
 end
 
 group :development do

@@ -2,6 +2,7 @@
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
+require 'rspec-solr'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
@@ -76,4 +77,38 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+end
+
+RSpec.shared_context 'solr_helpers' do
+  def solr
+    @solr ||= set_up_solr
+  end
+
+  # send a GET request to the indicated Solr request handler with the indicated Solr parameters
+  # @param solr_params [Hash] the key/value pairs to be sent to Solr as HTTP parameters
+  # @param req_handler [String] the pathname of the desired Solr request handler (defaults to 'select')
+  # @return [RSpecSolr::SolrResponseHash] object for rspec-solr testing the Solr response
+  def solr_response(solr_params)
+    RSpecSolr::SolrResponseHash.new(solr.get('select', params: solr_params))
+  end
+
+  # send a GET request to the default Solr request handler with the indicated Solr parameters
+  # @param solr_params [Hash] the key/value pairs to be sent to Solr as HTTP parameters, in addition to
+  #  those to get only id fields and no facets in the response
+  # @return [RSpecSolr::SolrResponseHash] object for rspec-solr testing the Solr response
+  def solr_resp_doc_ids_only(solr_params)
+    solr_response(solr_params.merge(doc_ids_only))
+  end
+
+  # use these Solr HTTP params to reduce the size of the Solr responses
+  # response documents will only have id fields, and there will be no facets in the response
+  # @return [Hash] Solr HTTP params to reduce the size of the Solr responses
+  def doc_ids_only
+    {'fl'=>'id', 'facet'=>'false'}
+  end
+  private
+    def set_up_solr
+      solr_admin = Solr::Admin.new
+      solr_admin.rsolr_conn('catalog-test')
+    end
 end
