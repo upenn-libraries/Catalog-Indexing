@@ -8,10 +8,10 @@ module Steps
     # @param [IO | StringIO] io
     # @param [Traject::Indexer] indexer
     # @return [Dry::Monads::Result]
-    def call(io:, indexer: PennMarcIndexer.new, **args)
+    def call(io:, indexer: PennMarcIndexer.new, commit: false, **args)
       indexer.process_with(
         MARC::XMLReader.new(io, parser: :nokogiri, ignore_namespace: true),
-        CatalogWriter.new(indexer.settings),
+        MultiCollectionWriter.new(indexer.settings.merge({ 'solr_writer.commit_on_close' => commit })),
         close_writer: true
       )
       Success(**args)

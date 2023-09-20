@@ -7,7 +7,7 @@ module Solr
 
     def initialize(collection: nil)
       config = Config.new
-      @collection ||= config.collection_name
+      @collection = collection || config.collection_name
       @solr = RSolr.connect(url: config.query_url(collection: @collection))
     end
 

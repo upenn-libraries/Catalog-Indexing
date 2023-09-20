@@ -15,8 +15,12 @@ FactoryBot.define do
       started_at { 1.hour.ago }
     end
 
-    trait :with_file do
-      path { Rails.root.join('spec/fixtures/files/test.xml.tar.gz') }
+    trait :with_empty_file do
+      path { Rails.root.join('spec/fixtures/files/empty.xml.tar.gz') }
+    end
+
+    trait :with_two_record_file do
+      path { Rails.root.join('spec/fixtures/files/two_record.xml.tar.gz') }
     end
 
     trait(:failed) { status { Statuses::FAILED } }
