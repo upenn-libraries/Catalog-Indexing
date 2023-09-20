@@ -9,7 +9,7 @@
   <dt>Path</dt>
   <dd class="path"><%= @batch_file.path %></dd>
   <dt>Status</dt>
-  <dd class="status"><%= @batch_file.status.capitalize %></dd>
+  <dd class="status"><%= @batch_file.status.titleize %></dd>
   <dt>Errors</dt>
   <dd class="errors">
     <% if @batch_file.error_messages.any? %>

@@ -23,11 +23,7 @@
           <%= link_to file.id, alma_export_batch_file_path(@alma_export, file.id) %>
         </th>
         <td class="path"><%= file.path %></td>
-        <td class="status">
-          <span class="badge bg-primary rounded-pill">
-            <%= file.status.titleize %>
-          </span>
-        </td>
+        <td class="status"><%= file.status.titleize %></td>
         <td class="errors">
           <%= link_to file.error_messages.count, alma_export_batch_file_path(@alma_export, file.id) %>
         </td>
@@ -36,7 +32,7 @@
         <td class="created-at"><%= file.created_at %></td>
         <td class="updated-at"><%= file.updated_at %></td>
       </tr>
-      </tbody>
     <% end %>
-    </table>
+    </tbody>
+  </table>
 <% end %>

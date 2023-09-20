@@ -19,11 +19,7 @@
           <%= link_to export.id, alma_export_path(export) %>
         </th>
         <td class="started-at"><%= export.started_at || 'Not Started' %></td>
-        <td class="status">
-          <span class="badge bg-primary rounded-pill">
-            <%= export.status.titleize %>
-          </span>
-        </td>
+        <td class="status"><%= export.status.titleize %></td>
         <td class="batch-files"><%= link_to export.batch_files.length, alma_export_batch_files_path(export) %></td>
       </tr>
     <% end %>
