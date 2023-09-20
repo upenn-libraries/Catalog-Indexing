@@ -1,43 +1,69 @@
 <h2>Alma Export: <%= @alma_export.id %></h2>
-
-<dl class="alma-export-list">
-  <dt>ID</dt>
-  <dd class="id"><%= @alma_export.id %></dd>
-  <dt>Target Collections</dt>
-  <dd class="target-collections">
-    <% if @alma_export.target_collections.any? %>
-      <ul>
-        <% @alma_export.target_collections.each do |collection| %>
-          <li><%= collection %></li>
-        <% end %>
-      </ul>
-    <% else %>
-      None
-    <% end %>
-  </dd>
-  <dt>Status</dt>
-  <dd class="status"><%= @alma_export.status.titleize %></dd>
-  <dt>Source</dt>
-  <dd class="source"><%= @alma_export.alma_source %></dd>
-  <dt>Full?</dt>
-  <dd class="full"><%= @alma_export.full.to_s.capitalize %></dd>
-  <dt>Started At</dt>
-  <dd class="started-at"><%= @alma_export.started_at || 'Not Started' %></dd>
-  <dt>Completed At</dt>
-  <dd class="completed-at"><%= @alma_export.completed_at || 'Not Completed' %></dd>
-  <dt>Created At</dt>
-  <dd class="created-at"><%= @alma_export.created_at %></dd>
-  <dt>Updated At</dt>
-  <dd class="updated-at"><%= @alma_export.updated_at %></dd>
-  <dt>Webhook Body</dt>
-  <dd class="webhook-body">
-      <pre>
+<div class="container">
+  <dl class="alma-export-list">
+    <div class="row my-3">
+      <div class="col">
+      <dt>ID</dt>
+        <dd class="id"><%= @alma_export.id %></dd>
+      </div>
+      <div class="col">
+      <dt>Status</dt>
+      <dd class="status"><%= @alma_export.status.titleize %></dd>
+      </div>
+      <div class="col">
+      <dt>Source</dt>
+      <dd class="source"><%= @alma_export.alma_source %></dd>
+      </div>
+      <div class="col">
+      <dt>Full?</dt>
+      <dd class="full"><%= @alma_export.full.to_s.capitalize %></dd>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col">
+      <dt>Started At</dt>
+      <dd class="started-at"><%= @alma_export.started_at || 'Not Started' %></dd>
+      </div>
+      <div class="col">
+      <dt>Completed At</dt>
+      <dd class="completed-at"><%= @alma_export.completed_at || 'Not Completed' %></dd>
+      </div>
+      <div class="col">
+      <dt>Created At</dt>
+      <dd class="created-at"><%= @alma_export.created_at %></dd>
+      </div>
+      <div class="col">
+      <dt>Updated At</dt>
+      <dd class="updated-at"><%= @alma_export.updated_at %></dd>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col">
+        <dt>Target Collections</dt>
+        <dd class="target-collections">
+          <% if @alma_export.target_collections.any? %>
+            <ul>
+              <% @alma_export.target_collections.each do |collection| %>
+                <li><%= collection %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            None
+          <% end %>
+        </dd>
+      </div>
+    </div>
+    <div class="row my-3">
+      <dt>Webhook Body</dt>
+      <dd class="webhook-body">
+      <pre class="bg-light">
         <%= JSON.pretty_generate @alma_export.webhook_body %>
       </pre>
-  </dd>
-</dl>
+      </dd>
+    </div>
+  </dl>
 
-<% unless @alma_export.batch_files.empty? %>
-  <%= link_to "Show Batch Files", alma_export_batch_files_path(@alma_export), class: 'btn btn-primary' %>
-<% end %>
-
+  <% unless @alma_export.batch_files.empty? %>
+    <%= link_to "Show Batch Files", alma_export_batch_files_path(@alma_export), class: 'btn btn-primary' %>
+  <% end %>
+</div>
