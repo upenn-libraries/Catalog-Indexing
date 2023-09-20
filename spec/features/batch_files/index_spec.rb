@@ -54,13 +54,13 @@ describe 'Batch Files Index Page' do
         }
       end
 
-      it 'displays started-at' do
+      it 'displays started_at' do
         within(first('.batch-file-row')) do
           expect(find('.started-at')).to have_text(batch_file.started_at)
         end
       end
 
-      it 'displays completed-at' do
+      it 'displays completed_at' do
         within(first('.batch-file-row')) do
           expect(find('.completed-at')).to have_text(batch_file.completed_at)
         end
@@ -73,19 +73,19 @@ describe 'Batch Files Index Page' do
       end
     end
 
-    it 'displays "Not Completed" when batch file started-at is nil' do
+    it 'displays "Not Completed" when batch file started_at is nil' do
       within(first('.batch-file-row')) do
         expect(find('.completed-at')).to have_text('Not Completed')
       end
     end
 
-    it 'displays created-at' do
+    it 'displays created_at' do
       within(first('.batch-file-row')) do
         expect(find('.created-at')).to have_text(batch_file.created_at)
       end
     end
 
-    it 'displays updated-at' do
+    it 'displays updated_at' do
       within(first('.batch-file-row')) do
         expect(find('.updated-at')).to have_text(batch_file.updated_at)
       end
