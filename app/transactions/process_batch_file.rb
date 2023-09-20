@@ -62,15 +62,16 @@ class ProcessBatchFile
     Failure("Problem decompressing BatchFile: #{e.message}")
   end
 
-  # Indexer Step...
-  # TODO: how to rescue/record errors from indexer step that should not stop processing? Consider custom Yell logger?
+  # Indexer Step
 
   # @param [BatchFile] batch_file
   # @param [File] file_handle
+  # @param [Array<String>] errors
   # @returns [Dry::Monads::Result]
-  def clean_up(batch_file:, file_handle:, **args)
+  def clean_up(batch_file:, file_handle:, errors:, **args)
     file_handle.close
-    batch_file.status = Statuses::COMPLETED
+    batch_file.error_messages = errors
+    batch_file.status = errors.any? ? Statuses::COMPLETED_WITH_ERRORS : Statuses::COMPLETED
     batch_file.completed_at = Time.zone.now
     batch_file.save
     # remove file? decompressed contents?

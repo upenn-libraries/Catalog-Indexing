@@ -35,6 +35,33 @@ describe Steps::IndexRecords do
       end
     end
 
+    context 'with a skipped record' do
+      let(:outcome) { step.call(io: io) }
+
+      before do
+        allow_any_instance_of(Traject::Indexer::Context).to receive(:skip?).and_return(true)
+      end
+
+      it 'writes an error message' do
+        expect(outcome).to be_success
+        expect(outcome.success[:errors].first).to include 'Record skipped'
+      end
+    end
+
+    context 'with an exception raised in the indexer' do
+      let(:indexer) { PennMarcIndexer.new }
+      let(:outcome) { step.call(io: io, indexer: indexer) }
+
+      before do
+        allow(indexer).to receive(:map_to_context!).and_raise(StandardError)
+      end
+
+      it 'writes an error message' do
+        expect(outcome).to be_success
+        expect(outcome.success[:errors].first).to include 'Error during record processing'
+      end
+    end
+
     context 'with multiple target_collections' do
       before do
         solr_config = Solr::Admin.new
