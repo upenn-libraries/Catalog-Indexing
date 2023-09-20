@@ -1,28 +1,32 @@
 <h2>Alma Exports</h2>
 
-<table class="table">
-  <thead>
+<% if @alma_exports.empty? %>
+  <p>No Alma Exports</p>
+<% else %>
+  <table class="table">
+    <thead>
     <tr>
       <th scope="col">ID</th>
       <th scope="col">Started</th>
       <th scope="col">Status</th>
       <th scope="col">Batch Files</th>
     </tr>
-  </thead>
-  <tbody>
-  <% @alma_exports.each do |export| %>
-    <tr class="alma-export-row row-id-<%= export.id %>">
-      <th scope="row" class="id">
-        <%= link_to export.id, alma_export_path(export) %>
-      </th>
-      <td class="started-at"><%= export.started_at || 'Not Started'%></td>
-      <td class="status">
-        <span class="badge bg-primary rounded-pill">
-          <%= export.status.titleize %>
-        </span>
-      </td>
-      <td class="batch-files"><%= link_to export.batch_files.length, alma_export_batch_files_path(export) %></td>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+    <% @alma_exports.each do |export| %>
+      <tr class="alma-export-row row-id-<%= export.id %>">
+        <th scope="row" class="id">
+          <%= link_to export.id, alma_export_path(export) %>
+        </th>
+        <td class="started-at"><%= export.started_at || 'Not Started' %></td>
+        <td class="status">
+          <span class="badge bg-primary rounded-pill">
+            <%= export.status.titleize %>
+          </span>
+        </td>
+        <td class="batch-files"><%= link_to export.batch_files.length, alma_export_batch_files_path(export) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
