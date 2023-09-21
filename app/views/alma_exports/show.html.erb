@@ -1,69 +1,43 @@
 <h2>Alma Export: <%= @alma_export.id %></h2>
 
-<dl>
+<dl class="alma-export-list">
   <dt>ID</dt>
-  <dd><%= @alma_export.id %></dd>
-  <dt>Status</dt>
-  <dd><%= @alma_export.status %></dd>
-  <dt>Source</dt>
-  <dd><%= @alma_export.alma_source %></dd>
-  <dt>Full?</dt>
-  <dd><%= @alma_export.full %></dd>
-  <dt>Webhook Body</dt>
-  <dd>
-    <pre>
-      <%= JSON.pretty_generate @alma_export.webhook_body %>
-    </pre>
+  <dd class="id"><%= @alma_export.id %></dd>
+  <dt>Target Collections</dt>
+  <dd class="target-collections">
+    <% if @alma_export.target_collections.any? %>
+      <ul>
+        <% @alma_export.target_collections.each do |collection| %>
+          <li><%= collection %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      None
+    <% end %>
   </dd>
+  <dt>Status</dt>
+  <dd class="status"><%= @alma_export.status.capitalize %></dd>
+  <dt>Source</dt>
+  <dd class="source"><%= @alma_export.alma_source %></dd>
+  <dt>Full?</dt>
+  <dd class="full"><%= @alma_export.full.to_s.capitalize %></dd>
   <dt>Started At</dt>
-  <dd><%= @alma_export.started_at %></dd>
+  <dd class="started-at"><%= @alma_export.started_at || 'Not Started' %></dd>
   <dt>Completed At</dt>
-  <dd><%= @alma_export.completed_at || 'Not Completed' %></dd>
+  <dd class="completed-at"><%= @alma_export.completed_at || 'Not Completed' %></dd>
   <dt>Created At</dt>
-  <dd><%= @alma_export.created_at %></dd>
+  <dd class="created-at"><%= @alma_export.created_at %></dd>
   <dt>Updated At</dt>
-  <dd><%= @alma_export.started_at %></dd>
+  <dd class="updated-at"><%= @alma_export.updated_at %></dd>
+  <dt>Webhook Body</dt>
+  <dd class="webhook-body">
+      <pre>
+        <%= JSON.pretty_generate @alma_export.webhook_body %>
+      </pre>
+  </dd>
 </dl>
 
-<h3>Batch Files</h3>
-
-<% if @alma_export.batch_files.empty? %>
-  <p>No batch files</p>
-<% else %>
-  <table class="table">
-    <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">File Path</th>
-      <th scope="col">Status</th>
-      <th scope="col">Error Messages</th>
-      <th scope="col">Started At</th>
-      <th scope="col">Completed At</th>
-      <th scope="col">Created At</th>
-      <th scope="col">Updated At</th>
-    </tr>
-    </thead>
-  <% @alma_export.batch_files.each do |file| %>
-    <tbody>
-    <tr>
-      <th scope="row"><%= file.id %></th>
-      <td><%= file.path %></td>
-      <td><%= file.status %></td>
-      <td>
-        <% if file.error_messages.any? %>
-        <ul>
-          <% file.error_messages.each do |message| %>
-          <li><%= message %></li>
-          <% end %>
-        </ul>
-        <% end %>
-      </td>
-      <td><%= file.started_at %></td>
-      <td><%= file.completed_at %></td>
-      <td><%= file.created_at %></td>
-      <td><%= file.updated_at %></td>
-    </tr>
-    </tbody>
-  <% end %>
-  </table>
+<% unless @alma_export.batch_files.empty? %>
+  <%= link_to "Show Batch Files", alma_export_batch_files_path(@alma_export), class: 'btn btn-primary' %>
 <% end %>
+

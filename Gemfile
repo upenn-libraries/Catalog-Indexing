@@ -9,6 +9,7 @@ ruby '3.2.2'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 5.2.3'
 gem 'bootstrap_form', '~> 5.0'
+gem 'config'
 gem 'devise'
 gem 'dry-transaction'
 gem 'faraday'

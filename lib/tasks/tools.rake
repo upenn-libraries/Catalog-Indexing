@@ -37,4 +37,9 @@ namespace :tools do
   task clean: :environment do
     system('COMPOSE_PROJECT_NAME=catalog-indexing docker-compose down --volumes')
   end
+
+  desc 'Generates some alma exports'
+  task generate_sample_alma_exports: :environment do
+    FactoryBot.create_list(:alma_export_with_files, 5)
+  end
 end

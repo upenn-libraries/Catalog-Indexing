@@ -25,5 +25,7 @@ Rails.application.routes.draw do
       post 'listen', to: 'webhook_indexing#listen', as: 'webhook_listen'
     end
   end
-  resources :alma_exports, only: %i[index show destroy]
+  resources :alma_exports, only: %i[index show destroy] do
+    resources :batch_files, only: %i[index show]
+  end
 end
