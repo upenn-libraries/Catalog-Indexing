@@ -10,54 +10,66 @@ describe Steps::IndexRecords do
   before { clear_collections }
   after { clear_collections }
 
-  describe '#call' do
-    context 'with invalid IO' do
-      let(:io) { [666] }
+  context 'with invalid IO' do
+    let(:io) { [666] }
 
-      it 'returns failure monad' do
-        expect(outcome).to be_failure
-        expect(outcome.failure).to include 'must pass in path or File'
-      end
+    it 'returns failure monad' do
+      expect(outcome).to be_failure
+      expect(outcome.failure).to include 'must pass in path or File'
+    end
+  end
+
+  context 'with a good IO' do
+    let(:sample_mmsid) { '9979201969103681' }
+    let(:io) { StringIO.new(marc_fixture(sample_mmsid)) }
+    let(:additional_params) { { commit: true } }
+
+    it 'returns success monad and writes a record to Solr' do
+      expect(outcome).to be_success
+      solr_response = Solr::QueryClient.new.get_by_id(sample_mmsid)
+      expect(solr_response['response']['numFound']).to eq 1
+    end
+  end
+
+  context 'with a skipped record' do
+    let(:sample_mmsid) { '9979201969103681' }
+    let(:indexer) { PennMarcIndexer.new({ 'skipped_record_limit' => 2 }) }
+    let(:additional_params) { { indexer: indexer } }
+    let(:io) { StringIO.new(marc_fixture(sample_mmsid)) }
+
+    before do
+      allow_any_instance_of(Traject::Indexer::Context).to receive(:skip?).and_return(true)
     end
 
-    context 'with a good IO' do
-      let(:sample_mmsid) { '9979201969103681' }
-      let(:io) { StringIO.new(marc_fixture(sample_mmsid)) }
-      let(:additional_params) { { commit: true } }
+    it 'writes an error message' do
+      expect(outcome).to be_success
+      expect(outcome.success[:errors].first).to include 'Record skipped'
+    end
+  end
 
-      it 'returns success monad and writes a record to Solr' do
-        expect(outcome).to be_success
-        solr_response = Solr::QueryClient.new.get_by_id(sample_mmsid)
-        expect(solr_response['response']['numFound']).to eq 1
-      end
+  context 'with a record that raises an exception' do
+    let(:io) { StringIO.new(marc_fixture('9979201969103681')) }
+    let(:additional_params) { { indexer: indexer } }
+
+    before do
+      allow(indexer).to receive(:map_to_context!).and_raise(StandardError)
     end
 
-    context 'with a skipped record' do
-      let(:sample_mmsid) { '9979201969103681' }
-      let(:io) { StringIO.new(marc_fixture(sample_mmsid)) }
+    context 'when exceeding the configured error limit' do
+      let(:indexer) { PennMarcIndexer.new({ 'failed_record_limit' => 2 }) }
 
-      before do
-        allow_any_instance_of(Traject::Indexer::Context).to receive(:skip?).and_return(true)
-      end
-
-      it 'writes an error message' do
-        expect(outcome).to be_success
-        expect(outcome.success[:errors].first).to include 'Record skipped'
-      end
-    end
-
-    context 'with a record that raises an exception' do
-      let(:indexer) { PennMarcIndexer.new }
-      let(:io) { StringIO.new(marc_fixture('9979201969103681')) }
-      let(:additional_params) { { indexer: indexer } }
-
-      before do
-        allow(indexer).to receive(:map_to_context!).and_raise(StandardError)
-      end
-
-      it 'writes an error message' do
+      it 'writes an error message but returns success' do
         expect(outcome).to be_success
         expect(outcome.success[:errors].first).to include 'Error during record processing'
+      end
+    end
+
+    context 'when not exceeding the configured error limit' do
+      let(:indexer) { PennMarcIndexer.new({ 'failed_record_limit' => 0 }) }
+
+      it 'writes error messages and returns success' do
+        expect(outcome).to be_success
+        expect(outcome.success[:errors].first).to include 'exceeds limit'
       end
     end
   end
@@ -84,3 +96,4 @@ describe Steps::IndexRecords do
     end
   end
 end
+

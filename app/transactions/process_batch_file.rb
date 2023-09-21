@@ -44,7 +44,8 @@ class ProcessBatchFile
 
   # @param [BatchFile] batch_file
   def prepare_indexer(batch_file:, **args)
-    settings = { 'solr_writer.target_collections' => batch_file.alma_export.target_collections } # TODO: target_collections should be validated in the ProcessAlmaExport transaction/job
+    settings = { 'solr_writer.target_collections' => batch_file.alma_export.target_collections,
+                 'skipped_record_limit' => 500, 'failed_record_limit' => 100 }
     indexer = PennMarcIndexer.new(settings)
     Success(batch_file: batch_file, indexer: indexer, **args)
   end
