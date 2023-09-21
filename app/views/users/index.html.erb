@@ -1,5 +1,8 @@
-  <h1>Users</h1>
-
+<h1>Users</h1>
+<div class="mb-3">
+  <%= page_entries_info @users%>
+</div>
+<% unless @users.empty? %>
   <table class="table table-striped">
     <thead>
     <tr>
@@ -18,3 +21,5 @@
     <% end %>
     </tbody>
   </table>
+  <%= paginate @users %>
+<% end %>

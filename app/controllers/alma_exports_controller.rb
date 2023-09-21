@@ -5,7 +5,7 @@ class AlmaExportsController < ApplicationController
   before_action :load_alma_export, only: %i[show destroy]
 
   def index
-    @alma_exports = AlmaExport.all.includes(:batch_files) # TODO: add sort/filter functionality
+    @alma_exports = AlmaExport.all.includes(:batch_files).page(params[:page]) # TODO: add sort/filter functionality
   end
 
   def show; end

@@ -1,8 +1,8 @@
 <h1>Batch Files for Alma Export: <%= @alma_export.id %></h1>
-
-<% if @batch_files.empty? %>
-  <p>No batch files</p>
-<% else %>
+<div class="mb-3">
+  <%= page_entries_info @batch_files %>
+</div>
+<% unless @batch_files.empty? %>
   <table class="table table-striped">
     <thead>
     <tr>
@@ -35,4 +35,5 @@
     <% end %>
     </tbody>
   </table>
+  <%= paginate @batch_files %>
 <% end %>
