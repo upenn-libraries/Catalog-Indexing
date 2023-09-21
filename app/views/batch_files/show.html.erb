@@ -1,7 +1,14 @@
-<h2>Batch File: <%= @batch_file.id %></h2>
-<div class="pb-2">
-  Belongs to Alma Export: <%= link_to @alma_export.id, alma_export_path(@alma_export) %>
-</div>
+<nav aria-label="breadcrumb" class="mb-3 bg-light text-dark rounded">
+  <ol class="breadcrumb py-2 px-3">
+    <li class="breadcrumb-item"><a href="<%= root_path %>">Home</a></li>
+    <li class="breadcrumb-item"><a href="<%= alma_exports_path %>">Alma Exports</a></li>
+    <li class="breadcrumb-item"><a href="<%= alma_export_path(@alma_export) %>"><%= @alma_export.id %></a></li>
+    <li class="breadcrumb-item"><a href="<%= alma_export_batch_files_path(@alma_export) %>">Batch Files</a></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @batch_file.id %></li>
+  </ol>
+</nav>
+
+<h1>Batch File: <%= @batch_file.id %></h1>
 <div class="container">
   <dl class="batch-file-list">
     <div class="row my-3">

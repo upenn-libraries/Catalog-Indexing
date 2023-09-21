@@ -1,4 +1,12 @@
-<h2>Alma Export: <%= @alma_export.id %></h2>
+<nav aria-label="breadcrumb" class="mb-3 bg-light text-dark rounded">
+  <ol class="breadcrumb py-2 px-3">
+    <li class="breadcrumb-item"><a href="<%= root_path %>">Home</a></li>
+    <li class="breadcrumb-item"><a href="<%= alma_exports_path %>">Alma Exports</a></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @alma_export.id %></li>
+  </ol>
+</nav>
+
+<h1>Alma Export: <%= @alma_export.id %></h1>
 <div class="container">
   <dl class="alma-export-list">
     <div class="row my-3">
