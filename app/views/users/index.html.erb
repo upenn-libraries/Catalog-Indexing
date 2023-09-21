@@ -1,5 +1,8 @@
-  <h1>Users</h1>
-
+<h1>Users</h1>
+<div class="mb-3">
+  <%= page_entries_info @users%>
+</div>
+<% unless @users.empty? %>
   <table class="table table-striped">
     <thead>
     <tr>
@@ -11,10 +14,12 @@
     <tbody>
     <% @users.each do |user| %>
       <tr>
-        <td><%= link_to user.email, user_path(user)%></td>
+        <td><%= link_to user.email, user_path(user) %></td>
         <td><%= user.active ? 'Active' : 'Inactive' %></td>
         <td><%= user.created_at.strftime('%B %d, %Y %I:%M %p') %></td>
       </tr>
     <% end %>
     </tbody>
   </table>
+  <%= paginate @users %>
+<% end %>
