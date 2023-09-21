@@ -2,20 +2,13 @@
 
 describe Steps::IndexRecords do
   include FixtureHelpers
+  include SolrHelpers
 
-  let(:solr_query_client) { Solr::QueryClient.new }
   let(:outcome) { described_class.new.call(io: io, **additional_params) }
   let(:additional_params) { {} }
 
-  before do
-    solr_query_client.delete_all
-    solr_query_client.commit
-  end
-
-  after do
-    solr_query_client.delete_all
-    solr_query_client.commit
-  end
+  before { clear_collections }
+  after { clear_collections }
 
   describe '#call' do
     context 'with invalid IO' do
@@ -34,7 +27,7 @@ describe Steps::IndexRecords do
 
       it 'returns success monad and writes a record to Solr' do
         expect(outcome).to be_success
-        solr_response = solr_query_client.get_by_id(sample_mmsid)
+        solr_response = Solr::QueryClient.new.get_by_id(sample_mmsid)
         expect(solr_response['response']['numFound']).to eq 1
       end
     end
@@ -71,24 +64,14 @@ describe Steps::IndexRecords do
 
   context 'with multiple target_collections' do
     let(:additional_params) do
-      { indexer: PennMarcIndexer.new({ 'solr_writer.target_collections' => %w[tc-1 tc-2] }), commit: true }
+      { indexer: PennMarcIndexer.new({ 'solr_writer.target_collections' => collection_names }), commit: true }
     end
+    let(:collection_names) { %w[tc-1 tc-2] }
     let(:sample_mmsid) { '9979201969103681' }
     let(:io) { StringIO.new(marc_fixture(sample_mmsid)) }
 
-    before do
-      solr_config = Solr::Admin.new
-      solr_config.delete_collection 'tc-1' if solr_config.collection_exists? name: 'tc-1'
-      solr_config.delete_collection 'tc-2' if solr_config.collection_exists? name: 'tc-2'
-      solr_config.create_collection name: 'tc-1'
-      solr_config.create_collection name: 'tc-2'
-    end
-
-    after do
-      solr_config = Solr::Admin.new
-      solr_config.delete_collection 'tc-1'
-      solr_config.delete_collection 'tc-2'
-    end
+    before { create_collections collection_names }
+    after { remove_collections collection_names }
 
     it 'writes a record to both collections' do
       outcome

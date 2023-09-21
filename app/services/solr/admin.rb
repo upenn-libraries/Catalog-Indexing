@@ -47,13 +47,13 @@ module Solr
       collections.include?(name)
     end
 
-    def delete_collection(collection = config.collection_name)
-      resp = connection.get(Config::COLLECTION_PATH, action: 'DELETE', name: collection)
+    def delete_collection(name: config.collection_name)
+      resp = connection.get(Config::COLLECTION_PATH, action: 'DELETE', name: name)
       check_resp(resp)
     end
 
     def delete_all_collections
-      collections.map { |collection| delete_collection(collection) }
+      collections.map { |collection| delete_collection(name: collection) }
     end
 
     def create_collection(name: config.collection_name, configset: config.configset_name)
