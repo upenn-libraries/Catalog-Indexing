@@ -10,10 +10,10 @@
     </thead>
     <tbody>
     <% @users.each do |user| %>
-      <tr>
-        <td><%= link_to user.email, user_path(user)%></td>
-        <td><%= user.active ? 'Active' : 'Inactive' %></td>
-        <td><%= user.created_at.strftime('%B %d, %Y %I:%M %p') %></td>
+      <tr class="user-row row-id-<%= user.id %>">
+        <td class="email"><%= link_to user.email, user_path(user)%></td>
+        <td class="active"><%= user.active ? 'Active' : 'Inactive' %></td>
+        <td class="created-at"><%= user.created_at.strftime('%B %d, %Y %I:%M %p') %></td>
       </tr>
     <% end %>
     </tbody>
