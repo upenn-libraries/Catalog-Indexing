@@ -6,7 +6,7 @@ class BatchFilesController < ApplicationController
   before_action :load_batch_file, only: %i[show]
 
   def index
-    @batch_files = @alma_export.batch_files
+    @batch_files = @alma_export.batch_files.page(params[:page])
   end
 
   def show; end
