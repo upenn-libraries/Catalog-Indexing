@@ -1,28 +1,36 @@
-<h2>Alma Exports</h2>
+<nav aria-label="breadcrumb" class="mb-3 bg-light text-dark rounded">
+  <ol class="breadcrumb py-2 px-3">
+    <li class="breadcrumb-item"><a href="<%= root_path %>">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Alma Exports</li>
+  </ol>
+</nav>
 
-<table class="table">
-  <thead>
+<h1>Alma Exports</h1>
+<div class="mb-3">
+  <%= page_entries_info @alma_exports%>
+</div>
+<% unless @alma_exports.empty? %>
+  <table class="table table-striped">
+    <thead>
     <tr>
       <th scope="col">ID</th>
       <th scope="col">Started</th>
       <th scope="col">Status</th>
       <th scope="col">Batch Files</th>
     </tr>
-  </thead>
-  <tbody>
-  <% @alma_exports.each do |export| %>
-    <tr class="alma-export-row row-id-<%= export.id %>">
-      <th scope="row" class="id">
-        <%= link_to export.id, alma_export_path(export) %>
-      </th>
-      <td class="started-at"><%= export.started_at || 'Not Started'%></td>
-      <td class="status">
-        <span class="badge bg-primary rounded-pill">
-          <%= export.status.titleize %>
-        </span>
-      </td>
-      <td class="batch-files"><%= link_to export.batch_files.length, alma_export_batch_files_path(export) %></td>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+    <% @alma_exports.each do |export| %>
+      <tr class="alma-export-row row-id-<%= export.id %>">
+        <th scope="row" class="id">
+          <%= link_to export.id, alma_export_path(export) %>
+        </th>
+        <td class="started-at"><%= export.started_at || 'Not Started' %></td>
+        <td class="status"><%= export.status.titleize %></td>
+        <td class="batch-files"><%= link_to export.batch_files.length, alma_export_batch_files_path(export) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%= paginate @alma_exports %>
+<% end %>

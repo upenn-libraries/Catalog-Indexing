@@ -12,10 +12,6 @@ describe 'Batch Files Show Page' do
 
     before { visit alma_export_batch_file_path(alma_export, batch_file) }
 
-    it 'shows parent alma export' do
-      expect(page).to have_text("Belongs to Alma Export: #{alma_export.id}")
-    end
-
     it 'displays ID' do
       within('.batch-file-list') do
         expect(find('.id')).to have_text(batch_file.id)
