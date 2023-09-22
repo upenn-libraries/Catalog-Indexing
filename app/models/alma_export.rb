@@ -40,6 +40,7 @@ class AlmaExport < ApplicationRecord
                  else
                    Statuses::COMPLETED_WITH_ERRORS
                  end
+    self.completed_at = Time.current unless new_status.in?(Statuses::INCOMPLETE_STATUSES)
     self.status = new_status
     save!
   end

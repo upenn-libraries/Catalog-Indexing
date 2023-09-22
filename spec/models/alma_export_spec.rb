@@ -53,6 +53,7 @@ describe AlmaExport do
 
       it 'sets a status of FAILED' do
         expect(alma_export.status).to eq Statuses::FAILED
+        expect(alma_export.completed_at).to be_present
       end
     end
 
@@ -61,6 +62,7 @@ describe AlmaExport do
 
       it 'sets a status of COMPLETED' do
         expect(alma_export.status).to eq Statuses::COMPLETED
+        expect(alma_export.completed_at).to be_present
       end
     end
 
@@ -69,6 +71,16 @@ describe AlmaExport do
 
       it 'sets a status of COMPLETED WITH ERRORS' do
         expect(alma_export.status).to eq Statuses::COMPLETED_WITH_ERRORS
+        expect(alma_export.completed_at).to be_present
+      end
+    end
+
+    context 'with an AlmaExport with incomplete outcomes' do
+      let(:traits) { [:with_files_all_incomplete] }
+
+      it 'does not change the status or completed_at value' do
+        expect(alma_export.status).to eq Statuses::PENDING
+        expect(alma_export.completed_at).to be_nil
       end
     end
   end
