@@ -6,7 +6,7 @@ class ProcessBatchFileJob
 
   # @param [Integer] batch_file_id
   def perform(batch_file_id)
-    outcome = ProcessBatchFile.call(batch_file_id)
+    outcome = ProcessBatchFile.new.call(batch_file_id: batch_file_id)
     outcome.success?
     # Notify based on failure outcomes?
   end

@@ -6,10 +6,9 @@ class MultiCollectionWriter < Traject::SolrJsonWriter
 
   def initialize(settings = {})
     @solr_config = Solr::Config.new
-    settings = settings.merge({'solr_writer.batch_size' => ENV.fetch('SOLR_WRITER_BATCH_SIZE', 250),
-                               'solr_writer.thread_pool' => 0, # manage concurrency on our own
-                               'solr.url' => solr_config.url
-                              })
+    settings = settings.merge({ 'solr_writer.batch_size' => ENV.fetch('SOLR_WRITER_BATCH_SIZE', 250),
+                                'solr_writer.thread_pool' => 0, # manage concurrency on our own
+                                'solr.url' => solr_config.url })
     super(settings)
     build_writers_for_targets
   end
