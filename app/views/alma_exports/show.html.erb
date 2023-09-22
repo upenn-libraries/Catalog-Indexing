@@ -64,9 +64,7 @@
     <div class="row my-3">
       <dt>Webhook Body</dt>
       <dd class="webhook-body">
-      <pre class="bg-light">
-        <%= JSON.pretty_generate @alma_export.webhook_body %>
-      </pre>
+      <pre class="bg-light"><%= JSON.pretty_generate alma_export.webhook_body %></pre>
       </dd>
     </div>
   </dl>
