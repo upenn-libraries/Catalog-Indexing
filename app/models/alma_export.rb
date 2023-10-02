@@ -18,6 +18,9 @@ class AlmaExport < ApplicationRecord
   validates :full, presence: true
   validates :webhook_body, presence: true
 
+  scope :filter_status, ->(status) { where(status: status) }
+  scope :filter_sort_by, ->(value, order) { order("#{value}": order) }
+
   # @return [String, nil]
   def alma_job_identifier
     webhook_body.dig('job_instance', 'id')
