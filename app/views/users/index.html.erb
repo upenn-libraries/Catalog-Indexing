@@ -6,9 +6,13 @@
 </nav>
 
 <h1>Users</h1>
+
+<%= render 'users/filter' %>
+
 <div class="mb-3">
   <%= page_entries_info @users%>
 </div>
+
 <% unless @users.empty? %>
   <table class="table table-striped">
     <thead>
