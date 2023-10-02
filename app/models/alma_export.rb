@@ -33,19 +33,24 @@ class AlmaExport < ApplicationRecord
   def set_completion_status!
     return unless all_batch_files_finished?
 
-    new_status = if all_unique_batch_file_statuses == [Statuses::FAILED]
-                   Statuses::FAILED
-                 elsif all_unique_batch_file_statuses == [Statuses::COMPLETED]
-                   Statuses::COMPLETED
-                 else
-                   Statuses::COMPLETED_WITH_ERRORS
-                 end
+    new_status = status_from_batch_file_statuses
     self.completed_at = Time.current unless new_status.in?(Statuses::INCOMPLETE_STATUSES)
     self.status = new_status
     save!
   end
 
   private
+
+  # @return [String (frozen)]
+  def status_from_batch_file_statuses
+    if all_unique_batch_file_statuses == [Statuses::FAILED]
+      Statuses::FAILED
+    elsif all_unique_batch_file_statuses == [Statuses::COMPLETED]
+      Statuses::COMPLETED
+    else
+      Statuses::COMPLETED_WITH_ERRORS
+    end
+  end
 
   # @return [Array<String>]
   def all_unique_batch_file_statuses

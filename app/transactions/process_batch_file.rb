@@ -29,7 +29,9 @@ class ProcessBatchFile
   # @returns [Dry::Monads::Result]
   def validate_batch_file(batch_file:, **args)
     unless batch_file.status == Statuses::PENDING
-      return Failure("BatchFile with ID #{batch_file.id} is in #{batch_file.status} state. It must be in 'pending' state.")
+      return Failure(
+        "BatchFile with ID #{batch_file.id} is in #{batch_file.status} state. It must be in 'pending' state."
+      )
     end
 
     # check for presence of file

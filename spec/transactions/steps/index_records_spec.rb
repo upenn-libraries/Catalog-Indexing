@@ -82,18 +82,29 @@ describe Steps::IndexRecords do
     let(:sample_mmsid) { '9979201969103681' }
     let(:io) { StringIO.new(marc_fixture(sample_mmsid)) }
 
-    before { create_collections collection_names }
+    before do
+      create_collections collection_names
+      outcome
+    end
+
     after { remove_collections collection_names }
 
     it 'writes a record to both collections' do
-      outcome
       tc_1_query_client = Solr::QueryClient.new collection: 'tc-1'
-      tc_2_query_client = Solr::QueryClient.new collection: 'tc-2'
       tc_1_solr_response = tc_1_query_client.get_by_id(sample_mmsid)
-      tc_2_solr_response = tc_2_query_client.get_by_id(sample_mmsid)
       expect(tc_1_solr_response['response']['numFound']).to eq 1
-      expect(tc_2_solr_response['response']['numFound']).to eq 1
+    end
+
+    it 'writes a record to tc-1' do
+      query_client = Solr::QueryClient.new collection: 'tc-1'
+      solr_response = query_client.get_by_id(sample_mmsid)
+      expect(solr_response['response']['numFound']).to eq 1
+    end
+
+    it 'writes a record to tc-2' do
+      query_client = Solr::QueryClient.new collection: 'tc-2'
+      solr_response = query_client.get_by_id(sample_mmsid)
+      expect(solr_response['response']['numFound']).to eq 1
     end
   end
 end
-
