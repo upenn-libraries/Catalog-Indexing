@@ -6,12 +6,14 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.2.2'
 
+gem 'bcrypt_pbkdf'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 5.2.3'
 gem 'bootstrap_form', '~> 5.0'
 gem 'config'
 gem 'devise'
 gem 'dry-transaction'
+gem 'ed25519'
 gem 'faraday'
 gem 'importmap-rails'
 gem 'net-sftp'

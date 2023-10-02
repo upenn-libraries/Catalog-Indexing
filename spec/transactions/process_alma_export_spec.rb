@@ -61,7 +61,7 @@ describe ProcessAlmaExport do
     context 'with an AlmaExport using bad target_collection values' do
       let(:alma_export) do
         create(:alma_export, target_collections: %w[exists does-not-exist],
-               webhook_body: JSON.parse(json_fixture('job_end_success')))
+                             webhook_body: JSON.parse(json_fixture('job_end_success')))
       end
 
       before do
