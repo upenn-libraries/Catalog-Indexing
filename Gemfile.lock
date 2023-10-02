@@ -465,6 +465,7 @@ DEPENDENCIES
   rsolr
   rspec-rails (~> 6.0.0)
   rspec-sidekiq
+  rubocop-factory_bot
   rubyzip
   sassc-rails
   selenium-webdriver
