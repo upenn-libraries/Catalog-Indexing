@@ -46,4 +46,66 @@ describe 'Alma Export Index Page' do
       within('.alma-export-row') { expect(find('.batch-files')).to have_text(alma_export.batch_files.count) }
     end
   end
+
+  context 'when filtering alma exports by status' do
+    let!(:alma_export) { create(:alma_export) }
+
+    before do
+      create(:alma_export, status: 'completed')
+      visit alma_exports_path
+    end
+
+    it 'filters by status' do
+      select 'Completed', from: 'Status'
+      click_on 'Filter'
+      expect(page).to have_css '.alma-export-row', count: 1
+      expect(page).not_to have_text alma_export.id
+    end
+  end
+
+  context 'when filtering alma exports by started_at' do
+    let!(:alma_export) { create(:alma_export, started_at: 2.hour.ago) }
+    let!(:other_alma_export) { create(:alma_export, started_at: 1.hour.ago) }
+
+    before do
+      visit alma_exports_path
+    end
+
+    it 'sorts by started_at ascending' do
+      select 'Started At', from: 'Sort by'
+      select 'Ascending', from: 'Order'
+      click_on 'Filter'
+      expect(first('.alma-export-row')).to have_text(alma_export.id)
+    end
+
+    it 'sorts by started_at descending' do
+      select 'Started At', from: 'Sort by'
+      select 'Descending', from: 'Order'
+      click_on 'Filter'
+      expect(first('.alma-export-row')).to have_text(other_alma_export.id)
+    end
+  end
+
+  context 'when filtering alma exports by completed_at' do
+    let!(:alma_export) { create(:alma_export, completed_at: 2.hour.ago) }
+    let!(:other_alma_export) { create(:alma_export, completed_at: 1.hour.ago) }
+
+    before do
+      visit alma_exports_path
+    end
+
+    it 'sorts by completed_at ascending' do
+      select 'Completed At', from: 'Sort by'
+      select 'Ascending', from: 'Order'
+      click_on 'Filter'
+      expect(first('.alma-export-row')).to have_text(alma_export.id)
+    end
+
+    it 'sorts by completed_at descending' do
+      select 'Completed At', from: 'Sort by'
+      select 'Descending', from: 'Order'
+      click_on 'Filter'
+      expect(first('.alma-export-row')).to have_text(other_alma_export.id)
+    end
+  end
 end
