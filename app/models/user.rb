@@ -11,7 +11,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :uid, uniqueness: { scope: :provider }, if: :provider_provided?
 
-  scope :filter_active, ->(status) { where(active: status) }
+  scope :filter_status, ->(status) { where(active: status) }
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
