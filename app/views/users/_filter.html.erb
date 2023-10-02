@@ -2,8 +2,8 @@
   <%= bootstrap_form_tag(url: users_path, method: 'get') do |form| %>
     <div class="row align-items-end">
       <div class="col-md-3 col-lg-2">
-        <%= form.select 'filter[active_status]',
-                        options_for_select([['Active', 1], ['Inactive', 0]], selected: params.dig('filter', 'active_status')),
+        <%= form.select 'filter[status]',
+                        options_for_select([['Active', 1], ['Inactive', 0]], selected: params.dig('filter', 'status')),
                         include_blank: true,
                         label: 'Status'
         %>
