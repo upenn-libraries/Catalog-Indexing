@@ -8,6 +8,7 @@ class ProcessAlmaExport
   include Dry::Transaction(container: Container)
 
   step :load_alma_export
+  step :validate_solr_collections
   step :initialize_sftp_session
   step :get_sftp_files
   step :update_alma_export
@@ -27,6 +28,19 @@ class ProcessAlmaExport
   end
 
   # @param [AlmaExport] alma_export
+  # @return [Dry::Monads::Result]
+  def validate_solr_collections(alma_export:)
+    solr_admin = Solr::Admin.new
+    alma_export.target_collections.each do |collection|
+      unless solr_admin.collection_exists? name: collection
+        return Failure("AlmaExport with ID #{alma_export.id} uses a non-existent target collection of '#{collection}'.")
+      end
+    end
+    Success(alma_export: alma_export)
+  end
+
+  # @param [AlmaExport] alma_export
+  # @return [Dry::Monads::Result]
   def initialize_sftp_session(alma_export:)
     sftp_session = Sftp::Client.new
     Success(alma_export: alma_export, sftp_session: sftp_session)
