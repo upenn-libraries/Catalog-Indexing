@@ -39,17 +39,17 @@ class WebhookIndexingController < ApplicationController
   # @param [Hash] payload action-specific data received from alma webhook post request
   # @return [TrueClass]
   def handle_bib_action(payload)
-    # marc_xml = payload.dig 'bib', 'anies'
+    marc_xml = payload.dig 'bib', 'anies'
     # TODO: respect "suppress_from_publishing"?
     case payload.dig 'event', 'value'
     when 'BIB_UPDATED'
-      # run bib updated job
+      IndexByBibEventJob.perform_async(marc_xml)
       head :ok
     when 'BIB_DELETED'
       # run bib deleted job
       head :ok
     when 'BIB_CREATED'
-      # run bib created job
+      IndexByBibEventJob.perform_async(marc_xml)
       head :ok
     else
       head :bad_request
