@@ -1,6 +1,12 @@
 <section class="my-4">
-  <%= bootstrap_form_tag(url: alma_exports_path, method: 'get') do |form| %>
+  <%= bootstrap_form_tag(url: alma_export_batch_files_path, method: 'get') do |form| %>
     <div class="row align-items-end">
+      <div class="col-md-3 col-lg-2">
+        <%= form.text_field 'filter[search]',
+                            value: params.dig('filter', 'search'),
+                            label: 'Search'
+        %>
+      </div>
       <div class="col-md-3 col-lg-2">
         <%= form.select 'filter[status]',
                         options_for_select(titleize_and_hash(Statuses::ALL), selected: params.dig('filter', 'status')),
@@ -24,7 +30,7 @@
       </div>
       <div class="col my-3 d-flex align-items-center">
         <%= form.submit 'Filter', name: nil, class: 'btn btn-primary' %>
-        <%= link_to '', alma_exports_path, name: nil, class: 'btn btn-close btn-sm ms-3' %>
+        <%= link_to '', alma_export_batch_files_path, name: nil, class: 'btn btn-close btn-sm ms-3' %>
       </div>
     </div>
   <% end %>
