@@ -31,7 +31,7 @@ class IndexingService
   # @return [Proc]
   def rescue_proc
     @rescue_proc ||= proc do |context, exception|
-      error_messages << "Error during record processing (ID: #{context.source_record_id}): #{exception.message}"
+      error_messages << compose_error_message(context, exception)
       raise FailuresExceededError, "Failed record count exceeds limit (#{max_failed})" if too_many_failed?
     end
   end
@@ -47,6 +47,17 @@ class IndexingService
   end
 
   private
+
+  # @param [Traject::Indexer::Context] context
+  # @param [Exception] exception
+  # @return [String]
+  def compose_error_message(context, exception)
+    <<~MSG
+      Unexpected error on record #{context.record_inspect} while executing #{context.index_step.inspect}.
+      Exception #{exception.class.name}: #{exception.message}
+      From: #{exception.backtrace.first}
+    MSG
+  end
 
   def too_many_skipped?
     @skipped_count >= max_skipped
