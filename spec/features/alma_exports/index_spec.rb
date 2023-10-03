@@ -58,13 +58,13 @@ describe 'Alma Export Index Page' do
     it 'filters by status' do
       select 'Completed', from: 'Status'
       click_on 'Filter'
-      expect(page).to have_css '.alma-export-row', count: 1
+      expect(page).to have_css('.alma-export-row'), count: 1
       expect(page).not_to have_text alma_export.id
     end
   end
 
-  context 'when filtering alma exports by started_at' do
-    let!(:alma_export) { create(:alma_export, started_at: 2.hour.ago) }
+  context 'when sorting alma exports by started_at' do
+    let!(:alma_export) { create(:alma_export, started_at: 2.hours.ago) }
     let!(:other_alma_export) { create(:alma_export, started_at: 1.hour.ago) }
 
     before do
@@ -86,8 +86,8 @@ describe 'Alma Export Index Page' do
     end
   end
 
-  context 'when filtering alma exports by completed_at' do
-    let!(:alma_export) { create(:alma_export, completed_at: 2.hour.ago) }
+  context 'when sorting alma exports by completed_at' do
+    let!(:alma_export) { create(:alma_export, completed_at: 2.hours.ago) }
     let!(:other_alma_export) { create(:alma_export, completed_at: 1.hour.ago) }
 
     before do
