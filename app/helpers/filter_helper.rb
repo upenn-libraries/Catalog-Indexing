@@ -7,6 +7,6 @@ module FilterHelper
   # @param [Array] values
   # @return [Array]
   def titleize_and_pair(values)
-    values.filter_map { |original_string| [original_string.titleize, original_string] }
+    values.filter_map { |value| [value.titleize, value] }
   end
 end
