@@ -9,14 +9,14 @@
       </div>
       <div class="col-md-3 col-lg-2">
         <%= form.select 'filter[status]',
-                        options_for_select(titleize_and_hash(Statuses::ALL), selected: params.dig('filter', 'status')),
+                        options_for_select(titleize_and_pair(Statuses::ALL), selected: params.dig('filter', 'status')),
                         include_blank: true,
                         label: 'Status'
         %>
       </div>
       <div class="col-md-3 col-lg-2">
         <%= form.select 'filter[sort_value]',
-                        options_for_select(titleize_and_hash(%w[started_at completed_at]), selected: params.dig('filter', 'sort_value')),
+                        options_for_select(titleize_and_pair(%w[started_at completed_at]), selected: params.dig('filter', 'sort_value')),
                         include_blank: true,
                         label: 'Sort by'
         %>
