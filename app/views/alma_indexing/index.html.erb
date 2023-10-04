@@ -1,4 +1,11 @@
-<h2>Index by Identifier</h2>
+<nav aria-label="breadcrumb" class="mb-3 bg-light text-dark rounded">
+  <ol class="breadcrumb py-2 px-3">
+    <li class="breadcrumb-item"><a href="<%= root_path %>">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Index by Indentifier</li>
+  </ol>
+</nav>
+
+<h1>Index by Identifier</h1>
 
 <%= bootstrap_form_tag url: process_ids_path do |form| %>
   <div class="row justify-content-center pt-5">
