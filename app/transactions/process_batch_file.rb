@@ -10,6 +10,7 @@ class ProcessBatchFile
 
   step :load_batch_file
   step :validate_batch_file
+  step :set_as_begun
   step :prepare_indexer
   step :decompress_file
   step :index_records, with: 'traject.index_records'
@@ -42,12 +43,20 @@ class ProcessBatchFile
       return handle_failure batch_file, "BatchFile expects a file present at #{batch_file.path}, but no file is present."
     end
 
-    batch_file.update_column(:started_at, Time.zone.now) # sends raw UPDATE query, no validations/callbacks
-
     Success(batch_file: batch_file, **args)
   end
 
   # @param [BatchFile] batch_file
+  # @returns [Dry::Monads::Result]
+  def set_as_begun(batch_file:, **args)
+    batch_file.update!({ started_at: Time.zone.now, status: Statuses::IN_PROGRESS })
+    Success(batch_file: batch_file, **args)
+  rescue StandardError => e
+    handle_failure batch_file, "Unhandled error when updating batch file ##{batch_file.id}: #{e}"
+  end
+
+  # @param [BatchFile] batch_file
+  # @returns [Dry::Monads::Result]
   def prepare_indexer(batch_file:, **args)
     settings = { 'solr_writer.target_collections' => batch_file.alma_export.target_collections,
                  'skipped_record_limit' => 500, 'failed_record_limit' => 100 }
@@ -81,7 +90,7 @@ class ProcessBatchFile
                          status: (errors.any? ? Statuses::COMPLETED_WITH_ERRORS : Statuses::COMPLETED),
                          completed_at: Time.zone.now
                        })
-    # remove file? decompressed contents?
+    # remove file?
     Success(batch_file: batch_file, **args)
   rescue StandardError => e
     handle_failure batch_file, "Problem updating BatchFile after indexing: #{e.message}"
@@ -90,7 +99,10 @@ class ProcessBatchFile
   # @param [BatchFile] batch_file
   # @returns [Dry::Monads::Result]
   def check_alma_export(batch_file:)
-    batch_file.alma_export.set_completion_status! if batch_file.alma_export.all_batch_files_finished?
+    benchmark = Benchmark.measure do
+      batch_file.alma_export.set_completion_status! if batch_file.alma_export.all_batch_files_finished?
+    end
+    Rails.logger.info { "AlmaExport status check took #{benchmark.total} seconds (from BatchFile ##{batch_file.id}" }
     message = "All done with BatchFile #{batch_file.id} / #{batch_file.path}"
     Rails.logger.info { message }
     Success(message)
