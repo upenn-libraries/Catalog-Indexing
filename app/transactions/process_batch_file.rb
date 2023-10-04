@@ -91,7 +91,9 @@ class ProcessBatchFile
   # @returns [Dry::Monads::Result]
   def check_alma_export(batch_file:)
     batch_file.alma_export.set_completion_status! if batch_file.alma_export.all_batch_files_finished?
-    Success("All done with BatchFile #{batch_file.id} / #{batch_file.path}")
+    message = "All done with BatchFile #{batch_file.id} / #{batch_file.path}"
+    Rails.logger.info { message }
+    Success(message)
   end
 
   private
@@ -110,7 +112,7 @@ class ProcessBatchFile
   # @return [Boolean]
   def mark_batch_file_failed(batch_file, error_messages)
     batch_file.status = Statuses::FAILED
-    batch_file.error_messages += Array.wrap(error_messages) # TODO: will this merge work?
+    batch_file.error_messages += Array.wrap(error_messages)
     batch_file.save
   end
 end
