@@ -48,7 +48,7 @@ class ProcessAlmaExport
     Failure("Problem connecting to the SFTP server: #{e.message}")
   end
 
-  # get Sftp::File objects via dir entries/glob
+  # get Sftp::File objects via SFTP entries
   # @param [AlmaExport] alma_export
   # @param [Sftp::Client] sftp_session
   # @return [Dry::Monads::Result]
@@ -89,7 +89,7 @@ class ProcessAlmaExport
     end
     Success(alma_export: alma_export)
   rescue StandardError => e
-    alma_export.status = Statuses::FAILED # TODO: how would this be done with AASM?
+    alma_export.status = Statuses::FAILED
     alma_export.save
     Failure("Problem processing SFTP file for Alma Export (ID: #{alma_export.id}): #{e.message}")
   end

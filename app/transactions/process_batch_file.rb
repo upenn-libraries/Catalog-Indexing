@@ -3,8 +3,8 @@
 require 'dry/transaction'
 require 'rubygems/package'
 
-# Initialize and create a AlmaExport from a webhook body. Downloads all files from SFTP and enqueues jobs to
-# process BatchFiles
+# Looks up a BatchFile, validates, decompresses and processes contents through PennMarcIndexer. Checks up on AlmaExport
+# completion status at the end.
 class ProcessBatchFile
   include Dry::Transaction(container: Container)
 
@@ -20,23 +20,26 @@ class ProcessBatchFile
   # @return [Dry::Monads::Result]
   def load_batch_file(batch_file_id:, **args)
     batch_file = BatchFile.find batch_file_id
+    Rails.logger.info { "Batch file processing beginning for ID ##{batch_file_id} @ #{batch_file.path}." }
     Success(batch_file: batch_file, **args)
   rescue ActiveRecord::RecordNotFound => _e
-    Failure("BatchFile record with ID #{batch_file_id} does not exist.")
+    message = "BatchFile record with ID #{batch_file_id} does not exist."
+    Rails.logger.info { "BatchFile processing failed: #{message}" }
+    Failure(message)
   end
 
   # @param [BatchFile] batch_file
   # @returns [Dry::Monads::Result]
   def validate_batch_file(batch_file:, **args)
     unless batch_file.status == Statuses::PENDING
-      return Failure(
-        "BatchFile with ID #{batch_file.id} is in #{batch_file.status} state. It must be in 'pending' state."
+      return handle_failure(
+        batch_file, "BatchFile ##{batch_file.id} is in #{batch_file.status} state. It must be in 'pending' state."
       )
     end
 
     # check for presence of file
     unless File.exist?(batch_file.path)
-      return Failure("BatchFile expects a file present at #{batch_file.path}, but no file is present.")
+      return handle_failure batch_file, "BatchFile expects a file present at #{batch_file.path}, but no file is present."
     end
 
     batch_file.update_column(:started_at, Time.zone.now) # sends raw UPDATE query, no validations/callbacks
@@ -62,7 +65,7 @@ class ProcessBatchFile
 
     Success(io: io, indexer: indexer, file_handle: file, batch_file: batch_file, **args)
   rescue StandardError => e
-    Failure("Problem decompressing BatchFile: #{e.message}")
+    handle_failure batch_file, "Problem decompressing BatchFile: #{e.message}"
   end
 
   # Indexer Step
@@ -73,14 +76,15 @@ class ProcessBatchFile
   # @returns [Dry::Monads::Result]
   def clean_up(batch_file:, file_handle:, errors:, **args)
     file_handle.close
-    batch_file.error_messages = errors
-    batch_file.status = errors.any? ? Statuses::COMPLETED_WITH_ERRORS : Statuses::COMPLETED
-    batch_file.completed_at = Time.zone.now
-    batch_file.save
+    batch_file.update!({
+                         error_messages: errors,
+                         status: (errors.any? ? Statuses::COMPLETED_WITH_ERRORS : Statuses::COMPLETED),
+                         completed_at: Time.zone.now
+                       })
     # remove file? decompressed contents?
     Success(batch_file: batch_file, **args)
   rescue StandardError => e
-    Failure("Problem updating BatchFile after indexing: #{e.message}")
+    handle_failure batch_file, "Problem updating BatchFile after indexing: #{e.message}"
   end
 
   # @param [BatchFile] batch_file
@@ -93,11 +97,20 @@ class ProcessBatchFile
   private
 
   # @param [BatchFile] batch_file
+  # @param [String] message
+  # @return [Dry::Monads::Failure]
+  def handle_failure(batch_file, message)
+    Rails.logger.info { "Batch file processing failed for ##{batch_file.id} @ #{batch_file.path}: #{message}" }
+    mark_batch_file_failed(batch_file, message)
+    Failure(message)
+  end
+
+  # @param [BatchFile] batch_file
   # @param [Array<String>, String] error_messages
   # @return [Boolean]
   def mark_batch_file_failed(batch_file, error_messages)
     batch_file.status = Statuses::FAILED
-    batch_file.error_messages.merge Array.wrap(error_messages) # TODO: will this merge work?
+    batch_file.error_messages += Array.wrap(error_messages) # TODO: will this merge work?
     batch_file.save
   end
 end

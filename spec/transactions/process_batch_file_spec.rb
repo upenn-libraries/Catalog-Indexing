@@ -22,7 +22,14 @@ describe ProcessBatchFile do
 
       it 'returns a Failure monad with the appropriate message' do
         expect(outcome).to be_failure
-        expect(outcome.failure).to include "BatchFile with ID #{batch_file.id} is in #{batch_file.status} state"
+        expect(outcome.failure).to include "BatchFile ##{batch_file.id} is in #{batch_file.status} state"
+      end
+
+      it 'sets the status of the BatchFile to failed and stores the failure message' do
+        outcome
+        batch_file.reload
+        expect(batch_file.status).to eq Statuses::FAILED
+        expect(batch_file.error_messages.join).to include "It must be in 'pending' state"
       end
     end
 

@@ -60,7 +60,7 @@ describe Steps::IndexRecords do
 
       it 'writes an error message but returns success' do
         expect(outcome).to be_success
-        expect(outcome.success[:errors].first).to include 'Error during record processing'
+        expect(outcome.success[:errors].first).to include 'Unexpected error on record'
       end
     end
 
