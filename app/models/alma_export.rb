@@ -54,6 +54,8 @@ class AlmaExport < ApplicationRecord
 
   # @return [Array<String>]
   def all_unique_batch_file_statuses
-    batch_files.distinct.pluck(:status)
+    ActiveRecord::Base.uncached do
+      batch_files.reload.distinct.pluck(:status)
+    end
   end
 end
