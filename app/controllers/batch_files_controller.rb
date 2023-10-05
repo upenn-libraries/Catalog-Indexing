@@ -12,7 +12,7 @@ class BatchFilesController < ApplicationController
 
     return if filter('sort_value').blank?
 
-    sort_order = (filter('sort_order').presence || 'desc')
+    sort_order = filter('sort_order').presence || 'desc'
     @batch_files = @batch_files.filter_sort_by(filter('sort_value'), sort_order)
   end
 

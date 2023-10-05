@@ -10,7 +10,7 @@ class AlmaExportsController < ApplicationController
 
     return if filter('sort_value').blank?
 
-    sort_order = (filter('sort_order').presence || 'desc')
+    sort_order = filter('sort_order').presence || 'desc'
     @alma_exports = @alma_exports.filter_sort_by(filter('sort_value'), sort_order)
   end
 
