@@ -24,28 +24,34 @@ class AlmaExport < ApplicationRecord
   end
 
   # query to see if all associated BatchFiles are in a completed state (completed, completed with errors, failed)
-  def all_batch_files_finished?
-    all_unique_batch_file_statuses.none? { |status| status.in? Statuses::INCOMPLETE_STATUSES }
+  # @param [Array<String>] statuses
+  # @return [Boolean]
+  def all_batch_files_finished?(statuses = unique_batch_file_statuses)
+    statuses.none? { |status| status.in? Statuses::INCOMPLETE_STATUSES }
   end
 
   # set to appropriate completed status and save
-  # @return [TrueClass]
+  # @return [NilClass]
   def set_completion_status!
-    return unless all_batch_files_finished?
+    new_status = derive_completion_status
+    return unless new_status
 
-    new_status = status_from_batch_file_statuses
-    self.completed_at = Time.current unless new_status.in?(Statuses::INCOMPLETE_STATUSES)
-    self.status = new_status
-    save!
+    update!({
+              completed_at: Time.current,
+              status: new_status
+            })
   end
 
   private
 
-  # @return [String (frozen)]
-  def status_from_batch_file_statuses
-    if all_unique_batch_file_statuses == [Statuses::FAILED]
+  # @param [Array<String>] statuses
+  # @return [NilClass | String (frozen)]
+  def derive_completion_status(statuses = unique_batch_file_statuses)
+    return unless all_batch_files_finished?(statuses)
+
+    if statuses == [Statuses::FAILED]
       Statuses::FAILED
-    elsif all_unique_batch_file_statuses == [Statuses::COMPLETED]
+    elsif statuses == [Statuses::COMPLETED]
       Statuses::COMPLETED
     else
       Statuses::COMPLETED_WITH_ERRORS
@@ -53,7 +59,7 @@ class AlmaExport < ApplicationRecord
   end
 
   # @return [Array<String>]
-  def all_unique_batch_file_statuses
+  def unique_batch_file_statuses
     ActiveRecord::Base.uncached do
       batch_files.reload.distinct.pluck(:status)
     end

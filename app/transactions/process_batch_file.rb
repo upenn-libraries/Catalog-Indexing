@@ -17,6 +17,7 @@ class ProcessBatchFile
   step :clean_up
   step :check_alma_export
 
+  # Load the BatchFile
   # @param [String] batch_file_id
   # @return [Dry::Monads::Result]
   def load_batch_file(batch_file_id:, **args)
@@ -29,6 +30,7 @@ class ProcessBatchFile
     Failure(message)
   end
 
+  # Perform some checks to help ensure BatchFile is ready to be processed
   # @param [BatchFile] batch_file
   # @returns [Dry::Monads::Result]
   def validate_batch_file(batch_file:, **args)
@@ -40,12 +42,14 @@ class ProcessBatchFile
 
     # check for presence of file
     unless File.exist?(batch_file.path)
-      return handle_failure batch_file, "BatchFile expects a file present at #{batch_file.path}, but no file is present."
+      return handle_failure(batch_file,
+                            "BatchFile expects a file present at #{batch_file.path}, but no file is present.")
     end
 
     Success(batch_file: batch_file, **args)
   end
 
+  # Update BatchFile status
   # @param [BatchFile] batch_file
   # @returns [Dry::Monads::Result]
   def set_as_begun(batch_file:, **args)
@@ -55,6 +59,7 @@ class ProcessBatchFile
     handle_failure batch_file, "Unhandled error when updating batch file ##{batch_file.id}: #{e}"
   end
 
+  # Prepare Traject indexer, apply configuration
   # @param [BatchFile] batch_file
   # @returns [Dry::Monads::Result]
   def prepare_indexer(batch_file:, **args)
@@ -64,6 +69,7 @@ class ProcessBatchFile
     Success(batch_file: batch_file, indexer: indexer, **args)
   end
 
+  # Prepare reader for compressed file
   # @param [BatchFile] batch_file
   # @param [Traject::Indexer] indexer
   # @returns [Dry::Monads::Result]
@@ -79,6 +85,8 @@ class ProcessBatchFile
 
   # Indexer Step
 
+  # After indexing completes, update the BatchFile status and clean up
+  # @todo clean up any files from the file system at this time?
   # @param [BatchFile] batch_file
   # @param [File] file_handle
   # @param [Array<String>] errors
@@ -96,25 +104,37 @@ class ProcessBatchFile
     handle_failure batch_file, "Problem updating BatchFile after indexing: #{e.message}"
   end
 
+  # Check if all BatchFiles for the current AlmaExport are in a completed state, and update the AlmaExport status if
+  # needed.
   # @param [BatchFile] batch_file
   # @returns [Dry::Monads::Result]
   def check_alma_export(batch_file:)
-    benchmark = Benchmark.measure do
-      batch_file.alma_export.set_completion_status! if batch_file.alma_export.all_batch_files_finished?
-    end
+    benchmark = Benchmark.measure { should_complete_alma_export(batch_file) }
     Rails.logger.info { "AlmaExport status check took #{benchmark.total} seconds (from BatchFile ##{batch_file.id}" }
     message = "All done with BatchFile #{batch_file.id} / #{batch_file.path}"
     Rails.logger.info { message }
     Success(message)
+  rescue StandardError => e
+    Rails.logger.error "Problem checking AlmaExport after BatchFile ##{batch_file.id} completion: #{e.message}"
   end
 
   private
 
   # @param [BatchFile] batch_file
+  def should_complete_alma_export(batch_file)
+    return unless batch_file.alma_export.all_batch_files_finished?
+
+    batch_file.alma_export.set_completion_status!
+    Rails.logger.info do
+      "AlmaExport ##{batch_file.alma_export.id} marked complete after BatchFile ##{batch_file.id} processed."
+    end
+  end
+
+  # @param [BatchFile] batch_file
   # @param [String] message
   # @return [Dry::Monads::Failure]
   def handle_failure(batch_file, message)
-    Rails.logger.info { "Batch file processing failed for ##{batch_file.id} @ #{batch_file.path}: #{message}" }
+    Rails.logger.error { "Batch file processing failed for ##{batch_file.id} @ #{batch_file.path}: #{message}" }
     mark_batch_file_failed(batch_file, message)
     Failure(message)
   end
@@ -125,6 +145,10 @@ class ProcessBatchFile
   def mark_batch_file_failed(batch_file, error_messages)
     batch_file.status = Statuses::FAILED
     batch_file.error_messages += Array.wrap(error_messages)
-    batch_file.save
+    batch_file.save!
+  rescue StandardError => e
+    Rails.logger.error do
+      "Unexpected error trying to update BatchFile ##{batch_file.id} upon processing error: #{e.message}"
+    end
   end
 end
