@@ -41,7 +41,7 @@ class IndexingService
   def skipped_proc
     @skipped_proc ||= proc do |context|
       @skipped_count += 1
-      error_messages << "Record skipped: #{context.record_inspect}"
+      Rails.logger.info("Record skipped: #{context.record_inspect}")
       raise SkipsExceededError, "Skipped record count exceeds limit (#{max_skipped})." if too_many_skipped?
     end
   end

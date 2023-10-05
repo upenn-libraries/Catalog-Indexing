@@ -87,6 +87,8 @@ class ProcessBatchFile
 
   # After indexing completes, update the BatchFile status and clean up
   # @todo clean up any files from the file system at this time?
+  # @todo can we distinguish between "completion with errors" and "failure" based on the response of the indexing step?
+  #       if the skip/error limits are exceeded, should that be considered a failure?
   # @param [BatchFile] batch_file
   # @param [File] file_handle
   # @param [Array<String>] errors

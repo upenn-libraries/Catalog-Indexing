@@ -39,11 +39,30 @@ describe Steps::IndexRecords do
 
     before do
       allow_any_instance_of(Traject::Indexer::Context).to receive(:skip?).and_return(true)
+      allow(Rails.logger).to receive(:info).at_least(:once)
     end
 
-    it 'writes an error message' do
+    it 'logs an error message' do
       expect(outcome).to be_success
-      expect(outcome.success[:errors].first).to include 'Record skipped'
+      expect(Rails.logger).to have_received(:info).with(/Record skipped/)
+    end
+
+    context 'when exceeding the configured skip limit' do
+      let(:indexer) { PennMarcIndexer.new({ 'skipped_record_limit' => 0, 'failed_record_limit' => 2 }) }
+
+      it 'writes error messages and returns success' do
+        expect(outcome).to be_success
+        expect(outcome.success[:errors].first).to include 'Skipped record count exceeds limit'
+      end
+    end
+
+    context 'when not exceeding the configured skip limit' do
+      let(:indexer) { PennMarcIndexer.new({ 'skipped_record_limit' => 2, 'failed_record_limit' => 2 }) }
+
+      it 'returns success and does not log an error message for the skipped record' do
+        expect(outcome).to be_success
+        expect(outcome.success[:errors].length).to eq 0
+      end
     end
   end
 
@@ -55,21 +74,21 @@ describe Steps::IndexRecords do
       allow(indexer).to receive(:map_to_context!).and_raise(StandardError)
     end
 
-    context 'when exceeding the configured error limit' do
-      let(:indexer) { PennMarcIndexer.new({ 'failed_record_limit' => 2 }) }
+    context 'when not exceeding the configured error limit' do
+      let(:indexer) { PennMarcIndexer.new({ 'failed_record_limit' => 2, 'skipped_record_limit' => 1 }) }
 
-      it 'writes an error message but returns success' do
+      it 'writes a single error message but returns success' do
         expect(outcome).to be_success
-        expect(outcome.success[:errors].first).to include 'Unexpected error on record'
+        expect(outcome.success[:errors].length).to eq 1
       end
     end
 
-    context 'when not exceeding the configured error limit' do
-      let(:indexer) { PennMarcIndexer.new({ 'failed_record_limit' => 0 }) }
+    context 'when exceeding the configured error limit' do
+      let(:indexer) { PennMarcIndexer.new({ 'failed_record_limit' => 0, 'skipped_record_limit' => 1 }) }
 
       it 'writes error messages and returns success' do
         expect(outcome).to be_success
-        expect(outcome.success[:errors].first).to include 'exceeds limit'
+        expect(outcome.success[:errors].first).to include 'Failed record count exceeds limit'
       end
     end
   end
