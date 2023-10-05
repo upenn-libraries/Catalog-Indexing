@@ -8,9 +8,9 @@ class AlmaExportsController < ApplicationController
     @alma_exports = AlmaExport.all.includes(:batch_files).page(params[:page])
     @alma_exports = @alma_exports.filter_status(filter('status')) if filter('status').present?
 
-    sort_order = (filter('sort_order').presence || 'desc')
     return if filter('sort_value').blank?
 
+    sort_order = (filter('sort_order').presence || 'desc')
     @alma_exports = @alma_exports.filter_sort_by(filter('sort_value'), sort_order)
   end
 

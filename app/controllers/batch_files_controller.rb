@@ -10,9 +10,9 @@ class BatchFilesController < ApplicationController
     @batch_files = @batch_files.filter_search(filter('search')) if filter('search').present?
     @batch_files = @batch_files.filter_status(filter('status')) if filter('status').present?
 
-    sort_order = (filter('sort_order').presence || 'desc')
     return if filter('sort_value').blank?
 
+    sort_order = (filter('sort_order').presence || 'desc')
     @batch_files = @batch_files.filter_sort_by(filter('sort_value'), sort_order)
   end
 
