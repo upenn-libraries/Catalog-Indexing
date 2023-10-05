@@ -1,28 +1,28 @@
 <section class="my-4">
   <%= bootstrap_form_tag(url: alma_exports_path, method: 'get') do |form| %>
     <div class="row align-items-end">
-      <div class="col-md-3 col-lg-2">
+      <div class="col-lg">
         <%= form.select 'filter[status]',
                         options_for_select(titleize_and_pair(Statuses::ALL), selected: params.dig('filter', 'status')),
                         include_blank: true,
                         label: 'Status'
         %>
       </div>
-      <div class="col-md-3 col-lg-2">
+      <div class="col-lg">
         <%= form.select 'filter[sort_value]',
                         options_for_select(titleize_and_pair(%w[started_at completed_at]), selected: params.dig('filter', 'sort_value')),
                         include_blank: true,
                         label: 'Sort by'
         %>
       </div>
-      <div class="col-md-3 col-lg-2">
+      <div class="col-lg-2">
         <%= form.select 'filter[sort_order]',
                         options_for_select([%w[Ascending asc], %w[Descending desc]], selected: params.dig('filter', 'sort_order')),
                         include_blank: true,
                         label: 'Order'
         %>
       </div>
-      <div class="col my-3 d-flex align-items-center">
+      <div class="col-lg my-3 d-flex align-items-center">
         <%= form.submit 'Filter', name: nil, class: 'btn btn-primary' %>
         <%= link_to '', alma_exports_path, name: nil, class: 'btn btn-close btn-sm ms-3' %>
       </div>
