@@ -6,10 +6,12 @@ class AlmaExportsController < ApplicationController
 
   def index
     @alma_exports = AlmaExport.all.includes(:batch_files).page(params[:page])
-    @alma_exports = @alma_exports.filter_status(params.dig('filter', 'status')) if params.dig('filter', 'status').present?
-    if params.dig('filter', 'sort_value').present? && params.dig('filter', 'sort_order').present?
-      @alma_exports = @alma_exports.filter_sort_by(params.dig('filter', 'sort_value'), params.dig('filter', 'sort_order'))
-    end
+    @alma_exports = @alma_exports.filter_status(filter('status')) if filter('status').present?
+
+    sort_order = (filter('sort_order').presence || 'desc')
+    return if filter('sort_value').blank?
+
+    @alma_exports = @alma_exports.filter_sort_by(filter('sort_value'), sort_order)
   end
 
   def show; end
@@ -24,5 +26,9 @@ class AlmaExportsController < ApplicationController
 
   def load_alma_export
     @alma_export = AlmaExport.find params[:id]
+  end
+
+  def filter(param)
+    params.dig('filter', param)
   end
 end
