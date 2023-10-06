@@ -70,13 +70,13 @@ describe 'Alma Export Show Page' do
 
     it 'displays created_at' do
       within('.alma-export-list') do
-        expect(find('.created-at')).to have_text(alma_export.created_at&.to_fs(:display))
+        expect(find('.created-at')).to have_text(alma_export.created_at.to_fs(:display))
       end
     end
 
     it 'displays updated_at' do
       within('.alma-export-list') do
-        expect(find('.updated-at')).to have_text(alma_export.updated_at&.to_fs(:display))
+        expect(find('.updated-at')).to have_text(alma_export.updated_at.to_fs(:display))
       end
     end
 
