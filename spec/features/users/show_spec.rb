@@ -22,7 +22,7 @@ describe 'User show page' do
 
     it 'displays created_at' do
       within('.user-list') do
-        expect(find('.created-at')).to have_text(user.created_at.strftime('%B %d, %Y %I:%M %p'))
+        expect(find('.created-at')).to have_text(user.created_at.to_fs(:display))
       end
     end
   end

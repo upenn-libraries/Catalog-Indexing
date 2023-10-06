@@ -30,19 +30,19 @@
     <div class="row my-3">
       <div class="col">
       <dt>Started At</dt>
-      <dd class="started-at"><%= @alma_export.started_at || 'Not Started' %></dd>
+      <dd class="started-at"><%= @alma_export.started_at&.to_fs(:display) || 'Not Started' %></dd>
       </div>
       <div class="col">
       <dt>Completed At</dt>
-      <dd class="completed-at"><%= @alma_export.completed_at || 'Not Completed' %></dd>
+      <dd class="completed-at"><%= @alma_export.completed_at&.to_fs(:display) || 'Not Completed' %></dd>
       </div>
       <div class="col">
       <dt>Created At</dt>
-      <dd class="created-at"><%= @alma_export.created_at %></dd>
+      <dd class="created-at"><%= @alma_export.created_at.to_fs(:display) %></dd>
       </div>
       <div class="col">
       <dt>Updated At</dt>
-      <dd class="updated-at"><%= @alma_export.updated_at %></dd>
+      <dd class="updated-at"><%= @alma_export.updated_at.to_fs(:display) %></dd>
       </div>
     </div>
     <div class="row my-3">

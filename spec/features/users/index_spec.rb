@@ -36,7 +36,7 @@ describe 'User Index page' do
 
     it 'displays created_at' do
       within(".user-row.row-id-#{user.id}") do
-        expect(find('.created-at')).to have_text(user.created_at.strftime('%B %d, %Y %I:%M %p'))
+        expect(find('.created-at')).to have_text(user.created_at.to_fs(:display))
       end
     end
 

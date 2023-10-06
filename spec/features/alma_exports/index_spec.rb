@@ -33,7 +33,7 @@ describe 'Alma Export Index Page' do
 
       it 'displays started_at' do
         within('.started-at') do
-          expect(page).to have_text(alma_export.started_at)
+          expect(page).to have_text(alma_export.started_at.to_fs(:display))
         end
       end
     end
