@@ -47,13 +47,13 @@ describe 'Batch Files Show Page' do
 
       it 'displays started_at' do
         within('.batch-file-list') do
-          expect(find('.started-at')).to have_text(batch_file.started_at)
+          expect(find('.started-at')).to have_text(batch_file.started_at.to_fs(:display))
         end
       end
 
       it 'displays completed_at' do
         within('.batch-file-list') do
-          expect(find('.completed-at')).to have_text(batch_file.completed_at)
+          expect(find('.completed-at')).to have_text(batch_file.completed_at.to_fs(:display))
         end
       end
     end
@@ -78,13 +78,13 @@ describe 'Batch Files Show Page' do
 
     it 'displays created_at' do
       within('.batch-file-list') do
-        expect(find('.created-at')).to have_text(batch_file.created_at)
+        expect(find('.created-at')).to have_text(batch_file.created_at.to_fs(:display))
       end
     end
 
     it 'displays updated_at' do
       within('.batch-file-list') do
-        expect(find('.updated-at')).to have_text(batch_file.updated_at)
+        expect(find('.updated-at')).to have_text(batch_file.updated_at.to_fs(:display))
       end
     end
   end

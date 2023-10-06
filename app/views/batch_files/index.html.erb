@@ -39,10 +39,10 @@
         <td class="errors">
           <%= link_to file.error_messages.count, alma_export_batch_file_path(@alma_export, file.id) %>
         </td>
-        <td class="started-at"><%= file.started_at || 'Not Started' %></td>
-        <td class="completed-at"><%= file.completed_at || 'Not Completed' %></td>
-        <td class="created-at"><%= file.created_at %></td>
-        <td class="updated-at"><%= file.updated_at %></td>
+        <td class="started-at"><%= file.started_at&.to_fs(:display) || 'Not Started' %></td>
+        <td class="completed-at"><%= file.completed_at&.to_fs(:display) || 'Not Completed' %></td>
+        <td class="created-at"><%= file.created_at.to_fs(:display) %></td>
+        <td class="updated-at"><%= file.updated_at.to_fs(:display) %></td>
       </tr>
     <% end %>
     </tbody>
