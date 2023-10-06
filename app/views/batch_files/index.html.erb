@@ -8,6 +8,9 @@
 </nav>
 
 <h1>Batch Files for Alma Export: <%= @alma_export.id %></h1>
+
+<%= render 'batch_files/filter' %>
+
 <div class="mb-3">
   <%= page_entries_info @batch_files %>
 </div>

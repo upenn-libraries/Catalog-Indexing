@@ -7,6 +7,13 @@ class BatchFilesController < ApplicationController
 
   def index
     @batch_files = @alma_export.batch_files.page(params[:page])
+    @batch_files = @batch_files.filter_search(filter('search')) if filter('search').present?
+    @batch_files = @batch_files.filter_status(filter('status')) if filter('status').present?
+
+    return if filter('sort_value').blank?
+
+    sort_order = filter('sort_order').presence || 'desc'
+    @batch_files = @batch_files.filter_sort_by(filter('sort_value'), sort_order)
   end
 
   def show; end
@@ -19,5 +26,9 @@ class BatchFilesController < ApplicationController
 
   def load_batch_file
     @batch_file = @alma_export.batch_files.find(params[:id])
+  end
+
+  def filter(param)
+    params.dig('filter', param)
   end
 end

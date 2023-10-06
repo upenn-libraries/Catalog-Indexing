@@ -39,5 +39,14 @@ describe 'User Index page' do
         expect(find('.created-at')).to have_text(user.created_at.strftime('%B %d, %Y %I:%M %p'))
       end
     end
+
+    context 'with User filtering and searching' do
+      it 'filters by status' do
+        select 'Active', from: 'Status'
+        click_on 'Filter'
+        expect(page).to have_css '.user-row', count: 1
+        expect(page).not_to have_text inactive_user.email
+      end
+    end
   end
 end

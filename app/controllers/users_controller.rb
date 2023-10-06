@@ -4,6 +4,7 @@
 class UsersController < ApplicationController
   def index
     @users = User.page(params[:page])
+    @users = @users.filter_status(params.dig('filter', 'status')) if params.dig('filter', 'status').present?
   end
 
   def show
