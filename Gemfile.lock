@@ -235,7 +235,7 @@ GEM
     matrix (0.4.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
-    minitest (5.19.0)
+    minitest (5.20.0)
     msgpack (1.7.1)
     net-imap (0.3.6)
       date
@@ -265,7 +265,7 @@ GEM
     parallel (1.23.0)
     parser (3.2.2.1)
       ast (~> 2.4.1)
-    pennmarc (1.0.1)
+    pennmarc (1.0.2)
       activesupport (~> 7)
       library_stdnums (~> 1.6)
       marc (~> 1.2)
