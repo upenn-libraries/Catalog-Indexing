@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   devise_scope :user do
     post 'sign_out', to: 'devise/sessions#destroy', as: 'destroy_user_session'
+  end
+
+  authenticate :user do
+    mount Sidekiq::Web => '/sidekiq'
   end
 
   get 'login', to: 'login#index'
