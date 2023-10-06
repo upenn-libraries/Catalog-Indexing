@@ -81,7 +81,7 @@ describe Solr::Admin do
   end
 
   describe '#create_collection' do
-    after { admin.delete_collection('sample_collection') }
+    after { admin.delete_collection(name: 'sample_collection') }
 
     it 'can create a collection' do
       expect(admin.create_collection(name: 'sample_collection')).to be_nil
@@ -92,15 +92,15 @@ describe Solr::Admin do
     before { admin.create_collection(name: 'sample_collection') }
 
     it 'can delete a collection' do
-      expect(admin.delete_collection('sample_collection')).to be_nil
+      expect(admin.delete_collection(name: 'sample_collection')).to be_nil
     end
   end
 
   describe('#delete_all_collections') do
     before do
       allow(admin).to receive(:collections).and_return(%w[sample_collection another_collection])
-      allow(admin).to receive(:delete_collection).with('sample_collection').and_return(nil)
-      allow(admin).to receive(:delete_collection).with('another_collection').and_return(nil)
+      allow(admin).to receive(:delete_collection).with(name: 'sample_collection').and_return(nil)
+      allow(admin).to receive(:delete_collection).with(name: 'another_collection').and_return(nil)
     end
 
     it 'deletes all the collections' do
