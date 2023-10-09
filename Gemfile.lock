@@ -323,6 +323,12 @@ GEM
     rsolr (2.5.0)
       builder (>= 2.1.2)
       faraday (>= 0.9, < 3, != 2.0.0)
+    rspec (3.12.0)
+      rspec-core (~> 3.12.0)
+      rspec-expectations (~> 3.12.0)
+      rspec-mocks (~> 3.12.0)
+    rspec-collection_matchers (1.2.1)
+      rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.3)
@@ -344,6 +350,9 @@ GEM
       rspec-expectations (~> 3.0)
       rspec-mocks (~> 3.0)
       sidekiq (>= 5, < 8)
+    rspec-solr (3.0.0)
+      rspec (~> 3.5)
+      rspec-collection_matchers
     rspec-support (3.12.1)
     rubocop (1.51.0)
       json (~> 2.3)
@@ -482,6 +491,7 @@ DEPENDENCIES
   rsolr
   rspec-rails (~> 6.0.0)
   rspec-sidekiq
+  rspec-solr
   rubocop-factory_bot
   rubyzip
   sassc-rails

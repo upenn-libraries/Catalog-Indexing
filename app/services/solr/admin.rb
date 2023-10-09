@@ -84,10 +84,6 @@ module Solr
       check_resp(resp)
     end
 
-    def rsolr_conn(collection_name)
-      @solr ||= RSolr.connect connection, :url => connection_with_collection(collection_name)
-    end
-
     private
 
     def raw_data
