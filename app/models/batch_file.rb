@@ -8,4 +8,8 @@ class BatchFile < ApplicationRecord
 
   validates :status, inclusion: Statuses::ALL, presence: true
   validates :path, presence: true
+
+  scope :filter_search, ->(query) { where('path ILIKE :search', search: "%#{query}%") }
+  scope :filter_status, ->(status) { where(status: status) }
+  scope :filter_sort_by, ->(value, order) { order("#{value}": order) }
 end

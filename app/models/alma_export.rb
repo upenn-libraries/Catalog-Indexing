@@ -18,8 +18,53 @@ class AlmaExport < ApplicationRecord
   validates :full, presence: true
   validates :webhook_body, presence: true
 
+  scope :filter_status, ->(status) { where(status: status) }
+  scope :filter_sort_by, ->(value, order) { order("#{value}": order) }
+
   # @return [String, nil]
   def alma_job_identifier
     webhook_body.dig('job_instance', 'id')
+  end
+
+  # query to see if all associated BatchFiles are in a completed state (completed, completed with errors, failed)
+  # @param [Array<String>] statuses
+  # @return [Boolean]
+  def all_batch_files_finished?(statuses = unique_batch_file_statuses)
+    statuses.none? { |status| status.in? Statuses::INCOMPLETE_STATUSES }
+  end
+
+  # set to appropriate completed status and save
+  # @return [NilClass]
+  def set_completion_status!
+    new_status = derive_completion_status
+    return unless new_status
+
+    update!({
+              completed_at: Time.current,
+              status: new_status
+            })
+  end
+
+  private
+
+  # @param [Array<String>] statuses
+  # @return [NilClass | String (frozen)]
+  def derive_completion_status(statuses = unique_batch_file_statuses)
+    return unless all_batch_files_finished?(statuses)
+
+    if statuses == [Statuses::FAILED]
+      Statuses::FAILED
+    elsif statuses == [Statuses::COMPLETED]
+      Statuses::COMPLETED
+    else
+      Statuses::COMPLETED_WITH_ERRORS
+    end
+  end
+
+  # @return [Array<String>]
+  def unique_batch_file_statuses
+    ActiveRecord::Base.uncached do
+      batch_files.reload.distinct.pluck(:status)
+    end
   end
 end

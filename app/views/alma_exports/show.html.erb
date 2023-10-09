@@ -1,69 +1,75 @@
-<h2>Alma Export: <%= @alma_export.id %></h2>
+<nav aria-label="breadcrumb" class="mb-3 bg-light text-dark rounded">
+  <ol class="breadcrumb py-2 px-3">
+    <li class="breadcrumb-item"><a href="<%= root_path %>">Home</a></li>
+    <li class="breadcrumb-item"><a href="<%= alma_exports_path %>">Alma Exports</a></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @alma_export.id %></li>
+  </ol>
+</nav>
 
-<dl>
-  <dt>ID</dt>
-  <dd><%= @alma_export.id %></dd>
-  <dt>Status</dt>
-  <dd><%= @alma_export.status %></dd>
-  <dt>Source</dt>
-  <dd><%= @alma_export.alma_source %></dd>
-  <dt>Full?</dt>
-  <dd><%= @alma_export.full %></dd>
-  <dt>Webhook Body</dt>
-  <dd>
-    <pre>
-      <%= JSON.pretty_generate @alma_export.webhook_body %>
-    </pre>
-  </dd>
-  <dt>Started At</dt>
-  <dd><%= @alma_export.started_at %></dd>
-  <dt>Completed At</dt>
-  <dd><%= @alma_export.completed_at || 'Not Completed' %></dd>
-  <dt>Created At</dt>
-  <dd><%= @alma_export.created_at %></dd>
-  <dt>Updated At</dt>
-  <dd><%= @alma_export.started_at %></dd>
-</dl>
-
-<h3>Batch Files</h3>
-
-<% if @alma_export.batch_files.empty? %>
-  <p>No batch files</p>
-<% else %>
-  <table class="table">
-    <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">File Path</th>
-      <th scope="col">Status</th>
-      <th scope="col">Error Messages</th>
-      <th scope="col">Started At</th>
-      <th scope="col">Completed At</th>
-      <th scope="col">Created At</th>
-      <th scope="col">Updated At</th>
-    </tr>
-    </thead>
-  <% @alma_export.batch_files.each do |file| %>
-    <tbody>
-    <tr>
-      <th scope="row"><%= file.id %></th>
-      <td><%= file.path %></td>
-      <td><%= file.status %></td>
-      <td>
-        <% if file.error_messages.any? %>
-        <ul>
-          <% file.error_messages.each do |message| %>
-          <li><%= message %></li>
+<h1>Alma Export: <%= @alma_export.id %></h1>
+<div class="container">
+  <dl class="alma-export-list">
+    <div class="row my-3">
+      <div class="col">
+      <dt>ID</dt>
+        <dd class="id"><%= @alma_export.id %></dd>
+      </div>
+      <div class="col">
+      <dt>Status</dt>
+      <dd class="status"><%= @alma_export.status.titleize %></dd>
+      </div>
+      <div class="col">
+      <dt>Source</dt>
+      <dd class="source"><%= @alma_export.alma_source %></dd>
+      </div>
+      <div class="col">
+      <dt>Full?</dt>
+      <dd class="full"><%= @alma_export.full.to_s.titleize %></dd>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col">
+      <dt>Started At</dt>
+      <dd class="started-at"><%= @alma_export.started_at&.to_fs(:display) || 'Not Started' %></dd>
+      </div>
+      <div class="col">
+      <dt>Completed At</dt>
+      <dd class="completed-at"><%= @alma_export.completed_at&.to_fs(:display) || 'Not Completed' %></dd>
+      </div>
+      <div class="col">
+      <dt>Created At</dt>
+      <dd class="created-at"><%= @alma_export.created_at.to_fs(:display) %></dd>
+      </div>
+      <div class="col">
+      <dt>Updated At</dt>
+      <dd class="updated-at"><%= @alma_export.updated_at.to_fs(:display) %></dd>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col">
+        <dt>Target Collections</dt>
+        <dd class="target-collections">
+          <% if @alma_export.target_collections.any? %>
+            <ul>
+              <% @alma_export.target_collections.each do |collection| %>
+                <li><%= collection %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            None
           <% end %>
-        </ul>
-        <% end %>
-      </td>
-      <td><%= file.started_at %></td>
-      <td><%= file.completed_at %></td>
-      <td><%= file.created_at %></td>
-      <td><%= file.updated_at %></td>
-    </tr>
-    </tbody>
+        </dd>
+      </div>
+    </div>
+    <div class="row my-3">
+      <dt>Webhook Body</dt>
+      <dd class="webhook-body">
+      <pre class="bg-light"><%= JSON.pretty_generate @alma_export.webhook_body %></pre>
+      </dd>
+    </div>
+  </dl>
+
+  <% unless @alma_export.batch_files.empty? %>
+    <%= link_to "Show Batch Files", alma_export_batch_files_path(@alma_export), class: 'btn btn-primary' %>
   <% end %>
-  </table>
-<% end %>
+</div>

@@ -1,0 +1,51 @@
+<nav aria-label="breadcrumb" class="mb-3 bg-light text-dark rounded">
+  <ol class="breadcrumb py-2 px-3">
+    <li class="breadcrumb-item"><a href="<%= root_path %>">Home</a></li>
+    <li class="breadcrumb-item"><a href="<%= alma_exports_path %>">Alma Exports</a></li>
+    <li class="breadcrumb-item"><a href="<%= alma_export_path(@alma_export) %>"><%= @alma_export.id %></a></li>
+    <li class="breadcrumb-item active" aria-current="page">Batch Files</li>
+  </ol>
+</nav>
+
+<h1>Batch Files for Alma Export: <%= @alma_export.id %></h1>
+
+<%= render 'batch_files/filter' %>
+
+<div class="mb-3">
+  <%= page_entries_info @batch_files %>
+</div>
+<% unless @batch_files.empty? %>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">File Path</th>
+      <th scope="col">Status</th>
+      <th scope="col">Error Messages</th>
+      <th scope="col">Started At</th>
+      <th scope="col">Completed At</th>
+      <th scope="col">Created At</th>
+      <th scope="col">Updated At</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @batch_files.each do |file| %>
+      <tr class="batch-file-row row-id-<%= file.id %>">
+        <th scope="row" class="id">
+          <%= link_to file.id, alma_export_batch_file_path(@alma_export, file.id) %>
+        </th>
+        <td class="path"><%= file.path %></td>
+        <td class="status"><%= file.status.titleize %></td>
+        <td class="errors">
+          <%= link_to file.error_messages.count, alma_export_batch_file_path(@alma_export, file.id) %>
+        </td>
+        <td class="started-at"><%= file.started_at&.to_fs(:display) || 'Not Started' %></td>
+        <td class="completed-at"><%= file.completed_at&.to_fs(:display) || 'Not Completed' %></td>
+        <td class="created-at"><%= file.created_at.to_fs(:display) %></td>
+        <td class="updated-at"><%= file.updated_at.to_fs(:display) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%= paginate @batch_files %>
+<% end %>

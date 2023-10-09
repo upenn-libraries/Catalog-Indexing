@@ -8,6 +8,7 @@ class ProcessAlmaExport
   include Dry::Transaction(container: Container)
 
   step :load_alma_export
+  step :validate_solr_collections
   step :initialize_sftp_session
   step :get_sftp_files
   step :update_alma_export
@@ -22,13 +23,24 @@ class ProcessAlmaExport
     end
 
     Success(alma_export: alma_export)
-  rescue JSON::JSONError => e
-    Failure("Problem parsing webhook response: #{e.message}")
   rescue ActiveRecord::RecordNotFound => _e
     Failure("AlmaExport record with ID #{alma_export_id} does not exist.")
   end
 
   # @param [AlmaExport] alma_export
+  # @return [Dry::Monads::Result]
+  def validate_solr_collections(alma_export:)
+    solr_admin = Solr::Admin.new
+    alma_export.target_collections.each do |collection|
+      unless solr_admin.collection_exists? name: collection
+        return Failure("AlmaExport with ID #{alma_export.id} uses a non-existent target collection of '#{collection}'.")
+      end
+    end
+    Success(alma_export: alma_export)
+  end
+
+  # @param [AlmaExport] alma_export
+  # @return [Dry::Monads::Result]
   def initialize_sftp_session(alma_export:)
     sftp_session = Sftp::Client.new
     Success(alma_export: alma_export, sftp_session: sftp_session)
@@ -36,7 +48,7 @@ class ProcessAlmaExport
     Failure("Problem connecting to the SFTP server: #{e.message}")
   end
 
-  # get Sftp::File objects via dir entries/glob
+  # get Sftp::File objects via SFTP entries
   # @param [AlmaExport] alma_export
   # @param [Sftp::Client] sftp_session
   # @return [Dry::Monads::Result]
@@ -73,11 +85,11 @@ class ProcessAlmaExport
     sftp_files.each_slice(20) do |slice|
       downloads = slice.map { |file| sftp_session.download(file, wait: false) }
       downloads.each(&:wait) # SFTP downloads occur concurrently here
-      build_and_enqueue_build_files(alma_export, slice)
+      build_and_enqueue_batch_files(alma_export, slice)
     end
     Success(alma_export: alma_export)
   rescue StandardError => e
-    alma_export.status = Statuses::FAILED # TODO: how would this be done with AASM?
+    alma_export.status = Statuses::FAILED
     alma_export.save
     Failure("Problem processing SFTP file for Alma Export (ID: #{alma_export.id}): #{e.message}")
   end
@@ -93,7 +105,7 @@ class ProcessAlmaExport
 
   # @param [AlmaExport] alma_export
   # @param [Array<Sftp::File>] sftp_files
-  def build_and_enqueue_build_files(alma_export, sftp_files)
+  def build_and_enqueue_batch_files(alma_export, sftp_files)
     batch_file_jobs_params = sftp_files.map do |sftp_file|
       batch_file = BatchFile.create!(alma_export_id: alma_export.id, path: sftp_file.local_path,
                                      status: Statuses::PENDING)

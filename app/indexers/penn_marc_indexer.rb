@@ -3,13 +3,6 @@
 # Traject Indexer for Penn's Alma MARC
 class PennMarcIndexer < Traject::Indexer
   configure do
-    settings do
-      provide 'solr.update_url', Solr::Config.new.update_url
-      provide 'solr_writer.batch_size', ENV.fetch('SOLR_WRITER_BATCH_SIZE', 250)
-      provide 'solr_writer.thread_pool', ENV.fetch('SOLR_WRITER_THREAD_POOL', 2)
-
-      provide 'solr_writer.commit_on_close', true
-    end
     define_all_fields
   end
 

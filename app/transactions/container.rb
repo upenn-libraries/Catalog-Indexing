@@ -9,4 +9,8 @@ class Container
       Steps::IndexRecords.new
     end
   end
+
+  register 'prepare_marcxml' do
+    Steps::PrepareMARCXML.new
+  end
 end

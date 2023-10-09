@@ -7,16 +7,18 @@ module Steps
 
     # @param [IO | StringIO] io
     # @param [Traject::Indexer] indexer
-    # @return [Traject::Writer]
-    def call(io:, indexer: PennMarcIndexer.new)
-      indexer.process_with(
-        MARC::XMLReader.new(io, parser: :nokogiri, ignore_namespace: true),
-        CatalogWriter.new(indexer.settings),
-        close_writer: true
-      )
-      Success(true)
+    # @param [Boolean] commit
+    # @return [Dry::Monads::Result]
+    def call(io:, indexer: PennMarcIndexer.new, commit: false, **args)
+      index_service = IndexingService.new(indexer: indexer, commit: commit)
+      index_service.process(io: io)
+      Success(errors: index_service.error_messages, **args)
+    rescue IndexingService::FailuresExceededError, IndexingService::SkipsExceededError => e
+      # We return success here even though a limit has been exceeded and expect that later processing steps will
+      # act based on the returned errors accordingly
+      Success(errors: (index_service&.error_messages&.unshift(e.message) || [e.message]), **args)
     rescue StandardError => e
-      Failure(e)
+      Failure("Failure while indexing: #{e.message}")
     end
   end
 end

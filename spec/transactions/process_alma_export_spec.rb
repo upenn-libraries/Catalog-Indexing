@@ -58,7 +58,26 @@ describe ProcessAlmaExport do
       end
     end
 
-    context 'with a AlmaExport not in PENDING status' do
+    context 'with an AlmaExport using bad target_collection values' do
+      let(:alma_export) do
+        create(:alma_export, target_collections: %w[exists does-not-exist],
+                             webhook_body: JSON.parse(json_fixture('job_end_success')))
+      end
+
+      before do
+        mock_admin = instance_double Solr::Admin
+        allow(mock_admin).to receive(:collection_exists?).with(name: 'exists').and_return true
+        allow(mock_admin).to receive(:collection_exists?).with(name: 'does-not-exist').and_return false
+        allow(Solr::Admin).to receive(:new).and_return mock_admin
+      end
+
+      it 'returns a failure monad with appropriate message' do
+        expect(outcome).to be_failure
+        expect(outcome.failure).to include "non-existent target collection of 'does-not-exist'"
+      end
+    end
+
+    context 'with an AlmaExport not in PENDING status' do
       let(:alma_export) do
         create(:alma_export, status: Statuses::IN_PROGRESS, webhook_body: JSON.parse(json_fixture('job_end_success')))
       end

@@ -6,14 +6,17 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.2.2'
 
+gem 'bcrypt_pbkdf'
 gem 'bootsnap', require: false
 gem 'bootstrap', '~> 5.2.3'
 gem 'bootstrap_form', '~> 5.0'
 gem 'config'
 gem 'devise'
 gem 'dry-transaction'
+gem 'ed25519'
 gem 'faraday'
 gem 'importmap-rails'
+gem 'kaminari'
 gem 'net-sftp'
 gem 'omniauth'
 gem 'omniauth-rails_csrf_protection'
@@ -32,12 +35,13 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'upennlib-rubocop', require: false
 
 group :development, :test do
+  gem 'capybara'
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'factory_bot_rails', '~> 6.0'
   gem 'rspec-rails', '~> 6.0.0'
-  gem 'webmock'
-  gem 'capybara'
+  gem 'rubocop-factory_bot'
   gem 'selenium-webdriver'
+  gem 'webmock'
 end
 
 group :test do

@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   devise_scope :user do
     post 'sign_out', to: 'devise/sessions#destroy', as: 'destroy_user_session'
+  end
+
+  authenticate :user do
+    mount Sidekiq::Web => '/sidekiq'
   end
 
   get 'login', to: 'login#index'
@@ -25,5 +31,7 @@ Rails.application.routes.draw do
       post 'listen', to: 'webhook_indexing#listen', as: 'webhook_listen'
     end
   end
-  resources :alma_exports, only: %i[index show destroy]
+  resources :alma_exports, only: %i[index show destroy] do
+    resources :batch_files, only: %i[index show]
+  end
 end

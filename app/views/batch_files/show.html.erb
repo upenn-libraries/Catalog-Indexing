@@ -1,0 +1,61 @@
+<nav aria-label="breadcrumb" class="mb-3 bg-light text-dark rounded">
+  <ol class="breadcrumb py-2 px-3">
+    <li class="breadcrumb-item"><a href="<%= root_path %>">Home</a></li>
+    <li class="breadcrumb-item"><a href="<%= alma_exports_path %>">Alma Exports</a></li>
+    <li class="breadcrumb-item"><a href="<%= alma_export_path(@alma_export) %>"><%= @alma_export.id %></a></li>
+    <li class="breadcrumb-item"><a href="<%= alma_export_batch_files_path(@alma_export) %>">Batch Files</a></li>
+    <li class="breadcrumb-item active" aria-current="page"><%= @batch_file.id %></li>
+  </ol>
+</nav>
+
+<h1>Batch File: <%= @batch_file.id %></h1>
+<div class="container">
+  <dl class="batch-file-list">
+    <div class="row my-3">
+      <div class="col">
+        <dt>ID</dt>
+        <dd class="id"><%= @batch_file.id %></dd>
+      </div>
+      <div class="col-6">
+        <dt>Path</dt>
+        <dd class="path"><%= @batch_file.path %></dd>
+      </div>
+      <div class="col">
+        <dt>Status</dt>
+        <dd class="status"><%= @batch_file.status.titleize %></dd>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col">
+        <dt>Started At</dt>
+        <dd class="started-at"><%= @batch_file.started_at&.to_fs(:display) || 'Not Started' %></dd>
+      </div>
+      <div class="col">
+        <dt>Completed At</dt>
+        <dd class="completed-at"><%= @batch_file.completed_at&.to_fs(:display) || 'Not Completed' %></dd>
+      </div>
+      <div class="col">
+        <dt>Created At</dt>
+        <dd class="created-at"><%= @batch_file.created_at.to_fs(:display) %></dd>
+      </div>
+      <div class="col">
+        <dt>Updated At</dt>
+        <dd class="updated-at"><%= @batch_file.updated_at.to_fs(:display) %></dd>
+      </div>
+    </div>
+    <div class="row my-3">
+      <dt>Errors</dt>
+      <dd class="errors">
+        <% if @batch_file.error_messages.any? %>
+          <ul>
+            <% @batch_file.error_messages.each do |message| %>
+              <li class="error-message"><%= message %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          None
+        <% end %>
+      </dd>
+    </div>
+  </dl>
+</div>
