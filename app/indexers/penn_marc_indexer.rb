@@ -95,6 +95,9 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def marc_field
-    # TODO: index full marcxml but without Alma enhanced fields?
+    # TODO: use a marcxml-specific field type to make this reasonably searchable
+    to_field('marcxml_ss') do |record, acc|
+      acc << MARC::FastXMLWriter.encode(PlainMarcRecord.new(record))
+    end
   end
 end
