@@ -38,7 +38,7 @@ class PennMarcIndexer < Traject::Indexer
 
   def identifier_fields
     define_field :id, :identifier_mmsid
-    define_field :oclc_id_ss, :identifier_oclc_id
+    define_field :oclc_id_ss, :identifier_oclc_id_show
     define_field :doi_ss, :identifier_doi_show
     define_field :isbn_ss, :identifier_isbn_show
     define_field :issn_ss, :identifier_issn_show
@@ -72,15 +72,17 @@ class PennMarcIndexer < Traject::Indexer
       pub_date = parser.public_send :date_publication, record
       acc << (pub_date&.strftime('%Y') || '') # e.g., 1999
     end
-    to_field('date_added_s') do |record, acc|
-      date_added = parser.public_send :date_added, record
-      acc << (date_added&.strftime('%F') || '') # e.g., 1999-1-30
-    end
+    # TODO: this is emitting LOTS of "Error parsing date in date added subfield" messages to stdout - there may be a bug in this PennMArc 1.0.2 method
+    # to_field('date_added_s') do |record, acc|
+    #   date_added = parser.public_send :date_added, record
+    #   acc << (date_added&.strftime('%F') || '') # e.g., 1999-1-30
+    # end
   end
 
   # TODO: many of these stored fields will eventually be replaced by dynamic methods parsing stored MARCXML in the
   #       catalog front end
   def stored_fields
+    define_field :title_ss, :title_show
     define_field :creator_ss, :creator_show
     define_field :format_ss, :format_show
     define_field :edition_ss, :edition_show
@@ -96,7 +98,7 @@ class PennMarcIndexer < Traject::Indexer
 
   def marc_field
     # TODO: use a marcxml-specific field type to make this reasonably searchable
-    to_field('marcxml_ss') do |record, acc|
+    to_field('marcxml_marcxml') do |record, acc|
       acc << MARC::FastXMLWriter.encode(PlainMarcRecord.new(record))
     end
   end

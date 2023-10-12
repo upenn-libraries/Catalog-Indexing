@@ -335,6 +335,26 @@
 <!--    </analyzer>-->
 <!--  </fieldtype>-->
 
+  <!-- MK's attempt at a field for MARCXML - it's the example text_cjk type with htmlStrip on the indexing side and synonym filter on the query side -->
+  <dynamicField name="*_marcxml" type="marcxml" indexed="true" stored="true" multiValued="false" />
+  <fieldType name="marcxml" class="solr.TextField" sortMissingLast="true">
+    <analyzer type="query">
+      <tokenizer name="standard"/>
+      <filter name="CJKWidth"/>
+      <filter name="lowercase"/>
+      <filter name="CJKBigram"/>
+      <filter name="synonymGraph" synonyms="synonyms.txt"/>
+      <filter name="flattenGraph"/>
+    </analyzer>
+    <analyzer type="index">
+      <charFilter name="htmlStrip" />
+      <tokenizer name="standard"/>
+      <filter name="CJKWidth"/>
+      <filter name="lowercase"/>
+      <filter name="CJKBigram"/>
+    </analyzer>
+  </fieldType>
+
   <!-- "search" type from Franklin config - CJK handling here also -->
   <fieldType name="search_franklin" class="solr.TextField" positionIncrementGap="100">
     <analyzer type="query">
