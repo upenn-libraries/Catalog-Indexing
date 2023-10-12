@@ -10,7 +10,7 @@ class PennMarcIndexer < Traject::Indexer
   # see: https://rubydoc.info/gems/traject/3.5.0/file/doc/indexing_rules.md
   def define_field(name, parser_method = nil)
     parser_signal = parser_method || name
-    raise ArgumentError unless parser.respond_to? parser_signal.to_sym
+    raise(ArgumentError, "Parser does not respond to #{parser_signal}") unless parser.respond_to? parser_signal.to_sym
 
     to_field(name.to_s) do |record, acc|
       parser_output = parser.public_send(parser_signal.to_sym, record)
@@ -70,11 +70,11 @@ class PennMarcIndexer < Traject::Indexer
   def date_fields
     to_field('publication_date_s') do |record, acc|
       pub_date = parser.public_send :date_publication, record
-      acc << (pub_date.strftime('%Y') || '') # e.g., 1999
+      acc << (pub_date&.strftime('%Y') || '') # e.g., 1999
     end
     to_field('date_added_s') do |record, acc|
       date_added = parser.public_send :date_added, record
-      acc << (date_added.strftime('%F') || '') # e.g., 1999-1-30
+      acc << (date_added&.strftime('%F') || '') # e.g., 1999-1-30
     end
   end
 
@@ -91,7 +91,7 @@ class PennMarcIndexer < Traject::Indexer
     define_field :genre_ss, :genre_show
     define_field :place_of_pub_ss, :production_place_of_publication_show
     define_field :language_ss, :language_show
-    define_field :notes_ss, :notes_notes_show
+    define_field :notes_ss, :note_notes_show
   end
 
   def marc_field
