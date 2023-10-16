@@ -53,4 +53,10 @@ namespace :tools do
                                      target_collections: Array.wrap(Solr::Config.new.collection_name))
     ProcessAlmaExport.new.call(alma_export_id: alma_export.id)
   end
+
+  desc 'Create Solr JSON from Alma set'
+  task generate_solr_json_from_set: :environment do
+    set_id = ENV.fetch('SET_ID', '51703864050003681') # default to NewCatSampleRecordsforTesting set
+    outcome = IndexBySet.new.call(set_id: set_id, writer: Traject::SolrJsonWriter)
+  end
 end
