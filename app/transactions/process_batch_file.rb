@@ -11,7 +11,7 @@ class ProcessBatchFile
   step :load_batch_file
   step :validate_batch_file
   step :set_as_begun
-  step :prepare_indexer
+  step :prepare_writer
   step :decompress_file
   step :index_records, with: 'traject.index_records'
   step :clean_up
@@ -62,23 +62,24 @@ class ProcessBatchFile
   # Prepare Traject indexer, apply configuration
   # @param [BatchFile] batch_file
   # @returns [Dry::Monads::Result]
-  def prepare_indexer(batch_file:, **args)
+  def prepare_writer(batch_file:, **args)
     settings = { 'solr_writer.target_collections' => batch_file.alma_export.target_collections,
+                 'solr_writer.commit_on_close' => (args.delete(:commit) == true), # TODO: only for checking Solr in specs?
                  'skipped_record_limit' => 500, 'failed_record_limit' => 100 }
-    indexer = PennMarcIndexer.new(settings)
-    Success(batch_file: batch_file, indexer: indexer, **args)
+    writer = MultiCollectionWriter.new(settings)
+    Success(batch_file: batch_file, writer: writer, **args)
   end
 
   # Prepare reader for compressed file
   # @param [BatchFile] batch_file
-  # @param [Traject::Indexer] indexer
+  # @param [Traject::Writer] writer
   # @returns [Dry::Monads::Result]
-  def decompress_file(batch_file:, indexer:, **args)
+  def decompress_file(batch_file:, writer:, **args)
     file = File.open(batch_file.path) # leave file handle open so indexer can stream contents, cleanup in later step
     tar = Zlib::GzipReader.new(file)
     io = Gem::Package::TarReader.new(tar).first
 
-    Success(io: io, indexer: indexer, file_handle: file, batch_file: batch_file, **args)
+    Success(io: io, writer: writer, file_handle: file, batch_file: batch_file, **args)
   rescue StandardError => e
     handle_failure batch_file, "Problem decompressing BatchFile: #{e.message}"
   end

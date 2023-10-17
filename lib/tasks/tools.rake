@@ -57,6 +57,6 @@ namespace :tools do
   desc 'Create Solr JSON from Alma set'
   task generate_solr_json_from_set: :environment do
     set_id = ENV.fetch('SET_ID', '51703864050003681') # default to NewCatSampleRecordsforTesting set
-    outcome = IndexBySet.new.call(set_id: set_id, writer: Traject::SolrJsonWriter)
+    puts IndexBySetToFile.new.call(set_id: set_id)
   end
 end

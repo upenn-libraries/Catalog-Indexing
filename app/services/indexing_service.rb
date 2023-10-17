@@ -8,20 +8,19 @@ class IndexingService
   class FailuresExceededError < StandardError; end
   class SkipsExceededError < StandardError; end
 
-  # Initialize Indexing service with an indexer. Settings from Indexer will be shared with writer.
-  # @todo what id we need to use a different writer? wait for a use case to figure that out
-  # @param [Traject::Indexer] indexer
-  # @param [Boolean] commit after the indexer runs
-  def initialize(indexer: PennMarcIndexer.new, commit: false)
-    @indexer = indexer
-    @writer = MultiCollectionWriter.new(indexer.settings.merge({ 'solr_writer.commit_on_close' => commit }))
+  # Initialize Indexing service with an indexer and a writer
+  # @param [Traject::Writer, nil] writer
+  # @param [Traject::Indexer, nil] indexer
+  def initialize(writer:, indexer:)
+    @indexer = indexer || PennMarcIndexer.new
+    @writer = writer || MultiCollectionWriter.new
     @error_messages = []
     @skipped_count = 0
   end
 
   # Process IO stream through indexer
   # @param [IO|StringIO] io
-  # @return [MultiCollectionWriter]
+  # @return [Traject::Writer]
   def process(io:)
     @indexer.process_with(MARC::XMLReader.new(io, parser: :nokogiri, ignore_namespace: true), @writer,
                           close_writer: true, on_skipped: skipped_proc, rescue_with: rescue_proc)
