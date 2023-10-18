@@ -10,7 +10,7 @@ class PennMarcIndexer < Traject::Indexer
   # see: https://rubydoc.info/gems/traject/3.5.0/file/doc/indexing_rules.md
   def define_field(name, parser_method = nil)
     parser_signal = parser_method || name
-    raise ArgumentError unless parser.respond_to? parser_signal.to_sym
+    raise(ArgumentError, "Parser does not respond to #{parser_signal}") unless parser.respond_to? parser_signal.to_sym
 
     to_field(name.to_s) do |record, acc|
       parser_output = parser.public_send(parser_signal.to_sym, record)
@@ -38,8 +38,10 @@ class PennMarcIndexer < Traject::Indexer
 
   def identifier_fields
     define_field :id, :identifier_mmsid
-    define_field :oclc_id_ss, :identifier_oclc_id
-    # define_field :isbn_isxn, :identifier_isxn_search
+    define_field :oclc_id_ss, :identifier_oclc_id_show
+    define_field :doi_ss, :identifier_doi_show
+    define_field :isbn_ss, :identifier_isbn_show
+    define_field :issn_ss, :identifier_issn_show
   end
 
   def facet_fields
@@ -65,9 +67,39 @@ class PennMarcIndexer < Traject::Indexer
     define_field :title_sort
   end
 
-  def date_fields; end
+  def date_fields
+    to_field('publication_date_s') do |record, acc|
+      pub_date = parser.public_send :date_publication, record
+      acc << (pub_date&.strftime('%Y') || '') # e.g., 1999
+    end
+    # TODO: this is emitting LOTS of "Error parsing date in date added subfield" messages to stdout - there may be a bug in this PennMArc 1.0.2 method
+    # to_field('date_added_s') do |record, acc|
+    #   date_added = parser.public_send :date_added, record
+    #   acc << (date_added&.strftime('%F') || '') # e.g., 1999-1-30
+    # end
+  end
 
-  def stored_fields; end
+  # TODO: many of these stored fields will eventually be replaced by dynamic methods parsing stored MARCXML in the
+  #       catalog front end
+  def stored_fields
+    define_field :title_ss, :title_show
+    define_field :creator_ss, :creator_show
+    define_field :format_ss, :format_show
+    define_field :edition_ss, :edition_show
+    define_field :series_ss, :series_show
+    define_field :subject_ss, :subject_show
+    define_field :mesh_subject_ss, :subject_medical_show
+    define_field :local_subject_ss, :subject_local_show
+    define_field :genre_ss, :genre_show
+    define_field :place_of_pub_ss, :production_place_of_publication_show
+    define_field :language_ss, :language_show
+    define_field :notes_ss, :note_notes_show
+  end
 
-  def marc_field; end
+  def marc_field
+    # TODO: use a marcxml-specific field type to make this reasonably searchable
+    to_field('marcxml_marcxml') do |record, acc|
+      acc << MARC::FastXMLWriter.encode(PlainMarcRecord.new(record))
+    end
+  end
 end
