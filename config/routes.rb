@@ -22,6 +22,8 @@ Rails.application.routes.draw do
 
   resources :users, except: %w[new create edit update destroy]
 
+  resources :config_items, only: %w[index update]
+
   scope :indexing do
     get 'by-id', to: 'alma_indexing#index', as: 'index_by_id'
     post 'process', to: 'alma_indexing#process_ids', as: 'process_ids'

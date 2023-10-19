@@ -7,3 +7,6 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+ConfigItem.create!(name: 'process_bib_webhooks')
+ConfigItem.create!(name: 'webhook_target_collections')

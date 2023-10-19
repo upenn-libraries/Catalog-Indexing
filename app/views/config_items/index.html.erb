@@ -1,0 +1,25 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @config_items.each do |config_item| %>
+    <tr>
+      <td><%= config_item.name %></td>
+      <td>
+        <% # TODO: obv some kind of component or helper & partial would be better here %>
+        <%= case ConfigItem::LIST[config_item.name.to_sym][:type]
+            when :boolean
+              'Form with a single checkbox'
+            when :array
+              'Form with a multiselect'
+            end
+        %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
