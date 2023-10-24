@@ -44,7 +44,7 @@ class IndexBySetToFile
     # TODO: determine writer based on something in args? There may be a use case... Like if we added a "set" option
     #       to the Index by Identifier UI, we'd want to support the MultiCollectionWriter...
     filename = Rails.root.join('storage/sample_set_solr.jsonl')
-    writer = Traject::JsonWriter.new({'output_file' => filename })
+    writer = Traject::JsonWriter.new({ 'output_file' => filename })
     Success(io: io, writer: writer, filename: filename, **args)
   rescue StandardError => e
     Failure("Problem preparing writer: #{e.message}")

@@ -80,7 +80,7 @@ describe ProcessAlmaExport do
     context 'with an AlmaExport not in PENDING status' do
       let(:alma_export) do
         create(:alma_export, status: Statuses::IN_PROGRESS,
-               webhook_body: JSON.parse(json_fixture('job_end_success', :webhooks)))
+                             webhook_body: JSON.parse(json_fixture('job_end_success', :webhooks)))
       end
 
       it 'returns a failure monad with appropriate message' do
