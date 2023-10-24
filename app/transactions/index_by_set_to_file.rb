@@ -21,23 +21,6 @@ class IndexBySetToFile
     Success(identifiers: mms_ids, **args)
   end
 
-  # Get MARCXML from Alma API
-  # @todo Step-ify if possible
-  # @param [Array<String>] identifiers
-  # @return [Dry::Monads::Result]
-  def retrieve_marcxml(identifiers:, **args)
-    docs = []
-    identifiers.in_groups_of(AlmaApi::Client::MAX_BIBS_GET, false).each do |group|
-      response = AlmaApi::Client.new.bibs group
-      docs += response['bib']&.filter_map do |bib_data|
-        bib_data['anies'].first
-      end
-    end
-    Success(docs: docs, **args)
-  rescue StandardError => e
-    Failure(e)
-  end
-
   ## prepare_marcxml
 
   def prepare_file_writer(io:, **args)
