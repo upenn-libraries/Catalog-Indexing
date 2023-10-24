@@ -17,7 +17,7 @@ class IndexBySetToFile
 
   def get_set_members(set_id:, **args)
     set_response = AlmaApi::Client.new.set_members(set_id)
-    mms_ids = set_response.collect { |member| member['id'] }
+    mms_ids = set_response.pluck 'id'
     Success(identifiers: mms_ids, **args)
   end
 
