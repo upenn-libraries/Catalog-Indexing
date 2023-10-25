@@ -10,7 +10,13 @@ class Container
     end
   end
 
-  register 'prepare_marcxml' do
-    Steps::PrepareMARCXML.new
+  namespace 'marcxml' do
+    register 'retrieve' do
+      Steps::RetrieveMARCXML.new
+    end
+
+    register 'prepare' do
+      Steps::PrepareMARCXML.new
+    end
   end
 end

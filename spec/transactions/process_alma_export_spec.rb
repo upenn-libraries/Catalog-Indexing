@@ -6,7 +6,7 @@ describe ProcessAlmaExport do
   let(:transaction) { described_class.new }
 
   describe '#call' do
-    let(:alma_export) { create(:alma_export, webhook_body: JSON.parse(json_fixture('job_end_success'))) }
+    let(:alma_export) { create(:alma_export, webhook_body: JSON.parse(json_fixture('job_end_success', :webhooks))) }
     let(:sftp_client) { instance_double Sftp::Client }
     let(:sftp_files) { [] }
     let(:outcome) { transaction.call(alma_export_id: alma_export.id) }
@@ -61,7 +61,7 @@ describe ProcessAlmaExport do
     context 'with an AlmaExport using bad target_collection values' do
       let(:alma_export) do
         create(:alma_export, target_collections: %w[exists does-not-exist],
-                             webhook_body: JSON.parse(json_fixture('job_end_success')))
+                             webhook_body: JSON.parse(json_fixture('job_end_success', :webhooks)))
       end
 
       before do
@@ -79,7 +79,8 @@ describe ProcessAlmaExport do
 
     context 'with an AlmaExport not in PENDING status' do
       let(:alma_export) do
-        create(:alma_export, status: Statuses::IN_PROGRESS, webhook_body: JSON.parse(json_fixture('job_end_success')))
+        create(:alma_export, status: Statuses::IN_PROGRESS,
+                             webhook_body: JSON.parse(json_fixture('job_end_success', :webhooks)))
       end
 
       it 'returns a failure monad with appropriate message' do
