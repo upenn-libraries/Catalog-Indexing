@@ -7,8 +7,8 @@ class IndexBySetToFile
   include Dry::Transaction(container: Container)
 
   step :get_set_members
-  step :retrieve_marcxml
-  step :prepare_marcxml, with: 'prepare_marcxml' # massage MARCXML - for now ensure UTF-8
+  step :retrieve_marcxml, with: 'marcxml.retrieve'
+  step :prepare_marcxml, with: 'marcxml.prepare' # massage MARCXML - for now ensure UTF-8
   step :prepare_file_writer
   step :index_via_traject, with: 'traject.index_records' # receive a IO object and do the indexing
   step :deliver_file
