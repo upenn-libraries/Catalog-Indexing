@@ -59,4 +59,10 @@ namespace :tools do
     set_id = ENV.fetch('SET_ID', '51703864050003681') # default to NewCatSampleRecordsforTesting set
     puts IndexBySetToFile.new.call(set_id: set_id)
   end
+
+  desc 'Package Solr config set for sharing'
+  task package_configset: :environment do
+    datestamp = DateTime.current.strftime('%Y%m%d')
+    File.write("configset_#{datestamp}.zip", File.read(Solr::Config.new.tempfile))
+  end
 end
