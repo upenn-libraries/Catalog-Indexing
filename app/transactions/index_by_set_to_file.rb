@@ -7,8 +7,8 @@ class IndexBySetToFile
   include Dry::Transaction(container: Container)
 
   step :get_set_members
-  step :retrieve_marcxml
-  step :prepare_marcxml, with: 'prepare_marcxml' # massage MARCXML - for now ensure UTF-8
+  step :retrieve_marcxml, with: 'marcxml.retrieve'
+  step :prepare_marcxml, with: 'marcxml.prepare' # massage MARCXML - for now ensure UTF-8
   step :prepare_file_writer
   step :index_via_traject, with: 'traject.index_records' # receive a IO object and do the indexing
   step :deliver_file
@@ -26,7 +26,8 @@ class IndexBySetToFile
   def prepare_file_writer(io:, **args)
     # TODO: determine writer based on something in args? There may be a use case... Like if we added a "set" option
     #       to the Index by Identifier UI, we'd want to support the MultiCollectionWriter...
-    filename = Rails.root.join('storage/sample_set_solr.jsonl')
+    datestamp = DateTime.current.strftime('%Y%m%d')
+    filename = Rails.root.join("storage/solrjson_#{datestamp}.jsonl")
     writer = Traject::JsonWriter.new({ 'output_file' => filename })
     Success(io: io, writer: writer, filename: filename, **args)
   rescue StandardError => e
