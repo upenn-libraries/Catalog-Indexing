@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# actions for displaying an AlmaExport's batch files
+# actions for displaying and modifying configuration items
 class ConfigItemsController < ApplicationController
   def index
     @config_items = ConfigItem.all

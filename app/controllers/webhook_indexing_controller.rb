@@ -27,7 +27,7 @@ class WebhookIndexingController < ApplicationController
   def handle_action_type(payload)
     case payload['action']
     when 'BIB'
-      return unless ConfigService.process_bib_webhooks?
+      return unless ConfigItem.value_for(:process_bib_webhooks)
 
       handle_bib_action(payload)
     when 'JOB_END'
