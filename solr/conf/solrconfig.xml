@@ -720,14 +720,10 @@
        https://solr.apache.org/guide/solr/latest/configuration-guide/requesthandlers-searchcomponents.html
 
        Incoming queries will be dispatched to a specific handler by name based on the path specified in the request.
-
        All handlers (Search Handlers, Update Request Handlers, and other specialized types) can have default parameters (defaults, appends and invariants).
-
        Search Handlers can also (append, prepend or even replace) default or defined Search Components.
-
        Update Request Handlers can leverage Update Request Processors to pre-process documents after they are loaded
        and before they are indexed/stored.
-
        Not all Request Handlers are defined in the solrconfig.xml, many are implicit.
     -->
 
@@ -737,273 +733,64 @@
        <str name="echoParams">explicit</str>
        <int name="rows">10</int>
      </lst>
-    <!-- "appends" example to ensure only products in stock are returned when using this Search Handler -->
-    <!--
-       <lst name="appends">
-         <str name="fq">inStock:true</str>
-       </lst>
-      -->
-    <!-- "invariants" example that will completely lock down the facets fields and queries if the facets are turned on -->
-    <!--
-       <lst name="invariants">
-         <str name="facet.field">cat</str>
-         <str name="facet.field">manu_exact</str>
-         <str name="facet.query">price:[* TO 500]</str>
-         <str name="facet.query">price:[500 TO *]</str>
-       </lst>
-      -->
   </requestHandler>
 
+  <!-- "search" request handler is used by Blacklight to handle all search requests -->
   <requestHandler name="search" class="solr.SearchHandler" default="true">
-    <!-- TODO: wat is this -->
-<!--    <shardHandlerFactory class="AffinityShardHandlerFactory">-->
-<!--      <str name="routingParam">routingHash</str>-->
-<!--      <str name="hashParam">qq</str>-->
-<!--    </shardHandlerFactory>-->
-    <!-- default values for query parameters can be specified, these
-         will be overridden by parameters in the request
-      -->
+    <!-- default values for query parameters can be specified here, but these
+         will be overridden by parameters in the request -->
     <lst name="defaults">
+      <!-- specify the query parser to use - "edismax" is the standard these days. query parser dictates what additional
+           parameters a search request will expect/handle. edismax is a superset of the dismax parser configuration. -->
       <str name="defType">edismax</str>
+
+      <!-- determine which parameters to return with the responses. "explicit" means only return the parameters
+           explicitly sent with the request, not any added by solr processing -->
       <str name="echoParams">explicit</str>
+
+      <!-- how many rows to return in the results by default. this parameter is overridden by the request as formulated
+           by Blacklight -->
       <int name="rows">10</int>
 
+      <!-- "alternate" query - or, default query if the query is blank. here, we configure a blank query to return all
+           documents -->
       <str name="q.alt">(*:*)</str>
 
-      <!--
-           mm param cannot be unset, so we will set q.op and override with mm
-           from client
-      -->
-      <str name="q.op">AND</str>
-      <!--<str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>-->
+      <!-- see solr docs for more on the mm param: https://solr.apache.org/guide/solr/latest/query-guide/dismax-query-parser.html#mm-minimum-should-match-parameter
+           in short, it helps determine how many "optional" parts of the query must match for a result to be considered
+           a match and returned as a result -->
+      <!-- this has some encoding... 2<-1 5<-2 6<90% is how Solr sees it. -->
+      <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
 
-      <!-- only consider uppercase AND/OR as boolean operators -->
+      <!-- specifies the default boolean operator for queries, so "some thing" will be considered as "some AND thing" -->
+      <str name="q.op">AND</str>
+
+      <!-- should "and" and "or" be considered boolean clauses? -->
       <bool name="lowercaseOperators">false</bool>
 
-      <!-- TODO: we should specify qf/pf at request time via BL config -->
-<!--      <str name="qf">-->
-<!--        title_unstem_search^100000-->
-<!--        subtitle_unstem_search^50000-->
-<!--        title_t^25000-->
-<!--        subtitle_t^10000-->
-<!--        title_addl_unstem_search^5000-->
-<!--        title_addl_t^2500-->
-<!--        title_added_entry_unstem_search^1500-->
-<!--        title_added_entry_t^1250-->
-<!--        subject_topic_unstem_search^1000-->
-<!--        subject_unstem_search^750-->
-<!--        subject_topic_facet^625-->
-<!--        subject_t^500-->
-<!--        author_unstem_search^250-->
-<!--        author_addl_unstem_search^250-->
-<!--        author_t^100-->
-<!--        author_addl_t^50-->
-<!--        subject_addl_unstem_search^250-->
-<!--        subject_addl_t^50-->
-<!--        title_series_unstem_search^25-->
-<!--        title_series_t^10-->
-<!--        isbn_t-->
-<!--        text_search-->
-<!--      </str>-->
-<!--      <str name="pf">-->
-<!--        title_unstem_search^1000000-->
-<!--        subtitle_unstem_search^500000-->
-<!--        title_t^250000-->
-<!--        subtitle_t^100000-->
-<!--        title_addl_unstem_search^50000-->
-<!--        title_addl_t^25000-->
-<!--        title_added_entry_unstem_search^15000-->
-<!--        title_added_entry_t^12500-->
-<!--        subject_topic_unstem_search^10000-->
-<!--        subject_unstem_search^7500-->
-<!--        subject_topic_facet^6250-->
-<!--        subject_t^5000-->
-<!--        author_unstem_search^2500-->
-<!--        author_addl_unstem_search^2500-->
-<!--        author_t^1000-->
-<!--        author_addl_t^500-->
-<!--        subject_addl_unstem_search^2500-->
-<!--        subject_addl_t^500-->
-<!--        title_series_unstem_search^250-->
-<!--        title_series_t^100-->
-<!--        text_search^10-->
-<!--      </str>-->
-      <!--
-      <str name="author_qf">
-        author_unstem_search^200
-        author_addl_unstem_search^50
-        author_t^20
-        author_addl_t
-      </str>
-      <str name="author_pf">
-        author_unstem_search^2000
-        author_addl_unstem_search^500
-        author_t^200
-        author_addl_t^10
-      </str>
-      <str name="title_qf">
-        title_unstem_search^50000
-        subtitle_unstem_search^25000
-        title_addl_unstem_search^10000
-        title_t^5000
-        subtitle_t^2500
-        title_addl_t^100
-        title_added_entry_unstem_search^50
-        title_added_entry_t^10
-        title_series_unstem_search^5
-        title_series_t
-      </str>
-      <str name="title_pf">
-        title_unstem_search^500000
-        subtitle_unstem_search^250000
-        title_addl_unstem_search^100000
-        title_t^50000
-        subtitle_t^25000
-        title_addl_t^1000
-        title_added_entry_unstem_search^500
-        title_added_entry_t^100
-        title_series_t^50
-        title_series_unstem_search^10
-      </str>
-      <str name="subject_qf">
-        subject_topic_unstem_search^200
-        subject_unstem_search^125
-        subject_topic_facet^100
-        subject_t^50
-        subject_addl_unstem_search^10
-        subject_addl_t
-      </str>
-      <str name="subject_pf">
-        subject_topic_unstem_search^2000
-        subject_unstem_search^1250
-        subject_t^1000
-        subject_topic_facet^500
-        subject_addl_unstem_search^100
-        subject_addl_t^10
-      </str>
-      -->
+      <!-- "qf" is the "query field" configuration. we will specify these values in the Blacklight configuration so that
+           we can easily tune the values. here we can specify field names and attribute "boost"s to matches that occur
+            in certain fields, helping us refine search relevance. -->
+      <str name="qf">*</str>
 
-      <!-- NOT using marc_display because it is large and will slow things down for search results -->
-      <!--
-          comment out the explicit field list that stock Blacklight
-          defines, and send them in each Solr request instead. This
-          helps de-couple this config file from BL.
-      -->
-      <!--
-      <str name="fl">
-        id,
-        score,
-        author_display,
-        author_vern_display,
-        format,
-        isbn_t,
-        language_facet,
-        lc_callnum_display,
-        material_type_display,
-        published_display,
-        published_vern_display,
-        pub_date,
-        title_display,
-        title_vern_display,
-        subject_topic_facet,
-        subject_geo_facet,
-        subject_era_facet,
-        subtitle_display,
-        subtitle_vern_display,
-        url_fulltext_display,
-        url_suppl_display,
-      </str>
-      -->
+      <!-- "pf" is the "phrase field" configuration. specifying fields and boosts here can further refine relevance by
+           boosting matches where each query term occurs in close proximity (in a "phrase") in a specified field. -->
+      <str name="pf">*</str>
+
+      <!-- "fl" is the "field list" param. simply it is the fields to return in the response -->
+      <str name="fl">*</str>
 
       <str name="facet">true</str>
       <str name="facet.mincount">1</str>
-<!--      <str name="facet.field">format</str>-->
-<!--      <str name="facet.field">lc_1letter_facet</str>-->
-<!--      <str name="facet.field">lc_alpha_facet</str>-->
-<!--      <str name="facet.field">lc_b4cutter_facet</str>-->
-<!--      <str name="facet.field">language_facet</str>-->
-<!--      <str name="facet.field">pub_date</str>-->
-<!--      <str name="facet.field">subject_era_facet</str>-->
-<!--      <str name="facet.field">subject_geo_facet</str>-->
-<!--      <str name="facet.field">subject_topic_facet</str>-->
-
-<!--      <str name="spellcheck">true</str>-->
-<!--      <str name="spellcheck.dictionary">default</str>-->
-<!--      <str name="spellcheck.onlyMorePopular">true</str>-->
-<!--      <str name="spellcheck.extendedResults">true</str>-->
-<!--      <str name="spellcheck.collate">false</str>-->
-<!--      <str name="spellcheck.count">5</str>-->
-
     </lst>
-    <!-- In addition to defaults, "appends" params can be specified
-         to identify values which should be appended to the list of
-         multi-val params from the query (or the existing "defaults").
-      -->
-    <!-- In this example, the param "fq=instock:true" would be appended to
-         any query time fq params the user may specify, as a mechanism for
-         partitioning the index, independent of any user selected filtering
-         that may also be desired (perhaps as a result of faceted searching).
-
-         NOTE: there is *absolutely* nothing a client can do to prevent these
-         "appends" values from being used, so don't use this mechanism
-         unless you are sure you always want it.
-      -->
-    <!--
-       <lst name="appends">
-         <str name="fq">inStock:true</str>
-       </lst>
-      -->
-    <!-- "invariants" are a way of letting the Solr maintainer lock down
-         the options available to Solr clients.  Any params values
-         specified here are used regardless of what values may be specified
-         in either the query, the "defaults", or the "appends" params.
-
-         In this example, the facet.field and facet.query params would
-         be fixed, limiting the facets clients can use.  Faceting is
-         not turned on by default - but if the client does specify
-         facet=true in the request, these are the only facets they
-         will be able to see counts for; regardless of what other
-         facet.field or facet.query params they may specify.
-
-         NOTE: there is *absolutely* nothing a client can do to prevent these
-         "invariants" values from being used, so don't use this mechanism
-         unless you are sure you always want it.
-      -->
-    <!--
-       <lst name="invariants">
-         <str name="facet.field">cat</str>
-         <str name="facet.field">manu_exact</str>
-         <str name="facet.query">price:[* TO 500]</str>
-         <str name="facet.query">price:[500 TO *]</str>
-       </lst>
-      -->
-    <!-- TODO: anything good from franklin invariants file? -->
-<!--    &franklin_invariants;-->
-
-    <!-- If the default list of SearchComponents is not desired, that
-         list can either be overridden completely, or components can be
-         prepended or appended to the default list.  (see below)
-      -->
-    <!--
-       <arr name="components">
-         <str>nameOfCustomComponent1</str>
-         <str>nameOfCustomComponent2</str>
-       </arr>
-      -->
-    <!--
-    <arr name="last-components">
-      <str>spellcheck</str>
-    </arr>
-    -->
   </requestHandler>
 
-  <!-- document handler is expected by default BL for querying for a single document
-       for requests to get a single document; use id=666 instead of q=id:666 -->
+  <!-- the "document" handler is expected by default BL for querying for a single document (for the "show" page) -->
   <requestHandler name="document" class="solr.SearchHandler">
     <lst name="defaults">
       <str name="echoParams">all</str>
       <str name="fl">*</str>
-      <str name="rows">1</str>
+      <str name="rows">1</str> <!-- just return 1 document based on the unique ID... -->
       <str name="q">{!term f=id v=$id}</str> <!-- use id=666 instead of q=id:666 -->
     </lst>
   </requestHandler>
