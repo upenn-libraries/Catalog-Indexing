@@ -737,8 +737,8 @@
 
   <!-- "search" request handler is used by Blacklight to handle all search requests -->
   <requestHandler name="search" class="solr.SearchHandler" default="true">
-    <!-- default values for query parameters can be specified here, but these
-         will be overridden by parameters in the request -->
+    <!-- default values for query parameters can be specified here, but many of these can and will be overridden by
+         parameters in the request -->
     <lst name="defaults">
       <!-- specify the query parser to use - "edismax" is the standard these days. query parser dictates what additional
            parameters a search request will expect/handle. edismax is a superset of the dismax parser configuration. -->
