@@ -306,7 +306,6 @@
   <dynamicField name="*_search" type="text_general" indexed="true" stored="false" multiValued="true" />
   <dynamicField name="*_sort" type="text_gen_sort" indexed="true" stored="false" multiValued="false" />
 
-
   <!-- TODO: XML type - CJK handling appears here... -->
 <!--  <fieldtype name="xml" class="solr.TextField" sortMissingLast="true">-->
 <!--    <analyzer type="query">-->
@@ -343,8 +342,9 @@
       <filter name="CJKWidth"/>
       <filter name="lowercase"/>
       <filter name="CJKBigram"/>
-      <filter name="synonymGraph" synonyms="synonyms.txt"/>
-      <filter name="flattenGraph"/>
+      <!-- see text_general notes for why this synonymGraph filter can't be used -->
+<!--      <filter name="synonymGraph" synonyms="synonyms.txt"/>-->
+<!--      <filter name="flattenGraph"/>-->
     </analyzer>
     <analyzer type="index">
       <charFilter name="htmlStrip" />
@@ -431,13 +431,15 @@
     <analyzer type="query">
       <tokenizer name="standard"/>
       <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt" />
-      <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
+      <!-- including this synonymGraph filter causes all fields of this type to be silently ignored during searches. it
+           is not clear why. even including a flattenGraph filter does not allow this to be used as intended -->
+      <!--      <filter name="synonymGraph" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>-->
       <filter name="lowercase"/>
     </analyzer>
   </fieldType>
 
 
-  <!-- SortableTextField generaly functions exactly like TextField,
+  <!-- SortableTextField generally functions exactly like TextField,
        except that it supports, and by default uses, docValues for sorting (or faceting)
        on the first 1024 characters of the original field values (which is configurable).
 
