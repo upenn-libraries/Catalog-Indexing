@@ -45,6 +45,7 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def facet_fields
+    define_field :access_facet
     define_field :creator_facet
     define_field :format_facet
     define_field :subject_facet
@@ -97,7 +98,6 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def marc_field
-    # TODO: use a marcxml-specific field type to make this reasonably searchable
     to_field('marcxml_marcxml') do |record, acc|
       acc << MARC::FastXMLWriter.encode(PlainMarcRecord.new(record))
     end
