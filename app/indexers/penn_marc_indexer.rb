@@ -45,11 +45,12 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def facet_fields
+    define_field :access_facet
     define_field :creator_facet
     define_field :format_facet
     define_field :subject_facet
     define_field :genre_facet
-    define_field :language_facet, :language_search
+    define_field :language_facet, :language_values
     define_field :location_facet, :location_specific_location
     define_field :library_facet, :location_library
   end
