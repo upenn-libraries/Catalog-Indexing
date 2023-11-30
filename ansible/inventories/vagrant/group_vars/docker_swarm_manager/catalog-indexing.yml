@@ -1,0 +1,20 @@
+---
+catalog_indexing_build_docker_image: false
+catalog_indexing_image_name: "catalog-indexing"
+catalog_indexing_image_registry: "gitlab.library.upenn.edu/dld/catalog/catalog-indexing"
+catalog_indexing_image_tag: "development"
+catalog_indexing_port: 3000
+catalog_indexing_rails_env: "development"
+catalog_indexing_replicas: 1
+catalog_indexing_url: "catalog-indexing-dev.library.upenn.edu"
+catalog_indexing_solr_url: "http://solr-1:8983/solr/catalog-indexing"
+catalog_indexing_versioned_secrets:
+  rails_master_key:
+    value: "d387ab7464fc5b8bb2e5c0dcd4105355"
+    version: "1"
+  solr_username:
+    value: "{{ solr_custom_env_variables.SOLR_ADMIN_USERNAME }}"
+    version: "1"
+  solr_password:
+    value: "{{ solr_custom_env_variables.SOLR_ADMIN_PASSWORD }}"
+    version: "1"

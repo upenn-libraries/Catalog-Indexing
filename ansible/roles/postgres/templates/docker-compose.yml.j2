@@ -1,0 +1,68 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+
+
+version: '3.8'
+
+services:
+  postgres:
+    image: {{ postgres_docker_image_name }}:{{ postgres_docker_image_tag }}
+    {% if postgres_dev_env == true %}
+    command: [
+      "postgres",
+      "-c",
+      "log_statement=all",
+      "-c",
+      "log_connections=on",
+      "-c",
+      "log_disconnections=on"
+    ]
+    {% endif %}
+    deploy:
+      placement:
+        constraints:
+          - node.labels.{{ postgres_docker_node_constraint }} == true
+      replicas: 1
+    environment:
+      POSTGRES_DB: "{{ postgres_database_name }}"
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_database_password
+      POSTGRES_USER: "{{ postgres_database_user }}"
+      {% if postgres_custom_env_variables | default({}) | dictsort | length > 0 %}
+      {% for key, value in postgres_custom_env_variables.items() %}
+      - {{ key + '=' + value }}
+      {% endfor %}
+      {% endif %}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U {{ postgres_database_user }} -d {{ postgres_database_name }}"
+        ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    logging:
+      driver: json-file
+      options:
+        max-file: '3'
+        max-size: '10m'
+    networks:
+      - postgres
+    secrets:
+      - postgres_database_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  postgres:
+    driver: overlay
+    name: "{{ postgres_network }}"
+    attachable: true
+
+secrets:
+  postgres_database_password:
+    external: true
+    name: "{{ 'postgres_database_password_v' + postgres_database_versioned_secrets.database_password.version }}"
+
+volumes:
+  postgres_data:

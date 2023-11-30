@@ -1,0 +1,15 @@
+---
+- name: Create custom docker image
+  community.docker.docker_image:
+    build:
+      args:
+        RAILS_ENV: "{{ catalog_indexing_rails_env }}"
+      dockerfile: "Dockerfile"
+      path: "/catalog-indexing/ansible/roles/catalog-indexing/files/src/"
+      target: "development"
+      pull: true
+    force_tag: true
+    force_source: true
+    name: "{{ catalog_indexing_image_name ~ ':' ~ catalog_indexing_image_tag }}"
+    source: build
+    state: present

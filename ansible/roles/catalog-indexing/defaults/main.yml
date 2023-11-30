@@ -1,0 +1,9 @@
+---
+catalog_indexing_build_docker_image: false
+catalog_indexing_image_name: "catalog-indexing"
+catalog_indexing_image_registry: "gitlab.library.upenn.edu/dld/catalog/catalog-indexing"
+catalog_indexing_image_tag: "main-development"
+catalog_indexing_port: 3000
+catalog_indexing_rails_env: "development"
+catalog_indexing_replicas: 1
+catalog_indexing_url: "catalog-indexing-dev.library.upenn.edu"

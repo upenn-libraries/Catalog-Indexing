@@ -1,0 +1,27 @@
+current directory: /home/app/vendor/bundle/ruby/3.2.0/gems/debug-1.8.0/ext/debug
+/usr/local/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /home/app/vendor/bundle/ruby/3.2.0/gems/debug-1.8.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20231130-17-elzri9 sitelibdir\=./.gem.20231130-17-elzri9 clean
+make: Warning: File 'Makefile' has modification time 0.56 s in the future
+make: warning:  Clock skew detected.  Your build may be incomplete.
+
+current directory: /home/app/vendor/bundle/ruby/3.2.0/gems/debug-1.8.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20231130-17-elzri9 sitelibdir\=./.gem.20231130-17-elzri9
+make: Warning: File 'Makefile' has modification time 0.55 s in the future
+compiling debug.c
+compiling iseq_collector.c
+linking shared-object debug/debug.so
+make: warning:  Clock skew detected.  Your build may be incomplete.
+
+current directory: /home/app/vendor/bundle/ruby/3.2.0/gems/debug-1.8.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20231130-17-elzri9 sitelibdir\=./.gem.20231130-17-elzri9 install
+make: Warning: File 'Makefile' has modification time 0.26 s in the future
+/usr/bin/install -c -m 0755 debug.so ./.gem.20231130-17-elzri9/debug
+make: warning:  Clock skew detected.  Your build may be incomplete.
+
+current directory: /home/app/vendor/bundle/ruby/3.2.0/gems/debug-1.8.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20231130-17-elzri9 sitelibdir\=./.gem.20231130-17-elzri9 clean
+make: Warning: File 'Makefile' has modification time 0.24 s in the future
+make: warning:  Clock skew detected.  Your build may be incomplete.
