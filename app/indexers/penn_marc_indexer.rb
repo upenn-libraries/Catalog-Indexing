@@ -53,6 +53,8 @@ class PennMarcIndexer < Traject::Indexer
     define_field :language_facet, :language_values
     define_field :location_facet, :location_specific_location
     define_field :library_facet, :location_library
+    define_field :db_type_facet, :database_type
+    define_field :db_subject_facet, :database_db_subcategory
   end
 
   def search_fields
