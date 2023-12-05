@@ -29,6 +29,7 @@ class PennMarcIndexer < Traject::Indexer
   def define_all_fields
     identifier_fields
     facet_fields
+    database_fields
     search_fields
     sort_fields
     date_fields
@@ -53,8 +54,18 @@ class PennMarcIndexer < Traject::Indexer
     define_field :language_facet, :language_values
     define_field :location_facet, :location_specific_location
     define_field :library_facet, :location_library
+  end
+
+  def database_fields
     define_field :db_type_facet, :database_type
-    define_field :db_subject_facet, :database_db_subcategory
+    define_field :db_subject_facet, :database_db_category
+    define_field :db_combined_subject_facet, :database_db_subcategory
+    to_field('db_sub_subject_facet') do |record, acc|
+      combined_subjects = parser.public_send(:database_db_subcategory, record)
+      combined_subjects.each do |combined_subject|
+        acc << combined_subject.split('--').last
+      end
+    end
   end
 
   def search_fields
