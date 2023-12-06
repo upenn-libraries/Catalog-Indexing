@@ -106,13 +106,12 @@ class PennMarcIndexer < Traject::Indexer
     define_field :format_ss, :format_show
     define_field :edition_ss, :edition_show
     define_field :series_ss, :series_show
-    define_field :subject_ss, :subject_show
-    define_field :mesh_subject_ss, :subject_medical_show
-    define_field :local_subject_ss, :subject_local_show
-    define_field :genre_ss, :genre_show
-    define_field :place_of_pub_ss, :production_place_of_publication_show
-    define_field :language_ss, :language_show
-    define_field :notes_ss, :note_notes_show
+    define_field :publication_ss, :production_publication_show
+    define_field :production_ss, :production_show
+    define_field :distribution_ss, :production_distribution_show
+    define_field :manufacture_ss, :production_manufacture_show
+    define_field :contained_within_ss, :relation_contained_in_show
+    define_field :full_text_links_ss, :link_full_text
   end
 
   def marc_field
