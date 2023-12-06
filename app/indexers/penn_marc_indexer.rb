@@ -73,6 +73,9 @@ class PennMarcIndexer < Traject::Indexer
   def search_fields
     define_field :creator_search
     define_field :title_search
+    define_field :title_aux_search, :title_search_aux
+    define_field :journal_title_search, :title_journal_search
+    define_field :journal_title_aux_search, :title_journal_search_aux
     define_field :subject_search
     define_field :genre_search
     define_field :isxn_search, :identifier_isxn_search
