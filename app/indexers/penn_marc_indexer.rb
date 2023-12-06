@@ -59,12 +59,14 @@ class PennMarcIndexer < Traject::Indexer
   def database_fields
     define_field :db_type_facet, :database_type
     define_field :db_subject_facet, :database_db_category
-    define_field :db_combined_subject_facet, :database_db_subcategory
-    to_field('db_sub_subject_facet') do |record, acc|
-      combined_subjects = parser.public_send(:database_db_subcategory, record)
-      combined_subjects.each do |combined_subject|
-        acc << combined_subject.split('--').last
-      end
+
+    to_field('db_combined_subject_facet') do |record, acc, context|
+      acc.concat(parser.public_send(:database_db_subcategory, record))
+      context.clipboard[:db_combined_subjects] = acc
+    end
+
+    to_field('db_sub_subject_facet') do |_record, acc, context|
+      context.clipboard[:db_combined_subjects].each { |combined_subject| acc << combined_subject.split('--').last }
     end
   end
 
