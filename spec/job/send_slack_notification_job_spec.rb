@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe SendSlackNotificationJob do
   describe '#perform' do
     it 'enqueues the job' do
