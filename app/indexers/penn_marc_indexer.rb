@@ -102,9 +102,10 @@ class PennMarcIndexer < Traject::Indexer
 
   def stored_fields
     define_field :title_ss, :title_show
-    define_field :creator_ss, :creator_show
     define_field :format_ss, :format_show
+    define_field :creator_ss, :creator_show
     define_field :edition_ss, :edition_show
+    define_field :conference_ss, :creator_conference_show
     define_field :series_ss, :series_show
     define_field :publication_ss, :production_publication_show
     define_field :production_ss, :production_show
@@ -115,7 +116,8 @@ class PennMarcIndexer < Traject::Indexer
 
   def link_fields
     to_field('full_text_links_ss') do |record, acc|
-      acc << json_encode(parser.link_full_text(record))
+      value = parser.link_full_text(record)
+      acc << json_encode(value) if value.present?
     end
   end
 
