@@ -11,7 +11,8 @@ class IndexByBibEvent
   step :index_via_traject, with: 'traject.index_records' # receive a IO object and do the indexing
 
   def prepare_writer(io:, **args)
-    target_collections = Array.wrap(Solr::Config.new.collection_name) # TODO: eventually pull this from settings, e.g., Settings.webhook_target_collections
+    # TODO: eventually pull this from settings, e.g., Settings.webhook_target_collections
+    target_collections = Array.wrap(Solr::Config.new.collection_name)
     writer = MultiCollectionWriter.new({ 'solr_writer.target_collections' => target_collections })
     Success(io: io, writer: writer, indexer: PennMarcIndexer.new, **args)
   rescue StandardError => e
