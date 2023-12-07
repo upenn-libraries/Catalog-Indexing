@@ -34,6 +34,7 @@ class PennMarcIndexer < Traject::Indexer
     sort_fields
     date_fields
     stored_fields
+    link_fields
     marc_field
   end
 
@@ -91,15 +92,14 @@ class PennMarcIndexer < Traject::Indexer
       pub_date = parser.public_send :date_publication, record
       acc << (pub_date&.strftime('%Y') || '') # e.g., 1999
     end
-    # TODO: this is emitting LOTS of "Error parsing date in date added subfield" messages to stdout - there may be a bug in this PennMArc 1.0.2 method
+    # TODO: this is emitting LOTS of "Error parsing date in date added subfield" messages to stdout - there may be a
+    #       bug in this PennMARC method
     # to_field('date_added_s') do |record, acc|
     #   date_added = parser.public_send :date_added, record
     #   acc << (date_added&.strftime('%F') || '') # e.g., 1999-1-30
     # end
   end
 
-  # TODO: many of these stored fields will eventually be replaced by dynamic methods parsing stored MARCXML in the
-  #       catalog front end
   def stored_fields
     define_field :title_ss, :title_show
     define_field :creator_ss, :creator_show
@@ -111,12 +111,27 @@ class PennMarcIndexer < Traject::Indexer
     define_field :distribution_ss, :production_distribution_show
     define_field :manufacture_ss, :production_manufacture_show
     define_field :contained_within_ss, :relation_contained_in_show
-    define_field :full_text_links_ss, :link_full_text
+  end
+
+  def link_fields
+    to_field('full_text_links_ss') do |record, acc|
+      acc << json_encode(parser.link_full_text(record))
+    end
   end
 
   def marc_field
     to_field('marcxml_marcxml') do |record, acc|
       acc << MARC::FastXMLWriter.encode(PlainMarcRecord.new(record))
     end
+  end
+
+  private
+
+  # Encode a field as JSON
+  # @todo implement Oj gem for speedup as needed
+  # @param [Object] value
+  # @return [String]
+  def json_encode(value)
+    JSON.generate value
   end
 end
