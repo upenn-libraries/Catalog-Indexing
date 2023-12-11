@@ -157,12 +157,14 @@ title = "gitlab gitleaks config"
             '''(?i)(omniauth)''',
             '''(?i)(header\[\:key\])''',
             '''(?i)(\?\<key\>)''',
-            '''password: password''',
+            '''(?i)password:\s*?(")?password''',
             ''':secret_access_key''',
             '''require_master_key''',
             '''storage_access_key''',
             '''POSTGRES_PASSWORD: password''',
-            '''uniqueKey'''
+            '''uniqueKey''',
+            '''(?i)insert_key''',
+            '''\(key\)'''
         ]
 
 [[rules]]
@@ -206,7 +208,9 @@ title = "gitlab gitleaks config"
         '''705832d6a26322200021c57e53913bc7d268442a''',
         '''a283ccb341deaa541fed26b7d71bcfb6b758d076''',
         '''dc6601efc5e345d6f0cbfb3043205fe5f1dd7fab''',
-        '''815515c089da007217181b98b09a54a3dde5f270'''
+        '''815515c089da007217181b98b09a54a3dde5f270''',
+        '''6ae3e96aebdc0d8e68189bcf72fa968349d1534b''',
+        '''e5d3672038eeb5f528e3efbdb391dda3145ec2bd'''
     ]
     files = [
         '''(.*?)(bin|csv|doc|gif|jpg|md|pdf)$''',
@@ -216,9 +220,14 @@ title = "gitlab gitleaks config"
         '''spec/support/alma_api_mocks.rb''',
         '''config/initializers/devise.rb'''
     ]
+    paths = [
+        '''rails_app/vendor/bundle'''
+    ]
     regexes = [
         # Values set by Ansible variables
         '''{{ *[\S]+ *}}''',
+        '''\${\s?[\S]+\s?}''',
+        '''{{.*?}}''',
         # Values set by environment variables
         '''ENV\[['"][\S]+['"]\]''',
         # AWS Secrets Manager resource for vault password
