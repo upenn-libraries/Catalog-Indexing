@@ -42,3 +42,6 @@ config/settings/*.local.yml
 config/environments/*.local.yml
 
 /configset_*.zip
+
+# Ignore development bundle files
+vendor/bundle

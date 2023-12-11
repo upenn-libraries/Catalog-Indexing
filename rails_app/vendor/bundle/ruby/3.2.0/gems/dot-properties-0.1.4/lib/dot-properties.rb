@@ -1,1 +1,0 @@
-require 'dot_properties'

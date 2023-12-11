@@ -1,8 +1,0 @@
-hello: hola
-goodbye: buenas noches
-nothing: 
-multiple:
-  - first 
-  - second
-  - last thing
-__default__: everything else
