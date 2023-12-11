@@ -64,7 +64,7 @@ class ProcessBatchFile
   # @returns [Dry::Monads::Result]
   def prepare_writer(batch_file:, **args)
     settings = { 'solr_writer.target_collections' => batch_file.alma_export.target_collections,
-                 'solr_writer.commit_on_close' => (args.delete(:commit) == true), # TODO: only for checking Solr in specs?
+                 'solr_writer.commit_on_close' => (args.delete(:commit) == true), # TODO: only spec usage?
                  'skipped_record_limit' => 500, 'failed_record_limit' => 100 }
     writer = MultiCollectionWriter.new(settings)
     Success(batch_file: batch_file, writer: writer, **args)
