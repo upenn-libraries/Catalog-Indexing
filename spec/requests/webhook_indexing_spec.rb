@@ -38,25 +38,25 @@ RSpec.describe 'Webhook Indexing requests' do
 
     it 'handles validated bib updated events' do
       headers = { 'X-Exl-Signature': 'izk27RMyBjiUl/16pJwlculiIA9/S8Ve1acxzs1m8Ag=' }
-      post webhook_listen_path, params: json_fixture('bib_updated'), headers: headers
+      post webhook_listen_path, params: json_fixture('bib_updated', :webhooks), headers: headers
       expect(response).to have_http_status :ok
     end
 
     it 'handles validated bib added events' do
       headers = { 'X-Exl-Signature': 'DFBUc0lp/4uXQ0F0XRijTJslEHiHoqD5TQN9hRnuNjI=' }
-      post webhook_listen_path, params: json_fixture('bib_created'), headers: headers
+      post webhook_listen_path, params: json_fixture('bib_created', :webhooks), headers: headers
       expect(response).to have_http_status :ok
     end
 
     it 'handles validated bib deleted events' do
       headers = { 'X-Exl-Signature': 'NTUI5p0G96iiw8vzq+7jX0U+KbxzZcbbMTIDjcwsacM=' }
-      post webhook_listen_path, params: json_fixture('bib_deleted'), headers: headers
+      post webhook_listen_path, params: json_fixture('bib_deleted', :webhooks), headers: headers
       expect(response).to have_http_status :ok
     end
 
     it 'handles validated job completed events' do
       headers = { 'X-Exl-Signature': 'e0ooQk9/vgmpK/RmdfMUz7jK0HIQkk4YDDP5dYHq+KY=' }
-      post webhook_listen_path, params: json_fixture('job_end_success'), headers: headers
+      post webhook_listen_path, params: json_fixture('job_end_success', :webhooks), headers: headers
       expect(response).to have_http_status :ok
       expect(ProcessAlmaExportJob.jobs.size).to eq 1
     end

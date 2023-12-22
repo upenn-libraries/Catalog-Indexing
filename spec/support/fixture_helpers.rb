@@ -10,8 +10,9 @@ module FixtureHelpers
 
   # @param [String] filename
   # @return [String]
-  def json_fixture(filename)
+  def json_fixture(filename, directory = nil)
     filename = "#{filename}.json" unless filename.ends_with?('.json')
-    File.read(File.join(fixture_path, 'json', filename))
+    dirs = ['json', directory.to_s, filename].compact_blank
+    File.read(File.join(fixture_path, dirs))
   end
 end

@@ -6,11 +6,11 @@ module Steps
     include Dry::Monads[:result]
 
     # @param [IO | StringIO] io
-    # @param [Traject::Indexer] indexer
-    # @param [Boolean] commit
+    # @param [Traject::Writer, nil] writer
+    # @param [Traject::Indexer, nil] indexer
     # @return [Dry::Monads::Result]
-    def call(io:, indexer: PennMarcIndexer.new, commit: false, **args)
-      index_service = IndexingService.new(indexer: indexer, commit: commit)
+    def call(io:, writer: nil, indexer: nil, **args)
+      index_service = IndexingService.new(indexer: indexer, writer: writer)
       index_service.process(io: io)
       Success(errors: index_service.error_messages, **args)
     rescue IndexingService::FailuresExceededError, IndexingService::SkipsExceededError => e

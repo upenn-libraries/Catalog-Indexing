@@ -22,7 +22,9 @@ describe Steps::IndexRecords do
   context 'with a good IO' do
     let(:sample_mmsid) { '9979201969103681' }
     let(:io) { StringIO.new(marc_fixture(sample_mmsid)) }
-    let(:additional_params) { { commit: true } }
+    let(:additional_params) do
+      { writer: MultiCollectionWriter.new({ 'solr_writer.commit_on_close' => true }) }
+    end
 
     it 'returns success monad and writes a record to Solr' do
       expect(outcome).to be_success
@@ -95,7 +97,10 @@ describe Steps::IndexRecords do
 
   context 'with multiple target_collections' do
     let(:additional_params) do
-      { indexer: PennMarcIndexer.new({ 'solr_writer.target_collections' => collection_names }), commit: true }
+      { writer: MultiCollectionWriter.new({
+                                            'solr_writer.target_collections' => collection_names,
+                                            'solr_writer.commit_on_close' => true
+                                          }) }
     end
     let(:collection_names) { %w[tc-1 tc-2] }
     let(:sample_mmsid) { '9979201969103681' }
