@@ -59,11 +59,11 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def database_fields
-    define_field :db_type_facet, :database_type
-    define_field :db_subject_facet, :database_db_category
+    define_field :db_type_facet, :database_type_facet
+    define_field :db_subject_facet, :database_category_facet
 
     to_field('db_combined_subject_facet') do |record, acc, context|
-      acc.concat(parser.public_send(:database_db_subcategory, record))
+      acc.concat(parser.public_send(:database_subcategory_facet, record))
       context.clipboard[:db_combined_subjects] = acc
     end
 
@@ -117,7 +117,7 @@ class PennMarcIndexer < Traject::Indexer
 
   def link_fields
     to_field('full_text_links_ss') do |record, acc|
-      value = parser.link_full_text(record)
+      value = parser.link_full_text_links(record)
       acc << json_encode(value) if value.present?
     end
   end
