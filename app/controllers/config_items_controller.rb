@@ -7,6 +7,6 @@ class ConfigItemsController < ApplicationController
   end
 
   def update
-    # update the rows in the database based on the form submission
+    # update the row in the database based on the form submission values
   end
 end
