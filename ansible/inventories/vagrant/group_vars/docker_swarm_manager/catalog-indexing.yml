@@ -18,3 +18,19 @@ catalog_indexing_versioned_secrets:
   solr_password:
     value: "{{ solr_custom_env_variables.SOLR_ADMIN_PASSWORD }}"
     version: "1"
+#  sftp_username:
+#    value: ""
+#    version: ""
+#  sftp_password:
+#    value: ""
+#    version: ""
+#  slack_webhook_url:
+#    value: ""
+#    version: ""
+#  redis_password:
+#    value: ""
+#    version: ""
+#  alma_api_key:
+#    value: ""
+#    version: ""
+

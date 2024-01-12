@@ -52,7 +52,7 @@ module AlmaApi
       @faraday ||= begin
         options = { request: {} } # TODO: configure timeouts, etc.
         Faraday.new(url: 'https://api-na.hosted.exlibrisgroup.com', **options) do |config|
-          config.request :authorization, :apikey, Rails.application.credentials.alma_api_key
+          config.request :authorization, :apikey, Settings.alma.api_key
           config.request :json
           config.response :raise_error
           config.response :logger, Rails.logger, headers: true, bodies: true, log_level: :debug do |fmt|

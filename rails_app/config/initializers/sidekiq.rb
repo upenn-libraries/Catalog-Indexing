@@ -1,9 +1,23 @@
 # frozen_string_literal: true
 
-Sidekiq.configure_server do |config|
-  config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/1') }
-end
+Rails.application.config.to_prepare do
+  unless Rails.env.test?
+    redis_connection = {
+      url: Settings.redis.url,
+      username: Settings.redis.username,
+      password: Settings.redis.password
+    }
 
-Sidekiq.configure_client do |config|
-  config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/1') }
+    Sidekiq.default_job_options = { backtrace: 5 }
+
+    Sidekiq.configure_server do |config|
+      config.redis = redis_connection
+      # TODO: activate HB as error handler when HoneyBadger is installed and configured
+      # config.error_handlers << proc { |e, context| Honeybadger.notify(e, context: context) }
+    end
+
+    Sidekiq.configure_client do |config|
+      config.redis = redis_connection
+    end
+  end
 end

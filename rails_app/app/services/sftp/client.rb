@@ -55,22 +55,22 @@ module Sftp
 
     # @return [String]
     def sftp_username
-      Rails.application.credentials.sftp_username
+      Settings.sftp.username
     end
 
     # @return [String]
     def sftp_password
-      Rails.application.credentials.sftp_password
+      Settings.sftp.password
     end
 
     # @return [String]
     def sftp_host
-      Settings.sftp_host
+      Settings.sftp.host
     end
 
     # @return [String]
     def sftp_root
-      Settings.sftp_root
+      Settings.sftp.root
     end
   end
 end
