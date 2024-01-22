@@ -180,10 +180,11 @@
 
   <!-- copyField commands copy one field to another at the time a document
      is added to the index.  It's used either to index the same field differently,
-     or to add multiple fields to the same field for easier/faster searching.
+     or to add multiple fields to the same field for easier/faster searching. -->
 
-  <copyField source="sourceFieldName" dest="destinationFieldName"/>
-  -->
+  <!-- copy _search fields at index time. this copies _ALL_ _search fields, which may be too much.
+       if so, add a copyField for each desired search field, e.g., title_search -->
+  <copyField source="*_search" dest="*_exact_search" />
 
   <!-- field type definitions. The "name" attribute is
      just a label to be used by field definitions.  The "class"
@@ -304,6 +305,7 @@
   <!-- Important Indexer types -->
   <dynamicField name="*_facet" type="string" indexed="true" stored="false" multiValued="true" />
   <dynamicField name="*_search" type="text_general" indexed="true" stored="false" multiValued="true" />
+  <dynamicField name="*_exact_search" type="text_anchored" indexed="true" stored="false" multiValued="true" />
   <dynamicField name="*_sort" type="text_gen_sort" indexed="true" stored="false" multiValued="false" />
 
   <!-- TODO: XML type - CJK handling appears here... -->
@@ -438,6 +440,74 @@
     </analyzer>
   </fieldType>
 
+  <!-- Text field for exact matches, inspired by SUL's text_anchored. No stemming is performed.
+       Stored tokens in this field have starting and ending tokens "labeled" with "aaaaaa" (start) and "zzzzzz" chars.
+       Doing the same to the query content allows us to match start and finish tokens
+       Example:
+       Indexed: "Achieving our Country"
+       Query: "Achieving Our Country" good match
+       Query: "Not achieving our country today" not a good match
+       It makes sense to think of this as left and right "anchored" rather than exact..
+        -->
+  <fieldType name="text_anchored" class="solr.TextField" positionIncrementGap="10000" autoGeneratePhraseQueries="true">
+    <analyzer type="index">
+      <!-- charFilters alter the stream of text character-by-character -->
+      <charFilter class="solr.PatternReplaceCharFilterFactory"
+                  pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <!-- add in beginning and ending anchors and remove trailing chars
+           who knows what this regex is doing, but SUL notes:
+           "watch out for query time whitespace separated chars that will be processed as their own token stream, e.g. in 'felines : warm and fuzzy'"
+           -->
+      <charFilter class="solr.PatternReplaceCharFilterFactory"
+                  pattern="^\s*(.*[\S&amp;&amp;[^\.\,:;/=&lt;&gt;\(\)\[\]\&amp;\|]])[\s\.\,:;/=&lt;&gt;\(\)\[\]\&amp;\|]*$"
+                  replacement="aaaaaa$1zzzzzz"/>
+      <!-- create tokens based on whitespace -->
+      <tokenizer class="solr.WhitespaceTokenizerFactory" />
+
+      <!-- NFKC, case folding, diacritics removed -->
+      <filter class="solr.ICUFoldingFilterFactory"/>
+
+      <!-- handle synonym files, with the special leading and trailing anchors considered. this seems hacky -->
+      <!-- SUL pivots to a graph here, but then uses the WordDelimiterGraphFilterFactory, which claims in the Solr docs
+           to not handle a graph as input. See:
+              https://solr.apache.org/guide/solr/latest/indexing-guide/filters.html#word-delimiter-graph-filter -->
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
+<!--      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms_both_anchors.txt" ignoreCase="true" expand="true"/>-->
+<!--      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms_left_anchor.txt" ignoreCase="true" expand="true"/>-->
+<!--      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms_right_anchor.txt" ignoreCase="true" expand="true"/>-->
+      <!-- PUL handles CJK here, SUL has a separate cjk_anchored field type... -->
+      <!-- in our case, we will probably want to handle CJK here (as well as in text_general, but let's not worry
+           about it for now... -->
+
+      <!-- chaining graph filter can lead to "unexpected" search results. see:
+            https://www.elastic.co/guide/en/elasticsearch/reference/current/token-graphs.html
+           I can't find much discussion about this, but it porbably clobbers the position information about each token.
+           Do we care about this? Our searches don't seem to depend on positional information. For now, let's do what
+           our peers do and ignore this warning. -->
+
+      <!-- Split tokens based on some grammatical things, e.g., hyphenation, caseChange, etc. -->
+      <filter class="solr.WordDelimiterGraphFilterFactory"
+              splitOnCaseChange="1" generateWordParts="1" catenateWords="1"
+              splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
+              catenateAll="0" preserveOriginal="0" stemEnglishPossessive="1" />
+      <!-- one must always flatten a graph at the end of an indexing analyzer -->
+      <filter class="solr.FlattenGraphFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <charFilter class="solr.PatternReplaceCharFilterFactory"
+                  pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <charFilter class="solr.PatternReplaceCharFilterFactory"
+                  pattern="^\s*(.*[\S&amp;&amp;[^\.\,:;/=&lt;&gt;\(\)\[\]\&amp;\|]])[\s\.\,:;/=&lt;&gt;\(\)\[\]\&amp;\|]*$"
+                  replacement="aaaaaa$1zzzzzz"/>
+      <tokenizer class="solr.WhitespaceTokenizerFactory" />
+      <filter class="solr.ICUFoldingFilterFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false" />
+      <filter class="solr.WordDelimiterGraphFilterFactory"
+              splitOnCaseChange="1" generateWordParts="1" catenateWords="1"
+              splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
+              catenateAll="0" preserveOriginal="0" stemEnglishPossessive="1" />
+    </analyzer>
+  </fieldType>
 
   <!-- SortableTextField generally functions exactly like TextField,
        except that it supports, and by default uses, docValues for sorting (or faceting)
