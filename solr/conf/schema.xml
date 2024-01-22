@@ -190,7 +190,7 @@
   <copyField source="series_search" dest="series_exact_search" />
 
   <!-- all search values can benefit from representation in an unstemmed field -->
-  <copyField source="*_search" dest="#_unstem_search" />
+  <copyField source="*_search" dest="*_unstem_search" />
 
   <!-- field type definitions. The "name" attribute is
      just a label to be used by field definitions.  The "class"
