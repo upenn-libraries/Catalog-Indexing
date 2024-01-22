@@ -81,6 +81,7 @@ class PennMarcIndexer < Traject::Indexer
     define_field :subject_search
     define_field :genre_search
     define_field :isxn_search, :identifier_isxn_search
+    define_field :series_search
   end
 
   def sort_fields

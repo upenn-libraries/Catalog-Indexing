@@ -182,9 +182,15 @@
      is added to the index.  It's used either to index the same field differently,
      or to add multiple fields to the same field for easier/faster searching. -->
 
-  <!-- copy _search fields at index time. this copies _ALL_ _search fields, which may be too much.
-       if so, add a copyField for each desired search field, e.g., title_search -->
-  <copyField source="*_search" dest="*_exact_search" />
+  <!-- title fields are most ripe for exact matches -->
+  <copyField source="title_search" dest="title_exact_search" />
+  <copyField source="title_aux_search" dest="title_aux_exact_search" />
+  <copyField source="journal_title_search" dest="journal_title_exact_search" />
+  <copyField source="journal_title_aux_search" dest="journal_title_aux_exact_search" />
+  <copyField source="series_search" dest="series_exact_search" />
+
+  <!-- all search values can benefit from representation in an unstemmed field -->
+  <copyField source="*_search" dest="#_unstem_search" />
 
   <!-- field type definitions. The "name" attribute is
      just a label to be used by field definitions.  The "class"
@@ -304,8 +310,9 @@
 
   <!-- Important Indexer types -->
   <dynamicField name="*_facet" type="string" indexed="true" stored="false" multiValued="true" />
-  <dynamicField name="*_search" type="text_general" indexed="true" stored="false" multiValued="true" />
+  <dynamicField name="*_search" type="text" indexed="true" stored="false" multiValued="true" />
   <dynamicField name="*_exact_search" type="text_anchored" indexed="true" stored="false" multiValued="true" />
+  <dynamicField name="*_unstem_search" type="text_unstem" indexed="true" stored="false" multiValued="true" />
   <dynamicField name="*_sort" type="text_gen_sort" indexed="true" stored="false" multiValued="false" />
 
   <!-- TODO: XML type - CJK handling appears here... -->
@@ -440,6 +447,65 @@
     </analyzer>
   </fieldType>
 
+  <!-- SUL's default text/search type. we'll probably want to add CJK handling in here eventually, which would require
+       not using the SnowballPorterFilterFactory - or maybe a cjk field type is warranted? :shrug_emoji:
+       see text_anchored field definition for inline commentary -->
+  <fieldtype name="text" class="solr.TextField" positionIncrementGap="10000" autoGeneratePhraseQueries="true">
+    <analyzer type="index">
+      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <tokenizer class="solr.WhitespaceTokenizerFactory" />
+      <filter class="solr.ICUFoldingFilterFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory"
+              splitOnCaseChange="1" generateWordParts="1" catenateWords="1"
+              splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
+              catenateAll="0" preserveOriginal="0" stemEnglishPossessive="1" />
+      <filter class="solr.FlattenGraphFilterFactory"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="English"/>
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
+    </analyzer>
+    <analyzer type="query">
+      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <tokenizer class="solr.WhitespaceTokenizerFactory" />
+      <filter class="solr.ICUFoldingFilterFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory"
+              splitOnCaseChange="1" generateWordParts="1" catenateWords="1"
+              splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
+              catenateAll="0" preserveOriginal="0" stemEnglishPossessive="1" />
+      <filter class="solr.SnowballPorterFilterFactory" language="English"/>
+      <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
+    </analyzer>
+  </fieldtype>
+
+  <!-- an "unstemmed" text field type. this should mirror our default search field type but without the stemming filter
+       see: https://solr.apache.org/guide/solr/latest/indexing-guide/filters.html#stemming
+       Also, see notes in text_anchored field definition about chaining graph filters
+  -->
+  <fieldType name="text_unstem" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+    <analyzer type="index">
+      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <tokenizer class="solr.WhitespaceTokenizerFactory" />
+      <filter class="solr.ICUFoldingFilterFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory"
+              splitOnCaseChange="1" generateWordParts="1" catenateWords="1"
+              splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
+              catenateAll="0" preserveOriginal="0" stemEnglishPossessive="0" />
+      <filter class="solr.FlattenGraphFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <tokenizer class="solr.WhitespaceTokenizerFactory" />
+      <filter class="solr.ICUFoldingFilterFactory"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.WordDelimiterGraphFilterFactory"
+              splitOnCaseChange="1" generateWordParts="1" catenateWords="1"
+              splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
+              catenateAll="0" preserveOriginal="0" stemEnglishPossessive="0" />
+    </analyzer>
+  </fieldType>
+
   <!-- Text field for exact matches, inspired by SUL's text_anchored. No stemming is performed.
        Stored tokens in this field have starting and ending tokens "labeled" with "aaaaaa" (start) and "zzzzzz" chars.
        Doing the same to the query content allows us to match start and finish tokens
@@ -449,9 +515,10 @@
        Query: "Not achieving our country today" not a good match
        It makes sense to think of this as left and right "anchored" rather than exact..
         -->
-  <fieldType name="text_anchored" class="solr.TextField" positionIncrementGap="10000" autoGeneratePhraseQueries="true">
+  <fieldType name="text_anchored" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
     <analyzer type="index">
       <!-- charFilters alter the stream of text character-by-character -->
+      <!-- remove standalone punctuation -->
       <charFilter class="solr.PatternReplaceCharFilterFactory"
                   pattern="\s+(\p{Punct}+)\s+" replacement=" " />
       <!-- add in beginning and ending anchors and remove trailing chars
