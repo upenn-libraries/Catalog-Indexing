@@ -482,7 +482,7 @@
        see: https://solr.apache.org/guide/solr/latest/indexing-guide/filters.html#stemming
        Also, see notes in text_anchored field definition about chaining graph filters
   -->
-  <fieldType name="text_unstem" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+  <fieldType name="text_unstem" class="solr.TextField" positionIncrementGap="10000" autoGeneratePhraseQueries="true">
     <analyzer type="index">
       <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
       <tokenizer class="solr.WhitespaceTokenizerFactory" />
@@ -515,7 +515,7 @@
        Query: "Not achieving our country today" not a good match
        It makes sense to think of this as left and right "anchored" rather than exact..
         -->
-  <fieldType name="text_anchored" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
+  <fieldType name="text_anchored" class="solr.TextField" positionIncrementGap="10000" autoGeneratePhraseQueries="true">
     <analyzer type="index">
       <!-- charFilters alter the stream of text character-by-character -->
       <!-- remove standalone punctuation -->
