@@ -1,4 +1,7 @@
 ---
+#Variables for Vault
+catalog_indexing_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'catalog-indexing/vagrant', engine_mount_point='kv-applications') }}"
+
 docker_swarm_addr: "{{ ansible_host }}"
 
 # Docker swarm setup vars

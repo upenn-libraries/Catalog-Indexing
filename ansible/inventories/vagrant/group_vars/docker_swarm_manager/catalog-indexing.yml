@@ -18,19 +18,18 @@ catalog_indexing_versioned_secrets:
   solr_password:
     value: "{{ solr_custom_env_variables.SOLR_ADMIN_PASSWORD }}"
     version: "1"
-#  sftp_username:
-#    value: ""
-#    version: ""
-#  sftp_password:
-#    value: ""
-#    version: ""
-#  slack_webhook_url:
-#    value: ""
-#    version: ""
+  sftp_username:
+    value: "{{ catalog_indexing_vault_values.secret.sftp_username }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
+  sftp_password:
+    value: "{{ catalog_indexing_vault_values.secret.sftp_password }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
+  slack_webhook_url:
+    value: "{{ catalog_indexing_vault_values.secret.slack_webhook_url }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
 #  redis_password:
 #    value: ""
 #    version: ""
-#  alma_api_key:
-#    value: ""
-#    version: ""
-
+  alma_api_key:
+    value: "{{ catalog_indexing_vault_values.secret.alma_api_key }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
