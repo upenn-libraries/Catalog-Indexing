@@ -164,7 +164,8 @@ title = "gitlab gitleaks config"
             '''POSTGRES_PASSWORD: password''',
             '''uniqueKey''',
             '''(?i)insert_key''',
-            '''\(key\)'''
+            '''\(key\)''',
+            '''Token\.new'''
         ]
 
 [[rules]]
