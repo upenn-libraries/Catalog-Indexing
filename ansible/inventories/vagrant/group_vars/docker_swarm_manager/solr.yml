@@ -1,6 +1,6 @@
 ---
 solr_collections:
-  - name: catalog-indexing-dev
+  - name: catalog-indexing-development
     configset: catalog-indexing
     replicas: 1
     shards: 1

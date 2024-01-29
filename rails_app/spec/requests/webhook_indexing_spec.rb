@@ -28,7 +28,7 @@ RSpec.describe 'Webhook Indexing requests' do
   context 'when receiving POST request' do
     before do
       allow(ENV).to receive(:fetch).with('ALMA_WEBHOOK').and_return('test')
-      allow(ENV).to receive(:fetch).with('SOLR_COLLECTION', 'catalog-test').and_return(nil)
+      allow(ENV).to receive(:fetch).with('SOLR_COLLECTION', 'catalog-indexing-test').and_return(nil)
     end
 
     it 'validates message integrity' do

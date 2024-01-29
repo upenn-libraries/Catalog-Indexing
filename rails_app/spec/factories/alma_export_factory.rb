@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :alma_export do
-    target_collections { ['catalog-test'] }
+    target_collections { ['catalog-indexing-test'] }
     status { Statuses::PENDING }
     alma_source { AlmaExport::Sources::PRODUCTION }
     full { true }

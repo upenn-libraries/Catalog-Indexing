@@ -18,6 +18,7 @@
     state: present
   changed_when: false
   environment:
+    ALMA_API_KEY: "{{ 'catalog_indexing_alma_api_key_v' ~ catalog_indexing_versioned_secrets.alma_api_key.version }}"
     APP_IMAGE_NAME: "{{ catalog_indexing_image_name }}"
     APP_IMAGE_TAG: "{{ catalog_indexing_image_tag }}"
     APP_PORT: "{{ catalog_indexing_port }}"
@@ -30,10 +31,13 @@
     REDIS_SIDEKIQ_USER: "sidekiq"
     REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
     REDIS_PORT: "{{ redis.port }}"
+    SFTP_PASSWORD: "{{ 'catalog_indexing_sftp_password_v' ~ catalog_indexing_versioned_secrets.sftp_password.version }}"
+    SFTP_USERNAME: "{{ 'catalog_indexing_sftp_username_v' ~ catalog_indexing_versioned_secrets.sftp_username.version }}"
+    SLACK_WEBHOOK_URL: "{{ 'catalog_indexing_slack_webhook_url_v' ~ catalog_indexing_versioned_secrets.slack_webhook_url.version }}"
     SOLR_URL: "{{ catalog_indexing_solr_url }}"
     SOLR_USERNAME: "{{ 'catalog_indexing_solr_username_v' ~ catalog_indexing_versioned_secrets.solr_username.version }}"
     SOLR_PASSWORD: "{{ 'catalog_indexing_solr_password_v' ~ catalog_indexing_versioned_secrets.solr_password.version }}"
-  no_log: true
+  no_log: false
   when: is_development | default (false) == true
   loop: "{{ sidekiq.instances }}"
   tags: dev_environment
@@ -46,6 +50,7 @@
     state: present
   changed_when: false
   environment:
+    ALMA_API_KEY: "{{ 'catalog_indexing_alma_api_key_v' ~ catalog_indexing_versioned_secrets.alma_api_key.version }}"
     APP_IMAGE_NAME: "{{ catalog_indexing_image_name }}"
     APP_IMAGE_TAG: "{{ catalog_indexing_image_tag }}"
     APP_PORT: "{{ catalog_indexing_port }}"
@@ -58,6 +63,9 @@
     REDIS_SIDEKIQ_USER: "sidekiq"
     REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
     REDIS_PORT: "{{ redis.port }}"
+    SFTP_PASSWORD: "{{ 'catalog_indexing_sftp_password_v' ~ catalog_indexing_versioned_secrets.sftp_password.version }}"
+    SFTP_USERNAME: "{{ 'catalog_indexing_sftp_username_v' ~ catalog_indexing_versioned_secrets.sftp_username.version }}"
+    SLACK_WEBHOOK_URL: "{{ 'catalog_indexing_slack_webhook_url_v' ~ catalog_indexing_versioned_secrets.slack_webhook_url.version }}"
     SOLR_URL: "{{ catalog_indexing_solr_url }}"
     SOLR_USERNAME: "{{ 'catalog_indexing_solr_username_v' ~ catalog_indexing_versioned_secrets.solr_username.version }}"
     SOLR_PASSWORD: "{{ 'catalog_indexing_solr_password_v' ~ catalog_indexing_versioned_secrets.solr_password.version }}"

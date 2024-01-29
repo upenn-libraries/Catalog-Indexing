@@ -6,14 +6,14 @@ namespace :tools do
     puts 'Starting Solr and Database services...'
     system('COMPOSE_PROJECT_NAME=catalog-indexing docker-compose up -d')
     puts 'Setting up basic auth for Solr...' # TODO: only run if needed...
-    system('docker-compose exec solrcloud solr auth enable -credentials catalog:catalog')
+    system('docker-compose exec solrcloud solr auth enable -credentials admin:password')
     solr_admin = Solr::Admin.new
     unless solr_admin.collection_exists?(name: 'catalog-dev')
       puts 'Uploading configset from solr/conf'
       solr_admin.upload_config
-      puts 'Creating catalog-dev and catalog-test collections'
-      solr_admin.create_collection(name: 'catalog-development')
-      solr_admin.create_collection(name: 'catalog-test')
+      puts 'Creating catalog-indexing-dev and catalog-indexing-test collections'
+      solr_admin.create_collection(name: 'catalog-indexing-dev')
+      solr_admin.create_collection(name: 'catalog-indexing-test')
     end
 
     # Create databases, if they aren't present.

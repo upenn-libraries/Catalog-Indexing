@@ -4,6 +4,8 @@
 class IndexByBibEventJob
   include Sidekiq::Job
 
+  sidekiq_options queue: 'low'
+
   def perform(marc_xml)
     IndexByBibEvent.new.call(docs: marc_xml)
   end

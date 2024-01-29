@@ -4,6 +4,8 @@
 class IndexByIdentifiersJob
   include Sidekiq::Job
 
+  sidekiq_options queue: 'high'
+
   # @param [Array] identifiers
   def perform(identifiers)
     IndexByIdentifier.new.call(identifiers: identifiers)

@@ -12,7 +12,7 @@ describe Sftp::File do
 
   describe '#remote_path' do
     it 'returns expected remote path' do
-      expect(file.remote_path).to eq("#{Settings.sftp_root}/#{file_name}")
+      expect(file.remote_path).to eq("#{Settings.sftp.root}/#{file_name}")
     end
   end
 

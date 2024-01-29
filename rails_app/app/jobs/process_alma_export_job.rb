@@ -4,6 +4,8 @@
 class ProcessAlmaExportJob
   include Sidekiq::Job
 
+  sidekiq_options queue: 'high'
+
   # @param [String] alma_export_id
   def perform(alma_export_id)
     outcome = ProcessAlmaExport.new.call(alma_export_id: alma_export_id)

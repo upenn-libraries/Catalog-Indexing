@@ -11,8 +11,6 @@ module Solr
     def self.reset
       conf = new
       conf.delete_all_collections
-      conf.delete_all_configsets
-      conf.upload_config
       conf.create_collection
     end
 
@@ -24,21 +22,6 @@ module Solr
 
     def zip_file
       File.open(config.tempfile)
-    end
-
-    def configset_exists?
-      config_sets.include?(config.configset_name)
-    end
-
-    def delete_configset(set = config.configset_name)
-      resp = connection.get(Config::CONFIG_PATH, action: 'DELETE', name: set)
-      check_resp(resp)
-    end
-
-    def delete_all_configsets
-      config_sets
-        .reject { |set| set == '_default' }
-        .map { |set| delete_configset(set) }
     end
 
     def all_collections
@@ -67,20 +50,11 @@ module Solr
       check_resp(resp)
     end
 
-    def modify_collection
+    def modify_collection(configset: config.configset_name)
       resp = connection.get(Config::COLLECTION_PATH,
                             action: 'MODIFYCOLLECTION',
                             collection: config.collection_name,
-                            'collection.configName': config.configset_name)
-      check_resp(resp)
-    end
-
-    def upload_config
-      resp = connection.post(Config::CONFIG_PATH) do |req|
-        req.params = { action: 'UPLOAD', name: config.configset_name }
-        req.headers['Content-Type'] = 'octect/stream'
-        req.body = raw_data
-      end
+                            'collection.configName': configset)
       check_resp(resp)
     end
 
@@ -104,18 +78,13 @@ module Solr
     end
 
     def connection
-      @connection ||= Faraday.new(config.url) do |faraday|
+      @connection ||= Faraday.new(config.base_url) do |faraday|
         if config.solr_username && config.solr_password
           faraday.request :authorization, :basic, config.solr_username, config.solr_password
         end
         # faraday.request :multipart
         faraday.adapter :net_http
       end
-    end
-
-    def config_sets
-      list = connection.get(Config::CONFIG_PATH, action: 'LIST')
-      JSON.parse(list.body)['configSets']
     end
 
     def collections
