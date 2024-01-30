@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE config [ <!ENTITY keyword_config SYSTEM "solrconfig/keyword_config.xml"> ]>
+
 <config>
   <!-- NOTE: various comments and unused configuration possibilities have been purged
      from this file.  Please refer to http://wiki.apache.org/solr/SolrConfigXml,
@@ -62,21 +65,8 @@
       <int name="ps">2</int>
       <float name="tie">0.01</float>
 
-      <!-- this qf and pf are used by default, if not otherwise specified by
-           client. The default blacklight_config will use these for the
-           "keywords" search. See the author_qf/author_pf, title_qf, etc
-           below, which the default blacklight_config will specify for
-           those searches. You may also be interested in:
-           http://wiki.apache.org/solr/LocalParams
-      -->
-      <str name="qf">
-        id
-        marcxml_marcxml
-      </str>
-      <str name="pf">
-        id
-        marcxml_marcxml
-      </str>
+      <!-- import qf/pf -->
+      &keyword_config;
 
       <!-- "fl" is the "field list" param. simply it is the fields to return in the response -->
       <str name="fl">
@@ -101,18 +91,56 @@
       <str name="defType">lucene</str>
       <str name="echoParams">explicit</str>
       <str name="df">marcxml_marcxml</str>
-      <str name="qf">
-        id
-        marcxml_marcxml
-      </str>
-      <str name="pf">
-        id
-        marcxml_marcxml
-      </str>
 
       <str name="fl">
         *,
         score
+      </str>
+
+      <!-- import qf/pf -->
+      &keyword_config;
+
+      <str name="title_qf">
+        title_search^3000
+        title_aux_search^500
+      </str>
+      <str name="title_pf">
+        title_search^3000
+        title_aux_search^500
+      </str>
+
+      <str name="journal_title_qf">
+        journal_title_search^3000
+        journal_title_aux_search^500
+      </str>
+      <str name="journal_title_pf">
+        journal_title_search^3000
+        journal_title_aux_search^500
+      </str>
+
+      <str name="creator_qf">
+        creator_search^3000
+        conference_search^1500
+        creator_search_aux^500
+      </str>
+      <str name="creator_pf">
+        creator_search^3000
+        conference_search^1500
+        creator_search_aux^500
+      </str>
+
+      <str name="subject_qf">
+        subject_search^1500
+      </str>
+      <str name="subject_pf">
+        subject_search^1000
+      </str>
+
+      <str name="genre_qf">
+        genre_search^1500
+      </str>
+      <str name="genre_pf">
+        genre_search^1000
       </str>
 
       <str name="facet">true</str>
