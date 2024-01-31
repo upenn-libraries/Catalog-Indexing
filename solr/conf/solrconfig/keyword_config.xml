@@ -1,5 +1,5 @@
 <str name="qf">
-  <!-- highly boost exact match fields (identifier fields, _exact anchored fields) -->
+  <!-- highly boost exact match fields (identifier fields, anchored fields) -->
   id^100000
   title_anchored_search^80000
   title_unstem_search^3000
