@@ -101,38 +101,38 @@
       &keyword_config;
 
       <str name="title_qf">
-        title_exact_search^80000
+        title_anchored_search^80000
         title_unstem_search^3000
         title_search^2500
-        title_aux_exact_search^50000
+        title_aux_anchored_search^50000
         title_aux_unstem_search^2500
         title_aux_search^2000
       </str>
       <str name="title_pf">
-        title_exact_search^80000
+        title_anchored_search^80000
         title_unstem_search^3000
         title_search^2500
-        title_aux_exact_search^50000
+        title_aux_anchored_search^50000
         title_aux_unstem_search^2500
         title_aux_search^2000
-        series_exact_search^1000
+        series_anchored_search^1000
         series_unstem_search^500
         series_search^2000
       </str>
 
       <str name="journal_title_qf">
-        journal_title_exact_search^75000
+        journal_title_anchored_search^75000
         journal_title_unstem_search^3000
         journal_title_search^2000
-        journal_title_aux_exact_search^60000
+        journal_title_aux_anchored_search^60000
         journal_title_aux_unstem_search^2500
         journal_title_search^1500
       </str>
       <str name="journal_title_pf">
-        journal_title_exact_search^75000
+        journal_title_anchored_search^75000
         journal_title_unstem_search^3000
         journal_title_search^2000
-        journal_title_aux_exact_search^60000
+        journal_title_aux_anchored_search^60000
         journal_title_aux_unstem_search^2500
         journal_title_search^1500
       </str>

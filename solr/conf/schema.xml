@@ -183,11 +183,11 @@
      or to add multiple fields to the same field for easier/faster searching. -->
 
   <!-- title fields are most ripe for exact matches -->
-  <copyField source="title_search" dest="title_exact_search" />
-  <copyField source="title_aux_search" dest="title_aux_exact_search" />
-  <copyField source="journal_title_search" dest="journal_title_exact_search" />
-  <copyField source="journal_title_aux_search" dest="journal_title_aux_exact_search" />
-  <copyField source="series_search" dest="series_exact_search" />
+  <copyField source="title_search" dest="title_anchored_search" />
+  <copyField source="title_aux_search" dest="title_aux_anchored_search" />
+  <copyField source="journal_title_search" dest="journal_title_anchored_search" />
+  <copyField source="journal_title_aux_search" dest="journal_title_aux_anchored_search" />
+  <copyField source="series_search" dest="series_anchored_search" />
 
   <!-- all search values can benefit from representation in an unstemmed field -->
   <copyField source="*_search" dest="*_unstem_search" />
@@ -311,7 +311,7 @@
   <!-- Important Indexer types -->
   <dynamicField name="*_facet" type="string" indexed="true" stored="false" multiValued="true" />
   <dynamicField name="*_search" type="text" indexed="true" stored="false" multiValued="true" />
-  <dynamicField name="*_exact_search" type="text_anchored" indexed="true" stored="false" multiValued="true" />
+  <dynamicField name="*_anchored_search" type="text_anchored" indexed="true" stored="false" multiValued="true" />
   <dynamicField name="*_unstem_search" type="text_unstem" indexed="true" stored="false" multiValued="true" />
   <dynamicField name="*_sort" type="text_gen_sort" indexed="true" stored="false" multiValued="false" />
 

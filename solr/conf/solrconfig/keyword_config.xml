@@ -1,19 +1,19 @@
 <str name="qf">
   <!-- highly boost exact match fields (identifier fields, _exact anchored fields) -->
   id^100000
-  title_exact_search^80000
+  title_anchored_search^80000
   title_unstem_search^3000
   title_search^2500
-  title_aux_exact_search^50000
+  title_aux_anchored_search^50000
   title_aux_unstem_search^2500
   title_aux_search^2000
-  journal_title_exact_search^75000
+  journal_title_anchored_search^75000
   journal_title_unstem_search^3000
   journal_title_search^2000
-  journal_title_aux_exact_search^60000
+  journal_title_aux_anchored_search^60000
   journal_title_aux_unstem_search^2500
   journal_title_search^1500
-  series_exact_search^50000
+  series_anchored_search^50000
   series_unstem_search^3000
   series_search^2000
   creator_unstem_search^7000
@@ -33,19 +33,19 @@
 </str>
 <str name="pf">
   <!-- no identifier fields, slightly boosted marcxml field -->
-  title_exact_search^80000
+  title_anchored_search^80000
   title_unstem_search^3000
   title_search^2500
-  title_aux_exact_search^50000
+  title_aux_anchored_search^50000
   title_aux_unstem_search^2500
   title_aux_search^2000
-  journal_title_exact_search^75000
+  journal_title_anchored_search^75000
   journal_title_unstem_search^3000
   journal_title_search^2000
-  journal_title_aux_exact_search^60000
+  journal_title_aux_anchored_search^60000
   journal_title_aux_unstem_search^2500
   journal_title_search^1500
-  series_exact_search^50000
+  series_anchored_search^50000
   series_unstem_search^3000
   series_search^2000
   creator_unstem_search^7000
