@@ -26,9 +26,9 @@
   subject_search^6000
   genre_unstem_search^6500
   genre_search^5000
-  isxn_search^9000
-  doi_ss^9000
-  oclc_id_ss^9000
+  isxn_search^20000
+  doi_ss^90000
+  oclc_id_ss^90000
   marcxml_marcxml
 </str>
 <str name="pf">
