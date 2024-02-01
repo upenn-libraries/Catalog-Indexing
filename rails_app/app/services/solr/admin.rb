@@ -79,10 +79,7 @@ module Solr
 
     def connection
       @connection ||= Faraday.new(config.base_url) do |faraday|
-        if config.solr_username && config.solr_password
-          faraday.request :authorization, :basic, config.solr_username, config.solr_password
-        end
-        # faraday.request :multipart
+        faraday.request :authorization, :basic, Settings.solr.user, Settings.solr.password
         faraday.adapter :net_http
       end
     end

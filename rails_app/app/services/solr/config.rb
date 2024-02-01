@@ -9,14 +9,6 @@ module Solr
     CONFIG_PATH = '/solr/admin/configs'
     COLLECTION_PATH = '/solr/admin/collections'
 
-    def solr_username
-      ENV.fetch('SOLR_USERNAME', 'admin')
-    end
-
-    def solr_password
-      ENV.fetch('SOLR_PASSWORD', 'password')
-    end
-
     def config_url
       solr_url path: CONFIG_PATH
     end
@@ -68,8 +60,8 @@ module Solr
     # @return [String]
     def solr_url(path: '')
       uri = URI(base_url)
-      uri.user = solr_username
-      uri.password = solr_password
+      uri.user = Settings.solr.user
+      uri.password = Settings.solr.password
       uri.path = path
       uri.to_s
     end
