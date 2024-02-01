@@ -58,4 +58,4 @@ vagrant ssh
 ```
 
 #### Rails Application
-For information about the Rails application, see the [README](/README.md) in the Rails application root. This includes information about running the test suite, performing indexing operations, development styleguide and general application information.
+For information about the Rails application, see the [README](rails_app/README.md) in the Rails application root. This includes information about running the test suite, performing indexing operations, development styleguide and general application information.
