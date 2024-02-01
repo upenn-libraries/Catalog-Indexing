@@ -8,6 +8,7 @@ class IndexByIdentifiersJob
 
   # @param [Array] identifiers
   def perform(identifiers)
-    IndexByIdentifier.new.call(identifiers: identifiers)
+    outcome = IndexByIdentifier.new.call(identifiers: identifiers)
+    outcome.success?
   end
 end

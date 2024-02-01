@@ -8,5 +8,15 @@ class IndexByIdentifier
 
   step :retrieve_marcxml, with: 'marcxml.retrieve' # get MARCXML from Alma API
   step :prepare_marcxml, with: 'marcxml.prepare' # massage MARCXML
+  step :prepare_writer
   step :index_via_traject, with: 'traject.index_records' # receive a IO object and do the indexing
+
+  # Prepare Traject indexer, with a setting to perform a commit upon closing the writer (job completion).
+  # This will make any added records immediately searchable.
+  # @returns [Dry::Monads::Result]
+  def prepare_writer(**args)
+    settings = { 'solr_writer.commit_on_close' => true }
+    writer = MultiCollectionWriter.new(settings)
+    Success(writer: writer, **args)
+  end
 end
