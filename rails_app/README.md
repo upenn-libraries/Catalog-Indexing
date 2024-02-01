@@ -21,7 +21,7 @@ docker exec -it catalog-indexing_catalog_indexing.1.{whatever} bash
 
 ## Working with `find`
 
-When developing with find, you may need to generate a configset or some sample solr data from this app. Run these commands from the application container:
+When [developing with find](https://gitlab.library.upenn.edu/dld/catalog/find#loading-data), you may need to generate a configset or some sample solr data from this app. Run these commands from the application container:
 
 ### Packaging the Solr configset
 
@@ -29,11 +29,13 @@ When developing with find, you may need to generate a configset or some sample s
 rake tools:package configset
 ```
 
-### Indexing the Alma sample set
+### Generating SolrJSON of the Alma sample set
 
 ```bash
 rake tools:generate_solr_json_from_set
 ```
+
+Using this JSONL file you can index records into your development instance of `find`.
 
 ## Running Test Suite
 
