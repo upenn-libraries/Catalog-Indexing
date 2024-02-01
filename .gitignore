@@ -34,7 +34,5 @@
 /rails_app/config/settings/*.local.yml
 /rails_app/config/environments/*.local.yml
 
-/rails_app/configset_*.zip
-
 # Ignore development bundle files
 /rails_app/vendor/bundle

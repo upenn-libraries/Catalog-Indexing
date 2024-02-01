@@ -55,6 +55,16 @@ module Solr
       ENV.fetch('SOLR_URL', 'http://localhost:8983')
     end
 
+    def tempfile
+      tmp = Tempfile.new('configset')
+      Zip::File.open(tmp, Zip::File::CREATE) do |zipfile|
+        Dir["#{dir}/**/**"].each do |file|
+          zipfile.add(file.sub("#{dir}/", ''), file)
+        end
+      end
+      tmp
+    end
+
     # @return [String]
     def solr_url(path: '')
       uri = URI(base_url)

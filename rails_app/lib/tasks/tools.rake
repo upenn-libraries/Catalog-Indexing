@@ -63,6 +63,6 @@ namespace :tools do
   desc 'Package Solr config set for sharing'
   task package_configset: :environment do
     datestamp = DateTime.current.strftime('%Y%m%d')
-    File.write("configset_#{datestamp}.zip", File.read(Solr::Config.new.tempfile))
+    File.write("storage/configset_#{datestamp}.zip", File.read(Solr::Config.new.tempfile))
   end
 end
