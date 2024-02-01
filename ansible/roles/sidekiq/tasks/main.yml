@@ -37,7 +37,7 @@
     SOLR_URL: "{{ catalog_indexing_solr_url }}"
     SOLR_USERNAME: "{{ 'catalog_indexing_solr_username_v' ~ catalog_indexing_versioned_secrets.solr_username.version }}"
     SOLR_PASSWORD: "{{ 'catalog_indexing_solr_password_v' ~ catalog_indexing_versioned_secrets.solr_password.version }}"
-  no_log: false
+  no_log: true
   when: is_development | default (false) == true
   loop: "{{ sidekiq.instances }}"
   tags: dev_environment
