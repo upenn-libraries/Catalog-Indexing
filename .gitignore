@@ -5,34 +5,3 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 
 .idea/
-
-# Ignore bundler config.
-/rails_app/.bundle
-
-# Ignore all logfiles and tempfiles.
-/rails_app/log/*
-/rails_app/tmp/*
-!/rails_app/log/.keep
-!/rails_app/tmp/.keep
-
-# Ignore pidfiles, but keep the directory.
-/rails_app/tmp/pids/*
-!/rails_app/tmp/pids/
-!/rails_app/tmp/pids/.keep
-
-/rails_app/public/assets
-/rails_app/storage/*
-
-# Ignore master key for decrypting credentials and more.
-/rails_app/config/master.key
-
-/rails_app/node_modules
-
-/rails_app/config/credentials/development.key
-
-/rails_app/config/settings.local.yml
-/rails_app/config/settings/*.local.yml
-/rails_app/config/environments/*.local.yml
-
-# Ignore development bundle files
-/rails_app/vendor/bundle
