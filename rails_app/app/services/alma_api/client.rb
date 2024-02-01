@@ -55,7 +55,7 @@ module AlmaApi
           config.request :authorization, :apikey, Settings.alma.api_key
           config.request :json
           config.response :raise_error
-          config.response :logger, Rails.logger, headers: true, bodies: true, log_level: :debug do |fmt|
+          config.response :logger, Rails.logger, headers: true, bodies: false, log_level: :info do |fmt|
             fmt.filter(/^(Authorization: ).*$/i, '\1[REDACTED]')
           end
           config.adapter :net_http
