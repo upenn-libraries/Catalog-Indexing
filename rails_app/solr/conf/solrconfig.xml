@@ -23,15 +23,23 @@
  -->
   <schemaFactory class="ClassicIndexSchemaFactory" />
 
+  <!-- auto/commit configurations -->
   <updateHandler class="solr.DirectUpdateHandler2">
     <updateLog>
       <str name="dir">${solr.core0.data.dir:}</str>
     </updateLog>
+    <autoCommit>
+      <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
+      <openSearcher>false</openSearcher>
+    </autoCommit>
+    <autoSoftCommit>
+      <maxTime>${solr.autoSoftCommit.maxTime:-1}</maxTime>
+    </autoSoftCommit>
   </updateHandler>
 
   <!-- solr lib dirs -->
   <lib dir="${solr.install.dir:../../../..}/modules/analysis-extras/lib" />
-  <lib dir="${solr.install.dir:../../../..}/contrib/analysis-extras/lib" />
+<!--  <lib dir="${solr.install.dir:../../../..}/contrib/analysis-extras/lib" />-->
 
   <dataDir>${solr.data.dir:}</dataDir>
 
