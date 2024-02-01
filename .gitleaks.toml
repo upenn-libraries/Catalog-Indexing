@@ -207,7 +207,11 @@ title = "gitlab gitleaks config"
         '''a283ccb341deaa541fed26b7d71bcfb6b758d076''',
         '''dc6601efc5e345d6f0cbfb3043205fe5f1dd7fab''',
         '''815515c089da007217181b98b09a54a3dde5f270''',
-        '''6ae3e96aebdc0d8e68189bcf72fa968349d1534b'''
+        '''6ae3e96aebdc0d8e68189bcf72fa968349d1534b''',
+        '''1ef62871a8e65d2c6e0c7dfc527b30ff1b1a37f7''',
+        '''0936420cc1f8237b9fcc722da8efaa55139548a4''',
+        '''0bba184423aedd1ba17acfe06a9260edfef49e3b''',
+        '''555262f1dd7a954f4eba4e5250c43d3fc0be0771'''
     ]
     files = [
         '''(.*?)(bin|csv|doc|gif|jpg|md|pdf)$''',
@@ -215,7 +219,8 @@ title = "gitlab gitleaks config"
         '''services/solr/config.rb ''',
         '''solr/conf/*.rbbi''',
         '''spec/support/alma_api_mocks.rb''',
-        '''config/initializers/devise.rb'''
+        '''config/initializers/devise.rb''',
+        '''solr/conf/solrconfig/keyword_config.xml'''
     ]
     regexes = [
         # Values set by Ansible variables

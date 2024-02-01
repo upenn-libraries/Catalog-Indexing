@@ -35,6 +35,7 @@ class PennMarcIndexer < Traject::Indexer
     date_fields
     stored_fields
     link_fields
+    inventory_fields
     marc_field
   end
 
@@ -74,6 +75,8 @@ class PennMarcIndexer < Traject::Indexer
 
   def search_fields
     define_field :creator_search
+    define_field :creator_aux_search, :creator_search_aux
+    define_field :conference_search, :creator_conference_search
     define_field :title_search
     define_field :title_aux_search, :title_search_aux
     define_field :journal_title_search, :title_journal_search
@@ -81,6 +84,7 @@ class PennMarcIndexer < Traject::Indexer
     define_field :subject_search
     define_field :genre_search
     define_field :isxn_search, :identifier_isxn_search
+    define_field :series_search
   end
 
   def sort_fields
@@ -120,6 +124,21 @@ class PennMarcIndexer < Traject::Indexer
       value = parser.link_full_text_links(record)
       acc << json_encode(value) if value.present?
     end
+  end
+
+  def inventory_fields
+    # TODO: these fields are likely to be too large for Solr string fields in many cases
+    #       leave them out until we have a better context for their usage and make proper accommodations for the size
+    # to_field('physical_holdings_json_ss') do |record, acc|
+    #   value = parser.inventory_physical(record)
+    #   acc << json_encode(value) if value.present?
+    # end
+    # to_field('electronic_holdings_json_ss') do |record, acc|
+    #   value = parser.inventory_electronic(record)
+    #   acc << json_encode(value) if value.present?
+    # end
+    define_field :physical_holding_count_i, :inventory_physical_holding_count
+    define_field :electronic_portfolio_count_i, :inventory_electronic_portfolio_count
   end
 
   def marc_field
