@@ -46,7 +46,7 @@ namespace :tools do
   desc 'Test full export processing'
   task process_full_index: :environment do
     job_id = ENV.fetch('JOB_ID', nil)
-    webhook_response_fixture = Rails.root.join('spec/fixtures/json/job_end_success.json').read
+    webhook_response_fixture = Rails.root.join('spec/fixtures/json/webhooks/job_end_success.json').read
     webhook_response_fixture.gsub!('50746714710003681', job_id) if job_id
     alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
                                      webhook_body: JSON.parse(webhook_response_fixture),
