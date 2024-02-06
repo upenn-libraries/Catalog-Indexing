@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'transaction_job_spec'
-
-describe ProcessAlmaExportJob do
+describe ProcessBatchFileJob do
   include FixtureHelpers
 
   let(:batch_file_id) { '1234' }
