@@ -1,0 +1,53 @@
+---
+- name: "Provision Docker Swarm Cluster"
+  hosts: docker_swarm_manager
+  become: true
+  tasks:
+    - ansible.builtin.import_tasks: "provision_docker.yml"
+
+- name: "Deploy application"
+  hosts: docker_swarm_manager
+  become: true
+  gather_facts: true
+  tasks:
+    - ansible.builtin.import_role:
+        name: catalog-indexing
+        tasks_from: symlink_project
+      tags: catalog-indexing
+    - ansible.builtin.import_role:
+        name: traefik
+      tags: traefik
+    - ansible.builtin.import_role:
+        name: zookeeper
+      tags: zookeeper
+    - ansible.builtin.import_role:
+        name: zoonavigator
+      tags: zoonavigator
+      when: not is_development | default (false, true)
+    - ansible.builtin.import_role:
+        name: solr
+      tags: solr
+    - ansible.builtin.import_role:
+        name: redis
+      tags: redis
+    - ansible.builtin.import_role:
+        name: postgres
+      tags: postgres
+    - ansible.builtin.import_role:
+        name: catalog-indexing
+      tags: catalog-indexing
+    - ansible.builtin.import_role:
+        name: sidekiq
+      tags: sidekiq
+  post_tasks:
+    - name: Recursively remove project directory
+      ansible.builtin.file:
+        path: "{{ project_root }}"
+        state: absent
+    - name: Prune images that are older than 2+ hours
+      community.docker.docker_prune:
+        images: true
+        images_filters:
+          dangling: false
+          until: 2h
+      when: not is_development | default (false, true)

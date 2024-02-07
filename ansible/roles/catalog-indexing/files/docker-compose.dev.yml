@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  catalog_indexing:
+    deploy:
+      labels:
+        - "traefik.enable=true"
+
+        - "traefik.http.routers.catalog_indexing.entrypoints=web"
+        - "traefik.http.routers.catalog_indexing.rule=Host(`${APP_URL}`)"
+        - "traefik.http.routers.catalog_indexing.service=catalog_indexing"
+        - "traefik.http.services.catalog_indexing.loadbalancer.server.port=${APP_PORT}"
+
+        - "traefik.http.routers.catalog_indexing.middlewares=catalog_indexing_https"
+        - "traefik.http.middlewares.catalog_indexing_https.redirectscheme.scheme=https"
+        - "traefik.http.middlewares.catalog_indexing_https.redirectscheme.permanent=true"
+
+        - "traefik.http.routers.catalog_indexing_secure.entrypoints=websecure"
+        - "traefik.http.routers.catalog_indexing_secure.rule=Host(`${APP_URL}`)"
+        - "traefik.http.routers.catalog_indexing_secure.service=catalog_indexing_secure"
+        - "traefik.http.services.catalog_indexing_secure.loadbalancer.server.port=${APP_PORT}"
+
+        - "traefik.http.routers.catalog_indexing_secure.tls=true"
+        - "traefik.http.routers.catalog_indexing_secure.tls.certresolver=letsencrypt"
+    environment:
+      APP_UID: ${UID:-1000}
+      APP_GID: ${GID:-1000}
+      SOLR_TEST_URL: "${SOLR_TEST_URL}"
+    healthcheck:
+      retries: 20
+      start_period: 5m
+    volumes:
+      - /catalog-indexing/ansible/roles/catalog-indexing/files/src/:/home/app

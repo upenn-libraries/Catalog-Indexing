@@ -1,0 +1,5 @@
+---
+postgres_database_versioned_secrets:
+  database_password:
+    value: "password"
+    version: "1"

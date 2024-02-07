@@ -1,0 +1,17 @@
+---
+- name: "Install deps"
+  block:
+    - name: "Install deps with package manager"
+      ansible.builtin.package:
+        name:
+          - python3-pip
+          - python3-jmespath
+        state: present
+
+- name: "Install pip deps"
+  ansible.builtin.pip:
+    name:
+      - jsondiff
+      - passlib
+      - pyyaml
+      - hvac

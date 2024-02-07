@@ -1,69 +1,61 @@
-# Catalog Indexing App
+# Catalog Indexing Environment
 
-Rails app to build and maintain Solr collections for the Penn Libraries catalog.
+This environment manages the services surrounding the creation and maintenence of the Solr index that powers the Penn Libraries catalog. This includes:
+1. Solr infrastructure and configuration for a SolrCloud holding indexed catalog information
+2. A Rails app for managing the building and maintenance of those indexes
+3. Sidekiq workers that manage the different indexing jobs enqueued by the Rails app
 
 ## Development
 
-Staring services:
+> Caveat: The vagrant development environment has only been tested in the local environments our developers currently have. This currently includes Linux, Intel-based Macs and M1 Macs.
 
-```rake tools:start```
+In order to use the integrated development environment you will need to install [Vagrant](https://www.vagrantup.com/docs/installation) [do *not* use the Vagrant version that may be available for your distro repository - explicitly follow instructions at the Vagrant homepage] and the appropriate virtualization software. If you are running Linux or Mac x86 then install [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads), if you are using a Mac with ARM processors then install [Parallels](https://www.parallels.com/).
 
-Stopping services:
+You may need to update the VirtualBox configuration for the creation of a host-only network. This can be done by creating a file `/etc/vbox/networks.conf` containing:
 
-```rake tools:stop```
-
-Cleaning up:
-
-```rake tools:clean```
-
-### Sidekiq
-
-You can start sidekiq in development using:
-
-```ruby
-bundle exec sidekiq
+```
+* 10.0.0.0/8
 ```
 
-This is not *required*, but is a good idea if you want to app to function as expected during development. Running the 
-sidekiq process is not needed to run the test suite.
+#### Starting
 
-## PennMARC
+From the [vagrant](vagrant) directory run:
 
-This app uses the PennMARC gem to handle most of the MARC parsing logic.
-
-### Developing
-
-Sometimes you might want to use an unpublished version of the PennMARC gem in development. Modify the gemfile like so:
-
-#### With a branch pushed to the remote (Gitlab)
-```ruby
-# Gemfile
-
-gem 'pennmarc', git: 'https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git', ref: 'some-remote-commit-sha'
-
-# or
-
-gem 'pennmarc', git: 'https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git', branch: 'some-remote-branch'
+if running with Virtualbox:
+```
+vagrant up --provision
 ```
 
-#### With a local branch
-
-You can instruct bundler to look at a local path for the `pennmarc` gem. When using this, running `bundle install` will
-update your `Gemfile.lock` file to point to the specified `ref:` or `branch:` in your local `pennmarc` repo. Be very
-careful to undo this when pushing to a remote branch.
-
-```bash
-bundle config set local.pennmarc ~/Projects/pennmarc/
+if running with Parallels:
+```
+vagrant up --provider=parallels --provision
 ```
 
-```ruby
-# Gemfile
+This will run the [vagrant/Vagrantfile](vagrant/Vagrantfile) which will bring up an Ubuntu VM and run the Ansible script which will provision a single node Docker Swarm behind nginx with a self-signed certificate to mimic a load balancer. Your hosts file will be modified; the domain `catalog-indexing-dev.library.upenn.edu` will be added and mapped to the Ubuntu VM. Once the Ansible script has completed and the Docker Swarm is deployed you can access the application by navigating to [https://catalog-indexing-dev.library.upenn.edu](https://catalog-indexing-dev.library.upenn.edu).
 
-gem 'pennmarc', git: 'https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git', branch: 'some-local-branch-name'
+#### Stopping
+
+To stop the development environment, from the `vagrant` directory run:
+
+```
+vagrant halt
 ```
 
-Running `bundle install` should then show:
+#### Destroying
 
-```bash
-Using pennmarc 1.0.0 from https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git (at /home/mk/Projects/pennmarc@ee38309)
+To destroy the development environment, from the `vagrant` directory run:
+
 ```
+vagrant destroy -f
+```
+
+#### SSH
+
+You may ssh into the Vagrant VM by running:
+
+```
+vagrant ssh
+```
+
+#### Rails Application
+For information about the Rails application, see the [README](rails_app/README.md) in the Rails application root. This includes information about running the test suite, performing indexing operations, development styleguide and general application information.

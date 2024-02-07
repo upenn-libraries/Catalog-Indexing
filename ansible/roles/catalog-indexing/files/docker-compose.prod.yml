@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  catalog_indexing:
+    deploy:
+      labels:
+        - "traefik.enable=true"
+
+        - "traefik.http.routers.catalog_indexing.entrypoints=web"
+        - "traefik.http.routers.catalog_indexing.rule=Host(`${APP_URL}`)"
+        - "traefik.http.routers.catalog_indexing.service=catalog_indexing"
+        - "traefik.http.services.catalog_indexing.loadbalancer.server.port=${APP_PORT}"
+    healthcheck:
+      interval: 10s
+      retries: 6
+      start_period: 60s
+      timeout: 120s
+    secrets:
+      - honeybadger_api_key
+    volumes:
+      - app_storage:/home/app/storage
+
+secrets:
+  honeybadger_api_key:
+    external: true
+    name: ${HONEYBADGER_API_KEY}
+
+volumes:
+  app_storage:
+    name: app_storage

@@ -1,0 +1,25 @@
+default: &default
+  adapter: postgresql
+  database: <%= ENV['DATABASE_NAME'] %>
+  encoding: unicode
+  host: postgres
+  password: <%= DockerSecrets.lookup(:database_password, ENV['DATABASE_PASSWORD']) %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV['DATABASE_USER'] %>
+  variables:
+    tcp_keepalives_idle: 60
+    tcp_keepalives_interval: 60
+    tcp_keepalives_count: 100
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+  database: catalog_indexing_test
+
+staging:
+  <<: *default
+
+production:
+  <<: *default

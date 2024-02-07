@@ -157,12 +157,15 @@ title = "gitlab gitleaks config"
             '''(?i)(omniauth)''',
             '''(?i)(header\[\:key\])''',
             '''(?i)(\?\<key\>)''',
-            '''password: password''',
+            '''(?i)password:\s*?(")?password''',
             ''':secret_access_key''',
             '''require_master_key''',
             '''storage_access_key''',
             '''POSTGRES_PASSWORD: password''',
-            '''uniqueKey'''
+            '''uniqueKey''',
+            '''(?i)insert_key''',
+            '''\(key\)''',
+            '''Token\.new'''
         ]
 
 [[rules]]
@@ -208,6 +211,10 @@ title = "gitlab gitleaks config"
         '''dc6601efc5e345d6f0cbfb3043205fe5f1dd7fab''',
         '''815515c089da007217181b98b09a54a3dde5f270''',
         '''6ae3e96aebdc0d8e68189bcf72fa968349d1534b''',
+        '''e5d3672038eeb5f528e3efbdb391dda3145ec2bd''',
+        '''972e8ec0c86fef1acc3eb703076cf7b070036e58''',
+        '''b01f427e55111b681cae4517373ee7ec09de3a45''',
+        '''6ae3e96aebdc0d8e68189bcf72fa968349d1534b''',
         '''1ef62871a8e65d2c6e0c7dfc527b30ff1b1a37f7''',
         '''0936420cc1f8237b9fcc722da8efaa55139548a4''',
         '''0bba184423aedd1ba17acfe06a9260edfef49e3b''',
@@ -223,13 +230,19 @@ title = "gitlab gitleaks config"
         '''config/initializers/devise.rb''',
         '''solr/conf/solrconfig/keyword_config.xml'''
     ]
+    paths = [
+        '''rails_app/vendor/bundle'''
+    ]
     regexes = [
         # Values set by Ansible variables
         '''{{ *[\S]+ *}}''',
+        '''\${\s?[\S]+\s?}''',
+        '''{{.*?}}''',
         # Values set by environment variables
         '''ENV\[['"][\S]+['"]\]''',
         # AWS Secrets Manager resource for vault password
         '''AnsibleVaultPassword''',
         '''solr_username''',
-        '''solr_password'''
+        '''solr_password''',
+        '''alma_api_key'''
     ]

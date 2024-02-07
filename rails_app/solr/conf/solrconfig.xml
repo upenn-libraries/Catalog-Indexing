@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE config [ <!ENTITY keyword_config SYSTEM "solrconfig/keyword_config.xml"> ]>
+
+<config>
+  <!-- NOTE: various comments and unused configuration possibilities have been purged
+     from this file.  Please refer to http://wiki.apache.org/solr/SolrConfigXml,
+     as well as the default solrconfig file included with Solr -->
+
+  <abortOnConfigurationError>${solr.abortOnConfigurationError:true}</abortOnConfigurationError>
+
+  <!-- Controls what version of Lucene various components of Solr
+     adhere to.  Generally, you want to use the latest version to
+     get all bug fixes and improvements. It is highly recommended
+     that you fully re-index after changing this setting as it can
+     affect both how text is indexed and queried. -->
+  <luceneMatchVersion>9.2.1</luceneMatchVersion>
+
+  <directoryFactory name="DirectoryFactory" class="${solr.directoryFactory:solr.StandardDirectoryFactory}"/>
+
+  <!-- Use the classic schema.xml instead of a managed schema
+     https://solr.apache.org/guide/solr/latest/configuration-guide/schema-factory.html#classicindexschemafactory
+ -->
+  <schemaFactory class="ClassicIndexSchemaFactory" />
+
+  <!-- auto/commit configurations -->
+  <updateHandler class="solr.DirectUpdateHandler2">
+    <updateLog>
+      <str name="dir">${solr.core0.data.dir:}</str>
+    </updateLog>
+    <autoCommit>
+      <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
+      <openSearcher>false</openSearcher>
+    </autoCommit>
+    <autoSoftCommit>
+      <maxTime>${solr.autoSoftCommit.maxTime:-1}</maxTime>
+    </autoSoftCommit>
+  </updateHandler>
+
+  <!-- solr lib dirs -->
+  <lib dir="${solr.install.dir:../../../..}/modules/analysis-extras/lib" />
+<!--  <lib dir="${solr.install.dir:../../../..}/contrib/analysis-extras/lib" />-->
+
+  <dataDir>${solr.data.dir:}</dataDir>
+
+  <!-- "search" request handler is used by Blacklight to handle all search requests -->
+  <requestHandler name="search" class="solr.SearchHandler" default="true">
+    <!-- default values for query parameters can be specified, these
+         will be overridden by parameters in the request
+      -->
+    <lst name="defaults">
+      <!-- specify the query parser to use - "edismax" is the standard these days. query parser dictates what additional
+           parameters a search request will expect/handle. edismax is a superset of the dismax parser configuration. -->
+      <str name="defType">edismax</str>
+
+      <!-- determine which parameters to return with the responses. "explicit" means only return the parameters
+           explicitly sent with the request, not any added by solr processing -->
+      <str name="echoParams">explicit</str>
+
+      <!-- "alternate" query - or, default query if the query is blank. here, we configure a blank query to return all
+           documents -->
+      <str name="q.alt">*:*</str>
+
+      <!-- see solr docs for more on the mm param: https://solr.apache.org/guide/solr/latest/query-guide/dismax-query-parser.html#mm-minimum-should-match-parameter
+           in short, it helps determine how many "optional" parts of the query must match for a result to be considered
+           a match and returned as a result. this has some encoding... 2<-1 5<-2 6<90% is how Solr sees it. -->
+      <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
+
+      <!-- "query slop" see guide for how slop functions https://solr.apache.org/guide/solr/latest/query-guide/edismax-query-parser.html#using-slop -->
+      <int name="qs">1</int>
+
+      <!-- "phrase slop" distance between tokens for a match in phrase query -->
+      <int name="ps">2</int>
+      <float name="tie">0.01</float>
+
+      <!-- import qf/pf -->
+      &keyword_config;
+
+      <!-- "fl" is the "field list" param. simply it is the fields to return in the response -->
+      <str name="fl">
+        *,
+        score
+      </str>
+
+      <str name="facet">true</str>
+      <str name="facet.mincount">1</str>
+      <str name="facet.limit">10</str>
+    </lst>
+  </requestHandler>
+
+  <requestHandler name="/advanced" class="solr.SearchHandler">
+    <!-- a lucene request handler for using the JSON Query DSL,
+         specifically for advanced search.
+         Using a separate requestHandler is a workaround to
+         https://issues.apache.org/jira/browse/SOLR-16916, although
+         it could be desirable for other reasons as well.
+      -->
+    <lst name="defaults">
+      <str name="defType">lucene</str>
+      <str name="echoParams">explicit</str>
+      <str name="df">marcxml_marcxml</str>
+
+      <str name="fl">
+        *,
+        score
+      </str>
+
+      <!-- import qf/pf -->
+      &keyword_config;
+
+      <str name="title_qf">
+        title_anchored_search^80000
+        title_unstem_search^3000
+        title_search^2500
+        title_aux_anchored_search^50000
+        title_aux_unstem_search^2500
+        title_aux_search^2000
+      </str>
+      <str name="title_pf">
+        title_anchored_search^80000
+        title_unstem_search^3000
+        title_search^2500
+        title_aux_anchored_search^50000
+        title_aux_unstem_search^2500
+        title_aux_search^2000
+        series_anchored_search^1000
+        series_unstem_search^500
+        series_search^2000
+      </str>
+
+      <str name="journal_title_qf">
+        journal_title_anchored_search^75000
+        journal_title_unstem_search^3000
+        journal_title_search^2000
+        journal_title_aux_anchored_search^60000
+        journal_title_aux_unstem_search^2500
+        journal_title_search^1500
+      </str>
+      <str name="journal_title_pf">
+        journal_title_anchored_search^75000
+        journal_title_unstem_search^3000
+        journal_title_search^2000
+        journal_title_aux_anchored_search^60000
+        journal_title_aux_unstem_search^2500
+        journal_title_search^1500
+      </str>
+
+      <str name="creator_qf">
+        creator_unstem_search^7000
+        creator_search^5000
+        creator_search_aux_unstem_search^5000
+        creator_search_aux_search^3000
+        conference_unstem_search^5000
+        conference_search^3000
+      </str>
+      <str name="creator_pf">
+        creator_unstem_search^7000
+        creator_search^5000
+        creator_search_aux_unstem_search^5000
+        creator_search_aux_search^3000
+        conference_unstem_search^5000
+        conference_search^3000
+      </str>
+
+      <str name="subject_qf">
+        subject_unstem_search^2500
+        subject_search^1500
+      </str>
+      <str name="subject_pf">
+        subject_unstem_search^2500
+        subject_search^1000
+      </str>
+
+      <str name="genre_qf">
+        genre_unstem_search^2500
+        genre_search^1500
+      </str>
+      <str name="genre_pf">
+        genre_unstem_search^2500
+        genre_search^1000
+      </str>
+
+      <str name="facet">true</str>
+      <str name="facet.mincount">1</str>
+      <str name="facet.limit">10</str>
+    </lst>
+  </requestHandler>
+
+  <requestHandler name="standard" class="solr.SearchHandler">
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+      <str name="defType">lucene</str>
+    </lst>
+  </requestHandler>
+
+  <requestHandler name="/replication" class="solr.ReplicationHandler" startup="lazy" />
+
+  <requestDispatcher handleSelect="true">
+    <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048" />
+  </requestDispatcher>
+
+  <requestHandler name="/analysis/field" startup="lazy" class="solr.FieldAnalysisRequestHandler" />
+</config>
