@@ -67,10 +67,10 @@ class IndexingService
   end
 
   def max_skipped
-    @max_skipped ||= (@indexer.settings[:skipped_record_limit] || 0)
+    @max_skipped ||= @indexer.settings[:skipped_record_limit] || 0
   end
 
   def max_failed
-    @max_failed ||= (@indexer.settings[:failed_record_limit] || 0)
+    @max_failed ||= @indexer.settings[:failed_record_limit] || 0
   end
 end
