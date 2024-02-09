@@ -58,7 +58,7 @@ describe 'Alma Export Index Page' do
     it 'filters by status' do
       select 'Completed', from: 'Status'
       click_on 'Filter'
-      expect(page).to have_css('.alma-export-row'), count: 1
+      expect(page).to have_css('.alma-export-row', count: 1)
       expect(page).not_to have_text alma_export.id
     end
   end
