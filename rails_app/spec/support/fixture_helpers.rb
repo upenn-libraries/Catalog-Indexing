@@ -5,7 +5,7 @@ module FixtureHelpers
   # @return [String]
   def marc_fixture(filename)
     filename = "#{filename}.xml" unless filename.ends_with?('.xml')
-    File.read(File.join(fixture_path, 'marc_xml', filename))
+    File.read(File.join(fixture_paths, 'marc_xml', filename))
   end
 
   # @param [String] filename
@@ -13,6 +13,6 @@ module FixtureHelpers
   def json_fixture(filename, directory = nil)
     filename = "#{filename}.json" unless filename.ends_with?('.json')
     dirs = ['json', directory.to_s, filename].compact_blank
-    File.read(File.join(fixture_path, dirs))
+    File.read(File.join(fixture_paths, dirs))
   end
 end
