@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
   root to: redirect('/login')
 
-  resources :users, except: %w[new create edit update destroy]
+  resources :users, except: :destroy
 
   scope :indexing do
     get 'by-id', to: 'alma_indexing#index', as: 'index_by_id'
@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       post 'listen', to: 'webhook_indexing#listen', as: 'webhook_listen'
     end
   end
+
   resources :alma_exports, only: %i[index show destroy] do
     resources :batch_files, only: %i[index show]
   end

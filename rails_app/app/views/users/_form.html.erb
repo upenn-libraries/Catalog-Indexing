@@ -1,0 +1,11 @@
+<div class="alert alert-warning">
+  Only a PennKey value is required here. Any other values provided will be overwritten with data from the PennKey
+  server when the user logs in.
+</div>
+
+<%= bootstrap_form_for(@user) do |f| %>
+  <%= f.text_field :uid, label: 'Penn Key' %>
+  <%= f.email_field :email %>
+  <%= f.check_box :active, switch: true %>
+  <%= f.submit 'Save' %>
+<% end %>

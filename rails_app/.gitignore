@@ -34,3 +34,5 @@
 
 # Ignore development bundle files
 /vendor/bundle
+
+.byebug_history
