@@ -223,19 +223,20 @@ title = "gitlab gitleaks config"
         '''a7868e92964e113abcd424f0b4047ac3682e5514''',
         '''07c7dd455236ed5278efd22cc1864968fb9e818b''',
         '''ee6ecc6bc6435a3c6559665e9649514c17f732cc'''
+
     ]
     files = [
         '''(.*?)(bin|csv|doc|gif|jpg|md|pdf)$''',
         '''\.gitleaks\.toml''',
-        '''rails_app/services/solr/config.rb ''',
-        '''rails_app/solr/conf/*.rbbi''',
-        '''rails_app/spec/support/alma_api_mocks.rb''',
-        '''rails_app/config/initializers/devise.rb''',
-        '''rails_app/solr/conf/solrconfig/keyword_config.xml'''
+        '''services/solr/config.rb ''',
+        '''solr/conf/*.rbbi''',
+        '''spec/support/alma_api_mocks.rb''',
+        '''config/initializers/devise.rb''',
+        '''solr/conf/solrconfig/keyword_config.xml'''
     ]
     paths = [
-        '''rails_app/vendor/bundle''',
-        '''rails_app/config/settings/(development|test|staging|production).yml'''
+        '''vendor/bundle''',
+        '''config/settings/(development|test|staging|production).yml'''
     ]
     regexes = [
         # Values set by Ansible variables

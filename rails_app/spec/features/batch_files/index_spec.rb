@@ -103,7 +103,7 @@ describe 'Batch Files Index Page' do
     it 'returns the result with the query in the path' do
       fill_in 'Search', with: 'path'
       click_on 'Filter'
-      expect(page).to have_css('.batch-file-row'), count: 1
+      expect(page).to have_css('.batch-file-row', count: 1)
       expect(find('.batch-file-row')).to have_text 'path/to/file'
     end
   end
@@ -120,7 +120,7 @@ describe 'Batch Files Index Page' do
     it 'filters by status' do
       select 'Completed', from: 'Status'
       click_on 'Filter'
-      expect(page).to have_css('.batch-file-row'), count: 1
+      expect(page).to have_css '.batch-file-row', count: 1
       expect(find('.batch-file-row')).to have_text 'Completed'
     end
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'solr/config'
+require 'config'
 
 module Solr
   # Rudely appropriating PSU's delightful:
