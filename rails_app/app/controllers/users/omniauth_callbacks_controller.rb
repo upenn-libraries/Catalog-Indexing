@@ -6,8 +6,13 @@ module Users
     skip_before_action :verify_authenticity_token, only: %i[developer failure]
 
     def developer
-      @user = User.from_omniauth(request.env['omniauth.auth'])
-      handle_user(user: @user, kind: 'developer')
+      @user = User.from_omniauth_developer(request.env['omniauth.auth'])
+      handle_user(user: @user, kind: 'Developer')
+    end
+
+    def saml
+      @user = User.from_omniauth_saml(request.env['omniauth.auth'])
+      handle_user(user: @user, kind: 'SAML')
     end
 
     def failure
