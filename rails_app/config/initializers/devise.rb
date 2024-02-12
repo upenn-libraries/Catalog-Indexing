@@ -274,7 +274,7 @@ Devise.setup do |config|
   config.omniauth :developer, fields: [:uid]
 
   config.omniauth :saml, {
-    sp_entity_id: ENV.fetch('SHIB_SP_ENTITY_ID', nil),
+    sp_entity_id: ENV['SHIB_SP_ENTITY_ID'],
     idp_sso_service_url: 'https://idp.pennkey.upenn.edu/idp/profile/SAML2/Redirect/SSO', # POST service URL didn't work
     idp_cert_fingerprint: '04:33:79:81:4E:7C:B7:B3:FA:91:AB:91:E3:94:78:15:03:C9:14:EF',
     request_attributes: [], # don't explicitly request attributes, rely on IdP defaults

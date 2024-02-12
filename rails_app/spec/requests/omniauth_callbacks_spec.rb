@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe 'Omniauth Callbacks Requests' do
-
   context 'with SAML authentication' do
     before do
       OmniAuth.config.mock_auth[:saml] = OmniAuth::AuthHash.new(
