@@ -235,7 +235,8 @@ title = "gitlab gitleaks config"
         '''solr/conf/solrconfig/keyword_config.xml'''
     ]
     paths = [
-        '''rails_app/vendor/bundle'''
+        '''vendor/bundle''',
+        '''config/settings/(development|test|staging|production).yml'''
     ]
     regexes = [
         # Values set by Ansible variables

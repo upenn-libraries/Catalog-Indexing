@@ -124,6 +124,10 @@ class PennMarcIndexer < Traject::Indexer
       value = parser.link_full_text_links(record)
       acc << json_encode(value) if value.present?
     end
+    to_field('web_links_ss') do |record, acc|
+      value = parser.link_web_links(record)
+      acc << json_encode(value) if value.present?
+    end
   end
 
   def inventory_fields
