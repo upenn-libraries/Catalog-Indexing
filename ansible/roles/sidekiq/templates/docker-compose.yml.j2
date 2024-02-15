@@ -19,6 +19,7 @@ services:
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_PASSWORD: /run/secrets/database_password
       DATABASE_USER: ${DATABASE_USER}
+      DB_POOL: {{ item.concurrency }}
       APP_URL: ${APP_URL}
       APP_IMAGE_TAG: ${APP_IMAGE_TAG}
       RAILS_ENV: ${APP_RAILS_ENV}
