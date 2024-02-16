@@ -2,7 +2,7 @@
 
 describe 'User Index page' do
   let(:user) { create(:user) }
-  let(:inactive_user) { create(:user, identifier: 'some_dev@library.upenn.edu', active: false) }
+  let(:inactive_user) { create(:user, :inactive, uid: 'some_dev', email: 'some_dev@library.upenn.edu') }
 
   before { sign_in user }
 
