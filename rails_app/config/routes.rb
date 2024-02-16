@@ -38,5 +38,5 @@ Rails.application.routes.draw do
 
   # Enable Rails built in health check endpoint. This endpoint is not suitable for checking uptime because it doesn't
   # consider all of the application's services.
-  get 'up', to: "rails/health#show", as: :rails_health_check
+  get 'up', to: 'rails/health#show', as: :rails_health_check
 end

@@ -29,7 +29,7 @@ class UsersController < ApplicationController
   def edit; end
 
   def update
-    @user.update **user_params
+    @user.update(**user_params)
     if @user.save
       flash.notice = 'User updated'
       redirect_to user_path(@user)
