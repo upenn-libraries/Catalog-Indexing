@@ -4,7 +4,7 @@ default: &default
   encoding: unicode
   host: postgres
   password: <%= DockerSecrets.lookup(:database_password, ENV['DATABASE_PASSWORD']) %>
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: <%= ENV['DB_POOL'] || ENV['RAILS_MAX_THREADS'] || 5 %>
   username: <%= ENV['DATABASE_USER'] %>
   variables:
     tcp_keepalives_idle: 60
