@@ -25,6 +25,7 @@ services:
       REDIS_URL: "redis://redis:${REDIS_PORT}/0"
       REDIS_SIDEKIQ_USER: "${REDIS_SIDEKIQ_USER}"
       REDIS_SIDEKIQ_PASSWORD: "${REDIS_SIDEKIQ_PASSWORD}"
+      SHIB_SP_ENTITY_ID: "https://${APP_URL}/shibboleth"
       SOLR_BACKUP_LOCATION: "solr/backups"
       SOLR_URL: "${SOLR_URL}"
       SOLR_ADMIN_URL: "${SOLR_ADMIN_URL}"
@@ -32,7 +33,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -fsSL localhost:${APP_PORT} || exit 1",
+          "curl -fsSL localhost:${APP_PORT}/up || exit 1",
         ]
       interval: 10s
       retries: 6
