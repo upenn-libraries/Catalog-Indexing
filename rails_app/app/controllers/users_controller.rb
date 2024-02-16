@@ -16,7 +16,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new user_params.merge(provider: 'saml')
+    @user = User.new(**user_params, provider: 'saml')
     if @user.save
       flash.notice = "User access granted for #{@user.uid}"
       redirect_to user_path(@user)
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
   def edit; end
 
   def update
-    @user.update user_params
+    @user.update **user_params
     if @user.save
       flash.notice = 'User updated'
       redirect_to user_path(@user)
@@ -47,6 +47,8 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:uid, :email, :active)
+    params.require(:user).permit(:uid, :email, :active).tap do |p|
+      p[:email] = "#{p[:uid]}@upenn.edu" if p[:email].blank?
+    end
   end
 end
