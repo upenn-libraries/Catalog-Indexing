@@ -35,4 +35,8 @@ Rails.application.routes.draw do
   resources :alma_exports, only: %i[index show destroy] do
     resources :batch_files, only: %i[index show]
   end
+
+  # Enable Rails built in health check endpoint. This endpoint is not suitable for checking uptime because it doesn't
+  # consider all of the application's services.
+  get 'up', to: "rails/health#show", as: :rails_health_check
 end
