@@ -1,0 +1,5 @@
+<%= bootstrap_form_for config_item, inline: true, remote: true do |f| %>
+  <%= label_tag config_item.name %>
+  <%= check_box_tag :value, label: config_item.name %>
+  <%= f.submit %>
+<% end %>
