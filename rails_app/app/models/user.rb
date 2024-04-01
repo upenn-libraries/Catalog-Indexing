@@ -9,7 +9,8 @@ class User < ApplicationRecord
   end
 
   validates :email, presence: true, uniqueness: true
-  validates :uid, presence: true, uniqueness: { scope: :provider }, if: :provider_provided?
+  validates :uid, presence: true, uniqueness: { scope: :provider }
+  validates :provider, presence: true
 
   scope :filter_status, ->(status) { where(active: status) }
 
@@ -34,12 +35,5 @@ class User < ApplicationRecord
 
     user.email = auth.info.uid # update email with value from IdP, save will occur later
     user
-  end
-
-  private
-
-  # @return [TrueClass, FalseClass]
-  def provider_provided?
-    provider.present?
   end
 end
