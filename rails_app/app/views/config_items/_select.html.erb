@@ -1,4 +1,4 @@
 <%= bootstrap_form_for config_item, layout: :inline, remote: true do |f| %>
-  <%= f.check_box :value, label: config_item.name.titleize, switch: true %>
+  <%= f.select :value, options, multiple: multiple, label: config_item.name.titleize %>
   <%= f.submit 'Save Setting' %>
 <% end %>

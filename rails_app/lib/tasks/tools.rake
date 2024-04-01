@@ -65,4 +65,12 @@ namespace :tools do
     datestamp = DateTime.current.strftime('%Y%m%d')
     File.write("storage/configset_#{datestamp}.zip", File.read(Solr::Config.new.tempfile))
   end
+
+  desc 'Add Configuration Items to the database'
+  task add_config_items: :environment do
+    ConfigItem::LIST.each do |name, config|
+      ConfigItem.create! name: name,
+                         value: config[:default]
+    end
+  end
 end

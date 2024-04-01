@@ -1,25 +1,15 @@
-<table class="table">
-  <thead>
-  <tr>
-    <th>Name</th>
-    <th>Value</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% @config_items.each do |config_item| %>
-    <tr>
-      <td><%= config_item.name %></td>
-      <td>
-        <% # TODO: obv some kind of component or helper & partial would be better here %>
-        <%= case ConfigItem::LIST[config_item.name.to_sym][:type]
-            when :boolean
-              boolean_form config_item: config_item
-            when :array
-              'Form with a multiselect'
-            end
-        %>
-      </td>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
+<% @config_items.each do |config_item| %>
+<% type = ConfigItem::LIST[config_item.name.to_sym][:type] %>
+  <div class="config-value-panel">
+    <%= case type
+        when :boolean
+          boolean_form config_item: config_item
+        when :array
+          select_form config_item: config_item
+        else
+          raise ArgumentError, "Unsupported ConfigItem type #{type}"
+        end
+    %>
+  </div>
+  <br>
+<% end %>

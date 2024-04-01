@@ -5,7 +5,10 @@ class ConfigItem < ApplicationRecord
   # controlled list of config entries, their type and default value
   LIST = {
     process_bib_webhooks: { type: :boolean, default: false },
-    webhook_target_collections: { type: :array, default: Array.wrap(Solr::Config.new.collection_name) },
+    webhook_target_collections: {
+      type: :array, default: Array.wrap(Solr::Config.new.collection_name),
+      options_method: :available_collections
+    }
   }.freeze
 
   # Return value from database by name, or default from config
