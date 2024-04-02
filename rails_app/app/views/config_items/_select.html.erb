@@ -1,4 +1,5 @@
-<%= bootstrap_form_for config_item, layout: :inline, remote: true do |f| %>
-  <%= f.select :value, options, multiple: multiple, label: config_item.name.titleize %>
-  <%= f.submit 'Save Setting' %>
+<% field_name = multiple ? "#{config_item.name}[]" : config_item.name %>
+<%= bootstrap_form_for config_item do |f| %>
+  <%= f.select :value, options, { multiple: multiple, label: nil }, { name: field_name } %>
+  <%= f.submit 'Save' %>
 <% end %>

@@ -7,6 +7,8 @@ class AddConfigItem < ActiveRecord::Migration[7.1]
       t.string :name
       t.jsonb :value
       t.timestamps
+
+      t.index :name, unique: true
     end
   end
 end

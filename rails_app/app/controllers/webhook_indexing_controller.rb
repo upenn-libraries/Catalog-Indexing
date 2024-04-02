@@ -32,6 +32,8 @@ class WebhookIndexingController < ApplicationController
 
       handle_bib_action(payload)
     when 'JOB_END'
+      return unless ConfigItem.value_for(:process_job_webhooks)
+
       handle_job_action(payload)
     else
       head(:bad_request)
