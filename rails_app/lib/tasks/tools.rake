@@ -66,7 +66,7 @@ namespace :tools do
     File.write("storage/configset_#{datestamp}.zip", File.read(Solr::Config.new.tempfile))
   end
 
-  desc 'Add Configuration Items to the database'
+  desc 'Add Configuration Items to the database with default values'
   task add_config_items: :environment do
     ConfigItem.create! name: 'process_job_webhooks', config_type: ConfigItem::BOOLEAN_TYPE,
                        value: ConfigItem::DETAILS.dig(:process_job_webhooks, :default)

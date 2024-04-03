@@ -20,6 +20,7 @@ class ConfigItemsController < ApplicationController
     @config_item = ConfigItem.find(params[:id])
   end
 
+  # @param config_item [ConfigItem]
   def save_and_set_message(config_item)
     if config_item.save
       "Value updated for #{config_item.name}"
@@ -29,6 +30,7 @@ class ConfigItemsController < ApplicationController
   end
 
   # Massage param values into appropriate data structure for storage in PG JSON field
+  # @param params [ActionController::Parameters]
   def value_from(params)
     value = params[@config_item.name]
     case @config_item.config_type
