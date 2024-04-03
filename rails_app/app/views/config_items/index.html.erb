@@ -3,7 +3,7 @@
     <div class="card-body">
       <h5 class="card-title"><%= config_item.name.titleize %></h5>
       <h6 class="card-subtitle mb-2"><%= t(config_item.name, scope: :config_item) %></h6>
-      <%= case config_item.value_type
+      <%= case config_item.config_type
           when ConfigItem::BOOLEAN_TYPE
             boolean_form config_item: config_item
           when ConfigItem::ARRAY_TYPE

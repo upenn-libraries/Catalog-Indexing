@@ -31,7 +31,7 @@ class ConfigItemsController < ApplicationController
   # Massage param values into appropriate data structure for storage in PG JSON field
   def value_from(params)
     value = params[@config_item.name]
-    case @config_item.value_type
+    case @config_item.config_type
     when ConfigItem::BOOLEAN_TYPE
       value == '1'
     else
