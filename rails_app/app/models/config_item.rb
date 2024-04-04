@@ -23,7 +23,7 @@ class ConfigItem < ApplicationRecord
     process_bib_webhooks: { default: false },
     webhook_target_collections: {
       default: Array.wrap(Solr::Config.new.collection_name),
-      options_method: :available_collections
+      options: Solr::Admin.new.all_collections
     }
   }.freeze
 
