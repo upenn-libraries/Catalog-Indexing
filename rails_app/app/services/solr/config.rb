@@ -33,6 +33,7 @@ module Solr
       ENV.fetch('SOLR_COLLECTION', "catalog-indexing-#{Rails.env}")
     end
 
+    # TODO: this value is set in the ansible edifice under a different ENV name?
     def num_shards
       ENV.fetch('SOLR_NUM_SHARDS', '1')
     end

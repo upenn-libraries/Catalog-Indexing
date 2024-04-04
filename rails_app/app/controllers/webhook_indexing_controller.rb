@@ -57,6 +57,8 @@ class WebhookIndexingController < ApplicationController
     end
   end
 
+  # TODO: move some of this logic to the processing transaction? would be less ugly and easier to report on errors, but
+  #       would mean that the AlmaExport would be initialized without a target_collection specified.
   # @param payload [Hash]
   # @return [TrueClass]
   def initialize_alma_export(payload)
