@@ -60,10 +60,18 @@ class WebhookIndexingController < ApplicationController
   # @param payload [Hash]
   # @return [TrueClass]
   def initialize_alma_export(payload)
-    alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
-                                     webhook_body: payload,
-                                     target_collections: Array.wrap(Solr::Config.new.collection_name))
-    ProcessAlmaExportJob.perform_async(alma_export.id)
+    solr_admin = Solr::Admin.new
+    collection_name = "#{Settings.solr.collection_name_prefix}#{DateTime.current.strftime('%Y%m%d')}"
+    if solr_admin.collection_exists?(name: collection_name)
+      # TODO: notify that we have a problem, the collection already exists with today's date
+    end
+    if solr_admin.create_collection(name: collection_name)
+      alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
+                                       webhook_body: payload, target_collections: Array.wrap(collection_name))
+      ProcessAlmaExportJob.perform_async(alma_export.id)
+    else
+      # TODO: notify that collection could not be created
+    end
     head :ok
   end
 

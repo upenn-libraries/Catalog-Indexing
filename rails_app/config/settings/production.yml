@@ -3,6 +3,7 @@ solr:
   user: <%= DockerSecrets.lookup(:solr_username) %>
   password: <%= DockerSecrets.lookup(:solr_password) %>
   url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
+  collection_name_prefix: 'catalog-index-'
 redis:
   url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
   username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
