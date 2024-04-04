@@ -6,6 +6,8 @@
 class AlmaExport < ApplicationRecord
   include Statuses
 
+  JOB_SUCCESS_VALUE = 'COMPLETED_SUCCESS'
+
   module Sources
     PRODUCTION = 'production'
     SANDBOX = 'sandbox'

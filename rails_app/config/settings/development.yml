@@ -11,6 +11,8 @@ redis:
 # External Services
 alma:
   api_key: <%= DockerSecrets.lookup(:alma_api_key) %>
+  publishing_job:
+    name: 'Publishing Platform Job All Titles - Alma ReLoad - Full FTP'
 
 sftp:
   host: <%= ENV.fetch('SFTP_HOST', 'move.library.upenn.edu') %>

@@ -22,14 +22,15 @@ class WebhookIndexingController < ApplicationController
 
   private
 
-  # @param [Hash] payload
-  # @return [TrueClass]
+  # @param payload [Hash]
   def handle_action_type(payload)
     case payload['action']
     when 'BIB'
       handle_bib_action(payload)
     when 'JOB_END'
-      handle_job_action(payload)
+      head(:ok) unless completed_publishing_job?(payload)
+
+      initialize_alma_export(payload)
     else
       head(:bad_request)
     end
@@ -56,14 +57,22 @@ class WebhookIndexingController < ApplicationController
     end
   end
 
-  # @param [Hash] payload
+  # @param payload [Hash]
   # @return [TrueClass]
-  def handle_job_action(payload)
+  def initialize_alma_export(payload)
     alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
                                      webhook_body: payload,
                                      target_collections: Array.wrap(Solr::Config.new.collection_name))
     ProcessAlmaExportJob.perform_async(alma_export.id)
     head :ok
+  end
+
+  # Ensure the webhook is telling us about a successfully completed Publishing job of the correct type
+  # @param payload [Hash]
+  def completed_publishing_job?(payload)
+    job_name = payload.dig('job_instance', 'name')
+    job_status = payload.dig('job_instance', 'status', 'value')
+    (job_name == Settings.alma.publishing_job.name) && (job_status == AlmaExport::JOB_SUCCESS_VALUE)
   end
 
   # Determines if the alma webhook signature header is valid to ensure request came from Alma
