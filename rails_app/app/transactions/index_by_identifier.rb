@@ -15,7 +15,10 @@ class IndexByIdentifier
   # This will make any added records immediately searchable.
   # @returns [Dry::Monads::Result]
   def prepare_writer(**args)
-    settings = { 'solr_writer.commit_on_close' => true }
+    # TODO: what collection to use here? use an arg (from a form element?) or a ConfigItem? or a production alias?
+    settings = { 'solr_writer.commit_on_close' => true,
+                 # 'solr_writer.target_collections' => args[:target_collection]
+               }
     writer = MultiCollectionWriter.new(settings)
     Success(writer: writer, **args)
   end

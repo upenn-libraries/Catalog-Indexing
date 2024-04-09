@@ -29,6 +29,7 @@ module Solr
       ENV.fetch('SOLR_CONFIG_DIR', 'solr/conf')
     end
 
+    # TODO: But there will be many collections!!!
     def collection_name
       ENV.fetch('SOLR_COLLECTION', "catalog-indexing-#{Rails.env}")
     end
