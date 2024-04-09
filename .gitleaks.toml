@@ -228,6 +228,7 @@ title = "gitlab gitleaks config"
     files = [
         '''(.*?)(bin|csv|doc|gif|jpg|md|pdf)$''',
         '''\.gitleaks\.toml''',
+        '''\.gitlab-ci\.yml''',
         '''services/solr/config.rb ''',
         '''solr/conf/*.rbbi''',
         '''spec/support/alma_api_mocks.rb''',
