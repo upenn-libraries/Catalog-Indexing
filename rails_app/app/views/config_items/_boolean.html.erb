@@ -1,0 +1,4 @@
+<%= bootstrap_form_for config_item do |f| %>
+  <%= f.check_box :value, name: config_item.name, label: config_item.name.titleize, id: config_item.name, switch: true %>
+  <%= f.submit 'Save' %>
+<% end %>
