@@ -9,7 +9,12 @@ describe IndexByBibEvent do
   let(:transaction) { described_class.new }
   let(:outcome) { transaction.call(docs: marcxml) }
 
-  before { solr.delete_all }
+  before do
+    allow(ConfigItem).to receive(:value_for).with(:webhook_target_collections)
+                                            .and_return(Solr::Config.new.collection_name)
+    solr.delete_all
+  end
+
   after { solr.delete_all }
 
   describe '#call' do

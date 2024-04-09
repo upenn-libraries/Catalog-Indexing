@@ -1,0 +1,9 @@
+#
+# Settings/Configuration shared among all environments.
+#
+# This configuration can be overridden in environment specific files.
+#
+
+# External Services
+honeybadger:
+  api_key: '12345'

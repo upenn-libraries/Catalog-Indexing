@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_26_185306) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_21_213443) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -38,13 +38,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_185306) do
     t.index ["alma_export_id"], name: "index_batch_files_on_alma_export_id"
   end
 
+  create_table "config_items", force: :cascade do |t|
+    t.string "name"
+    t.string "config_type"
+    t.jsonb "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_config_items_on_name", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "provider", null: false
-    t.string "uid", null: false
+    t.string "provider"
+    t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end

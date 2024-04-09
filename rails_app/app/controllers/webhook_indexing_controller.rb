@@ -4,6 +4,7 @@
 class WebhookIndexingController < ApplicationController
   skip_before_action :authenticate_user!
   before_action :validate, only: [:listen]
+
   # echo challenge phrase back to Alma
   def challenge
     render json: challenge_params
@@ -26,9 +27,11 @@ class WebhookIndexingController < ApplicationController
   def handle_action_type(payload)
     case payload['action']
     when 'BIB'
+      return unless ConfigItem.value_for(:process_bib_webhooks)
+
       handle_bib_action(payload)
     when 'JOB_END'
-      head(:ok) unless completed_publishing_job?(payload)
+      head(:ok) unless ConfigItem.value_for(:process_job_webhooks) && completed_publishing_job?(payload)
 
       initialize_alma_export(payload)
     else
