@@ -165,7 +165,10 @@ title = "gitlab gitleaks config"
             '''uniqueKey''',
             '''(?i)insert_key''',
             '''\(key\)''',
-            '''Token\.new'''
+            '''Token\.new''',
+            '''(?i)(password|key)\:\s*?\"\<\%\=\s*?Settings''',
+            '''(?i)password\s*?\=\s*?Settings''',
+            '''12345'''
         ]
 
 [[rules]]
