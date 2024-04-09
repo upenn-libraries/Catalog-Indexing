@@ -197,6 +197,7 @@ GEM
       activesupport (>= 6.1)
     hashdiff (1.1.0)
     hashie (5.0.0)
+    honeybadger (5.8.0)
     http (5.2.0)
       addressable (~> 2.8)
       base64 (~> 0.1)
@@ -517,6 +518,7 @@ DEPENDENCIES
   ed25519
   factory_bot_rails (~> 6.0)
   faraday
+  honeybadger
   importmap-rails
   kaminari
   net-sftp
