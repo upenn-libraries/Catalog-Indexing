@@ -57,23 +57,13 @@ class WebhookIndexingController < ApplicationController
     end
   end
 
-  # TODO: move some of this logic to the processing transaction? would be less ugly and easier to report on errors, but
-  #       would mean that the AlmaExport would be initialized without a target_collection specified.
   # @param payload [Hash]
   # @return [TrueClass]
   def initialize_alma_export(payload)
-    solr_admin = Solr::Admin.new
-    collection_name = "#{Settings.solr.collection_name_prefix}#{DateTime.current.strftime('%Y%m%d')}"
-    if solr_admin.collection_exists?(name: collection_name)
-      # TODO: notify that we have a problem, the collection already exists with today's date
-    end
-    if solr_admin.create_collection(name: collection_name)
-      alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
-                                       webhook_body: payload, target_collections: Array.wrap(collection_name))
-      ProcessAlmaExportJob.perform_async(alma_export.id)
-    else
-      # TODO: notify that collection could not be created
-    end
+    alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
+                                     webhook_body: payload)
+    ProcessAlmaExportJob.perform_async(alma_export.id)
+
     head :ok
   end
 

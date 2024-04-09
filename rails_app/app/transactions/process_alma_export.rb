@@ -8,7 +8,7 @@ class ProcessAlmaExport
   include Dry::Transaction(container: Container)
 
   step :load_alma_export
-  step :validate_solr_collections
+  step :prepare_solr_collection
   step :initialize_sftp_session
   step :get_sftp_files
   step :update_alma_export
@@ -29,14 +29,17 @@ class ProcessAlmaExport
 
   # @param [AlmaExport] alma_export
   # @return [Dry::Monads::Result]
-  def validate_solr_collections(alma_export:)
-    solr_admin = Solr::Admin.new
-    alma_export.target_collections.each do |collection|
-      unless solr_admin.collection_exists? name: collection
-        return Failure("AlmaExport with ID #{alma_export.id} uses a non-existent target collection of '#{collection}'.")
-      end
+  def prepare_solr_collection(alma_export:)
+    # TODO: build new collection
+    collection_name = "#{Settings.solr.collection_name_prefix}#{DateTime.current.strftime('%Y%m%d')}"
+    if SolrTools.collection_exists?(name: collection_name)
+      # TODO: notify that we have a problem, the collection already exists with today's date
     end
+    SolrTools.create_collection(collection_name)
+    alma_export.target_collections = Array.wrap collection_name
     Success(alma_export: alma_export)
+  rescue SolrTools::CommandError => e
+    Failure("Could not create #{collection_name}.") # TODO: why not???
   end
 
   # @param [AlmaExport] alma_export
