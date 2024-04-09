@@ -1,7 +1,10 @@
 ---
 - name: "Provision Docker Swarm Cluster"
-  hosts: docker_swarm_manager
+  hosts: all
   become: true
+  collections:
+    - ansible.utils
+    - ansible.netcommon
   tasks:
     - ansible.builtin.import_tasks: "provision_docker.yml"
 
