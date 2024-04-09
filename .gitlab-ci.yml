@@ -99,7 +99,7 @@ rspec_app_test:
       alias: fits
     - name: postgres:14
       variables:
-        POSTGRES_DB: "indexing_test"
+        POSTGRES_DB: "catalog_indexing_test"
         POSTGRES_PASSWORD: "rspec_test"
         POSTGRES_USER: "rspec_test"
     - name: bitnami/solr:9.3.0
