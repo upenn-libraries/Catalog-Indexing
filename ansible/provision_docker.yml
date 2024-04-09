@@ -3,34 +3,37 @@
   ansible.builtin.import_tasks: "install_deps.yml"
   tags: deps
 
-- name: "Ensure docker overlay network port is open to udp"
-  ansible.posix.firewalld:
-    immediate: true
-    port: 4789/udp
-    permanent: true
-    state: enabled
+- name: Ensure all docker ports are open for multinode swarm
+  when: not is_development | default (false, true)
+  block:
+    - name: "Ensure docker overlay network port is open to udp"
+      ansible.posix.firewalld:
+        immediate: true
+        port: 4789/udp
+        permanent: true
+        state: enabled
 
-- name: "Ensure docker swarm manager port is open to tcp"
-  ansible.posix.firewalld:
-    immediate: true
-    port: 2377/tcp
-    permanent: true
-    state: enabled
-  when: "inventory_hostname == groups['docker_swarm_manager'][0]"
+    - name: "Ensure docker swarm manager port is open to tcp"
+      ansible.posix.firewalld:
+        immediate: true
+        port: 2377/tcp
+        permanent: true
+        state: enabled
+      when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
-- name: "Ensure docker overlay network node discovery port is open to tcp"
-  ansible.posix.firewalld:
-    immediate: true
-    port: 7946/tcp
-    permanent: true
-    state: enabled
+    - name: "Ensure docker overlay network node discovery port is open to tcp"
+      ansible.posix.firewalld:
+        immediate: true
+        port: 7946/tcp
+        permanent: true
+        state: enabled
 
-- name: "Ensure docker overlay network node discovery port is open to udp"
-  ansible.posix.firewalld:
-    immediate: true
-    port: 7946/udp
-    permanent: true
-    state: enabled
+    - name: "Ensure docker overlay network node discovery port is open to udp"
+      ansible.posix.firewalld:
+        immediate: true
+        port: 7946/udp
+        permanent: true
+        state: enabled
 
 - name: "Provision Docker Swarm Cluster"
   ansible.builtin.import_role:
