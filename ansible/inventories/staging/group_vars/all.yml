@@ -1,0 +1,22 @@
+---
+#Variables for Vault
+catalog_indexing_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'catalog/indexing/staging', engine_mount_point='kv-applications') }}"
+catalog_manager_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'catalog/swarm_manager/staging', engine_mount_point='kv-applications') }}"
+catalog_solr_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'catalog/solr/staging', engine_mount_point='kv-applications') }}"
+
+# Docker swarm setup vars
+skip_repo: false
+skip_containerd: false
+skip_engine: false
+skip_cli: false
+skip_swarm: false
+skip_group: false
+skip_docker_py: false
+skip_docker_compose: false
+
+docker_daemon_config:
+  default-ulimits:
+    nofile:
+      Name: "nofile"
+      Hard: 1048576
+      Soft: 1048576
