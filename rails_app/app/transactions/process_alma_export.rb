@@ -30,16 +30,16 @@ class ProcessAlmaExport
   # @param [AlmaExport] alma_export
   # @return [Dry::Monads::Result]
   def prepare_solr_collection(alma_export:)
-    # TODO: build new collection
-    collection_name = "#{Settings.solr.collection_name_prefix}#{DateTime.current.strftime('%Y%m%d')}"
+    collection_name = SolrTools.new_collection_name
     if SolrTools.collection_exists?(name: collection_name)
-      # TODO: notify that we have a problem, the collection already exists with today's date
+      return Failure("Solr collection #{collection_name} already exists. Something is probably going wrong.")
     end
-    SolrTools.create_collection(collection_name)
+
+    SolrTools.create_collection(collection_name) # TODO: we need to clean this up in failure cases below
     alma_export.target_collections = Array.wrap collection_name
     Success(alma_export: alma_export)
   rescue SolrTools::CommandError => e
-    Failure("Could not create #{collection_name}.") # TODO: why not???
+    Failure("Could not create new Solr collection '#{collection_name}': #{e.message}.")
   end
 
   # @param [AlmaExport] alma_export

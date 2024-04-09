@@ -27,6 +27,10 @@ describe ProcessAlmaExport do
         allow(downloader).to receive(:wait).and_return(downloader)
       end
 
+      after do
+        SolrTools.delete_collection(SolrTools.new_collection_name)
+      end
+
       it 'is successful' do
         expect(outcome).to be_success
       end
