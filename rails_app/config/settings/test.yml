@@ -1,7 +1,7 @@
 # Internal Services
 solr:
-  user: <%= DockerSecrets.lookup(:solr_username) %>
-  password: <%= DockerSecrets.lookup(:solr_password) %>
+  user: <%= DockerSecrets.lookup(:solr_username, 'admin') %>
+  password: <%= DockerSecrets.lookup(:solr_password, 'Bitnami') %>
   url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
 redis:
   url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
