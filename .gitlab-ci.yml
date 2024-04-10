@@ -104,6 +104,16 @@ rspec_app_test:
       alias: redis
     - name: bitnami/solr:9.3.0
       alias: solr
+      script:
+        - >
+          for ((i = 0; i <= 9; i += 1)); do
+            curl --silent "http://solr:8983/api/" "-H" "'Content-type:application/json'" && break
+            echo "Waiting for solr api to be ready"
+            sleep "30s"
+          done
+        - .${ZK_SCRIPT_LOCATION}/zkcli.sh -zkhost 127.0.0.1:9983 -cmd upconfig -confname ${SOLR_TEST_CONFIGNAME} -confdir $CI_PROJECT_DIR/rails_app/solr/conf
+        - ./opt/bitnami/solr/bin/solr create_collection -c ${SOLR_TEST_COLLECTION}
+        - .${ZK_SCRIPT_LOCATION}/zkcli.sh -zkhost 127.0.0.1:9983 -cmd linkconfig -collection ${SOLR_TEST_COLLECTION} -confname ${SOLR_TEST_CONFIGNAME}
       variables:
         SOLR_CLOUD_BOOTSTRAP: "yes"
         SOLR_ENABLE_AUTHENTICATION: "yes"
@@ -111,7 +121,10 @@ rspec_app_test:
         SOLR_JAVA_MEM: "-Xms4g -Xmx4g"
         SOLR_MODE: "solrcloud"
         SOLR_OPTS: "-Dsolr.disableConfigSetsCreateAuthChecks=true"
+        SOLR_TEST_COLLECTION: "catalog-indexing-test"
+        SOLR_TEST_CONFIGNAME: "indexing"
         ZK_CREATE_CHROOT: "true"
+        ZK_SCRIPT_LOCATION: "/opt/bitnami/solr/server/scripts/cloud-scripts"
   extends:
     - .rspec
   variables:
@@ -125,22 +138,18 @@ rspec_app_test:
     RAILS_ENV: "test"
     RAILS_SYSTEM_TESTING_SCREENSHOT_HTML: "1"
     REDIS_URL: "redis:6379"
-    SOLR_URL: "http://solr:8983/solr/catalog-indexing-test"
+    SOLR_URL: "http://solr:8983"
   script:
-    - apt-get update && apt-get -y install zip
-    - cd ${CI_PROJECT_DIR}/rails_app/
-    - bundle add rspec_junit_formatter
-    - bundle exec rake db:migrate
     - >
       for ((i = 0; i <= 9; i += 1)); do
         curl --silent "http://solr:8983/api/" "-H" "'Content-type:application/json'" && break
         echo "Waiting for solr api to be ready"
         sleep "30s"
       done
-    - (cd ./solr/conf && zip -r - *) > configset.zip
+    - cd ${CI_PROJECT_DIR}/rails_app/
+    - bundle add rspec_junit_formatter
+    - bundle exec rake db:migrate
     - sleep 3600
-    - curl -X POST --user "admin:Bitnami" --header "Content-Type:application/octet-stream" --data-binary @configset.zip "http://solr:8983/solr/admin/configs?action=UPLOAD&name=indexing"
-    - curl -v --user "admin:Bitnami" "http://solr:8983/solr/admin/collections?action=CREATE&name=catalog-indexing-test&collection.configName=indexing&numShards=1"
     - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
   needs:
     - amend_tmp_base_dev_images
