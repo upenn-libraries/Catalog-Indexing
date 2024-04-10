@@ -134,6 +134,7 @@ rspec_app_test:
         sleep "30s"
       done
     - (cd ./solr/conf && zip -r - *) > configset.zip
+    - sleep 3600
     - curl -X POST --user "admin:Bitnami" --header "Content-Type:application/octet-stream" --data-binary @configset.zip "http://solr:8983/solr/admin/configs?action=UPLOAD&name=indexing"
     - curl -v --user "admin:Bitnami" "http://solr:8983/solr/admin/collections?action=CREATE&name=indexing-test&collection.configName=indexing&numShards=1"
     - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
