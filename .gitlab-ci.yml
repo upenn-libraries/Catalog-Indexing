@@ -109,10 +109,14 @@ rspec_app_test:
         "/bin/bash",
         "-c",
         "./opt/bitnami/scripts/solr/entrypoint.sh /opt/bitnami/scripts/solr/run.sh & \n
-        for ((i = 0; i <= 9; i += 1)); do curl --silent 'http://solr:8983/api/' && break; echo 'Waiting for solr api to be ready'; sleep '10s'; done \n
-        .$${ZK_SCRIPT_LOCATION}/zkcli.sh -zkhost 127.0.0.1:9983 -cmd upconfig -confname $${SOLR_TEST_CONFIGNAME} -confdir $${CI_PROJECT_DIR}/rails_app/solr/conf && \n
-        ./opt/bitnami/solr/bin/solr create_collection -c $${SOLR_TEST_COLLECTION} && \n
-        .$${ZK_SCRIPT_LOCATION}/zkcli.sh -zkhost 127.0.0.1:9983 -cmd linkconfig -collection $${SOLR_TEST_COLLECTION} -confname $${SOLR_TEST_CONFIGNAME} \n
+        for ((i = 0; i <= 9; i += 1)); do \n
+          curl --silent 'http://solr:8983/api/' && break; \n
+          echo 'Waiting for solr api to be ready'; \n
+          sleep '10s'; \n
+        done \n
+        .${ZK_SCRIPT_LOCATION}/zkcli.sh -zkhost 127.0.0.1:9983 -cmd upconfig -confname ${SOLR_TEST_CONFIGNAME} -confdir ${CI_PROJECT_DIR}/rails_app/solr/conf && \n
+        ./opt/bitnami/solr/bin/solr create_collection -c ${SOLR_TEST_COLLECTION} && \n
+        .${ZK_SCRIPT_LOCATION}/zkcli.sh -zkhost 127.0.0.1:9983 -cmd linkconfig -collection ${SOLR_TEST_COLLECTION} -confname ${SOLR_TEST_CONFIGNAME} \n
         wait"
       ]
       variables:
