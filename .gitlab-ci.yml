@@ -95,8 +95,6 @@ rspec_app_test:
       alias: chrome
       variables:
         CONNECTION_TIMEOUT: 600000
-    - name: gitlab.library.upenn.edu/dld/digital-repository/fits-servlet:main
-      alias: fits
     - name: postgres:14
       variables:
         POSTGRES_DB: "catalog_indexing_test"
