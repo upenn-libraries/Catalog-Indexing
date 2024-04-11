@@ -22,8 +22,8 @@ class ConfigItem < ApplicationRecord
     process_job_webhooks: { default: false },
     process_bib_webhooks: { default: false },
     webhook_target_collections: {
-      default: Array.wrap(Solr::Config.new.collection_name),
-      options: Solr::Admin.new.all_collections
+      default: [],
+      options: SolrTools.collections
     }
   }.freeze
 
@@ -33,7 +33,7 @@ class ConfigItem < ApplicationRecord
 
   # Return value from database by name.
   #
-  # @param name [String|Symbol] name of ConfigItem value
+  # @param name [String, Symbol] name of ConfigItem value
   # @raise [ArgumentError] if config item matching name is not found
   # @return [Object] configured value of config item
   def self.value_for(name, details: DETAILS)

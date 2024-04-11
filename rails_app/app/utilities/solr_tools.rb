@@ -27,6 +27,10 @@ class SolrTools
       end
     end
 
+    def default_collection
+      'catalog-indexing'
+    end
+
     def collections
       resp = connection.get(collections_url, action: 'LIST')
       resp.body['collections']
@@ -61,6 +65,8 @@ class SolrTools
     end
 
     # Used in contexts where the above Faraday connection is not used (Traject)
+    # @param [String (frozen)] path
+    # @return [String]
     def solr_url_with_auth(path: '')
       uri = URI(base_url)
       uri.user = Settings.solr.user
@@ -72,6 +78,28 @@ class SolrTools
     # @param collection [String]
     def collection_update_url_with_auth(collection:)
       solr_url_with_auth path: "/solr/#{collection}/update/json"
+    end
+
+    # @param collection [String]
+    def collection_query_url_with_auth(collection:)
+      solr_url_with_auth path: "/solr/#{collection}"
+    end
+
+    # @return [String]
+    def config_directory
+      ENV.fetch('SOLR_CONFIG_DIR', 'solr/conf')
+    end
+
+    # Used to package configset for Rake task
+    # @return [Tempfile]
+    def configset_zipfile
+      tmp = Tempfile.new('configset')
+      Zip::File.open(tmp, Zip::File::CREATE) do |zipfile|
+        Dir["#{dir}/**/**"].each do |file|
+          zipfile.add(file.sub("#{dir}/", ''), file)
+        end
+      end
+      tmp
     end
   end
 end

@@ -31,7 +31,7 @@ class ProcessAlmaExport
   # @return [Dry::Monads::Result]
   def prepare_solr_collection(alma_export:)
     collection_name = SolrTools.new_collection_name
-    if SolrTools.collection_exists?(name: collection_name)
+    if SolrTools.collection_exists?(collection_name)
       return Failure("Solr collection #{collection_name} already exists. Something is probably going wrong.")
     end
 

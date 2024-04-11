@@ -5,10 +5,9 @@ module Solr
   class QueryClient
     attr_accessor :solr, :collection
 
-    def initialize(collection: nil)
-      config = Config.new
-      @collection = collection || config.collection_name
-      @solr = RSolr.connect(url: config.query_url(collection: @collection))
+    def initialize(collection:)
+      @collection = collection
+      @solr = RSolr.connect(url: SolrTools.collection_query_url_with_auth(collection: collection))
     end
 
     # Perform a query

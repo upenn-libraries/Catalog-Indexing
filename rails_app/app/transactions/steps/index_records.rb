@@ -6,10 +6,10 @@ module Steps
     include Dry::Monads[:result]
 
     # @param [IO | StringIO] io
-    # @param [Traject::Writer, nil] writer
-    # @param [Traject::Indexer, nil] indexer
+    # @param [Traject::Writer] writer
+    # @param [Traject::Indexer] indexer
     # @return [Dry::Monads::Result]
-    def call(io:, writer: nil, indexer: nil, **args)
+    def call(io:, writer:, indexer: nil, **args)
       index_service = IndexingService.new(indexer: indexer, writer: writer)
       index_service.process(io: io)
       Success(errors: index_service.error_messages, **args)

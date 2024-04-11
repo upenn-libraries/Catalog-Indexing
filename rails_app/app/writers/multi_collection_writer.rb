@@ -2,10 +2,12 @@
 
 # Traject Writer class for writing to (potentially more than one) Penn Libraries Catalog Solr index
 class MultiCollectionWriter < Traject::SolrJsonWriter
-  attr_accessor :writers
+  attr_accessor :writers, :collections
 
+  # @param [Array] collections
   # @param [Hash] settings
-  def initialize(settings)
+  def initialize(collections, settings = {})
+    @collections = Array.wrap(collections)
     settings = settings.merge({ 'solr_writer.batch_size' => ENV.fetch('SOLR_WRITER_BATCH_SIZE', 250),
                                 'solr_writer.thread_pool' => 0, # manage concurrency on our own
                                 'solr.url' => SolrTools.solr_url_with_auth })
@@ -34,7 +36,7 @@ class MultiCollectionWriter < Traject::SolrJsonWriter
 
   def build_writers_for_targets
     # Ensure settings are propagated to sub-writers
-    @writers = settings['solr_writer.target_collections'].map do |collection_name|
+    @writers = collections.map do |collection_name|
       Traject::SolrJsonWriter.new(settings.merge({ 'solr.update_url' => update_url(collection_name) }))
     end
   end

@@ -13,7 +13,7 @@ require 'webmock/rspec'
 # Only allow localhost connections when running tests.
 WebMock.disable_net_connect!(
   allow_localhost: true,
-  allow: [/#{Solr::Config.new.base_url}/]
+  allow: [/#{SolrTools.base_url}/]
 )
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

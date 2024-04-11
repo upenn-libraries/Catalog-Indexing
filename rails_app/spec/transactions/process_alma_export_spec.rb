@@ -2,8 +2,12 @@
 
 describe ProcessAlmaExport do
   include FixtureHelpers
+  include SolrHelpers
 
   let(:transaction) { described_class.new }
+
+  before { remove_collections(SolrTools.new_collection_name) }
+  after { remove_collections(SolrTools.new_collection_name) }
 
   describe '#call' do
     let(:alma_export) { create(:alma_export, webhook_body: JSON.parse(json_fixture('job_end_success', :webhooks))) }
@@ -49,6 +53,26 @@ describe ProcessAlmaExport do
         expect(alma_export.status).to eq Statuses::IN_PROGRESS
         expect(alma_export.started_at).to be_present
       end
+
+      it 'creates a new collection in Solr and saves it on the AlmaExport' do
+        alma_export = outcome.success[:alma_export]
+        expect(alma_export.target_collections).to eq [SolrTools.new_collection_name]
+        expect(SolrTools.collection_exists?(alma_export.target_collections.first)).to be true
+      end
+    end
+
+    context 'with a duplicate new collection name' do
+      before do
+        allow(SolrTools).to receive(:collection_exists?).with(SolrTools.new_collection_name).and_return true
+      end
+
+      # Unstub above - this allows the spec-wide after hook to run without exception
+      after { RSpec::Mocks.space.proxy_for(SolrTools).reset }
+
+      it 'returns a failure monad with appropriate message' do
+        expect(outcome).to be_failure
+        expect(outcome.failure).to include('already exists')
+      end
     end
 
     context 'with a bad AlmaExport identifier' do
@@ -59,25 +83,6 @@ describe ProcessAlmaExport do
       it 'returns a failure monad with appropriate message' do
         expect(outcome).to be_failure
         expect(outcome.failure).to include('does not exist')
-      end
-    end
-
-    context 'with an AlmaExport using bad target_collection values' do
-      let(:alma_export) do
-        create(:alma_export, target_collections: %w[exists does-not-exist],
-                             webhook_body: JSON.parse(json_fixture('job_end_success', :webhooks)))
-      end
-
-      before do
-        mock_admin = instance_double Solr::Admin
-        allow(mock_admin).to receive(:collection_exists?).with(name: 'exists').and_return true
-        allow(mock_admin).to receive(:collection_exists?).with(name: 'does-not-exist').and_return false
-        allow(Solr::Admin).to receive(:new).and_return mock_admin
-      end
-
-      it 'returns a failure monad with appropriate message' do
-        expect(outcome).to be_failure
-        expect(outcome.failure).to include "non-existent target collection of 'does-not-exist'"
       end
     end
 

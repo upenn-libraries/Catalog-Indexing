@@ -5,7 +5,9 @@ describe Steps::IndexRecords do
   include SolrHelpers
 
   let(:outcome) { described_class.new.call(io: io, **additional_params) }
-  let(:additional_params) { {} }
+  let(:additional_params) do
+    { writer: MultiCollectionWriter.new(test_collection) }
+  end
 
   before { clear_collections }
   after { clear_collections }
@@ -22,13 +24,14 @@ describe Steps::IndexRecords do
   context 'with a good IO' do
     let(:sample_mmsid) { '9979201969103681' }
     let(:io) { StringIO.new(marc_fixture(sample_mmsid)) }
+    let(:solr) { Solr::QueryClient.new(collection: test_collection) }
     let(:additional_params) do
-      { writer: MultiCollectionWriter.new({ 'solr_writer.commit_on_close' => true }) }
+      { writer: MultiCollectionWriter.new(solr.collection, { 'solr_writer.commit_on_close' => true }) }
     end
 
     it 'returns success monad and writes a record to Solr' do
       expect(outcome).to be_success
-      solr_response = Solr::QueryClient.new.get_by_id(sample_mmsid)
+      solr_response = solr.get_by_id(sample_mmsid)
       expect(solr_response['response']['numFound']).to eq 1
     end
   end
@@ -36,7 +39,7 @@ describe Steps::IndexRecords do
   context 'with a skipped record' do
     let(:sample_mmsid) { '9979201969103681' }
     let(:indexer) { PennMarcIndexer.new({ 'skipped_record_limit' => 2 }) }
-    let(:additional_params) { { indexer: indexer } }
+    let(:additional_params) { { indexer: indexer, writer: MultiCollectionWriter.new(test_collection) } }
     let(:io) { StringIO.new(marc_fixture(sample_mmsid)) }
 
     before do
@@ -70,7 +73,7 @@ describe Steps::IndexRecords do
 
   context 'with a record that raises an exception' do
     let(:io) { StringIO.new(marc_fixture('9979201969103681')) }
-    let(:additional_params) { { indexer: indexer } }
+    let(:additional_params) { { indexer: indexer, writer: MultiCollectionWriter.new(test_collection) } }
 
     before do
       allow(indexer).to receive(:map_to_context!).and_raise(StandardError)
@@ -97,10 +100,7 @@ describe Steps::IndexRecords do
 
   context 'with multiple target_collections' do
     let(:additional_params) do
-      { writer: MultiCollectionWriter.new({
-                                            'solr_writer.target_collections' => collection_names,
-                                            'solr_writer.commit_on_close' => true
-                                          }) }
+      { writer: MultiCollectionWriter.new(collection_names, { 'solr_writer.commit_on_close' => true }) }
     end
     let(:collection_names) { %w[tc-1 tc-2] }
     let(:sample_mmsid) { '9979201969103681' }

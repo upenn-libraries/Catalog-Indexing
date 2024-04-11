@@ -2,16 +2,17 @@
 
 describe IndexByBibEvent do
   include FixtureHelpers
+  include SolrHelpers
 
   let(:sample_mmsid) { '9979201969103681' }
   let(:marcxml) { marc_fixture sample_mmsid }
-  let(:solr) { Solr::QueryClient.new }
+  let(:solr) { Solr::QueryClient.new(collection: test_collection) }
   let(:transaction) { described_class.new }
   let(:outcome) { transaction.call(docs: marcxml) }
 
   before do
     allow(ConfigItem).to receive(:value_for).with(:webhook_target_collections)
-                                            .and_return(Solr::Config.new.collection_name)
+                                            .and_return(Array.wrap(solr.collection))
     solr.delete_all
   end
 

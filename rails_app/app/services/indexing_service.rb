@@ -13,7 +13,7 @@ class IndexingService
   # @param [Traject::Indexer, nil] indexer
   def initialize(writer:, indexer:)
     @indexer = indexer || PennMarcIndexer.new
-    @writer = writer || MultiCollectionWriter.new
+    @writer = writer
     @error_messages = []
     @skipped_count = 0
   end
