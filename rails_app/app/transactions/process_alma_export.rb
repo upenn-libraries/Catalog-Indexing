@@ -8,9 +8,9 @@ class ProcessAlmaExport
   include Dry::Transaction(container: Container)
 
   step :load_alma_export
-  step :prepare_solr_collection
   step :initialize_sftp_session
   step :get_sftp_files
+  step :prepare_solr_collection
   step :update_alma_export
   step :process_sftp_files
 
@@ -25,21 +25,6 @@ class ProcessAlmaExport
     Success(alma_export: alma_export)
   rescue ActiveRecord::RecordNotFound => _e
     Failure("AlmaExport record with ID #{alma_export_id} does not exist.")
-  end
-
-  # @param [AlmaExport] alma_export
-  # @return [Dry::Monads::Result]
-  def prepare_solr_collection(alma_export:)
-    collection_name = SolrTools.new_collection_name
-    if SolrTools.collection_exists?(collection_name)
-      return Failure("Solr collection #{collection_name} already exists. Something is probably going wrong.")
-    end
-
-    SolrTools.create_collection(collection_name) # TODO: we need to clean this up in failure cases below
-    alma_export.target_collections = Array.wrap collection_name
-    Success(alma_export: alma_export)
-  rescue SolrTools::CommandError => e
-    Failure("Could not create new Solr collection '#{collection_name}': #{e.message}.")
   end
 
   # @param [AlmaExport] alma_export
@@ -66,10 +51,25 @@ class ProcessAlmaExport
     Failure("Problem retrieving files from SFTP server: #{e.message}")
   end
 
+  # @param [AlmaExport] alma_export
+  # @return [Dry::Monads::Result]
+  def prepare_solr_collection(alma_export:, **args)
+    collection_name = SolrTools.new_collection_name
+    if SolrTools.collection_exists?(collection_name)
+      return Failure("Solr collection #{collection_name} already exists. Something is probably going wrong.")
+    end
+
+    SolrTools.create_collection(collection_name)
+    Success(alma_export: alma_export, collection: collection_name, **args)
+  rescue SolrTools::CommandError => e
+    Failure("Could not create new Solr collection '#{collection_name}': #{e.message}.")
+  end
+
   # Files are ready to process, update AlmaExport to IN_PROGRESS
   # @param [AlmaExport] alma_export
   # @return [Dry::Monads::Result]
-  def update_alma_export(alma_export:, **args)
+  def update_alma_export(alma_export:, collection:, **args)
+    alma_export.target_collections = Array.wrap collection
     alma_export.status = Statuses::IN_PROGRESS
     alma_export.started_at = Time.zone.now
     alma_export.save

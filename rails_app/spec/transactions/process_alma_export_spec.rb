@@ -11,29 +11,12 @@ describe ProcessAlmaExport do
 
   describe '#call' do
     let(:alma_export) { create(:alma_export, webhook_body: JSON.parse(json_fixture('job_end_success', :webhooks))) }
-    let(:sftp_client) { instance_double Sftp::Client }
-    let(:sftp_files) { [] }
     let(:outcome) { transaction.call(alma_export_id: alma_export.id) }
 
-    before do
-      allow(sftp_client).to receive(:files).and_return(sftp_files)
-      allow(Sftp::Client).to receive(:new).and_return(sftp_client)
-    end
+    include_context 'with sftp files available'
 
     context 'with valid webhook response body' do
-      let(:sftp_files) do
-        [Sftp::File.new('all_ub_ah_b_2023090100_12345678900000_new_001.xml.tar.gz')]
-      end
-
-      before do
-        downloader = instance_double(Net::SFTP::Operations::Download)
-        allow(sftp_client).to receive(:download).and_return(downloader)
-        allow(downloader).to receive(:wait).and_return(downloader)
-      end
-
-      after do
-        SolrTools.delete_collection(SolrTools.new_collection_name)
-      end
+      after { SolrTools.delete_collection(SolrTools.new_collection_name) }
 
       it 'is successful' do
         expect(outcome).to be_success
@@ -61,7 +44,7 @@ describe ProcessAlmaExport do
       end
     end
 
-    context 'with a duplicate new collection name' do
+    context 'with an existing collection matching the new collection name' do
       before do
         allow(SolrTools).to receive(:collection_exists?).with(SolrTools.new_collection_name).and_return true
       end
@@ -99,6 +82,8 @@ describe ProcessAlmaExport do
     end
 
     context 'with no files matching on SFTP server' do
+      let(:sftp_files) { [] }
+
       it 'returns a failure monad with appropriate message' do
         expect(outcome).to be_failure
         expect(outcome.failure).to include('No files downloaded')
