@@ -127,7 +127,7 @@ rspec_app_test:
         SOLR_MODE: "solrcloud"
         SOLR_OPTS: "-Dsolr.disableConfigSetsCreateAuthChecks=true"
         SOLR_TEST_COLLECTION: "catalog-indexing-test"
-        SOLR_TEST_CONFIGNAME: "indexing"
+        SOLR_TEST_CONFIGNAME: "catalog-indexing"
         ZK_CREATE_CHROOT: "true"
         ZK_SCRIPT_LOCATION: "/opt/bitnami/solr/server/scripts/cloud-scripts"
   extends:
