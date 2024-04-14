@@ -19,7 +19,6 @@
         port: 2377/tcp
         permanent: true
         state: enabled
-      when: "inventory_hostname == groups['docker_swarm_manager'][0]"
 
     - name: "Ensure docker overlay network node discovery port is open to tcp"
       ansible.posix.firewalld:
