@@ -68,7 +68,6 @@ output = {
     },
     "docker_swarm_worker": {
         "hosts": [
-            "SWARM01",
             "SWARM02",
             "SWARM03",
             "SWARM04",
