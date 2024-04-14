@@ -8,6 +8,26 @@
   tasks:
     - ansible.builtin.import_tasks: "provision_docker.yml"
 
+- name: "Bootstrap Solr server/s"
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Set up folders for Solr docker volumes
+      when: (inventory_hostname in solr_nodes) and swarm_manager_solr_docker_volume_settings
+      block:
+        - name: Create a directory if it does not exist
+          ansible.builtin.file:
+            path: "{{ swarm_manager_solr_docker_volume_settings[item].driver_opts.device }}"
+            state: directory
+            mode: 0775
+          loop: "{{ swarm_labels }}"
+  vars:
+    solr_nodes: "{{ dict(groups.all | zip(groups.all | map('extract', hostvars, 'swarm_labels'))) | dict2items | selectattr('value', 'search', 'solr-') | map(attribute='key') }}"
+    swarm_manager_host: "{{ groups | dict2items | selectattr('key', 'search', 'docker_swarm_manager') | map(attribute='value') | flatten | first }}"
+    swarm_manager_solr_docker_volume_settings: "{{ hostvars[swarm_manager_host].solr_docker_volume_settings }}"
+    swarm_labels: "{{ hostvars[inventory_hostname].swarm_labels | select('match', 'solr-') }}"
+
 - name: "Deploy application"
   hosts: docker_swarm_manager
   become: true

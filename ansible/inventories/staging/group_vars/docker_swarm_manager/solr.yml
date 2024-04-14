@@ -16,3 +16,23 @@ solr_custom_env_variables:
   SOLR_ENABLE_AUTHENTICATION: "yes"
   SOLR_HEAP: "8G"
   SOLR_JAVA_MEM: "-Xms10G -Xmx10G"
+
+solr_docker_volume_settings:
+  solr-1:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/solr_03/solr-1-staging"
+  solr-2:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/solr_03/solr-2-staging"
+  solr-3:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/solr_03/solr-3-staging"
