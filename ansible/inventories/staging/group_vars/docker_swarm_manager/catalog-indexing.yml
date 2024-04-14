@@ -3,7 +3,7 @@ catalog_indexing_build_docker_image: false
 catalog_indexing_image_name: "gitlab.library.upenn.edu/dld/catalog/catalog-indexing"
 catalog_indexing_image_tag: "{{ image_tag }}"
 catalog_indexing_port: 3000
-catalog_indexing_rails_env: "production"
+catalog_indexing_rails_env: "staging"
 catalog_indexing_replicas: 1
 catalog_indexing_solr_url: "http://solr-1:8983"
 catalog_indexing_solr_admin_url: "http://catalog-manager-stg01.library.upenn.int/solr1/#/"
