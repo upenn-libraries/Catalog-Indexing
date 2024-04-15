@@ -58,7 +58,8 @@ class SolrTools
     def create_collection(collection_name)
       response = connection.get('/solr/admin/collections',
                                 action: 'CREATE', name: collection_name,
-                                numShards: Settings.solr.shards, 'collection.configName': Settings.solr.configset)
+                                numShards: Settings.solr.shards, replicationFactor: Settings.solr.replicas,
+                                'collection.configName': Settings.solr.configset)
       raise CommandError, "Solr command failed with response: #{response.body}" unless response.success?
     end
 
