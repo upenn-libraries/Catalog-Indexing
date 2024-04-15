@@ -31,11 +31,11 @@ class WebhookIndexingController < ApplicationController
 
       handle_bib_action(payload)
     when 'JOB_END'
-      head(:ok) unless ConfigItem.value_for(:process_job_webhooks) && completed_publishing_job?(payload)
+      head(:accepted) unless ConfigItem.value_for(:process_job_webhooks) && completed_publishing_job?(payload)
 
       initialize_alma_export(payload)
     else
-      head(:bad_request)
+      head(:no_content)
     end
   end
 
@@ -43,20 +43,21 @@ class WebhookIndexingController < ApplicationController
   # @param [Hash] payload action-specific data received from alma webhook post request
   # @return [TrueClass]
   def handle_bib_action(payload)
+    head(:ok) if suppressed_from_discovery?(payload)
+
     marc_xml = payload.dig 'bib', 'anies'
-    # TODO: respect "suppress_from_publishing"?
     case payload.dig 'event', 'value'
     when 'BIB_UPDATED'
       IndexByBibEventJob.perform_async(marc_xml)
-      head :ok
+      head :accepted
     when 'BIB_DELETED'
-      # run bib deleted job
-      head :ok
+      # TODO: write and run bib deleted job, return :accepted
+      head :not_implemented
     when 'BIB_CREATED'
       IndexByBibEventJob.perform_async(marc_xml)
-      head :ok
+      head :accepted
     else
-      head :bad_request
+      head :no_content
     end
   end
 
@@ -67,7 +68,7 @@ class WebhookIndexingController < ApplicationController
                                      webhook_body: payload)
     ProcessAlmaExportJob.perform_async(alma_export.id)
 
-    head :ok
+    head :accepted
   end
 
   # Ensure the webhook is telling us about a successfully completed Publishing job of the correct type
@@ -96,5 +97,12 @@ class WebhookIndexingController < ApplicationController
 
   def challenge_params
     params.permit(:challenge)
+  end
+
+  # @param [Hash] payload
+  # @return [Boolean]
+  def suppressed_from_discovery?(payload)
+    (payload.dig(:bib, :suppress_from_publishing) == true) ||
+      (payload.dig(:bib, :suppress_from_external_search) == true)
   end
 end
