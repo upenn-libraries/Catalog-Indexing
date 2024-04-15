@@ -4,15 +4,8 @@
 class SolrTools
   class CommandError < StandardError; end
 
-  # Known Needed
-
-  # tempfile (aka configset as a ZIP - for use in Find development)
-  # collection_name - return name of "the" Solr collection. adapting this depends on context
-  # delete_collection - used only in specs
-
-
   class << self
-
+    # @return [Faraday::Connection]
     def connection
       Faraday.new(base_url) do |faraday|
         faraday.request :authorization, :basic, Settings.solr.user, Settings.solr.password
@@ -27,31 +20,41 @@ class SolrTools
       end
     end
 
+    # @return [String (frozen)]
     def default_collection
       'catalog-indexing'
     end
 
+    # @return [Array<String>]
     def collections
       resp = connection.get(collections_url, action: 'LIST')
       resp.body['collections']
     end
 
+    # @return [String (frozen)]
     def new_collection_name
       "#{Settings.solr.collection_name_prefix}#{DateTime.current.strftime('%Y%m%d')}"
     end
 
+    # @return [String]
     def base_url
       Settings.solr.url
     end
 
+    # @return [String (frozen)]
     def collections_url
       "#{Settings.solr.url}/solr/admin/collections"
     end
 
+    # @param [String] collection_name
+    # @return [Boolean]
     def collection_exists?(collection_name)
       collections.include? collection_name
     end
 
+    # @param [String] collection_name
+    # @raise [SolrTools::CommandError]
+    # @return [Faraday::Response]
     def create_collection(collection_name)
       response = connection.get('/solr/admin/collections',
                                 action: 'CREATE', name: collection_name,
@@ -64,7 +67,7 @@ class SolrTools
       raise CommandError, "Solr command failed with response: #{response.body}" unless response.success?
     end
 
-    # Used in contexts where the above Faraday connection is not used (Traject)
+    # @note used in contexts where the above Faraday connection is not used (Traject)
     # @param [String (frozen)] path
     # @return [String]
     def solr_url_with_auth(path: '')
@@ -75,24 +78,24 @@ class SolrTools
       uri.to_s
     end
 
+    # @note used in contexts where the above Faraday connection is not used (Traject)
     # @param collection [String]
+    # @return [String]
     def collection_update_url_with_auth(collection:)
       solr_url_with_auth path: "/solr/#{collection}/update/json"
     end
 
+    # @note used in contexts where the above Faraday connection is not used (Traject)
     # @param collection [String]
+    # @return [String]
     def collection_query_url_with_auth(collection:)
       solr_url_with_auth path: "/solr/#{collection}"
-    end
-
-    # @return [String]
-    def config_directory
-      ENV.fetch('SOLR_CONFIG_DIR', 'solr/conf')
     end
 
     # Used to package configset for Rake task
     # @return [Tempfile]
     def configset_zipfile
+      dir = ENV.fetch('SOLR_CONFIG_DIR', 'solr/conf')
       tmp = Tempfile.new('configset')
       Zip::File.open(tmp, Zip::File::CREATE) do |zipfile|
         Dir["#{dir}/**/**"].each do |file|
