@@ -74,5 +74,7 @@ namespace :tools do
                                  value: ConfigItem::DETAILS.dig(:process_bib_webhooks, :default)
     ConfigItem.find_or_create_by name: 'webhook_target_collections', config_type: ConfigItem::ARRAY_TYPE,
                                  value: ConfigItem::DETAILS.dig(:webhook_target_collections, :default)
+    ConfigItem.find_or_create_by name: 'adhoc_target_collections', config_type: ConfigItem::ARRAY_TYPE,
+                                 value: ConfigItem::DETAILS.dig(:adhoc_target_collections, :default)
   end
 end

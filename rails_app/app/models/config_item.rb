@@ -21,10 +21,8 @@ class ConfigItem < ApplicationRecord
   DETAILS = {
     process_job_webhooks: { default: false },
     process_bib_webhooks: { default: false },
-    webhook_target_collections: {
-      default: [],
-      options: SolrTools.collections
-    }
+    webhook_target_collections: { default: [], options: SolrTools.collections },
+    adhoc_target_collections: { default: [], options: SolrTools.collections }
   }.freeze
 
   validates :name, presence: true, uniqueness: true
