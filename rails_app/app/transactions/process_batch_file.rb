@@ -95,11 +95,8 @@ class ProcessBatchFile
   # @return [Dry::Monads::Result]
   def clean_up(batch_file:, file_handle:, errors:, **args)
     file_handle.close
-    batch_file.update!({
-                         error_messages: errors,
-                         status: (errors.any? ? Statuses::COMPLETED_WITH_ERRORS : Statuses::COMPLETED),
-                         completed_at: Time.zone.now
-                       })
+    batch_file.update!({ error_messages: errors, completed_at: Time.zone.now,
+                         status: (errors.any? ? Statuses::COMPLETED_WITH_ERRORS : Statuses::COMPLETED) })
     # remove file?
     Success(batch_file: batch_file, **args)
   rescue StandardError => e
@@ -129,6 +126,7 @@ class ProcessBatchFile
     return unless batch_file.alma_export.all_batch_files_finished?
 
     batch_file.alma_export.set_completion_status!
+    # TODO: issue solr commit!
     Rails.logger.info do
       "AlmaExport ##{batch_file.alma_export.id} marked complete after BatchFile ##{batch_file.id} processed."
     end

@@ -26,3 +26,7 @@ sftp:
 
 slack:
   webhook_url: <%= DockerSecrets.lookup(:slack_webhook_url) %>
+
+indexing:
+  max_skipped_per_file: 0
+  max_errors_per_file: 0

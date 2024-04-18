@@ -5,6 +5,8 @@ require 'dry/transaction'
 # Initialize and create a AlmaExport from a webhook body. Downloads all files from SFTP and enqueues jobs to
 # process BatchFiles
 class ProcessAlmaExport
+  SFTP_PARALLEL_DOWNLOADS = 10
+
   include Dry::Transaction(container: Container)
 
   step :load_alma_export
@@ -46,6 +48,7 @@ class ProcessAlmaExport
       return Failure("No files downloaded for Alma publishing job with ID: #{alma_export.alma_job_identifier}")
     end
 
+    Rails.logger.info { "Sftp files found for this AlmaExport: #{sftp_files.count}." }
     Success(alma_export: alma_export, sftp_session: sftp_session, sftp_files: sftp_files)
   rescue Sftp::Client::Error => e
     Failure("Problem retrieving files from SFTP server: #{e.message}")
@@ -85,16 +88,20 @@ class ProcessAlmaExport
   # @param [Array<Sftp::File>] sftp_files
   # @return [Dry::Monads::Result]
   def process_sftp_files(alma_export:, sftp_session:, sftp_files:)
-    sftp_files.each_slice(20) do |slice|
+    sftp_files.each_slice(SFTP_PARALLEL_DOWNLOADS).with_index do |slice, i|
+      start = i * SFTP_PARALLEL_DOWNLOADS
+      Rails.logger.info { "Downloading and enqueueing files #{start} to #{start + SFTP_PARALLEL_DOWNLOADS} of #{sftp_files.count}" }
       downloads = slice.map { |file| sftp_session.download(file, wait: false) }
       downloads.each(&:wait) # SFTP downloads occur concurrently here
       build_and_enqueue_batch_files(alma_export, slice)
     end
     Success(alma_export: alma_export)
   rescue StandardError => e
+    message = "Problem processing SFTP file for Alma Export (ID: #{alma_export.id}): #{e.message}"
+    Rails.logger.info { message }
     alma_export.status = Statuses::FAILED
     alma_export.save
-    Failure("Problem processing SFTP file for Alma Export (ID: #{alma_export.id}): #{e.message}")
+    Failure(message)
   end
 
   # Return a regex suitable for matching only the output files of the specified FULL PUBLISH job
