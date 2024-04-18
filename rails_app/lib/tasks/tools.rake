@@ -43,14 +43,17 @@ namespace :tools do
     FactoryBot.create_list(:alma_export_with_files, 5)
   end
 
+  # JOB_ID=55827228880003681 bundle exec rake tools:process_full_index
   desc 'Test full export processing'
   task process_full_index: :environment do
+    SolrTools.delete_collection(SolrTools.new_collection_name) if SolrTools.collection_exists?(SolrTools.new_collection_name)
+    Sidekiq.redis(&:flushdb)
+    AlmaExport.destroy_all
     job_id = ENV.fetch('JOB_ID', nil)
     webhook_response_fixture = Rails.root.join('spec/fixtures/json/webhooks/job_end_success.json').read
     webhook_response_fixture.gsub!('50746714710003681', job_id) if job_id
     alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
-                                     webhook_body: JSON.parse(webhook_response_fixture),
-                                     target_collections: Array.wrap(Solr::Config.new.collection_name))
+                                     webhook_body: JSON.parse(webhook_response_fixture))
     ProcessAlmaExport.new.call(alma_export_id: alma_export.id)
   end
 
