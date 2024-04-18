@@ -222,8 +222,10 @@ title = "gitlab gitleaks config"
         '''ec579b633b43904cb751f63b555fd3ab4e424f7d''',
         '''a7868e92964e113abcd424f0b4047ac3682e5514''',
         '''07c7dd455236ed5278efd22cc1864968fb9e818b''',
+        '''2c9f3302d855ec0a13645c440d5904d02421b748''',
         '''ee6ecc6bc6435a3c6559665e9649514c17f732cc''',
-        '''2c9f3302d855ec0a13645c440d5904d02421b748'''
+        '''dcf8b8aa87d3d0ac021489319036d242b971d428''',
+        '''1180501404602395cd13d48c6299b1f52a44d75e'''
 
     ]
     files = [
@@ -234,7 +236,10 @@ title = "gitlab gitleaks config"
         '''spec/support/alma_api_mocks.rb''',
         '''config/initializers/devise.rb''',
         '''solr/conf/solrconfig/keyword_config.xml''',
-        '''utilities/solr_tools.rb'''
+        '''utilities/solr_tools.rb''',
+        '''solr/conf/solrconfig/keyword_config.xml''',
+        '''config/settings.yml''',
+        '''config/honeybadger.yml'''
     ]
     paths = [
         '''vendor/bundle''',
