@@ -5,7 +5,7 @@ catalog_indexing_image_tag: "{{ image_tag }}"
 catalog_indexing_port: 3000
 catalog_indexing_rails_env: "staging"
 catalog_indexing_replicas: 1
-catalog_indexing_solr_url: "http://solr-1:8983"
+catalog_indexing_solr_url: "http://{{ solr_proxy_host }}"
 catalog_indexing_solr_admin_url: "http://catalog-manager-stg01.library.upenn.int/solr1/#/"
 catalog_indexing_url: "indexing-staging.library.upenn.edu"
 catalog_indexing_versioned_secrets:
