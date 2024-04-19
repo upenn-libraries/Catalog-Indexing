@@ -1,75 +1,10 @@
 ---
-- name: Create sidekiq dir
-  file:
-    path: "{{ project_root ~ '/sidekiq' }}"
-    state: directory
-
-- name: Copy base docker-compose files
-  copy:
-    content: "{{ lookup('template', 'docker-compose.yml.j2', template_vars={'item': item} ) | from_yaml }}"
-    dest: "{{ project_root ~ '/sidekiq/docker-compose.' ~ item.name ~ '.yml' }}"
-  loop: "{{ sidekiq.instances }}"
-
-- name: Deploy Sidekiq development environment
+- name: Deploy Sidekiq environment
   docker_stack:
     name: "catalog-indexing"
     compose:
-      - "{{ project_root ~ '/sidekiq/docker-compose.' ~ item.name ~ '.yml' }}"
+      - "{{ lookup('template', 'docker-compose.yml.j2', template_vars={'item': item} ) | from_yaml }}"
     state: present
   changed_when: false
-  environment:
-    ALMA_API_KEY: "{{ 'catalog_indexing_alma_api_key_v' ~ catalog_indexing_versioned_secrets.alma_api_key.version }}"
-    APP_IMAGE_NAME: "{{ catalog_indexing_image_name }}"
-    APP_IMAGE_TAG: "{{ catalog_indexing_image_tag }}"
-    APP_PORT: "{{ catalog_indexing_port }}"
-    APP_URL: "{{ catalog_indexing_url }}"
-    DATABASE_NAME: "{{ postgres_database_name }}"
-    DATABASE_PASSWORD: "{{ 'postgres_database_password_v' ~ postgres_database_versioned_secrets.database_password.version }}"
-    DATABASE_USER: "{{ postgres_database_user }}"
-    RAILS_ENV: "{{ catalog_indexing_rails_env }}"
-    RAILS_MASTER_KEY: "{{ 'catalog_indexing_rails_master_key_v' ~ catalog_indexing_versioned_secrets.rails_master_key.version }}"
-    REDIS_SIDEKIQ_USER: "sidekiq"
-    REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
-    REDIS_PORT: "{{ redis.port }}"
-    SFTP_PASSWORD: "{{ 'catalog_indexing_sftp_password_v' ~ catalog_indexing_versioned_secrets.sftp_password.version }}"
-    SFTP_USERNAME: "{{ 'catalog_indexing_sftp_username_v' ~ catalog_indexing_versioned_secrets.sftp_username.version }}"
-    SLACK_WEBHOOK_URL: "{{ 'catalog_indexing_slack_webhook_url_v' ~ catalog_indexing_versioned_secrets.slack_webhook_url.version }}"
-    SOLR_URL: "{{ catalog_indexing_solr_url }}"
-    SOLR_USERNAME: "{{ 'catalog_indexing_solr_username_v' ~ catalog_indexing_versioned_secrets.solr_username.version }}"
-    SOLR_PASSWORD: "{{ 'catalog_indexing_solr_password_v' ~ catalog_indexing_versioned_secrets.solr_password.version }}"
-  no_log: true
-  when: is_development | default (false) == true
-  loop: "{{ sidekiq.instances }}"
-  tags: dev_environment
-
-- name: Deploy Sidekiq
-  docker_stack:
-    name: "catalog-indexing"
-    compose:
-      - "{{ project_root ~ '/sidekiq/docker-compose.' ~ item.name ~ '.yml' }}"
-    state: present
-  changed_when: false
-  environment:
-    ALMA_API_KEY: "{{ 'catalog_indexing_alma_api_key_v' ~ catalog_indexing_versioned_secrets.alma_api_key.version }}"
-    APP_IMAGE_NAME: "{{ catalog_indexing_image_name }}"
-    APP_IMAGE_TAG: "{{ catalog_indexing_image_tag }}"
-    APP_PORT: "{{ catalog_indexing_port }}"
-    APP_URL: "{{ catalog_indexing_url }}"
-    DATABASE_NAME: "{{ postgres_database_name }}"
-    DATABASE_PASSWORD: "{{ 'postgres_database_password_v' ~ postgres_database_versioned_secrets.database_password.version }}"
-    DATABASE_USER: "{{ postgres_database_user }}"
-    RAILS_ENV: "{{ catalog_indexing_rails_env }}"
-    RAILS_MASTER_KEY: "{{ 'catalog_indexing_rails_master_key_v' ~ catalog_indexing_versioned_secrets.rails_master_key.version }}"
-    REDIS_SIDEKIQ_USER: "sidekiq"
-    REDIS_SIDEKIQ_PASSWORD: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
-    REDIS_PORT: "{{ redis.port }}"
-    SFTP_PASSWORD: "{{ 'catalog_indexing_sftp_password_v' ~ catalog_indexing_versioned_secrets.sftp_password.version }}"
-    SFTP_USERNAME: "{{ 'catalog_indexing_sftp_username_v' ~ catalog_indexing_versioned_secrets.sftp_username.version }}"
-    SLACK_WEBHOOK_URL: "{{ 'catalog_indexing_slack_webhook_url_v' ~ catalog_indexing_versioned_secrets.slack_webhook_url.version }}"
-    SOLR_URL: "{{ catalog_indexing_solr_url }}"
-    SOLR_USERNAME: "{{ 'catalog_indexing_solr_username_v' ~ catalog_indexing_versioned_secrets.solr_username.version }}"
-    SOLR_PASSWORD: "{{ 'catalog_indexing_solr_password_v' ~ catalog_indexing_versioned_secrets.solr_password.version }}"
-    HONEYBADGER_API_KEY: "{{ 'catalog_indexing_honeybadger_api_key_v' ~ catalog_indexing_versioned_secrets.honeybadger_api_key.version }}"
-  no_log: true
-  when: not is_development | default (false) == true
+  # no_log: true
   loop: "{{ sidekiq.instances }}"
