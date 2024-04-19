@@ -27,6 +27,7 @@ services:
       REDIS_SIDEKIQ_PASSWORD: "${REDIS_SIDEKIQ_PASSWORD}"
       SHIB_SP_ENTITY_ID: "https://${APP_URL}/shibboleth"
       SOLR_BACKUP_LOCATION: "solr/backups"
+      SOLR_INSTANCES: "${SOLR_INSTANCES}"
       SOLR_URL: "${SOLR_URL}"
       SOLR_ADMIN_URL: "${SOLR_ADMIN_URL}"
     healthcheck:

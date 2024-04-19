@@ -26,6 +26,7 @@ services:
       REDIS_SIDEKIQ_USER: ${REDIS_SIDEKIQ_USER}
       REDIS_SIDEKIQ_PASSWORD: ${REDIS_SIDEKIQ_PASSWORD}
       REDIS_URL: "redis://redis:${REDIS_PORT}/0"
+      SOLR_INSTANCES: "{{ solr_instances }}"
       SOLR_URL: "${SOLR_URL}"
     healthcheck:
       test:
