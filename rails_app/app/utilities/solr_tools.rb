@@ -56,6 +56,7 @@ class SolrTools
     # @raise [SolrTools::CommandError]
     # @return [Faraday::Response]
     def create_collection(collection_name)
+      # TODO: validate SOLR_INSTANCES => replicas * nodes
       response = connection.get('/solr/admin/collections',
                                 action: 'CREATE', name: collection_name,
                                 numShards: Settings.solr.shards, replicationFactor: Settings.solr.replicas,

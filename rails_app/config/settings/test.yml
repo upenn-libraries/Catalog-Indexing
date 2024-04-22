@@ -4,8 +4,9 @@ solr:
   password: <%= DockerSecrets.lookup(:solr_password) %>
   url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
   configset: <%= ENV.fetch('SOLR_CONFIGSET_NAME', 'catalog-indexing') %> # TODO: confirm env var name
-  shards: <%= ENV.fetch('SOLR_SHARDS', '1') %> # TODO: confirm env var name
-  replicas: <%= ENV.fetch('SOLR_REPLICAS', '1') %> # TODO: confirm env var name
+  shards: 6
+  replicas: 1
+  instances: <%= ENV.fetch('SOLR_INSTANCES') %>
   collection_name_prefix: 'catalog-'
 redis:
   url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>

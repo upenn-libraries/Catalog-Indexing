@@ -11,7 +11,7 @@ class ProcessAlmaExport
 
   step :load_alma_export
   step :initialize_sftp_session
-  step :get_sftp_files
+  step :get_sftp_files_list
   step :prepare_solr_collection
   step :update_alma_export
   step :process_sftp_files
@@ -42,14 +42,14 @@ class ProcessAlmaExport
   # @param [AlmaExport] alma_export
   # @param [Sftp::Client] sftp_session
   # @return [Dry::Monads::Result]
-  def get_sftp_files(alma_export:, sftp_session:)
+  def get_sftp_files_list(alma_export:, sftp_session:)
     sftp_files = sftp_session.files matching: files_matching_regex(alma_export.alma_job_identifier)
     if sftp_files.empty?
       return Failure("No files downloaded for Alma publishing job with ID: #{alma_export.alma_job_identifier}")
     end
 
     Rails.logger.info { "Sftp files found for this AlmaExport: #{sftp_files.count}." }
-    Success(alma_export: alma_export, sftp_session: sftp_session, sftp_files: sftp_files)
+    Success(alma_export: alma_export, sftp_files: sftp_files)
   rescue Sftp::Client::Error => e
     Failure("Problem retrieving files from SFTP server: #{e.message}")
   end
@@ -84,20 +84,21 @@ class ProcessAlmaExport
 
   # In batches, download files, build BatchFile objects and enqueue processing jobs
   # @param [AlmaExport] alma_export
-  # @param [Sftp::Client] sftp_session
   # @param [Array<Sftp::File>] sftp_files
   # @return [Dry::Monads::Result]
-  def process_sftp_files(alma_export:, sftp_session:, sftp_files:)
+  def process_sftp_files(alma_export:, sftp_files:)
     sftp_files.each_slice(SFTP_PARALLEL_DOWNLOADS).with_index do |slice, i|
+      sftp_session = Sftp::Client.new # initialize a new connection each batch to avoid connection being closed after a long time
       start = i * SFTP_PARALLEL_DOWNLOADS
       Rails.logger.info { "Downloading and enqueueing files #{start} to #{start + SFTP_PARALLEL_DOWNLOADS} of #{sftp_files.count}" }
       downloads = slice.map { |file| sftp_session.download(file, wait: false) }
       downloads.each(&:wait) # SFTP downloads occur concurrently here
+      sftp_session.sftp.close_channel # close connection since we open a new once each iteration
       build_and_enqueue_batch_files(alma_export, slice)
     end
     Success(alma_export: alma_export)
   rescue StandardError => e
-    message = "Problem processing SFTP file for Alma Export (ID: #{alma_export.id}): #{e.message}"
+    message = "Problem processing SFTP file for Alma Export (ID: #{alma_export.id}): #{e.inspect} -- #{e.message} -- #{e.backtrace}"
     Rails.logger.info { message }
     alma_export.status = Statuses::FAILED
     alma_export.save
