@@ -106,7 +106,7 @@ class ProcessBatchFile
   # Check if all BatchFiles for the current AlmaExport are in a completed state, and update the AlmaExport status if
   # needed.
   # @note this may be subject to a race condition when jobs are processed in parallel
-  # @todo this should be replaced with Sidekiq Pro's batching system when avaialble
+  # @todo this should be replaced with Sidekiq Pro's batching system when available
   # @param [BatchFile] batch_file
   # @return [Dry::Monads::Result]
   def check_alma_export(batch_file:)
@@ -126,7 +126,8 @@ class ProcessBatchFile
     return unless batch_file.alma_export.all_batch_files_finished?
 
     batch_file.alma_export.set_completion_status!
-    # TODO: issue solr commit!
+
+    issue_solr_commits(alma_export: batch_file.alma_export)
     Rails.logger.info do
       "AlmaExport ##{batch_file.alma_export.id} marked complete after BatchFile ##{batch_file.id} processed."
     end
@@ -151,6 +152,13 @@ class ProcessBatchFile
   rescue StandardError => e
     Rails.logger.error do
       "Unexpected error trying to update BatchFile ##{batch_file.id} upon processing error: #{e.message}"
+    end
+  end
+
+  # @param [AlmaExport] alma_export
+  def issue_solr_commits(alma_export:)
+    alma_export.target_collections.each do |collection|
+      Solr::QueryClient.new(collection: collection).commit
     end
   end
 end
