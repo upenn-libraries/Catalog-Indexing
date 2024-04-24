@@ -16,19 +16,31 @@
     - name: Create folders for solr swarm
       when: not (is_development | default (false, true)) and (hostvars[inventory_hostname].swarm_labels | select('search', 'solr-') | length > 0)
       block:
+        - name: "Get volume node labels"
+          set_fact:
+            node_labels: "{{ hostvars[inventory_hostname].swarm_labels | select('search', 'solr-') }}"
+
+        - name: "Get volume groups"
+          set_fact:
+            volume_groups: "{{ volume_groups | default([]) + (swarm_manager_solr_docker_volume_settings | json_query(query)) }}"
+          vars:
+            query: "[?node_label == '{{ item }}'].{backup_device: backup_volume.driver_opts.device, data_device: data_volume.driver_opts.device}"
+          loop: "{{ node_labels }}"
+
+        - name: "Get volumes"
+          set_fact:
+            volumes: "{{ volumes | default([]) + (item | dict2items | default([]) | map(attribute='value') | default([])) }}"
+          loop: "{{ volume_groups }}"
+
         - name: Create a directory if it does not exist
           ansible.builtin.file:
             path: "{{ item }}"
             state: directory
             mode: "0775"
-          loop: "{{ volume_folders | reject('none') | list }}"
+          loop: "{{ volumes }}"
       vars:
         swarm_manager_host: "{{ groups | dict2items | selectattr('key', 'search', 'docker_swarm_manager') | map(attribute='value') | flatten | first }}"
         swarm_manager_solr_docker_volume_settings: "{{ hostvars[swarm_manager_host].solr_docker_volume_settings | default({}) }}"
-        node_label: "{{ hostvars[inventory_hostname].swarm_labels | select('search', 'solr-') | first }}"
-        query: "[?node_label == '{{ node_label }}'].{backup_device: backup_volume.driver_opts.device, data_device: data_volume.driver_opts.device}"
-        volume_folders: "{{ swarm_manager_solr_docker_volume_settings | json_query(query) | default([], true) | first | default({}) | dict2items | default([]) | map(attribute='value') | default([]) }}"
-
 
 - name: "Deploy application"
   hosts: docker_swarm_manager
