@@ -17,10 +17,10 @@ output = {
                 "ansible_host": os.environ["SWARM02"],
                 "ansible_python_interpreter": "/usr/bin/python3",
                 "swarm_labels": [
-                    "catalog_indexing",
-                    "postgres",
-                    "redis",
-                    "sidekiq"
+                    "catalog_indexing_app",
+                    "catalog_indexing_postgres",
+                    "catalog_indexing_redis",
+                    "catalog_indexing_sidekiq"
                 ]
             },
             "SWARM03": {
@@ -45,6 +45,16 @@ output = {
                 "swarm_labels": [
                     "solr-3",
                     "zookeeper-3"
+                ]
+            },
+            "SWARM06": {
+                "ansible_host": os.environ["SWARM06"],
+                "ansible_python_interpreter": "/usr/bin/python3",
+                "swarm_labels": [
+                    "catalog_find_app",
+                    "catalog_find_postgres",
+                    "catalog_find_redis",
+                    "catalog_find_sidekiq"
                 ]
             }
         }
@@ -71,7 +81,8 @@ output = {
             "SWARM02",
             "SWARM03",
             "SWARM04",
-            "SWARM05"
+            "SWARM05",
+            "SWARM06"
         ]
     },
     "staging": {
@@ -80,7 +91,8 @@ output = {
             "SWARM02",
             "SWARM03",
             "SWARM04",
-            "SWARM05"
+            "SWARM05",
+            "SWARM06"
         ]
     }
 }

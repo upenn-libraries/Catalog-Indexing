@@ -7,7 +7,7 @@ services:
     deploy:
       placement:
         constraints:
-          - "node.labels.catalog_indexing == true"
+          - "node.labels.catalog_indexing_app == true"
       replicas: ${APP_REPLICAS}
       update_config:
         order: "start-first"
