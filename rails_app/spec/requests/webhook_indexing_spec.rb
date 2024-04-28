@@ -91,15 +91,19 @@ RSpec.describe 'Webhook Indexing requests' do
     end
 
     context 'with JOB actions' do
-      before do
+      let(:headers) { { 'X-Exl-Signature': 'e0ooQk9/vgmpK/RmdfMUz7jK0HIQkk4YDDP5dYHq+KY=' } }
+      it 'handles validated job completed events if process_job_webhooks is true' do
         allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
-      end
-
-      it 'handles validated job completed events' do
-        headers = { 'X-Exl-Signature': 'e0ooQk9/vgmpK/RmdfMUz7jK0HIQkk4YDDP5dYHq+KY=' }
         post webhook_listen_path, params: json_fixture('job_end_success', :webhooks), headers: headers
         expect(response).to have_http_status :accepted
         expect(ProcessAlmaExportJob.jobs.size).to eq 1
+      end
+
+      it 'does not handle JOB_END events if process_job_webhooks is false' do
+        allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(false)
+        post webhook_listen_path, params: json_fixture('job_end_success', :webhooks), headers: headers
+        expect(response).to have_http_status :ok
+        expect(ProcessAlmaExportJob.jobs.size).to eq 0
       end
     end
   end

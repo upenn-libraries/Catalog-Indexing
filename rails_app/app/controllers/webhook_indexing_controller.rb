@@ -27,13 +27,17 @@ class WebhookIndexingController < ApplicationController
   def handle_action_type(payload)
     case payload['action']
     when 'BIB'
-      return unless ConfigItem.value_for(:process_bib_webhooks)
-
-      handle_bib_action(payload)
+      if ConfigItem.value_for(:process_bib_webhooks)
+        handle_bib_action(payload)
+      else
+        head(:ok)
+      end
     when 'JOB_END'
-      head(:accepted) unless ConfigItem.value_for(:process_job_webhooks) && completed_publishing_job?(payload)
-
-      initialize_alma_export(payload)
+      if ConfigItem.value_for(:process_job_webhooks) && completed_publishing_job?(payload)
+        initialize_alma_export(payload)
+      else
+        head(:ok)
+      end
     else
       head(:no_content)
     end
