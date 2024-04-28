@@ -102,6 +102,7 @@ class ProcessAlmaExport
     message = "Problem processing SFTP file for Alma Export (ID: #{alma_export.id}): #{e.inspect} -- #{e.message} -- #{e.backtrace}"
     Rails.logger.info { message }
     alma_export.status = Statuses::FAILED
+    # TODO: save error message on alma_export
     alma_export.save
     Failure(message)
   end
