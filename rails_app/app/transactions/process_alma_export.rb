@@ -75,11 +75,12 @@ class ProcessAlmaExport
     alma_export.target_collections = Array.wrap collection
     alma_export.status = Statuses::IN_PROGRESS
     alma_export.started_at = Time.zone.now
-    alma_export.save
-
-    # Notify -> "AlmaExport ##{alma_export.id} off and running!"
-
+    alma_export.save!
+    SendSlackNotificationJob.perform_async("AlmaExport ##{alma_export.id} off and running!")
     Success(alma_export: alma_export, **args)
+  rescue StandardError => e
+    validation_messages = alma_export.errors&.full_messages&.to_sentence
+    Failure("Failed to save AlmaExport ##{alma_export.id}: #{e.message}. Validation errors: #{validation_messages}")
   end
 
   # In batches, download files, build BatchFile objects and enqueue processing jobs
