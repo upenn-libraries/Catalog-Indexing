@@ -282,12 +282,32 @@ deploy_staging:
   extends:
     - .deploy
   variables:
+    ANSIBLE_HOST_KEY_CHECKING: "false"
     IMAGE_TAG: ${CI_COMMIT_SHORT_SHA}
   environment:
     name: staging
     url: https://indexing-staging.library.upenn.edu
   needs:
     - copy_app_docker_images
+  before_script:
+    - ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -P ""
+
+    # Get Vault token via JWT auth locked to this project
+    - export VAULT_ADDR=${VAULT_URL}
+    - export VAULT_TOKEN="$(vault write -field=token auth/jwt/${CI_SERVER_HOST}/login role=${JWT_ROLE} jwt=${CI_JOB_JWT})"
+
+    # Generate signed key and write to a new pub key
+    - vault write -field=signed_key ${VAULT_SSH_CLIENT_ENDPOINT}/sign/${VAULT_SSH_CLIENT_ROLE} public_key=@${HOME}/.ssh/id_ed25519.pub valid_principals=${VALID_PRINCIPALS} > ~/.ssh/id_ed25519-cert.pub
+    - chmod 0400 ~/.ssh/id_ed25519-cert.pub
+
+    # Set the remote user for ansible
+    - export ANSIBLE_REMOTE_USER=${DEPLOY_USER}
+
+    # Set the private key for ansible
+    - export ANSIBLE_PRIVATE_KEY_FILE=~/.ssh/id_ed25519
+
+    # Set the vault id
+    - export ANSIBLE_VAULT_ID_MATCH=${DEPLOY_ENVIRONMENT}
   script:
     # Ensure dynamic inventory file is executable
     - chmod +x ansible/inventories/${DEPLOY_ENVIRONMENT}/inventory.py
@@ -308,12 +328,32 @@ deploy_production:
   extends:
     - .deploy
   variables:
+    ANSIBLE_HOST_KEY_CHECKING: "false"
     IMAGE_TAG: ${CI_COMMIT_SHORT_SHA}
   environment:
     name: production
     url: https://indexing.library.upenn.edu
   needs:
     - copy_app_docker_images
+  before_script:
+    - ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -P ""
+
+    # Get Vault token via JWT auth locked to this project
+    - export VAULT_ADDR=${VAULT_URL}
+    - export VAULT_TOKEN="$(vault write -field=token auth/jwt/${CI_SERVER_HOST}/login role=${JWT_ROLE} jwt=${CI_JOB_JWT})"
+
+    # Generate signed key and write to a new pub key
+    - vault write -field=signed_key ${VAULT_SSH_CLIENT_ENDPOINT}/sign/${VAULT_SSH_CLIENT_ROLE} public_key=@${HOME}/.ssh/id_ed25519.pub valid_principals=${VALID_PRINCIPALS} > ~/.ssh/id_ed25519-cert.pub
+    - chmod 0400 ~/.ssh/id_ed25519-cert.pub
+
+    # Set the remote user for ansible
+    - export ANSIBLE_REMOTE_USER=${DEPLOY_USER}
+
+    # Set the private key for ansible
+    - export ANSIBLE_PRIVATE_KEY_FILE=~/.ssh/id_ed25519
+
+    # Set the vault id
+    - export ANSIBLE_VAULT_ID_MATCH=${DEPLOY_ENVIRONMENT}
   script:
     # Ensure dynamic inventory file is executable
     - chmod +x ansible/inventories/${DEPLOY_ENVIRONMENT}/inventory.py
