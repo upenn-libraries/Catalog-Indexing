@@ -1,13 +1,15 @@
 version: "3.8"
 
+{% set queues = item.queues | map('regex_replace', '^(.*)$', '"-q", "\\1"') | join(', ') %}
+
 services:
   sidekiq-{{ item.name }}:
-    image: ${APP_IMAGE_NAME}:${APP_IMAGE_TAG}
-    command: ["bundle", "exec", "sidekiq", {{ item.queues | map('regex_replace', '^(.*)$', '"-q", "\\1"') | join(', ') }}, "-c", "{{ item.concurrency }}"]
+    image: "{{ catalog_indexing_image_name }}:{{ catalog_indexing_image_tag }}"
+    command: ["bundle", "exec", "sidekiq", {{ queues }}, "-c", "{{ item.concurrency }}"]
     deploy:
       placement:
         constraints:
-          - "node.labels.sidekiq == true"
+          - "node.labels.catalog_indexing_sidekiq == true"
       update_config:
         order: "start-first"
         parallelism: 1
@@ -16,17 +18,17 @@ services:
       APP_UID: ${UID:-1000}
       APP_GID: ${GID:-1000}
 {% endif %}
-      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_NAME: "{{ postgres_database_name }}"
       DATABASE_PASSWORD: /run/secrets/database_password
-      DATABASE_USER: ${DATABASE_USER}
-      DB_POOL: {{ item.concurrency }}
-      APP_URL: ${APP_URL}
+      DATABASE_USER: "{{ postgres_database_user }}"
+      DB_POOL: "{{ item.concurrency }}"
+      APP_URL: "{{ catalog_indexing_url }}"
       APP_IMAGE_TAG: ${APP_IMAGE_TAG}
-      RAILS_ENV: ${APP_RAILS_ENV}
-      REDIS_SIDEKIQ_USER: ${REDIS_SIDEKIQ_USER}
-      REDIS_SIDEKIQ_PASSWORD: ${REDIS_SIDEKIQ_PASSWORD}
-      REDIS_URL: "redis://redis:${REDIS_PORT}/0"
-      SOLR_URL: "${SOLR_URL}"
+      RAILS_ENV: "{{ catalog_indexing_rails_env }}"
+      REDIS_SIDEKIQ_USER: "sidekiq"
+      REDIS_URL: "redis://redis:{{ redis.port }}/0"
+      SOLR_INSTANCES: "{{ solr_instances }}"
+      SOLR_URL: "{{ catalog_indexing_solr_url }}"
     healthcheck:
       test:
         [
@@ -50,7 +52,7 @@ services:
       - alma_api_key
       - database_password
       - source: rails_master_key
-        target: /home/app/config/credentials/${RAILS_ENV}.key
+        target: "/home/app/config/credentials/{{ catalog_indexing_rails_env }}.key"
         uid: "1000"
         gid: "1000"
         mode: 0440
@@ -81,35 +83,35 @@ networks:
 secrets:
   alma_api_key:
     external: true
-    name: ${ALMA_API_KEY}
+    name: "{{ 'catalog_indexing_alma_api_key_v' ~ catalog_indexing_versioned_secrets.alma_api_key.version }}"
   database_password:
     external: true
-    name: ${DATABASE_PASSWORD}
+    name: "{{ 'postgres_database_password_v' ~ postgres_database_versioned_secrets.database_password.version }}"
   rails_master_key:
     external: true
-    name: ${RAILS_MASTER_KEY}
+    name: "{{ 'catalog_indexing_rails_master_key_v' ~ catalog_indexing_versioned_secrets.rails_master_key.version }}"
   redis_sidekiq_password:
     external: true
-    name: ${REDIS_SIDEKIQ_PASSWORD}
+    name: "{{ 'redis_sidekiq_password_v' ~ redis.versioned_configs.users_acl.users | selectattr('name', 'equalto', 'sidekiq') | map(attribute='version')  | join('') }}"
   sftp_username:
     external: true
-    name: ${SFTP_USERNAME}
+    name: "{{ 'catalog_indexing_sftp_username_v' ~ catalog_indexing_versioned_secrets.sftp_username.version }}"
   sftp_password:
     external: true
-    name: ${SFTP_PASSWORD}
+    name: "{{ 'catalog_indexing_sftp_password_v' ~ catalog_indexing_versioned_secrets.sftp_password.version }}"
   slack_webhook_url:
     external: true
-    name: ${SLACK_WEBHOOK_URL}
+    name: "{{ 'catalog_indexing_slack_webhook_url_v' ~ catalog_indexing_versioned_secrets.slack_webhook_url.version }}"
   solr_username:
     external: true
-    name: ${SOLR_USERNAME}
+    name: "{{ 'catalog_indexing_solr_username_v' ~ catalog_indexing_versioned_secrets.solr_username.version }}"
   solr_password:
     external: true
-    name: ${SOLR_PASSWORD}
+    name: "{{ 'catalog_indexing_solr_password_v' ~ catalog_indexing_versioned_secrets.solr_password.version }}"
 {% if is_development == false %}
   honeybadger_api_key:
     external: true
-    name: ${HONEYBADGER_API_KEY}
+    name: "{{ 'catalog_indexing_honeybadger_api_key_v' ~ catalog_indexing_versioned_secrets.honeybadger_api_key.version }}"
 {% endif %}
 
 {% if is_development == false %}

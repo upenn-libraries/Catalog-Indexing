@@ -30,7 +30,7 @@
 
 - name: Deploy Redis
   docker_stack:
-    name: "apotheca"
+    name: "catalog-indexing"
     compose:
       - "{{ project_root ~ '/redis/docker-compose.yml' }}"
     state: present

@@ -8,4 +8,4 @@ development
 ansible_user=vagrant
 
 [docker_swarm_manager]
-swarm-01 swarm_labels='["catalog_indexing", "postgres", "redis", "sidekiq", "solr-1", "solr-2", "solr-3", "traefik" ,"zookeeper-1", "zookeeper-2", "zookeeper-3", "zoonavigator"]'
+swarm-01 swarm_labels='["catalog_indexing_app", "catalog_indexing_postgres", "catalog_indexing_redis", "catalog_indexing_sidekiq", "solr-1", "solr-2", "solr-3", "traefik" ,"zookeeper-1", "zookeeper-2", "zookeeper-3", "zoonavigator"]'
