@@ -9,6 +9,8 @@ module Sftp
 
     attr_reader :sftp
 
+    delegate :close_channel, to: :sftp
+
     def initialize
       @sftp = Net::SFTP.start(sftp_host, sftp_username, password: sftp_password)
     rescue RuntimeError => e

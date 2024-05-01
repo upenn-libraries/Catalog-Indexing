@@ -94,7 +94,7 @@ class ProcessAlmaExport
       Rails.logger.info { "Downloading and enqueueing files #{start} to #{start + SFTP_PARALLEL_DOWNLOADS} of #{sftp_files.count}" }
       downloads = slice.map { |file| sftp_session.download(file, wait: false) }
       downloads.each(&:wait) # SFTP downloads occur concurrently here
-      sftp_session.sftp.close_channel # close connection since we open a new once each iteration
+      sftp_session.close_channel # close connection since we open a new once each iteration
       build_and_enqueue_batch_files(alma_export, slice)
     end
     Success(alma_export: alma_export)
