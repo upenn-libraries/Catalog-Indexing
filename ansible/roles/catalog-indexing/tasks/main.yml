@@ -70,6 +70,7 @@
     SLACK_WEBHOOK_URL: "{{ 'catalog_indexing_slack_webhook_url_v' ~ catalog_indexing_versioned_secrets.slack_webhook_url.version }}"
     SOLR_ADMIN_URL: "{{ catalog_indexing_solr_admin_url }}"
     SOLR_PASSWORD: "{{ 'catalog_indexing_solr_password_v' ~ catalog_indexing_versioned_secrets.solr_password.version }}"
+    SOLR_INSTANCES: "{{ solr_instances }}"
     SOLR_URL: "{{ catalog_indexing_solr_url }}"
     SOLR_USERNAME: "{{ 'catalog_indexing_solr_username_v' ~ catalog_indexing_versioned_secrets.solr_username.version }}"
   changed_when: false
@@ -114,6 +115,7 @@
     SFTP_PASSWORD: "{{ 'catalog_indexing_sftp_password_v' ~ catalog_indexing_versioned_secrets.sftp_password.version }}"
     SFTP_USERNAME: "{{ 'catalog_indexing_sftp_username_v' ~ catalog_indexing_versioned_secrets.sftp_username.version }}"
     SLACK_WEBHOOK_URL: "{{ 'catalog_indexing_slack_webhook_url_v' ~ catalog_indexing_versioned_secrets.slack_webhook_url.version }}"
+    SOLR_INSTANCES: "{{ solr_instances }}"
     SOLR_URL: "{{ catalog_indexing_solr_url }}"
     SOLR_USERNAME: "{{ 'catalog_indexing_solr_username_v' ~ catalog_indexing_versioned_secrets.solr_username.version }}"
     SOLR_PASSWORD: "{{ 'catalog_indexing_solr_password_v' ~ catalog_indexing_versioned_secrets.solr_password.version }}"

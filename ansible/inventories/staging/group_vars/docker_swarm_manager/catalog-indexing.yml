@@ -1,0 +1,35 @@
+---
+catalog_indexing_build_docker_image: false
+catalog_indexing_image_name: "gitlab.library.upenn.edu/dld/catalog/catalog-indexing"
+catalog_indexing_image_tag: "{{ image_tag }}"
+catalog_indexing_port: 3000
+catalog_indexing_rails_env: "staging"
+catalog_indexing_replicas: 1
+catalog_indexing_solr_url: "http://{{ solr_proxy_host }}"
+catalog_indexing_solr_admin_url: "http://catalog-manager-stg01.library.upenn.int/solr1/#/"
+catalog_indexing_url: "indexing-staging.library.upenn.edu"
+catalog_indexing_versioned_secrets:
+  alma_api_key:
+    value: "{{ catalog_indexing_vault_values.secret.alma_api_key }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
+  honeybadger_api_key:
+    value: "{{ catalog_indexing_vault_values.secret.honeybadger_api_key }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
+  rails_master_key:
+    value: "{{ catalog_indexing_vault_values.secret.rails_master_key }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
+  sftp_password:
+    value: "{{ catalog_indexing_vault_values.secret.sftp_password }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
+  sftp_username:
+    value: "{{ catalog_indexing_vault_values.secret.sftp_username }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
+  slack_webhook_url:
+    value: "{{ catalog_indexing_vault_values.secret.slack_webhook_url }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
+  solr_password:
+    value: "{{ catalog_solr_vault_values.secret.password }}"
+    version: "{{ catalog_solr_vault_values.metadata.version }}"
+  solr_username:
+    value: "{{ catalog_solr_vault_values.secret.username }}"
+    version: "{{ catalog_solr_vault_values.metadata.version }}"

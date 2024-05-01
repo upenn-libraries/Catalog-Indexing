@@ -1,13 +1,8 @@
 # Internal Services
 solr:
-  user: <%= DockerSecrets.lookup(:solr_username, 'admin') %>
-  password: <%= DockerSecrets.lookup(:solr_password, 'Bitnami') %>
+  user: <%= DockerSecrets.lookup(:solr_username) %>
+  password: <%= DockerSecrets.lookup(:solr_password) %>
   url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
-  configset: <%= ENV.fetch('SOLR_CONFIGSET_NAME', 'catalog-indexing') %> # TODO: confirm env var name
-  shards: 6
-  replicas: 1
-  instances: <%= ENV.fetch('SOLR_INSTANCES', 1) %>
-  collection_name_prefix: 'catalog-'
 redis:
   url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
   username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
@@ -16,8 +11,6 @@ redis:
 # External Services
 alma:
   api_key: <%= DockerSecrets.lookup(:alma_api_key) %>
-  publishing_job:
-    name: 'Publishing Platform Job All Titles - Alma ReLoad - Full FTP'
 
 sftp:
   host: <%= ENV.fetch('SFTP_HOST', 'move.library.upenn.edu') %>
@@ -27,7 +20,3 @@ sftp:
 
 slack:
   webhook_url: <%= DockerSecrets.lookup(:slack_webhook_url) %>
-
-indexing:
-  max_skipped_per_file: 0
-  max_errors_per_file: 0

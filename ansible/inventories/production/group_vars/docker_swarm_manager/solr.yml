@@ -1,0 +1,141 @@
+---
+solr_collection_replicas: 9
+
+solr_configsets:
+  - name: "catalog-indexing"
+    path: "roles/catalog-indexing/files/src/solr/conf/"
+
+solr_custom_env_variables:
+  SOLR_ADMIN_USERNAME: "{{ catalog_solr_vault_values.secret.username }}"
+  SOLR_ADMIN_PASSWORD: "{{ catalog_solr_vault_values.secret.password }}"
+  SOLR_ENABLE_AUTHENTICATION: "yes"
+  SOLR_HEAP: "50G"
+  SOLR_JAVA_MEM: "-Xms100G -Xmx100G"
+
+solr_docker_image_tag: 9.3.0
+
+solr_docker_volume_settings:
+  - node_label: solr-1
+    backup_volume:
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_01/production/backups/solr-1"
+      target_folder: /backups
+    data_volume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_01/production/data/solr-1"
+  - node_label: solr-2
+    backup_volume:
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_02/production/backups/solr-2"
+      target_folder: /backups
+    data_volume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_02/production/data/solr-2"
+  - node_label: solr-3
+    backup_volume:
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_03/production/backups/solr-3"
+      target_folder: /backups
+    data_volume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_03/production/data/solr-3"
+  - node_label: solr-4
+    backup_volume:
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_01/production/backups/solr-4"
+      target_folder: /backups
+    data_volume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_01/production/data/solr-4"
+  - node_label: solr-5
+    backup_volume:
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_02/production/backups/solr-5"
+      target_folder: /backups
+    data_volume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_02/production/data/solr-5"
+  - node_label: solr-6
+    backup_volume:
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_03/production/backups/solr-6"
+      target_folder: /backups
+    data_volume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_03/production/data/solr-6"
+  - node_label: solr-7
+    backup_volume:
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_01/production/backups/solr-7"
+      target_folder: /backups
+    data_volume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_01/production/data/solr-7"
+  - node_label: solr-8
+    backup_volume:
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_02/production/backups/solr-8"
+      target_folder: /backups
+    data_volume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_02/production/data/solr-8"
+  - node_label: solr-9
+    backup_volume:
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_03/production/backups/solr-9"
+      target_folder: /backups
+    data_volume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: "/solr_03/production/data/solr-9"
+
+solr_instances: 9
+
+solr_limits_cpu: "20"
+solr_limits_mem: "125G"
+
+solr_proxy_host: "catalog-manager-prod01.library.upenn.int"
