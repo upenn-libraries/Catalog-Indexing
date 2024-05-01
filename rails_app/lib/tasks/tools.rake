@@ -46,7 +46,8 @@ namespace :tools do
   # JOB_ID=55827228880003681 bundle exec rake tools:process_full_index
   desc 'Test full export processing'
   task process_full_index: :environment do
-    SolrTools.delete_collection(SolrTools.new_collection_name) if SolrTools.collection_exists?(SolrTools.new_collection_name)
+    collection = SolrTools.new_collection_name
+    SolrTools.delete_collection(collection) if SolrTools.collection_exists?(collection)
     Sidekiq.redis(&:flushdb)
     AlmaExport.destroy_all
     job_id = ENV.fetch('JOB_ID', nil)

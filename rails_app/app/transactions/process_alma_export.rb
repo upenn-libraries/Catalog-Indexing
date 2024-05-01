@@ -89,7 +89,7 @@ class ProcessAlmaExport
   # @return [Dry::Monads::Result]
   def process_sftp_files(alma_export:, sftp_files:)
     sftp_files.each_slice(SFTP_PARALLEL_DOWNLOADS).with_index do |slice, i|
-      sftp_session = Sftp::Client.new # initialize a new connection each batch to avoid connection being closed after a long time
+      sftp_session = Sftp::Client.new # initialize a new connection each batch to avoid connection being closed
       start = i * SFTP_PARALLEL_DOWNLOADS
       Rails.logger.info { "Downloading and enqueueing files #{start} to #{start + SFTP_PARALLEL_DOWNLOADS} of #{sftp_files.count}" }
       downloads = slice.map { |file| sftp_session.download(file, wait: false) }
