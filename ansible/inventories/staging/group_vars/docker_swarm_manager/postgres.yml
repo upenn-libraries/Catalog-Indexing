@@ -1,7 +1,9 @@
 ---
 postgres_database_versioned_secrets:
+  secret_name_prefix: "catalog_indexing_postgres_password_v"
   database_password:
     value: "{{ catalog_indexing_vault_values.secret.database_password }}"
     version: "{{ catalog_indexing_vault_values.metadata.version }}"
 
 postgres_docker_node_constraint: catalog_indexing_postgres
+postgres_docker_stack_name: catalog-indexing
