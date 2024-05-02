@@ -12,6 +12,7 @@
     state: present
   with_dict:
     - "{{ redis.versioned_configs }}"
+  no_log: true
 
 - name: Create versioned docker secrets
   docker_secret:
