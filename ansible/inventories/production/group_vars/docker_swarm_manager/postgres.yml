@@ -1,7 +1,7 @@
 ---
 postgres_database_versioned_secrets:
-  secret_name_prefix: "catalog_indexing_postgres_password_v"
   database_password:
+    secret_name_prefix: "catalog_indexing_postgres_password_v"
     value: "{{ catalog_indexing_vault_values.secret.database_password }}"
     version: "{{ catalog_indexing_vault_values.metadata.version }}"
 
