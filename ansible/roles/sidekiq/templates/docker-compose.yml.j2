@@ -45,8 +45,8 @@ services:
         max-file: "3"
         max-size: "10m"
     networks:
-      - postgres
-      - redis
+      - catalog_indexing_postgres
+      - catalog_indexing_redis
       - traefik
     secrets:
       - alma_api_key
@@ -73,9 +73,9 @@ services:
 {% endif %}
 
 networks:
-  postgres:
+  catalog_indexing_postgres:
     external: true
-  redis:
+  catalog_indexing_redis:
     external: true
   traefik:
     external: true

@@ -41,8 +41,8 @@ services:
       start_period: 10s
       timeout: 10s
     networks:
-      - postgres
-      - redis
+      - catalog_indexing_postgres
+      - catalog_indexing_redis
       - traefik
     secrets:
       - alma_api_key
@@ -60,9 +60,9 @@ services:
       - solr_password
 
 networks:
-  postgres:
+  catalog_indexing_postgres:
     external: true
-  redis:
+  catalog_indexing_redis:
     external: true
   traefik:
     external: true
