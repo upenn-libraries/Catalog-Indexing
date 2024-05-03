@@ -4,7 +4,7 @@
 class SendSlackNotificationJob
   include Sidekiq::Job
 
-  sidekiq_options queue: 'medium'
+  sidekiq_options queue: 'high'
 
   def perform(message)
     webhook_url = Settings.slack.webhook_url
