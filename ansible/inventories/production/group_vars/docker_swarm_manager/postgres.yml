@@ -7,3 +7,4 @@ postgres_database_versioned_secrets:
 
 postgres_docker_node_constraint: catalog_indexing_postgres
 postgres_docker_stack_name: catalog-indexing
+postgres_network: catalog_indexing_postgres
