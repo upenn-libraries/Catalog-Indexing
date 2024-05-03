@@ -44,7 +44,7 @@ configs:
 networks:
   catalog_indexing_redis:
     driver: overlay
-    name: redis
+    name: catalog_indexing_redis
     attachable: true
 
 volumes:
