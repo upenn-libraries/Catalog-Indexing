@@ -138,14 +138,14 @@ class ProcessBatchFile
   # @return [Dry::Monads::Failure]
   def handle_failure(batch_file, message)
     Rails.logger.error { "Batch file processing failed for ##{batch_file.id} @ #{batch_file.path}: #{message}" }
-    mark_batch_file_failed(batch_file, message)
+    mark_as_failed(batch_file, message)
     Failure(message)
   end
 
   # @param [BatchFile] batch_file
   # @param [Array<String>, String] error_messages
   # @return [Boolean]
-  def mark_batch_file_failed(batch_file, error_messages)
+  def mark_as_failed(batch_file, error_messages)
     batch_file.status = Statuses::FAILED
     batch_file.error_messages += Array.wrap(error_messages)
     batch_file.save!

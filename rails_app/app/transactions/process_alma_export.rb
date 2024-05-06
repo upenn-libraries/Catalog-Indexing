@@ -52,6 +52,8 @@ class ProcessAlmaExport
     Success(alma_export: alma_export, sftp_files: sftp_files)
   rescue Sftp::Client::Error => e
     Failure("Problem retrieving files from SFTP server: #{e.message}")
+  rescue StandardError => e
+    handle_error alma_export, "Unexpected error (#{e.class.name}) during SFTP list: #{e.message}"
   end
 
   # @param [AlmaExport] alma_export
@@ -65,7 +67,9 @@ class ProcessAlmaExport
     SolrTools.create_collection(collection_name)
     Success(alma_export: alma_export, collection: collection_name, **args)
   rescue SolrTools::CommandError => e
-    Failure("Could not create new Solr collection '#{collection_name}': #{e.message}.")
+    handle_failure(alma_export, "Could not create new Solr collection '#{collection_name}': #{e.message}.")
+  rescue StandardError => e
+    handle_error alma_export, "Unexpected error (#{e.class.name}) during Solr prep: #{e.message}"
   end
 
   # Files are ready to process, update AlmaExport to IN_PROGRESS
@@ -80,7 +84,10 @@ class ProcessAlmaExport
     Success(alma_export: alma_export, **args)
   rescue StandardError => e
     validation_messages = alma_export.errors&.full_messages&.to_sentence
-    Failure("Failed to save AlmaExport ##{alma_export.id}: #{e.message}. Validation errors: #{validation_messages}")
+    alma_export.reload # reload AlmaExport to resolve any issues from attributes set above so we can save
+    message = "Update failed with #{e.class.name}: #{e.message}."
+    message += " Validation errors: #{validation_messages}" if validation_messages.present?
+    handle_failure(alma_export, message)
   end
 
   # In batches, download files, build BatchFile objects and enqueue processing jobs
@@ -88,10 +95,8 @@ class ProcessAlmaExport
   # @param [Array<Sftp::File>] sftp_files
   # @return [Dry::Monads::Result]
   def process_sftp_files(alma_export:, sftp_files:)
-    sftp_files.each_slice(SFTP_PARALLEL_DOWNLOADS).with_index do |slice, i|
+    sftp_files.each_slice(SFTP_PARALLEL_DOWNLOADS) do |slice|
       sftp_session = Sftp::Client.new # initialize a new connection each batch to avoid connection being closed
-      start = i * SFTP_PARALLEL_DOWNLOADS
-      Rails.logger.info { "Downloading and enqueueing files #{start} to #{start + SFTP_PARALLEL_DOWNLOADS} of #{sftp_files.count}" }
       downloads = slice.map { |file| sftp_session.download(file, wait: false) }
       downloads.each(&:wait) # SFTP downloads occur concurrently here
       sftp_session.close_channel # close connection since we open a new once each iteration
@@ -99,12 +104,8 @@ class ProcessAlmaExport
     end
     Success(alma_export: alma_export)
   rescue StandardError => e
-    message = "Problem processing SFTP file for Alma Export (ID: #{alma_export.id}): #{e.inspect} -- #{e.message} -- #{e.backtrace}"
-    Rails.logger.info { message }
-    alma_export.status = Statuses::FAILED
-    # TODO: save error message on alma_export
-    alma_export.save
-    Failure(message)
+    message = "Error #{e.class.name} processing SFTP file: #{e.message}."
+    handle_failure(alma_export, message)
   end
 
   # Return a regex suitable for matching only the output files of the specified FULL PUBLISH job
@@ -125,5 +126,27 @@ class ProcessAlmaExport
       Array.wrap(batch_file.id)
     end
     ProcessBatchFileJob.perform_bulk(batch_file_jobs_params)
+  end
+
+  # @param [AlmaExport] alma_export
+  # @param [String] message
+  # @return [Dry::Monads::Failure]
+  def handle_failure(alma_export, message)
+    Rails.logger.error { "Alma export processing failed for ##{alma_export.id}: #{message}" }
+    mark_as_failed(alma_export, message)
+    Failure(message)
+  end
+
+  # @param [AlmaExport] alma_export
+  # @param [Array<String>, String] error_messages
+  # @return [Boolean]
+  def mark_as_failed(alma_export, error_messages)
+    alma_export.status = Statuses::FAILED
+    alma_export.error_messages += Array.wrap(error_messages)
+    alma_export.save!
+  rescue StandardError => e
+    Rails.logger.error do
+      "Unexpected error trying to update AlmaExport ##{alma_export.id} upon processing error: #{e.message}"
+    end
   end
 end

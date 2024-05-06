@@ -99,7 +99,7 @@ describe ProcessAlmaExport do
 
       it 'returns a failure monad with appropriate message' do
         expect(outcome).to be_failure
-        expect(outcome.failure).to include('Problem processing SFTP file')
+        expect(outcome.failure).to include('processing SFTP file')
       end
     end
   end
