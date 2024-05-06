@@ -13,6 +13,7 @@ services:
       update_config:
         order: "start-first"
         parallelism: 1
+      replicas: {{ item.replicas }}
     environment:
 {% if is_development == true %}
       APP_UID: ${UID:-1000}
