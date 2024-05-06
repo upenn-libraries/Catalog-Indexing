@@ -29,7 +29,7 @@ services:
         max-file: "3"
         max-size: "10m"
     networks:
-      - redis
+      - catalog_indexing_redis
     volumes:
       - redis_data:/data
 
@@ -42,9 +42,9 @@ configs:
     name: ${REDIS_USERS_ACL}
 
 networks:
-  redis:
+  catalog_indexing_redis:
     driver: overlay
-    name: redis
+    name: catalog_indexing_redis
     attachable: true
 
 volumes:

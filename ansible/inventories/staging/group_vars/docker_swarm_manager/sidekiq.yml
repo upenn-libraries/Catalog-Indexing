@@ -7,4 +7,9 @@ sidekiq:
         - medium
         - low
       concurrency: 5
+      replicas: 3
+    - name: priority
+      queues:
+        - high
+      concurrency: 5
       replicas: 1

@@ -13,6 +13,7 @@ services:
       update_config:
         order: "start-first"
         parallelism: 1
+      replicas: {{ item.replicas }}
     environment:
 {% if is_development == true %}
       APP_UID: ${UID:-1000}
@@ -45,8 +46,8 @@ services:
         max-file: "3"
         max-size: "10m"
     networks:
-      - postgres
-      - redis
+      - catalog_indexing_postgres
+      - catalog_indexing_redis
       - traefik
     secrets:
       - alma_api_key
@@ -73,9 +74,9 @@ services:
 {% endif %}
 
 networks:
-  postgres:
+  catalog_indexing_postgres:
     external: true
-  redis:
+  catalog_indexing_redis:
     external: true
   traefik:
     external: true
@@ -86,7 +87,7 @@ secrets:
     name: "{{ 'catalog_indexing_alma_api_key_v' ~ catalog_indexing_versioned_secrets.alma_api_key.version }}"
   database_password:
     external: true
-    name: "{{ 'postgres_database_password_v' ~ postgres_database_versioned_secrets.database_password.version }}"
+    name: "{{ postgres_database_versioned_secrets.database_password.secret_name_prefix + postgres_database_versioned_secrets.database_password.version }}"
   rails_master_key:
     external: true
     name: "{{ 'catalog_indexing_rails_master_key_v' ~ catalog_indexing_versioned_secrets.rails_master_key.version }}"

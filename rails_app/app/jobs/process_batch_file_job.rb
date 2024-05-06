@@ -2,7 +2,7 @@
 
 # Process a BatchFile through the indexer
 class ProcessBatchFileJob < TransactionJob
-  sidekiq_options queue: 'high'
+  sidekiq_options queue: 'low'
 
   # @param [Integer] batch_file_id
   def transaction(batch_file_id)

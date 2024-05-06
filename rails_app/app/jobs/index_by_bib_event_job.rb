@@ -2,7 +2,7 @@
 
 # Index to Solr via Alma bib webhooks and Traject
 class IndexByBibEventJob < TransactionJob
-  sidekiq_options queue: 'low'
+  sidekiq_options queue: 'medium'
 
   def transaction(marc_xml)
     IndexByBibEvent.new.call(docs: marc_xml)
