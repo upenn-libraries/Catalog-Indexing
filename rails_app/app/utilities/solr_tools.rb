@@ -110,7 +110,7 @@ class SolrTools
 
     # @return [Boolean]
     def collections_settings_present?
-      Settings.solr.shards.present? && Settings.solr.replicas.present && Settings.solr.configset.present?
+      Settings.solr.shards.present? && Settings.solr.replicas.present? && Settings.solr.configset.present?
     end
   end
 end
