@@ -52,9 +52,9 @@ describe ProcessAlmaExport do
       # Unstub above - this allows the spec-wide after hook to run without exception
       after { RSpec::Mocks.space.proxy_for(SolrTools).reset }
 
-      it 'returns a failure monad with appropriate message' do
-        expect(outcome).to be_failure
-        expect(outcome.failure).to include('already exists')
+      it 'returns appropriate failure and saves the error message' do
+        expect(outcome.failure).to include 'already exists'
+        expect(alma_export.reload.error_messages).to include outcome.failure
       end
     end
 
@@ -76,8 +76,8 @@ describe ProcessAlmaExport do
       end
 
       it 'returns a failure monad with appropriate message' do
-        expect(outcome).to be_failure
-        expect(outcome.failure).to include("must be in 'pending' state")
+        expect(outcome.failure).to include 'must be in \'pending\' state'
+        expect(alma_export.reload.error_messages).to include outcome.failure
       end
     end
 
@@ -85,8 +85,8 @@ describe ProcessAlmaExport do
       let(:sftp_files) { [] }
 
       it 'returns a failure monad with appropriate message' do
-        expect(outcome).to be_failure
         expect(outcome.failure).to include('No files downloaded')
+        expect(alma_export.reload.error_messages).to include outcome.failure
       end
     end
 
@@ -98,8 +98,8 @@ describe ProcessAlmaExport do
       end
 
       it 'returns a failure monad with appropriate message' do
-        expect(outcome).to be_failure
         expect(outcome.failure).to include('processing SFTP file')
+        expect(alma_export.reload.error_messages).to include outcome.failure
       end
     end
   end

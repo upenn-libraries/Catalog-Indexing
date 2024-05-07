@@ -21,7 +21,10 @@ class ProcessAlmaExport
   def load_alma_export(alma_export_id:)
     alma_export = AlmaExport.find alma_export_id
     unless alma_export.status == Statuses::PENDING
-      return Failure("AlmaExport with ID #{alma_export_id} is in #{alma_export.status}. It must be in 'pending' state.")
+      return handle_failure(
+        alma_export,
+        "AlmaExport with ID #{alma_export_id} is in #{alma_export.status}. It must be in 'pending' state."
+      )
     end
 
     Success(alma_export: alma_export)
@@ -45,7 +48,10 @@ class ProcessAlmaExport
   def get_sftp_files_list(alma_export:, sftp_session:)
     sftp_files = sftp_session.files matching: files_matching_regex(alma_export.alma_job_identifier)
     if sftp_files.empty?
-      return Failure("No files downloaded for Alma publishing job with ID: #{alma_export.alma_job_identifier}")
+      return handle_failure(
+        alma_export,
+        "No files downloaded for Alma publishing job with ID: #{alma_export.alma_job_identifier}"
+      )
     end
 
     Rails.logger.info { "Sftp files found for this AlmaExport: #{sftp_files.count}." }
@@ -61,7 +67,8 @@ class ProcessAlmaExport
   def prepare_solr_collection(alma_export:, **args)
     collection_name = SolrTools.new_collection_name
     if SolrTools.collection_exists?(collection_name)
-      return Failure("Solr collection #{collection_name} already exists. Something is probably going wrong.")
+      return handle_failure(alma_export,
+                            "Solr collection #{collection_name} already exists. Something is going wrong.")
     end
 
     SolrTools.create_collection(collection_name)
@@ -69,7 +76,7 @@ class ProcessAlmaExport
   rescue SolrTools::CommandError => e
     handle_failure(alma_export, "Could not create new Solr collection '#{collection_name}': #{e.message}.")
   rescue StandardError => e
-    handle_error alma_export, "Unexpected error (#{e.class.name}) during Solr prep: #{e.message}"
+    handle_failure alma_export, "Unexpected error (#{e.class.name}) during Solr prep: #{e.message}"
   end
 
   # Files are ready to process, update AlmaExport to IN_PROGRESS
