@@ -1,9 +1,9 @@
 # Internal Services
 solr:
   collection_name_prefix: 'catalog-test-'
-  replicas: <%= ENV.fetch('SOLR_COLLECTION_REPLICAS', 1) %>
-  shards: <%= ENV.fetch('SOLR_COLLECTION_SHARDS', 1) %>
-  configset: <%= ENV['SOLR_TEST_CONFIGNAME'] %>
+  replicas: 1
+  shards: 1
+  configset: 'catalog-indexing'
 
 # Settings
 indexing:
