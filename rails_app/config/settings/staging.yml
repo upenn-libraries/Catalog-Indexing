@@ -8,6 +8,7 @@ solr:
   replicas: 1
   instances: <%= ENV.fetch('SOLR_INSTANCES', 3) %>
   collection_name_prefix: 'catalog-'
+
 redis:
   url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
   username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
@@ -16,10 +17,12 @@ redis:
 # External Services
 alma:
   api_key: <%= DockerSecrets.lookup(:alma_api_key) %>
+  publishing_job:
+    name: 'Publishing Platform Job All Titles - Alma ReLoad - Full FTP'
 
 sftp:
   host: <%= ENV.fetch('SFTP_HOST', 'move.library.upenn.edu') %>
-  root: <%= ENV.fetch('SFTP_ROOT', '/recordstoalma/bibexport') %>
+  root: <%= ENV.fetch('SFTP_ROOT', '/almareload') %>
   username: <%= DockerSecrets.lookup(:sftp_username) %>
   password: <%= DockerSecrets.lookup(:sftp_password) %>
 
@@ -28,3 +31,7 @@ slack:
 
 honeybadger:
   api_key: <%= DockerSecrets.lookup(:honeybadger_api_key) %>
+
+indexing:
+  max_skipped_per_file: 0
+  max_errors_per_file: 10

@@ -4,10 +4,11 @@ solr:
   password: <%= DockerSecrets.lookup(:solr_password, 'Bitnami') %>
   url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
   configset: <%= ENV.fetch('SOLR_CONFIGSET_NAME', 'catalog-indexing') %> # TODO: confirm env var name
-  shards: 6
+  shards: 3
   replicas: 1
   instances: <%= ENV.fetch('SOLR_INSTANCES', 1) %>
   collection_name_prefix: 'catalog-'
+
 redis:
   url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
   username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
@@ -21,7 +22,7 @@ alma:
 
 sftp:
   host: <%= ENV.fetch('SFTP_HOST', 'move.library.upenn.edu') %>
-  root: <%= ENV.fetch('SFTP_ROOT', '/recordstoalma/bibexport') %>
+  root: <%= ENV.fetch('SFTP_ROOT', '/almareload') %>
   username: <%= DockerSecrets.lookup(:sftp_username) %>
   password: <%= DockerSecrets.lookup(:sftp_password) %>
 

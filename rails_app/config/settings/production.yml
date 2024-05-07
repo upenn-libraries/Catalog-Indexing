@@ -8,6 +8,7 @@ solr:
   replicas: 1
   instances: <%= ENV.fetch('SOLR_INSTANCES', 3) %>
   collection_name_prefix: 'catalog-'
+
 redis:
   url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
   username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
@@ -21,7 +22,7 @@ alma:
 
 sftp:
   host: <%= ENV.fetch('SFTP_HOST', 'move.library.upenn.edu') %>
-  root: <%= ENV.fetch('SFTP_ROOT', '/recordstoalma/bibexport') %>
+  root: <%= ENV.fetch('SFTP_ROOT', '/almareload') %>
   username: <%= DockerSecrets.lookup(:sftp_username) %>
   password: <%= DockerSecrets.lookup(:sftp_password) %>
 
