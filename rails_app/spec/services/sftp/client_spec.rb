@@ -32,7 +32,7 @@ describe Sftp::Client do
       allow(sftp_session).to receive(:dir).and_raise(Net::SSH::ConnectionTimeout)
       expect { client.files(matching: /12345678/) }.to raise_error(
         Sftp::Client::Error,
-        'Could not list files on the sftp server: Net::SSH::ConnectionTimeout'
+        'Could not list files on the SFTP server: Net::SSH::ConnectionTimeout'
       )
     end
   end
@@ -62,7 +62,7 @@ describe Sftp::Client do
       allow(sftp_session).to receive(:download).and_raise(Net::SFTP::Exception)
       expect { client.download(file) }.to raise_error(
         Sftp::Client::Error,
-        'Could not download file from sftp server: Net::SFTP::Exception'
+        'Could not download file from SFTP server: Net::SFTP::Exception'
       )
     end
   end
@@ -86,7 +86,7 @@ describe Sftp::Client do
       allow(sftp_session).to receive(:remove).and_raise(Net::SFTP::Exception)
       expect { client.delete(file) }.to raise_error(
         Sftp::Client::Error,
-        'Could not delete file on sftp server: Net::SFTP::Exception'
+        'Could not delete file on SFTP server: Net::SFTP::Exception'
       )
     end
   end
@@ -99,7 +99,7 @@ describe Sftp::Client do
     it 'raises an error when it fails to connect to sftp server' do
       allow(Net::SFTP).to receive(:start).and_raise(Net::SSH::Exception)
       expect { client.sftp }.to raise_error(Sftp::Client::Error,
-                                            'Could not connect to sftp server: Net::SSH::Exception')
+                                            'Could not connect to SFTP server: Net::SSH::Exception')
     end
   end
 end

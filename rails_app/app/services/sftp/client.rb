@@ -14,7 +14,7 @@ module Sftp
     def initialize
       @sftp = Net::SFTP.start(sftp_host, sftp_username, password: sftp_password)
     rescue RuntimeError => e
-      raise Error, "Could not connect to sftp server: #{e.message}"
+      raise Error, "Could not connect to SFTP server: #{e.message}"
     end
 
     # list files on sftp server that match pattern, returning Sftp::File objects
@@ -26,7 +26,7 @@ module Sftp
         Sftp::File.new(entry.name) if entry.name.match?(matching)
       end
     rescue RuntimeError => e
-      raise Error, "Could not list files on the sftp server: #{e.message}"
+      raise Error, "Could not list files on the SFTP server: #{e.message}"
     end
 
     # download single file from sftp server
@@ -41,7 +41,7 @@ module Sftp
 
         download.wait
       rescue RuntimeError => e
-        raise Error, "Could not download file from sftp server: #{e.message}"
+        raise Error, "Could not download file from SFTP server: #{e.message}"
       end
     end
 
@@ -50,7 +50,7 @@ module Sftp
     def delete(file)
       sftp.remove(file.remote_path).wait
     rescue RuntimeError => e
-      raise Error, "Could not delete file on sftp server: #{e.message}"
+      raise Error, "Could not delete file on SFTP server: #{e.message}"
     end
 
     private
