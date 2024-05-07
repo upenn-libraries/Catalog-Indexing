@@ -1,9 +1,9 @@
 # Internal Services
 solr:
   collection_name_prefix: 'catalog-test-'
-  url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
-  user: <%= DockerSecrets.lookup(:solr_username, 'admin') %>
-  password: <%= DockerSecrets.lookup(:solr_password, 'Bitnami') %>
+  replicas: <%= ENV.fetch('SOLR_COLLECTION_REPLICAS', 1) %>
+  shards: <%= ENV.fetch('SOLR_COLLECTION_SHARDS', 1) %>
+  configset: <%= ENV['SOLR_TEST_CONFIGNAME'] %>
 
 # Settings
 indexing:

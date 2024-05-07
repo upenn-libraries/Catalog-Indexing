@@ -56,7 +56,8 @@ class SolrTools
     # @raise [SolrTools::CommandError]
     # @return [Faraday::Response]
     def create_collection(collection_name)
-      # TODO: validate SOLR_INSTANCES => replicas * nodes
+      raise CommandError, 'Insufficient configuration to create a collection' unless collections_settings_present?
+
       response = connection.get('/solr/admin/collections',
                                 action: 'CREATE', name: collection_name,
                                 numShards: Settings.solr.shards, replicationFactor: Settings.solr.replicas,
@@ -105,6 +106,11 @@ class SolrTools
         end
       end
       tmp
+    end
+
+    # @return [Boolean]
+    def collections_settings_present?
+      Settings.solr.shards.present? && Settings.solr.replicas.present && Settings.solr.configset.present?
     end
   end
 end
