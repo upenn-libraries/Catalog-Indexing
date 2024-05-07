@@ -30,6 +30,9 @@ services:
       REDIS_URL: "redis://redis:{{ redis.port }}/0"
       SOLR_INSTANCES: "{{ solr_instances }}"
       SOLR_URL: "{{ catalog_indexing_solr_url }}"
+      SOLR_COLLECTION_SHARDS: "{{ solr_collection_shards }}"
+      SOLR_COLLECTION_REPLICAS: "{{ solr_collection_replicas }}"
+      SOLR_CONFIGSET_NAME: "{{ solr_configsets[0].name }}"
     healthcheck:
       test:
         [

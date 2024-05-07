@@ -1,9 +1,35 @@
-#
 # Settings/Configuration shared among all environments.
-#
-# This configuration can be overridden in environment specific files.
-#
+
+# Internal Services
+solr:
+  user: <%= DockerSecrets.lookup(:solr_username) %>
+  password: <%= DockerSecrets.lookup(:solr_password) %>
+  url: <%= ENV['SOLR_URL'] %>
+  instances: <%= ENV['SOLR_INSTANCES'] %>
+  configset: <%= ENV['SOLR_CONFIGSET_NAME'] %>
+  collection_name_prefix: 'catalog-prod-'
+  shards: <%= ENV['SOLR_COLLECTION_SHARDS'] %>
+  replicas: <%= ENV['SOLR_COLLECTION_REPLICAS'] %>
+
+redis:
+  url: <%= ENV['REDIS_URL'] %>
+  username: <%= ENV['REDIS_SIDEKIQ_USER'] %>
+  password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
 
 # External Services
+alma:
+  api_key: <%= DockerSecrets.lookup(:alma_api_key) %>
+  publishing_job:
+    name: 'Publishing Platform Job All Titles - Alma ReLoad - Full FTP'
+
+sftp:
+  host: <%= ENV.fetch('SFTP_HOST', 'move.library.upenn.edu') %>
+  root: <%= ENV.fetch('SFTP_ROOT', '/almareload') %>
+  username: <%= DockerSecrets.lookup(:sftp_username) %>
+  password: <%= DockerSecrets.lookup(:sftp_password) %>
+
+slack:
+  api_key: '12345'
+
 honeybadger:
   api_key: '12345'
