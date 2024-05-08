@@ -1,19 +1,23 @@
-<% @config_items.each do |config_item| %>
-  <div class="card mb-4">
-    <div class="card-body">
-      <h5 class="card-title"><%= config_item.name.titleize %></h5>
-      <h6 class="card-subtitle mb-2"><%= t(config_item.name, scope: :config_item) %></h6>
-      <%= case config_item.config_type
-          when ConfigItem::BOOLEAN_TYPE
-            boolean_form config_item: config_item
-          when ConfigItem::ARRAY_TYPE
-            select_form config_item: config_item, selected: config_item.value, multiple: true
-          when ConfigItem::STRING_TYPE
-            select_form config_item: config_item, multiple: false
-          else
-            raise ArgumentError, "Unsupported ConfigItem type #{type}"
-          end
-      %>
+<% if @config_items.any? %>
+  <% @config_items.each do |config_item| %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title"><%= config_item.name.titleize %></h5>
+        <h6 class="card-subtitle mb-2"><%= t(config_item.name, scope: :config_item) %></h6>
+        <%= case config_item.config_type
+            when ConfigItem::BOOLEAN_TYPE
+              boolean_form config_item: config_item
+            when ConfigItem::ARRAY_TYPE
+              select_form config_item: config_item, selected: config_item.value, multiple: true
+            when ConfigItem::STRING_TYPE
+              select_form config_item: config_item, multiple: false
+            else
+              raise ArgumentError, "Unsupported ConfigItem type #{type}"
+            end
+        %>
+      </div>
     </div>
-  </div>
+  <% end %>
+<% else %>
+  No configuration items have been established!
 <% end %>
