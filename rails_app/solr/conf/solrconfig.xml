@@ -180,6 +180,17 @@
         genre_search^1000
       </str>
 
+      <str name="isxn_qf">
+        isxn_search^2500
+        isbn_ss^1000
+        issn_ss^1000
+      </str>
+      <str name="isxn_pf">
+        isxn_search^2500
+        isbn_ss^1000
+        issn_ss^1000
+      </str>
+
       <str name="facet">true</str>
       <str name="facet.mincount">1</str>
       <str name="facet.limit">10</str>
