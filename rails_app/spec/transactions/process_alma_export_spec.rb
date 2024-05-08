@@ -108,19 +108,19 @@ describe ProcessAlmaExport do
     let(:files) do
       [
         '.', '..', # returned by dir.entries command, ignore
-        'prefix_2023010100_123456789_new_1.xml.tar.gz',
-        'prefix_2023010100_123456789_new_23.xml.tar.gz',
-        'prefix_2023010100_123456789_new_900.xml.tar.gz',
-        'prefix_2023010100_123456789_new_1.zip', # wrong extension
-        'prefix_2023010100_555555555_new_1.xml.tar.gz' # wrong job id
+        'prefix_123456789_2023010100_new_1.tar.gz',
+        'prefix_123456789_2023010100_new_23.tar.gz',
+        'prefix_123456789_2023010100_new_900.tar.gz',
+        'prefix_123456789_2023010100_new_1.zip', # wrong extension
+        'prefix_555555555_2023010100_new_1.xml.tar.gz' # wrong job id
       ]
     end
 
     it 'can be used to select only the desired files' do
       regex = transaction.files_matching_regex('123456789')
-      expect(files.grep(regex)).to eq %w[prefix_2023010100_123456789_new_1.xml.tar.gz
-                                         prefix_2023010100_123456789_new_23.xml.tar.gz
-                                         prefix_2023010100_123456789_new_900.xml.tar.gz]
+      expect(files.grep(regex)).to eq %w[prefix_123456789_2023010100_new_1.tar.gz
+                                         prefix_123456789_2023010100_new_23.tar.gz
+                                         prefix_123456789_2023010100_new_900.tar.gz]
     end
 
     it 'returns no files if a blank parameter is provided' do
