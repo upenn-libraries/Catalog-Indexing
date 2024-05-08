@@ -115,11 +115,13 @@ class ProcessAlmaExport
     handle_failure(alma_export, message)
   end
 
-  # Return a regex suitable for matching only the output files of the specified FULL PUBLISH job
+  # Return a regex suitable for matching only the output files of the specified PUBLISH job
+  # See Alma Publishing profile for filename schema:
+  # Currently: AllTitles_Find_{JOB_ID}_{TIMESTAMP}_nnn.tar.gz
   # @param [String] alma_job_identifier
   # @return [Regexp]
   def files_matching_regex(alma_job_identifier)
-    /_#{alma_job_identifier}_new_\d+.xml.tar.gz/
+    /_#{alma_job_identifier}_.*_new_\d+.tar.gz/
   end
 
   private
