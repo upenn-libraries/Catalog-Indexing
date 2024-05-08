@@ -91,7 +91,7 @@ RSpec.describe 'Webhook Indexing requests' do
     end
 
     context 'with JOB actions' do
-      let(:headers) { { 'X-Exl-Signature': 'ZqzKTZyxR0jdRGyLVtyJc4+npLM0L40qGQYRPITmgc4=' } }
+      let(:headers) { { 'X-Exl-Signature': 'QhwSbxLgOFFbbKlGT+v2okksabFaNQNTBZxXLOI4Jvs=' } }
 
       it 'handles validated job completed events if process_job_webhooks is true' do
         allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
