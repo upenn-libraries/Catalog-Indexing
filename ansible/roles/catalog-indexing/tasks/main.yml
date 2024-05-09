@@ -118,6 +118,7 @@
     SFTP_PASSWORD: "{{ 'catalog_indexing_sftp_password_v' ~ catalog_indexing_versioned_secrets.sftp_password.version }}"
     SFTP_USERNAME: "{{ 'catalog_indexing_sftp_username_v' ~ catalog_indexing_versioned_secrets.sftp_username.version }}"
     SLACK_WEBHOOK_URL: "{{ 'catalog_indexing_slack_webhook_url_v' ~ catalog_indexing_versioned_secrets.slack_webhook_url.version }}"
+    SOLR_ADMIN_URL: "{{ catalog_indexing_solr_admin_url }}"
     SOLR_INSTANCES: "{{ solr_instances }}"
     SOLR_COLLECTION_SHARDS: "{{ solr_collection_shards }}"
     SOLR_COLLECTION_REPLICAS: "{{ solr_collection_replicas }}"
