@@ -2,30 +2,21 @@
 
 describe ProcessAlmaExport do
   include FixtureHelpers
+  include SolrHelpers
 
   let(:transaction) { described_class.new }
 
+  before { remove_collections(SolrTools.new_collection_name) }
+  after { remove_collections(SolrTools.new_collection_name) }
+
   describe '#call' do
     let(:alma_export) { create(:alma_export, webhook_body: JSON.parse(json_fixture('job_end_success', :webhooks))) }
-    let(:sftp_client) { instance_double Sftp::Client }
-    let(:sftp_files) { [] }
     let(:outcome) { transaction.call(alma_export_id: alma_export.id) }
 
-    before do
-      allow(sftp_client).to receive(:files).and_return(sftp_files)
-      allow(Sftp::Client).to receive(:new).and_return(sftp_client)
-    end
+    include_context 'with sftp files available'
 
     context 'with valid webhook response body' do
-      let(:sftp_files) do
-        [Sftp::File.new('all_ub_ah_b_2023090100_12345678900000_new_001.xml.tar.gz')]
-      end
-
-      before do
-        downloader = instance_double(Net::SFTP::Operations::Download)
-        allow(sftp_client).to receive(:download).and_return(downloader)
-        allow(downloader).to receive(:wait).and_return(downloader)
-      end
+      after { SolrTools.delete_collection(SolrTools.new_collection_name) }
 
       it 'is successful' do
         expect(outcome).to be_success
@@ -45,6 +36,26 @@ describe ProcessAlmaExport do
         expect(alma_export.status).to eq Statuses::IN_PROGRESS
         expect(alma_export.started_at).to be_present
       end
+
+      it 'creates a new collection in Solr and saves it on the AlmaExport' do
+        alma_export = outcome.success[:alma_export]
+        expect(alma_export.target_collections).to eq [SolrTools.new_collection_name]
+        expect(SolrTools.collection_exists?(alma_export.target_collections.first)).to be true
+      end
+    end
+
+    context 'with an existing collection matching the new collection name' do
+      before do
+        allow(SolrTools).to receive(:collection_exists?).with(SolrTools.new_collection_name).and_return true
+      end
+
+      # Unstub above - this allows the spec-wide after hook to run without exception
+      after { RSpec::Mocks.space.proxy_for(SolrTools).reset }
+
+      it 'returns appropriate failure and saves the error message' do
+        expect(outcome.failure).to include 'already exists'
+        expect(alma_export.reload.error_messages).to include outcome.failure
+      end
     end
 
     context 'with a bad AlmaExport identifier' do
@@ -58,25 +69,6 @@ describe ProcessAlmaExport do
       end
     end
 
-    context 'with an AlmaExport using bad target_collection values' do
-      let(:alma_export) do
-        create(:alma_export, target_collections: %w[exists does-not-exist],
-                             webhook_body: JSON.parse(json_fixture('job_end_success', :webhooks)))
-      end
-
-      before do
-        mock_admin = instance_double Solr::Admin
-        allow(mock_admin).to receive(:collection_exists?).with(name: 'exists').and_return true
-        allow(mock_admin).to receive(:collection_exists?).with(name: 'does-not-exist').and_return false
-        allow(Solr::Admin).to receive(:new).and_return mock_admin
-      end
-
-      it 'returns a failure monad with appropriate message' do
-        expect(outcome).to be_failure
-        expect(outcome.failure).to include "non-existent target collection of 'does-not-exist'"
-      end
-    end
-
     context 'with an AlmaExport not in PENDING status' do
       let(:alma_export) do
         create(:alma_export, status: Statuses::IN_PROGRESS,
@@ -84,15 +76,17 @@ describe ProcessAlmaExport do
       end
 
       it 'returns a failure monad with appropriate message' do
-        expect(outcome).to be_failure
-        expect(outcome.failure).to include("must be in 'pending' state")
+        expect(outcome.failure).to include 'must be in \'pending\' state'
+        expect(alma_export.reload.error_messages).to include outcome.failure
       end
     end
 
     context 'with no files matching on SFTP server' do
+      let(:sftp_files) { [] }
+
       it 'returns a failure monad with appropriate message' do
-        expect(outcome).to be_failure
         expect(outcome.failure).to include('No files downloaded')
+        expect(alma_export.reload.error_messages).to include outcome.failure
       end
     end
 
@@ -104,8 +98,8 @@ describe ProcessAlmaExport do
       end
 
       it 'returns a failure monad with appropriate message' do
-        expect(outcome).to be_failure
-        expect(outcome.failure).to include('Problem processing SFTP file')
+        expect(outcome.failure).to include('processing SFTP file')
+        expect(alma_export.reload.error_messages).to include outcome.failure
       end
     end
   end
@@ -114,19 +108,19 @@ describe ProcessAlmaExport do
     let(:files) do
       [
         '.', '..', # returned by dir.entries command, ignore
-        'prefix_2023010100_123456789_new_1.xml.tar.gz',
-        'prefix_2023010100_123456789_new_23.xml.tar.gz',
-        'prefix_2023010100_123456789_new_900.xml.tar.gz',
-        'prefix_2023010100_123456789_new_1.zip', # wrong extension
-        'prefix_2023010100_555555555_new_1.xml.tar.gz' # wrong job id
+        'prefix_123456789_2023010100_new_1.tar.gz',
+        'prefix_123456789_2023010100_new_23.tar.gz',
+        'prefix_123456789_2023010100_new_900.tar.gz',
+        'prefix_123456789_2023010100_new_1.zip', # wrong extension
+        'prefix_555555555_2023010100_new_1.xml.tar.gz' # wrong job id
       ]
     end
 
     it 'can be used to select only the desired files' do
       regex = transaction.files_matching_regex('123456789')
-      expect(files.grep(regex)).to eq %w[prefix_2023010100_123456789_new_1.xml.tar.gz
-                                         prefix_2023010100_123456789_new_23.xml.tar.gz
-                                         prefix_2023010100_123456789_new_900.xml.tar.gz]
+      expect(files.grep(regex)).to eq %w[prefix_123456789_2023010100_new_1.tar.gz
+                                         prefix_123456789_2023010100_new_23.tar.gz
+                                         prefix_123456789_2023010100_new_900.tar.gz]
     end
 
     it 'returns no files if a blank parameter is provided' do

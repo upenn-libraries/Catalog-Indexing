@@ -1,25 +1,15 @@
 # Internal Services
 solr:
-  user: <%= DockerSecrets.lookup(:solr_username) %>
-  password: <%= DockerSecrets.lookup(:solr_password) %>
-  url: <%= ENV.fetch('SOLR_URL', 'http://solr:8983') %>
-redis:
-  url: <%= ENV.fetch('REDIS_URL', 'localhost:6379') %>
-  username: <%= ENV.fetch('REDIS_SIDEKIQ_USER', 'sidekiq') %>
-  password: <%= DockerSecrets.lookup(:redis_sidekiq_password) %>
+  collection_name_prefix: 'catalog-staging-'
 
 # External Services
-alma:
-  api_key: <%= DockerSecrets.lookup(:alma_api_key) %>
-
-sftp:
-  host: <%= ENV.fetch('SFTP_HOST', 'move.library.upenn.edu') %>
-  root: <%= ENV.fetch('SFTP_ROOT', '/recordstoalma/bibexport') %>
-  username: <%= DockerSecrets.lookup(:sftp_username) %>
-  password: <%= DockerSecrets.lookup(:sftp_password) %>
+honeybadger:
+  api_key: <%= DockerSecrets.lookup(:honeybadger_api_key) %>
 
 slack:
   webhook_url: <%= DockerSecrets.lookup(:slack_webhook_url) %>
 
-honeybadger:
-  api_key: <%= DockerSecrets.lookup(:honeybadger_api_key) %>
+# Settings
+indexing:
+  max_skipped_per_file: 0
+  max_errors_per_file: 10

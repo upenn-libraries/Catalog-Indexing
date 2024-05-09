@@ -52,7 +52,7 @@ describe ProcessBatchFile do
     end
 
     context 'with indexing performed' do
-      let(:collection) { Solr::Config.new.collection_name }
+      let(:collection) { SolrTools.new_collection_name }
       let(:batch_file) do
         create(:batch_file, :with_two_record_file,
                alma_export: create(:alma_export, target_collections: [collection]))
@@ -60,8 +60,7 @@ describe ProcessBatchFile do
       let(:solr_query_client) { Solr::QueryClient.new(collection: collection) }
 
       before do
-        solr_query_client.delete_all
-        solr_query_client.commit
+        SolrTools.create_collection(collection)
       end
 
       after do

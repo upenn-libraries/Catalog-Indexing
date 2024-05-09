@@ -13,10 +13,11 @@ class IndexByIdentifier
 
   # Prepare Traject indexer, with a setting to perform a commit upon closing the writer (job completion).
   # This will make any added records immediately searchable.
-  # @returns [Dry::Monads::Result]
+  # @return [Dry::Monads::Result]
   def prepare_writer(**args)
+    collections = ConfigItem.value_for :adhoc_target_collections
     settings = { 'solr_writer.commit_on_close' => true }
-    writer = MultiCollectionWriter.new(settings)
+    writer = MultiCollectionWriter.new(collections, settings)
     Success(writer: writer, **args)
   end
 end

@@ -12,7 +12,7 @@ class IndexByBibEvent
 
   def prepare_writer(io:, **args)
     target_collections = Array.wrap(ConfigItem.value_for(:webhook_target_collections))
-    writer = MultiCollectionWriter.new({ 'solr_writer.target_collections' => target_collections })
+    writer = MultiCollectionWriter.new(target_collections)
     Success(io: io, writer: writer, indexer: PennMarcIndexer.new, **args)
   rescue StandardError => e
     Failure("Problem preparing writer: #{e.message}")
