@@ -116,7 +116,7 @@ class ProcessBatchFile
     Rails.logger.info { message }
     Success(message)
   rescue StandardError => e
-    Rails.logger.error "Problem checking AlmaExport after BatchFile ##{batch_file.id} completion: #{e.message}"
+    handle_failure batch_file, "Problem checking AlmaExport after BatchFile ##{batch_file.id} completion: #{e.message}"
   end
 
   private
