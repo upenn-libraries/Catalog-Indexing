@@ -11,7 +11,7 @@ class SendSlackNotificationJob
     return if webhook_url.blank?
 
     slack = Faraday.new(webhook_url, headers: { 'Content-Type' => 'application/json' })
-
+    message = "#{Rails.env}: #{message}" # Prepend environment name
     response = slack.post('', "{text: '#{message}'}")
     response.body
   end

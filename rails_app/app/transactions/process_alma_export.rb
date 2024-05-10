@@ -87,7 +87,7 @@ class ProcessAlmaExport
     alma_export.status = Statuses::IN_PROGRESS
     alma_export.started_at = Time.zone.now
     alma_export.save!
-    SendSlackNotificationJob.perform_async("AlmaExport ##{alma_export.id} off and running!")
+    SendSlackNotificationJob.perform_async("AlmaExport ##{alma_export.id}: off and running!")
     Success(alma_export: alma_export, **args)
   rescue StandardError => e
     validation_messages = alma_export.errors&.full_messages&.to_sentence
@@ -109,6 +109,7 @@ class ProcessAlmaExport
       sftp_session.close_channel # close connection since we open a new once each iteration
       build_and_enqueue_batch_files(alma_export, slice)
     end
+    SendSlackNotificationJob.perform_async("AlmaExport ##{alma_export.id}: All #{sftp_files.count} files downloaded.")
     Success(alma_export: alma_export)
   rescue StandardError => e
     message = "Error #{e.class.name} processing SFTP file: #{e.message}."
@@ -142,6 +143,7 @@ class ProcessAlmaExport
   # @return [Dry::Monads::Failure]
   def handle_failure(alma_export, message)
     Rails.logger.error { "Alma export processing failed for ##{alma_export.id}: #{message}" }
+    SendSlackNotificationJob.perform_async("AlmaExport ##{alma_export.id}: Failed with message: #{message}")
     mark_as_failed(alma_export, message)
     Failure(message)
   end

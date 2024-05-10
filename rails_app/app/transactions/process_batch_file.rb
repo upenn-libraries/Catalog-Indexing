@@ -126,7 +126,7 @@ class ProcessBatchFile
     return unless batch_file.alma_export.all_batch_files_finished?
 
     batch_file.alma_export.set_completion_status!
-
+    SendSlackNotificationJob.perform_async("AlmaExport ##{batch_file.alma_export.id} file processing completed!")
     issue_solr_commits(alma_export: batch_file.alma_export)
     Rails.logger.info do
       "AlmaExport ##{batch_file.alma_export.id} marked complete after BatchFile ##{batch_file.id} processed."
@@ -157,8 +157,14 @@ class ProcessBatchFile
 
   # @param [AlmaExport] alma_export
   def issue_solr_commits(alma_export:)
-    alma_export.target_collections.each do |collection|
-      Solr::QueryClient.new(collection: collection).commit
+    benchmark = Benchmark.measure do
+      alma_export.target_collections.each do |collection|
+        Solr::QueryClient.new(collection: collection).commit
+      end
     end
+    SendSlackNotificationJob.perform_async(
+      "AlmaExport ##{alma_export.id}: Solr commits to #{alma_export.target_collections.to_sentence} completed " \
+        " in #{benchmark.total} seconds."
+    )
   end
 end
