@@ -6,8 +6,8 @@ sidekiq:
         - high
         - medium
         - low
-      concurrency: 5
-      replicas: 3
+      concurrency: 4
+      replicas: 5
     - name: priority
       queues:
         - high
