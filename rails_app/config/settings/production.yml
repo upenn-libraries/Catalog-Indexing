@@ -1,6 +1,8 @@
 # Internal Services
 solr:
   collection_name_prefix: 'catalog-prod-'
+  shards: 6
+  replicas: 1
 
 # External Services
 honeybadger:

@@ -1,5 +1,5 @@
 ---
-solr_collection_replicas: 9
+solr_collection_replicas: 1
 
 solr_configsets:
   - name: "catalog-indexing"
