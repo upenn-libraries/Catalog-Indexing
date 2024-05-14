@@ -43,7 +43,7 @@ When [developing with find](https://gitlab.library.upenn.edu/dld/catalog/find#lo
 ### Packaging the Solr configset
 
 ```bash
-rake tools:package configset
+rake tools:package_configset
 ```
 
 ### Generating SolrJSON of the Alma sample set
