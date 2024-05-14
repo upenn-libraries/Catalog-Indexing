@@ -67,7 +67,9 @@ namespace :tools do
   desc 'Package Solr config set for sharing'
   task package_configset: :environment do
     datestamp = DateTime.current.strftime('%Y%m%d')
+    filename = "storage/configset_#{datestamp}.zip"
     File.write("storage/configset_#{datestamp}.zip", File.read(SolrTools.configset_zipfile))
+    puts "Configset package saved to #{filename}"
   end
 
   desc 'Add Configuration Items to the database with default values'
