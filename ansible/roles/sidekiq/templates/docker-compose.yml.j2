@@ -25,6 +25,7 @@ services:
       DB_POOL: "{{ item.concurrency }}"
       APP_URL: "{{ catalog_indexing_url }}"
       APP_IMAGE_TAG: ${APP_IMAGE_TAG}
+      BUNDLE_GEMS__CONTRIBSYS__COM: "{{ 'catalog_indexing_sidekiq_pro_credentials_v' ~ catalog_indexing_versioned_secrets.sidekiq_pro_credentials.version }}"
       RAILS_ENV: "{{ catalog_indexing_rails_env }}"
       REDIS_SIDEKIQ_USER: "sidekiq"
       REDIS_URL: "redis://redis:{{ redis.port }}/0"
