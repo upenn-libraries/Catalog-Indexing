@@ -24,9 +24,6 @@ ENV PROJECT_ROOT=${PROJECT_ROOT}
 ARG RAILS_ENV=development
 ENV RAILS_ENV=${RAILS_ENV}
 
-ARG BUNDLE_GEMS__CONTRIBSYS__COM
-ENV BUNDLE_GEMS__CONTRIBSYS__COM=${BUNDLE_GEMS__CONTRIBSYS__COM}
-
 ENV BUNDLE_APP_CONFIG="${PROJECT_ROOT}/.bundle"
 
 WORKDIR ${PROJECT_ROOT}
@@ -48,8 +45,12 @@ RUN bundle config path ${PROJECT_ROOT}/${BUNDLE_HOME} && \
     bundle config set with "development:test:assets"; \
     else \
     bundle config set without "development:test:assets"; \
-    fi && \
-    MAKE="make -j $(nproc)" bundle install && \
+    fi
+
+RUN --mount=type=secret,id=sidekiq_pro_credentials \
+    bundle config set --local gems.contribsys.com $(cat /run/secrets/sidekiq_pro_credentials)
+
+RUN MAKE="make -j $(nproc)" bundle install && \
     rm -rf ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/cache/*.gem && \
     find ${PROJECT_ROOT}/${BUNDLE_HOME}/ruby/${RUBY_MAJOR}.0/gems/ \( -name "*.c" -o -name "*.o" \) -delete
 

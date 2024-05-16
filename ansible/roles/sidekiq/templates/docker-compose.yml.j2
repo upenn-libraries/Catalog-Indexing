@@ -25,7 +25,6 @@ services:
       DB_POOL: "{{ item.concurrency }}"
       APP_URL: "{{ catalog_indexing_url }}"
       APP_IMAGE_TAG: ${APP_IMAGE_TAG}
-      BUNDLE_GEMS__CONTRIBSYS__COM: "{{ 'catalog_indexing_sidekiq_pro_credentials_v' ~ catalog_indexing_versioned_secrets.sidekiq_pro_credentials.version }}"
       RAILS_ENV: "{{ catalog_indexing_rails_env }}"
       REDIS_SIDEKIQ_USER: "sidekiq"
       REDIS_URL: "redis://redis:{{ redis.port }}/0"
@@ -69,7 +68,10 @@ services:
       - solr_password
 {% if is_development == false %}
       - honeybadger_api_key
+{% elif is_development == true %}
+      - sidekiq_pro_credentials
 {% endif %}
+
     volumes:
 {% if is_development == true %}
       - /catalog-indexing/ansible/roles/catalog-indexing/files/src/:/home/app
@@ -117,6 +119,10 @@ secrets:
   honeybadger_api_key:
     external: true
     name: "{{ 'catalog_indexing_honeybadger_api_key_v' ~ catalog_indexing_versioned_secrets.honeybadger_api_key.version }}"
+{% elif is_development == true %}
+  sidekiq_pro_credentials:
+    external: true
+    name: "{{ 'catalog_indexing_sidekiq_pro_credentials_v' ~ catalog_indexing_versioned_secrets.sidekiq_pro_credentials.version }}"
 {% endif %}
 
 {% if is_development == false %}
