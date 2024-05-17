@@ -44,11 +44,10 @@ build_and_push_base_app_image:
     matrix:
       - RUNNER: build-arm
         DOCKER_BUILD_PLATFORM: "linux/arm64"
-        JWT_ROLE: "sidekiq_pro_ro"
       - RUNNER: build
         DOCKER_BUILD_PLATFORM: "linux/amd64"
-        JWT_ROLE: "sidekiq_pro_ro"
   before_script:
+    - apk add --no-cache bash
     - !reference [.install_hashicorp_vault, before_script]
     - !reference [.vault_jwt_auth, before_script]
     - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials ${VAULT_SIDEKIQ_ENDPOINT})"
@@ -57,6 +56,7 @@ build_and_push_base_app_image:
     DOCKER_BUILD_CONTEXT: "rails_app/"
     DOCKER_TARGET: "base"
     DOCKERFILE_PATH: "rails_app/"
+    JWT_ROLE: "sidekiq_pro_ro"
     REGISTRY_REPOSITORY: "${CI_PIPELINE_ID}"
   tags:
     - ${RUNNER}
