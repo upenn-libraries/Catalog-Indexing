@@ -26,8 +26,8 @@ catalog_indexing_versioned_secrets:
     value: "{{ catalog_indexing_vault_values.secret.sftp_password }}"
     version: "{{ catalog_indexing_vault_values.metadata.version }}"
   sidekiq_pro_credentials:
-    value: "{{ catalog_indexing_vault_values.secret.sidekiq_pro_credentials }}"
-    version: "{{ catalog_indexing_vault_values.metadata.version }}"
+    value: "{{ dld_sidekiq_pro_vault_values.secret.credentials }}"
+    version: "{{ dld_sidekiq_pro_vault_values.metadata.version }}"
   slack_webhook_url:
     value: "{{ catalog_indexing_vault_values.secret.slack_webhook_url }}"
     version: "{{ catalog_indexing_vault_values.metadata.version }}"

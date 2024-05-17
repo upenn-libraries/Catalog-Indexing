@@ -8,7 +8,6 @@
     secrets:
       - id: sidekiq_pro_credentials
         type: value
-        value: "{{ catalog_indexing_vault_values.secret.sidekiq_pro_credentials }}"
+        value: "{{ dld_sidekiq_pro_vault_values.secret.credentials }}"
     args:
         RAILS_ENV: "{{ catalog_indexing_rails_env }}"
-        BUNDLE_GEMS__CONTRIBSYS__COM: "{{ 'catalog_indexing_sidekiq_pro_credentials_v' ~ catalog_indexing_versioned_secrets.sidekiq_pro_credentials.version }}"
