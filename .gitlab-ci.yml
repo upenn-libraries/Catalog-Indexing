@@ -51,11 +51,16 @@ build_and_push_base_app_image:
     - !reference [.vault_jwt_auth, before_script]
     - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=sidekiq_pro_credentials ${VAULT_KV_ENDPOINT}indexing/${DEPLOY_ENVIRONMENT})"
   variables:
+    DEPLOY_ENVIRONMENT: "staging"
     DOCKER_BUILD_SECRETS: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
     DOCKER_BUILD_CONTEXT: "rails_app/"
     DOCKER_TARGET: "base"
     DOCKERFILE_PATH: "rails_app/"
     REGISTRY_REPOSITORY: "${CI_PIPELINE_ID}"
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+(\.[a-zA-Z0-9]+)?$/
+      variables:
+        DEPLOY_ENVIRONMENT: "production"
   tags:
     - ${RUNNER}
 # -- End - build and push base image
