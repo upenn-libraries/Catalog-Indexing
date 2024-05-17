@@ -55,6 +55,7 @@ build_and_push_base_app_image:
     DOCKER_BUILD_CONTEXT: "rails_app/"
     DOCKER_TARGET: "base"
     DOCKERFILE_PATH: "rails_app/"
+    JWT_ROLE: "sidekiq_pro_ro"
     REGISTRY_REPOSITORY: "${CI_PIPELINE_ID}"
   tags:
     - ${RUNNER}
