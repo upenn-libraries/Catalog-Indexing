@@ -50,7 +50,6 @@ build_and_push_base_app_image:
     - !reference [.install_hashicorp_vault, before_script]
     - !reference [.vault_jwt_auth, before_script]
     - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials ${VAULT_SIDEKIQ_ENDPOINT})"
-    - sleep 3600
   variables:
     DOCKER_BUILD_SECRETS: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
     DOCKER_BUILD_CONTEXT: "rails_app/"
