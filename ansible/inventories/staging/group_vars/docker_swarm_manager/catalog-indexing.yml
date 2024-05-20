@@ -12,6 +12,9 @@ catalog_indexing_versioned_secrets:
   alma_api_key:
     value: "{{ catalog_indexing_vault_values.secret.alma_api_key }}"
     version: "{{ catalog_indexing_vault_values.metadata.version }}"
+  alma_webhook_secret:
+    value: "{{ catalog_indexing_vault_values.secret.alma_webhook_secret }}"
+    version: "{{ catalog_indexing_vault_values.metadata.version }}"
   honeybadger_api_key:
     value: "{{ catalog_indexing_vault_values.secret.honeybadger_api_key }}"
     version: "{{ catalog_indexing_vault_values.metadata.version }}"

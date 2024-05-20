@@ -19,6 +19,7 @@ redis:
 # External Services
 alma:
   api_key: <%= DockerSecrets.lookup(:alma_api_key) %>
+  webhook_secret: <%= DockerSecrets.lookup(:alma_webhook_secret) %>
   publishing_job:
     name: 'Publishing Platform Job All Titles - Find Catalog - Full FTP'
 
