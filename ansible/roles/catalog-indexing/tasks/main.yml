@@ -101,6 +101,7 @@
     state: present
   environment:
     ALMA_API_KEY: "{{ 'catalog_indexing_alma_api_key_v' ~ catalog_indexing_versioned_secrets.alma_api_key.version }}"
+    ALMA_WEBHOOK_SECRET: "{{ 'catalog_indexing_alma_webhook_secret_v' ~ catalog_indexing_versioned_secrets.alma_webhook_secret.version }}"
     APP_IMAGE_NAME: "{{ catalog_indexing_image_name }}"
     APP_IMAGE_TAG: "{{ catalog_indexing_image_tag }}"
     APP_PORT: "{{ catalog_indexing_port }}"

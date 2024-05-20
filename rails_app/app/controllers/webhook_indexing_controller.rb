@@ -86,7 +86,7 @@ class WebhookIndexingController < ApplicationController
   # Determines if the alma webhook signature header is valid to ensure request came from Alma
   # @return [Boolean]
   def valid_signature?
-    hmac = OpenSSL::HMAC.new ENV.fetch('ALMA_WEBHOOK'), OpenSSL::Digest.new('sha256')
+    hmac = OpenSSL::HMAC.new Settings.alma.webhook_secret, OpenSSL::Digest.new('sha256')
     hmac.update request.body.string
     signature = request.get_header('X-Exl-Signature') || request.get_header('HTTP_X_EXL_SIGNATURE')
     encoded_digest = Base64.strict_encode64(hmac.digest)

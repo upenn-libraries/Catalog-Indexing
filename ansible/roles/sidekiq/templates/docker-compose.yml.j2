@@ -67,6 +67,7 @@ services:
       - solr_username
       - solr_password
 {% if is_development == false %}
+      - alma_webhook_secret
       - honeybadger_api_key
 {% endif %}
     volumes:
@@ -113,6 +114,9 @@ secrets:
     external: true
     name: "{{ 'catalog_indexing_solr_password_v' ~ catalog_indexing_versioned_secrets.solr_password.version }}"
 {% if is_development == false %}
+  alma_webhook_secret:
+    external: true
+    name: "{{ 'catalog_indexing_alma_webhook_secret_v' ~ catalog_indexing_versioned_secrets.alma_webhook_secret.version }}"
   honeybadger_api_key:
     external: true
     name: "{{ 'catalog_indexing_honeybadger_api_key_v' ~ catalog_indexing_versioned_secrets.honeybadger_api_key.version }}"

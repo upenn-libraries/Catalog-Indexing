@@ -18,7 +18,7 @@ RSpec.describe 'Webhook Indexing requests' do
 
   context 'when receiving POST requests' do
     before do
-      allow(ENV).to receive(:fetch).with('ALMA_WEBHOOK').and_return('test')
+      allow(Settings.alma).to receive(:webhook_secret).and_return('test')
       allow(ENV).to receive(:fetch).with('SOLR_COLLECTION', 'catalog-indexing-test').and_return(nil)
     end
 
