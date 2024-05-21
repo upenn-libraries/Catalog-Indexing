@@ -2,6 +2,7 @@
 #Variables for Vault
 catalog_indexing_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'catalog/indexing/vagrant', engine_mount_point='kv-applications') }}"
 catalog_solr_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'catalog/solr/vagrant', engine_mount_point='kv-applications') }}"
+dld_sidekiq_pro_vault_values: "{{ lookup('community.hashi_vault.vault_kv2_get', 'sidekiq_pro', engine_mount_point='dld') }}"
 
 docker_swarm_addr: "{{ ansible_host }}"
 
