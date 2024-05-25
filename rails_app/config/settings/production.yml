@@ -2,7 +2,7 @@
 solr:
   collection_name_prefix: 'catalog-prod-'
   shards: 6
-  replicas: 1
+  replicas: 2
 
 # External Services
 honeybadger:
