@@ -90,6 +90,8 @@ class PennMarcIndexer < Traject::Indexer
   def sort_fields
     define_field :creator_sort
     define_field :title_sort
+    define_field :publication_date_sort, :date_publication
+    define_field :date_added_sort, :date_added
   end
 
   def date_fields
@@ -97,12 +99,11 @@ class PennMarcIndexer < Traject::Indexer
       pub_date = parser.public_send :date_publication, record
       acc << (pub_date&.strftime('%Y') || '') # e.g., 1999
     end
-    # TODO: this is emitting LOTS of "Error parsing date in date added subfield" messages to stdout - there may be a
-    #       bug in this PennMARC method
-    # to_field('date_added_s') do |record, acc|
-    #   date_added = parser.public_send :date_added, record
-    #   acc << (date_added&.strftime('%F') || '') # e.g., 1999-1-30
-    # end
+
+    to_field('date_added_s') do |record, acc|
+      date_added = parser.public_send :date_added, record
+      acc << (date_added&.strftime('%F') || '') # e.g., 1999-1-30
+    end
   end
 
   def stored_fields
