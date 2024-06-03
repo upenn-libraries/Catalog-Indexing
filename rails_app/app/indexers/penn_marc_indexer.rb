@@ -90,8 +90,16 @@ class PennMarcIndexer < Traject::Indexer
   def sort_fields
     define_field :creator_sort
     define_field :title_sort
-    define_field :publication_date_sort, :date_publication
-    define_field :date_added_sort, :date_added
+
+    to_field('publication_date_sort') do |record, acc|
+      pub_date = parser.public_send :date_publication, record
+      valid_date?(pub_date) ? acc << pub_date.strftime('%FT%H:%M:%SZ') : acc # e.g., 1999-01-01T00::00::00Z
+    end
+
+    to_field('added_date_sort') do |record, acc|
+      date = parser.public_send :date_added, record
+      valid_date?(date) ? acc << date.strftime('%FT%H:%M:%SZ') : acc # e.g., 1999-01-01T00::00::00Z
+    end
   end
 
   def date_fields
@@ -100,7 +108,7 @@ class PennMarcIndexer < Traject::Indexer
       acc << (pub_date&.strftime('%Y') || '') # e.g., 1999
     end
 
-    to_field('date_added_s') do |record, acc|
+    to_field('added_date_s') do |record, acc|
       date_added = parser.public_send :date_added, record
       acc << (date_added&.strftime('%F') || '') # e.g., 1999-1-30
     end
@@ -160,5 +168,12 @@ class PennMarcIndexer < Traject::Indexer
   # @return [String]
   def json_encode(value)
     JSON.generate value
+  end
+
+  # Determine if parsed date values are valid
+  # @param [Time, nil] date
+  # @return [TrueClass, FalseClass]
+  def valid_date?(date)
+    date.is_a?(Time) && date&.year&.positive?
   end
 end
