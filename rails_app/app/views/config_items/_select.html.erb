@@ -1,5 +1,5 @@
 <% field_name = multiple ? "#{config_item.name}[]" : config_item.name %>
 <%= bootstrap_form_for config_item do |f| %>
-  <%= f.select :value, options, { multiple: multiple, label: config_item.name.titleize }, { name: field_name } %>
+  <%= f.select :value, options, { multiple: multiple, label: config_item.name.titleize, include_hidden: false }, { name: field_name } %>
   <%= f.submit 'Save' %>
 <% end %>
