@@ -313,6 +313,7 @@
   <dynamicField name="*_search" type="text" indexed="true" stored="false" multiValued="true" />
   <dynamicField name="*_anchored_search" type="text_anchored" indexed="true" stored="false" multiValued="true" />
   <dynamicField name="*_unstem_search" type="text_unstem" indexed="true" stored="false" multiValued="true" />
+  <dynamicField name="*_date_sort" type="pdate" indexed="true" stored="false" multiValued="false" />
   <dynamicField name="*_sort" type="text_gen_sort" indexed="true" stored="false" multiValued="false" />
 
   <!-- TODO: XML type - CJK handling appears here... -->
