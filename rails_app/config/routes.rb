@@ -29,7 +29,7 @@ Rails.application.routes.draw do
     post 'process', to: 'alma_indexing#process_ids', as: 'process_ids'
 
     scope :webhook do
-      get 'challenge', to: 'webhook_indexing#challenge', as: 'webhook_challenge'
+      get 'listen', to: 'webhook_indexing#challenge', as: 'webhook_challenge'
       post 'listen', to: 'webhook_indexing#listen', as: 'webhook_listen'
     end
   end
