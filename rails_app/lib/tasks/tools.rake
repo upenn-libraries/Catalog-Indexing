@@ -46,10 +46,6 @@ namespace :tools do
   # JOB_ID=55827228880003681 bundle exec rake tools:process_full_index
   desc 'Test full export processing'
   task process_full_index: :environment do
-    collection = SolrTools.new_collection_name
-    SolrTools.delete_collection(collection) if SolrTools.collection_exists?(collection)
-    Sidekiq.redis(&:flushdb)
-    AlmaExport.destroy_all
     job_id = ENV.fetch('JOB_ID', nil)
     webhook_response_fixture = Rails.root.join('spec/fixtures/json/webhooks/job_end_success.json').read
     webhook_response_fixture.gsub!('50746714710003681', job_id) if job_id
