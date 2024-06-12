@@ -2,7 +2,7 @@
 
 # Listens for and handles Alma Webhooks
 class WebhookIndexingController < ApplicationController
-  skip_before_action :authenticate_user!
+  skip_before_action :authenticate_user!, :verify_authenticity_token
   before_action :validate, only: [:listen]
 
   # echo challenge phrase back to Alma
