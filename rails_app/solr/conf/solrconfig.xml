@@ -62,9 +62,8 @@
       <str name="q.alt">*:*</str>
 
       <!-- see solr docs for more on the mm param: https://solr.apache.org/guide/solr/latest/query-guide/dismax-query-parser.html#mm-minimum-should-match-parameter
-           in short, it helps determine how many "optional" parts of the query must match for a result to be considered
-           a match and returned as a result. this has some encoding... 2<-1 5<-2 6<90% is how Solr sees it. -->
-      <str name="mm">2&lt;-1 5&lt;-2 6&lt;90%</str>
+           using the default value of 0% in order to allow boolean searching to work as expected -->
+      <!-- <str name="mm">0%</str>-->
 
       <!-- "query slop" see guide for how slop functions https://solr.apache.org/guide/solr/latest/query-guide/edismax-query-parser.html#using-slop -->
       <int name="qs">1</int>
