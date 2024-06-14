@@ -56,7 +56,7 @@ class WebhookIndexingController < ApplicationController
       head :accepted
     when 'BIB_DELETED'
       # TODO: write and run bib deleted job, return :accepted
-      head :not_implemented
+      head :ok
     when 'BIB_CREATED'
       IndexByBibEventJob.perform_async(marc_xml)
       head :accepted
