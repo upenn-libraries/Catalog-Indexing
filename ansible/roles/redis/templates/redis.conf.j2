@@ -1,3 +1,11 @@
+# Using an external ACL file
 aclfile /usr/local/etc/redis/users.acl
+
+# Persist data
 appendonly yes
+
+# Accept connections on the specified port
 port {{ redis.port }}
+
+# Close the connection after a client is idle for N seconds
+timeout 300
