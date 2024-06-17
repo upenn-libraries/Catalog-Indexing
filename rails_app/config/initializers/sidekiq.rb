@@ -12,8 +12,7 @@ Rails.application.config.to_prepare do
 
     Sidekiq.configure_server do |config|
       config.redis = redis_connection
-      # TODO: activate HB as error handler when HoneyBadger is installed and configured
-      # config.error_handlers << proc { |e, context| Honeybadger.notify(e, context: context) }
+      config.error_handlers << proc { |e, context| Honeybadger.notify(e, context: context) }
     end
 
     Sidekiq.configure_client do |config|
