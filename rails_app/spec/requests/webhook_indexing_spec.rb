@@ -68,7 +68,7 @@ RSpec.describe 'Webhook Indexing requests' do
       it 'handles validated bib deleted events' do
         headers = { 'X-Exl-Signature': 'NTUI5p0G96iiw8vzq+7jX0U+KbxzZcbbMTIDjcwsacM=' }
         post webhook_listen_path, params: json_fixture('bib_deleted', :webhooks), headers: headers
-        expect(response).to have_http_status :ok
+        expect(response).to have_http_status :accepted
       end
 
       it 'handles validated requests with unexpected action' do
