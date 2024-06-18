@@ -7,30 +7,28 @@ describe DeleteByIdentifier do
   let(:sample_mmsid) { '9979201969103681' }
   let(:solr) { Solr::QueryClient.new(collection: test_collection) }
   let(:transaction) { described_class.new }
-  let(:outcome) { transaction.call(id: sample_mmsid) }
+  let(:outcome) { transaction.call(id: sample_mmsid, commit_within: 1, collections: Array.wrap(solr.collection)) }
 
-  before do
-    allow(ConfigItem).to receive(:value_for).with(:webhook_target_collections)
-                                            .and_return(Array.wrap(solr.collection))
-    solr.delete_all
-  end
-
+  before { solr.delete_all }
   after { solr.delete_all }
 
   describe '#call' do
     context 'with a successful delete' do
       before do
-        # index a record
-        # commit
+        solr.add(docs: { id: sample_mmsid })
+        solr.commit
       end
 
-      xit 'removes the record from Solr'
+      it 'removes the record from Solr' do
+        expect(outcome).to be_success
+        expect(solr.get_by_id(sample_mmsid)['response']['numFound']).to eq 0
+      end
     end
 
     context 'with a failed delete' do
-      before do
-        # stub solr error/exception
-      end
+      # before do
+      #   # TODO: how to simulate an error?
+      # end
 
       xit 'returns the failure message in some informative way'
     end
