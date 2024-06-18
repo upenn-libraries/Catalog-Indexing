@@ -157,7 +157,7 @@
   <dynamicField name="*_fs"  type="pfloats"  indexed="true"  stored="true"/>
   <dynamicField name="*_d"   type="pdouble"  indexed="true"  stored="true"/>
   <dynamicField name="*_ds"  type="pdoubles" indexed="true"  stored="true"/>
-  <dynamicField name="*_dt"  type="pdate"    indexed="true"  stored="true" sortMissingLast="true"/>
+  <dynamicField name="*_dt"  type="pdate"    indexed="true"  stored="true"/>
   <dynamicField name="*_dts" type="pdates"   indexed="true"  stored="true"/>
   <dynamicField name="*_t"   type="text_general" indexed="true" stored="true" multiValued="false"/>
   <dynamicField name="*_txt" type="text_general" indexed="true" stored="true"/>
@@ -262,7 +262,7 @@
 
     -->
   <!-- KD-tree versions of date fields -->
-  <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
+  <fieldType name="pdate" class="solr.DatePointField" docValues="true" sortMissingLast="true"/>
   <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
 
   <!--Binary data type. The data should be sent/retrieved in as Base64 encoded Strings -->
