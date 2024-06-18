@@ -5,6 +5,20 @@ This environment manages the services surrounding the creation and maintenence o
 2. A Rails app for managing the building and maintenance of those indexes
 3. Sidekiq workers that manage the different indexing jobs enqueued by the Rails app
 
+## Managing Solr configuration in deployed environments
+
+### Configset changes
+
+Our GitLab deployment pipelines push changes to the configset included here to the SolrCloud via the Zookeeper CLI. In order for changes to take effect in any collections using the configset, a RELOAD must be issued. This can be most easily accomplished through the Solr admin UI ("Collections" -> your collection -> "Reload" button), but can also be done via [an API call](https://solr.apache.org/guide/solr/latest/deployment-guide/collection-management.html#reload).
+
+### Collection Alias changes
+
+Our full index processing creates a new Solr collection on each run. This allows the collections to be swapped in sync with front-end changes or as needs otherwise dictate.
+
+The `staging` Find environment uses the `catalog-staging` collection alias, and the `production` Find environment uses the `catalog-production` collection alias. To change the destination collection for these aliases, use the Solr admin UI ("Collections" -> "Create alias") and overwrite the existing alias with the new destination collection. The change will be immediate.
+
+When swapping alias destinations, don't forget that you may also want to make a corresponding change your Webhook and Ad Hoc indexing collection targets in the applications `Settings` UI.
+
 ## Development
 
 > Caveat: The vagrant development environment has only been tested in the local environments our developers currently have. This currently includes Linux, Intel-based Macs and M1 Macs.
