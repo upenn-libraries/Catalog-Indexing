@@ -15,7 +15,7 @@ class WebhookIndexingController < ApplicationController
     payload = JSON.parse(request.body.string)
     handle_action_type(payload)
   rescue JSON::ParserError => _e
-    head(:unprocessable_entity)
+    head(:bad_request)
   rescue ActiveRecord::RecordInvalid => _e
     # TODO: Notify of error
     head(:internal_server_error)
