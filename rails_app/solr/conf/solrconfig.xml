@@ -55,7 +55,7 @@
 
       <!-- determine which parameters to return with the responses. "explicit" means only return the parameters
            explicitly sent with the request, not any added by solr processing -->
-      <str name="echoParams">explicit</str>
+      <str name="echoParams">all</str>
 
       <!-- "alternate" query - or, default query if the query is blank. here, we configure a blank query to return all
            documents -->
