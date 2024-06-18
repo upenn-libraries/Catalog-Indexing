@@ -262,7 +262,7 @@
 
     -->
   <!-- KD-tree versions of date fields -->
-  <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
+  <fieldType name="pdate" class="solr.DatePointField" docValues="true" sortMissingLast="true"/>
   <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
 
   <!--Binary data type. The data should be sent/retrieved in as Base64 encoded Strings -->
@@ -587,7 +587,8 @@
   -->
   <dynamicField name="*_t_sort" type="text_gen_sort" indexed="true" stored="true" multiValued="false"/>
   <dynamicField name="*_txt_sort" type="text_gen_sort" indexed="true" stored="true"/>
-  <fieldType name="text_gen_sort" class="solr.SortableTextField" positionIncrementGap="100" multiValued="true">
+  <fieldType name="text_gen_sort" class="solr.SortableTextField" positionIncrementGap="100" multiValued="true"
+             sortMissingLast="true">
     <analyzer type="index">
       <tokenizer name="standard"/>
       <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt" />
