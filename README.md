@@ -15,7 +15,7 @@ Our GitLab deployment pipelines push changes to the configset included here to t
 
 Our full index processing creates a new Solr collection on each run. This allows the collections to be swapped in sync with front-end changes or as needs otherwise dictate.
 
-The `staging` Find environment uses the `catalog-staging` collection alias, and the `production` Find environment uses the `catalog-production` collection alias. To change the destination collection for these aliases, use the Solr admin UI ("Collections" -> "Create alias") and overwrite the existing alias with the new destination collection. The change will be immediate.
+The `staging` Find environment uses the `catalog-staging` collection alias, and the `production` Find environment uses the `catalog-production` collection alias. To change the destination collection for these aliases, use the Solr admin UI ("Collections" -> "Create alias") for the target environment and overwrite the existing alias with the new destination collection. The change will be immediate.
 
 When swapping alias destinations, don't forget that you may also want to make a corresponding change your Webhook and Ad Hoc indexing collection targets in the applications `Settings` UI.
 
