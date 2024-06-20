@@ -46,6 +46,7 @@ class WebhookIndexingController < ApplicationController
   # Handles alma webhook bib actions
   # @param [Hash] payload action-specific data received from alma webhook post request
   # @return [TrueClass]
+  # rubocop:disable Metrics/AbcSize
   def handle_bib_action(payload)
     head(:ok) if suppressed_from_discovery?(payload)
 
@@ -67,6 +68,7 @@ class WebhookIndexingController < ApplicationController
       head :no_content
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   # @param payload [Hash]
   # @return [TrueClass]

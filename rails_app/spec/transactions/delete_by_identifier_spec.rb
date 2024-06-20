@@ -26,11 +26,14 @@ describe DeleteByIdentifier do
     end
 
     context 'with a failed delete' do
-      # before do
-      #   # TODO: how to simulate an error?
-      # end
+      before do
+        allow(solr).to receive(:collection).and_return('bad-collection-name')
+      end
 
-      xit 'returns the failure message in some informative way'
+      it 'returns the failure message in some informative way' do
+        expect(outcome).to be_failure
+        expect(outcome.failure).to include 'bad-collection-name'
+      end
     end
   end
 end
