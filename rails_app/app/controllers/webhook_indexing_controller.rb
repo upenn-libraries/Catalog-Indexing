@@ -53,12 +53,15 @@ class WebhookIndexingController < ApplicationController
     case payload.dig 'event', 'value'
     when 'BIB_UPDATED'
       IndexByBibEventJob.perform_async(marc_xml)
+      Rails.logger.info "Webhook: BIB_UPDATED job enqueued for #{payload['id']}"
       head :accepted
     when 'BIB_DELETED'
       DeleteByIdentifierJob.perform_async(payload['id'])
+      Rails.logger.info "Webhook: BIB_DELETED job enqueued for #{payload['id']}"
       head :accepted
     when 'BIB_CREATED'
       IndexByBibEventJob.perform_async(marc_xml)
+      Rails.logger.info "Webhook: BIB_CREATED job enqueued for #{payload['id']}"
       head :accepted
     else
       head :no_content
