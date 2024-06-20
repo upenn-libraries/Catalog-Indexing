@@ -10,6 +10,8 @@ class IndexByBibEvent
   step :prepare_writer
   step :index_via_traject, with: 'traject.index_records' # receive a IO object and do the indexing
 
+  # @param io [StringIO]
+  # @return [Dry::Monads::Result]
   def prepare_writer(io:, **args)
     target_collections = Array.wrap(ConfigItem.value_for(:webhook_target_collections))
     writer = MultiCollectionWriter.new(target_collections)

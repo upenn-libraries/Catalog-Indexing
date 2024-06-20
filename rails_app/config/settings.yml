@@ -10,7 +10,7 @@ solr:
   collection_name_prefix: 'catalog-prod-'
   shards: <%= ENV['SOLR_COLLECTION_SHARDS'] %>
   replicas: <%= ENV['SOLR_COLLECTION_REPLICAS'] %>
-  webhook_action_commit_within_time: 15000
+  webhook_action_commit_within_time_ms: 15000
 
 redis:
   url: <%= ENV['REDIS_URL'] %>

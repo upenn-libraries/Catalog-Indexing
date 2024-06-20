@@ -19,9 +19,13 @@ describe DeleteByIdentifier do
         solr.commit
       end
 
-      it 'removes the record from Solr' do
+      it 'removes the record from the specified collections' do
         expect(outcome).to be_success
         expect(solr.get_by_id(sample_mmsid)['response']['numFound']).to eq 0
+      end
+
+      it 'returns an appropriate message' do
+        expect(outcome.success).to include sample_mmsid
       end
     end
 
