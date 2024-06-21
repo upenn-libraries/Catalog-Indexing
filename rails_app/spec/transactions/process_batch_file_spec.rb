@@ -4,7 +4,7 @@ describe ProcessBatchFile do
   let(:transaction) { described_class.new }
 
   describe '#call' do
-    let(:outcome) { transaction.call(batch_file_id: batch_file.id, commit: true) }
+    let(:outcome) { transaction.call(batch_file_id: batch_file.id, commit_within: 0) }
 
     context 'with a bad BatchFile ID' do
       let(:batch_file) { instance_double(BatchFile) }

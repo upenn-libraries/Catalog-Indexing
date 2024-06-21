@@ -7,7 +7,7 @@ describe DeleteByIdentifier do
   let(:sample_mmsid) { '9979201969103681' }
   let(:solr) { Solr::QueryClient.new(collection: test_collection) }
   let(:transaction) { described_class.new }
-  let(:outcome) { transaction.call(id: sample_mmsid, commit_within: 1, collections: Array.wrap(solr.collection)) }
+  let(:outcome) { transaction.call(id: sample_mmsid, commit: true, collections: Array.wrap(solr.collection)) }
 
   before { solr.delete_all }
   after { solr.delete_all }

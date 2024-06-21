@@ -4,14 +4,15 @@
 class MultiCollectionWriter < Traject::SolrJsonWriter
   attr_accessor :writers, :collections
 
-  # @param [Array] collections
-  # @param [Hash] settings
-  def initialize(collections, settings = {})
+  # @param collections [Array] Solr collection names to update
+  # @param commit_within [String] number of milliseconds to wait before issuing commit. added to Solr update request.
+  # @param commit_on_close [Boolean] whether to issue commit when the writer closes. overrides any commit_within value.
+  # @param settings [Hash] for the traject SolrJsonWriter
+  def initialize(collections:, commit_within: nil, commit_on_close: false, settings: {})
     @collections = Array.wrap(collections)
-    settings = settings.merge({ 'solr_writer.batch_size' => ENV.fetch('SOLR_WRITER_BATCH_SIZE', 250),
-                                'solr_writer.thread_pool' => 0, # manage concurrency on our own
-                                'solr.url' => SolrTools.solr_url_with_auth })
-    super(settings)
+    @settings = settings.merge(base_config)
+    define_commit_behavior(commit_on_close: commit_on_close, commit_within: commit_within)
+    super(@settings)
     build_writers_for_targets
   end
 
@@ -33,6 +34,17 @@ class MultiCollectionWriter < Traject::SolrJsonWriter
   end
 
   private
+
+  def define_commit_behavior(commit_within:, commit_on_close:)
+    @settings['solr_writer.commit_on_close'] = commit_on_close if commit_on_close
+    @settings['solr_writer.solr_update_args'] = { commitWithin: commit_within } if commit_within
+  end
+
+  def base_config
+    { 'solr_writer.batch_size' => ENV.fetch('SOLR_WRITER_BATCH_SIZE', 250),
+      'solr_writer.thread_pool' => 0, # manage concurrency on our own
+      'solr.url' => SolrTools.solr_url_with_auth }
+  end
 
   def build_writers_for_targets
     # Ensure settings are propagated to sub-writers

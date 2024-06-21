@@ -6,23 +6,17 @@ require 'dry/transaction'
 class DeleteByIdentifier
   include Dry::Transaction(container: Container)
 
-  step :get_collections
+  step :get_collections, with: 'webhooks.get_collections'
   step :build_params
   step :issue_deletes
 
-  # Get the collections names from which the record should be deleted, either from args or from the ConfigItem
-  # @option collections [Array]
-  # @return [Dry::Monads::Result]
-  def get_collections(**args)
-    collections = Array.wrap(args[:collections] || ConfigItem.value_for(:webhook_target_collections))
-    Success(collections: collections, **args)
-  end
-
   # Assemble additional params for Solr request
+  # @option commit_within [Integer]
   # @return [Dry::Monads::Result]
   def build_params(**args)
     commit_within = args[:commit_within] || Settings.solr.webhook_action_commit_within_time_ms
-    params = { 'commitWithin' => commit_within }
+    commit = args[:commit] == true
+    params = { 'commitWithin' => commit_within, 'commit' => commit }
     Success(params: params, **args)
   end
 

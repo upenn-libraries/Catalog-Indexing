@@ -8,13 +8,9 @@ describe IndexByBibEvent do
   let(:marcxml) { marc_fixture sample_mmsid }
   let(:solr) { Solr::QueryClient.new(collection: test_collection) }
   let(:transaction) { described_class.new }
-  let(:outcome) { transaction.call(docs: marcxml) }
+  let(:outcome) { transaction.call(docs: marcxml, commit_on_close: true, collections: [test_collection]) }
 
-  before do
-    allow(ConfigItem).to receive(:value_for).with(:webhook_target_collections)
-                                            .and_return(Array.wrap(solr.collection))
-    solr.delete_all
-  end
+  before { solr.delete_all }
 
   after { solr.delete_all }
 
@@ -26,7 +22,6 @@ describe IndexByBibEvent do
 
       it 'indexes record to solr' do
         outcome
-        solr.commit
         solr_response = solr.get_by_id(sample_mmsid)
         expect(solr_response['response']['numFound']).to eq 1
       end
