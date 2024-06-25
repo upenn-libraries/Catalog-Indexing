@@ -17,7 +17,7 @@ secret_detection:
       secret_detection: gl-secret-detection-report.json
     expire_in: 1 day
   tags:
-    - ${RUNNER}
+    - deploy
 
 #This job fails when secrets are detected in the repo.
 validate_secret:
@@ -35,7 +35,7 @@ validate_secret:
         exit 1
       fi
   tags:
-    - ${RUNNER}
+    - deploy
 
 main:
   stage: main_pipeline
