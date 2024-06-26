@@ -110,7 +110,7 @@ class ProcessBatchFile
   # @todo this should be replaced with Sidekiq Pro's batching system when available
   # @param [BatchFile] batch_file
   # @return [Dry::Monads::Result]
-  def check_alma_export(batch_file:, **_args)
+  def check_alma_export(batch_file:, **)
     benchmark = Benchmark.measure { should_complete_alma_export(batch_file) }
     Rails.logger.info { "AlmaExport status check took #{benchmark.total} seconds (from BatchFile ##{batch_file.id})" }
     message = "All done with BatchFile #{batch_file.id} / #{batch_file.path}"
