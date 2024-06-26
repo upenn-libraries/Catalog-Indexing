@@ -27,7 +27,6 @@ validate_secret:
     - secret_detection
   script:
     - apk add jq
-    - jq . gl-secret-detection-report.json
     - export VULNERABILTIES=$(jq .vulnerabilities[0] gl-secret-detection-report.json) 
     - |
       if [ "$VULNERABILTIES" != "null" ]
