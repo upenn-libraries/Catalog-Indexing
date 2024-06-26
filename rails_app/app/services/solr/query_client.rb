@@ -30,14 +30,15 @@ module Solr
     # @return [RSolr::HashWithResponse]
     def add(docs:, attributes: {})
       documents = Array.wrap(docs)
-      solr.post documents, add_attributes: attributes
+      solr.add documents, add_attributes: attributes
     end
 
     # Delete a record by unique ID
-    # @param [String] id
+    # @param id [String]
+    # @param args [Hash] extra parameters for Solr request
     # @return [RSolr::HashWithResponse]
-    def delete(id:)
-      solr.delete_by_id id
+    def delete(id:, args:)
+      solr.delete_by_id id, args
     end
 
     # Delete all records in the collection
