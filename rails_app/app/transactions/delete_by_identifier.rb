@@ -20,7 +20,7 @@ class DeleteByIdentifier
     Success(params: params, **args)
   end
 
-  # Send delete to Solr for each specified collection, with
+  # Send delete to Solr for each specified collection, with params added to the Solr URL
   # @param id [String]
   # @param collections [Array]
   # @param params [Hash]
