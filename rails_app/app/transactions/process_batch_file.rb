@@ -63,9 +63,10 @@ class ProcessBatchFile
   # @param [BatchFile] batch_file
   # @return [Dry::Monads::Result]
   def prepare_writer(batch_file:, **args)
-    settings = { 'solr_writer.commit_on_close' => (args.delete(:commit) == true), # TODO: only spec usage?
-                 'skipped_record_limit' => 500, 'failed_record_limit' => 100 }
-    writer = MultiCollectionWriter.new(batch_file.alma_export.target_collections, settings)
+    settings = { 'skipped_record_limit' => 500, 'failed_record_limit' => 100 }
+    writer = MultiCollectionWriter.new(collections: batch_file.alma_export.target_collections,
+                                       settings: settings,
+                                       commit_within: args.delete(:commit_within))
     Success(batch_file: batch_file, writer: writer, **args)
   end
 
@@ -109,7 +110,7 @@ class ProcessBatchFile
   # @todo this should be replaced with Sidekiq Pro's batching system when available
   # @param [BatchFile] batch_file
   # @return [Dry::Monads::Result]
-  def check_alma_export(batch_file:)
+  def check_alma_export(batch_file:, **)
     benchmark = Benchmark.measure { should_complete_alma_export(batch_file) }
     Rails.logger.info { "AlmaExport status check took #{benchmark.total} seconds (from BatchFile ##{batch_file.id})" }
     message = "All done with BatchFile #{batch_file.id} / #{batch_file.path}"

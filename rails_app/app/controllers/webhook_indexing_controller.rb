@@ -46,6 +46,7 @@ class WebhookIndexingController < ApplicationController
   # Handles alma webhook bib actions
   # @param [Hash] payload action-specific data received from alma webhook post request
   # @return [TrueClass]
+  # rubocop:disable Metrics/AbcSize
   def handle_bib_action(payload)
     head(:ok) if suppressed_from_discovery?(payload)
 
@@ -53,17 +54,21 @@ class WebhookIndexingController < ApplicationController
     case payload.dig 'event', 'value'
     when 'BIB_UPDATED'
       IndexByBibEventJob.perform_async(marc_xml)
+      Rails.logger.info "Webhook: BIB_UPDATED job enqueued for #{payload['id']}"
       head :accepted
     when 'BIB_DELETED'
-      # TODO: write and run bib deleted job, return :accepted
-      head :ok
+      DeleteByIdentifierJob.perform_async(payload['id'])
+      Rails.logger.info "Webhook: BIB_DELETED job enqueued for #{payload['id']}"
+      head :accepted
     when 'BIB_CREATED'
       IndexByBibEventJob.perform_async(marc_xml)
+      Rails.logger.info "Webhook: BIB_CREATED job enqueued for #{payload['id']}"
       head :accepted
     else
       head :no_content
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   # @param payload [Hash]
   # @return [TrueClass]

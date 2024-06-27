@@ -19,4 +19,10 @@ class Container
       Steps::PrepareMARCXML.new
     end
   end
+
+  namespace 'webhooks' do
+    register 'get_collections' do
+      Steps::GetCollections.new
+    end
+  end
 end
