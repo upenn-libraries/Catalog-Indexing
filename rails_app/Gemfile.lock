@@ -262,6 +262,7 @@ GEM
     mini_mime (1.1.5)
     minitest (5.24.0)
     msgpack (1.7.2)
+    multi_string_replace (2.0.2)
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
@@ -530,6 +531,7 @@ DEPENDENCIES
   honeybadger
   importmap-rails
   kaminari
+  multi_string_replace
   net-sftp
   omniauth
   omniauth-rails_csrf_protection

@@ -48,10 +48,14 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def facet_fields
+    to_field 'subject_facet' do |record, acc, _clipboard|
+      values = parser.subject_facet(record)
+      acc << TermOverrider.process(values: values)
+    end
+
     define_field :access_facet
     define_field :creator_facet
     define_field :format_facet
-    define_field :subject_facet
     define_field :genre_facet
     define_field :classification_facet
     define_field :language_facet, :language_values
