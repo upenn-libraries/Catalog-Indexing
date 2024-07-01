@@ -18,6 +18,9 @@ secret_detection:
     expire_in: 1 day
   tags:
     - deploy
+  rules:
+  when: always
+
 
 #This job fails when secrets are detected in the repo.
 validate_secret:
@@ -35,6 +38,8 @@ validate_secret:
       fi
   tags:
     - deploy
+  rules:
+  when: always
 
 main:
   stage: main_pipeline
