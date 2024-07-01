@@ -193,6 +193,13 @@
         issn_ss^1000
       </str>
 
+      <str name="publication_date_qf">
+        publication_date_s
+      </str>
+      <str name="publication_date_pf">
+        publication_date_s
+      </str>
+
       <str name="facet">true</str>
       <str name="facet.mincount">1</str>
       <str name="facet.limit">10</str>
