@@ -11,7 +11,7 @@ class TermOverrider
     def process(values:)
       values.filter_map do |value|
         # Remove values
-        next nil if remove_terms.include? value
+        next nil if MultiStringReplace.match(value, remove_terms).any?
 
         # Replace values using multi_string_replace gem
         MultiStringReplace.replace value, replace_map

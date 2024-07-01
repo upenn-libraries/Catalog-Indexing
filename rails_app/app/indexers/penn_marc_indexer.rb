@@ -8,6 +8,7 @@ class PennMarcIndexer < Traject::Indexer
 
   # shortcut for defining a simple field with appropriate handling for return type
   # see: https://rubydoc.info/gems/traject/3.5.0/file/doc/indexing_rules.md
+  # @todo receive a block to process each value? term override case
   def define_field(name, parser_method = nil)
     parser_signal = parser_method || name
     raise(ArgumentError, "Parser does not respond to #{parser_signal}") unless parser.respond_to? parser_signal.to_sym
@@ -119,6 +120,11 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def stored_fields
+    to_field 'subject_ss' do |record, acc|
+      values = parser.subject_show(record)
+      acc << TermOverrider.process(values: values)
+    end
+
     define_field :title_ss, :title_show
     define_field :format_ss, :format_show
     define_field :creator_ss, :creator_show
