@@ -1,14 +1,3 @@
-GIT
-  remote: https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git
-  revision: d87dc9e0432468f6156b27ac7243dff06d639b99
-  branch: share_spec_helpers
-  specs:
-    pennmarc (1.0.25)
-      activesupport (~> 7)
-      library_stdnums (~> 1.6)
-      marc (~> 1.2)
-      nokogiri (~> 1.15)
-
 GEM
   remote: https://gems.contribsys.com/
   specs:
@@ -310,6 +299,11 @@ GEM
     parser (3.3.0.5)
       ast (~> 2.4.1)
       racc
+    pennmarc (1.0.26)
+      activesupport (~> 7)
+      library_stdnums (~> 1.6)
+      marc (~> 1.2)
+      nokogiri (~> 1.15)
     pg (1.5.4)
     popper_js (2.11.8)
     psych (5.1.2)
@@ -540,7 +534,7 @@ DEPENDENCIES
   omniauth
   omniauth-rails_csrf_protection
   omniauth-saml
-  pennmarc!
+  pennmarc (~> 1)
   pg (~> 1.1)
   puma (~> 6.0)
   rails (~> 7.1)
