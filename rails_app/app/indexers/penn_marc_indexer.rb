@@ -51,7 +51,7 @@ class PennMarcIndexer < Traject::Indexer
   def facet_fields
     to_field 'subject_facet' do |record, acc, _clipboard|
       values = parser.subject_facet(record)
-      acc << TermOverrider.process(values: values)
+      acc << TermOverrider.process(values)
     end
 
     define_field :access_facet
@@ -122,7 +122,7 @@ class PennMarcIndexer < Traject::Indexer
   def stored_fields
     to_field 'subject_ss' do |record, acc|
       values = parser.subject_show(record)
-      acc << TermOverrider.process(values: values)
+      acc << TermOverrider.process(values)
     end
 
     define_field :title_ss, :title_show
