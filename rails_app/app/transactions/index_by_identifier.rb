@@ -16,8 +16,7 @@ class IndexByIdentifier
   # @return [Dry::Monads::Result]
   def prepare_writer(**args)
     collections = ConfigItem.value_for :adhoc_target_collections
-    settings = { 'solr_writer.commit_on_close' => true }
-    writer = MultiCollectionWriter.new(collections, settings)
+    writer = MultiCollectionWriter.new(collections: collections, commit_on_close: true)
     Success(writer: writer, **args)
   end
 end
