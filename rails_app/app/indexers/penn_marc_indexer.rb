@@ -40,7 +40,12 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def identifier_fields
-    define_field :id, :identifier_mmsid
+    to_field 'id' do |record, acc, context|
+      acc << parser.identifier_mmsid(record)
+
+      context.skip!("Skipping bound-with host record: #{acc.last}") if parser.title_host_bib_record?(record)
+    end
+    define_field :host_record_id, :identifier_host_record_id
     define_field :oclc_id_ss, :identifier_oclc_id_show
     define_field :doi_ss, :identifier_doi_show
     define_field :isbn_ss, :identifier_isbn_show
