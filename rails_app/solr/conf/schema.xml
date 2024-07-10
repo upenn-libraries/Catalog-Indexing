@@ -182,6 +182,9 @@
      is added to the index.  It's used either to index the same field differently,
      or to add multiple fields to the same field for easier/faster searching. -->
 
+  <!-- language search field -->
+  <copyField source="language_facet" dest="language_search" />
+
   <!-- title fields are most ripe for exact matches -->
   <copyField source="title_search" dest="title_anchored_search" />
   <copyField source="title_aux_search" dest="title_aux_anchored_search" />
