@@ -111,6 +111,7 @@
       &keyword_config;
 
       <str name="title_qf">
+        title_ss^100000
         title_anchored_search^80000
         title_unstem_search^3000
         title_search^2500
@@ -119,6 +120,7 @@
         title_aux_search^2000
       </str>
       <str name="title_pf">
+        title_ss^100000
         title_anchored_search^80000
         title_unstem_search^3000
         title_search^2500
@@ -148,6 +150,7 @@
       </str>
 
       <str name="creator_qf">
+        creator_ss^50000
         creator_unstem_search^7000
         creator_search^5000
         creator_search_aux_unstem_search^5000
@@ -156,6 +159,7 @@
         conference_search^3000
       </str>
       <str name="creator_pf">
+        creator_ss^50000
         creator_unstem_search^7000
         creator_search^5000
         creator_search_aux_unstem_search^5000
@@ -198,6 +202,80 @@
       </str>
       <str name="publication_date_pf">
         publication_date_s
+      </str>
+
+      <str name="publisher_qf">
+        publisher_unstem_search^2500
+        publisher_search^1500
+      </str>
+      <str name="publisher_pf">
+        publisher_unstem_search^2500
+        publisher_search^1000
+      </str>
+
+      <str name="series_qf">
+        series_ss^30000
+        series_anchored_search^7000
+        series_unstem_search^2500
+        series_search^1500
+      </str>
+      <str name="series_pf">
+        series_ss^30000
+        series_anchored_search^7000
+        series_unstem_search^2000
+        series_search^1000
+      </str>
+
+      <str name="language_qf">
+        language_facet^3000
+        language_search^1000
+      </str>
+      <str name="language_pf">
+        language_facet^3000
+        language_search^1000
+      </str>
+
+      <str name="place_of_publication_qf">
+        place_of_publication_unstem_search^2500
+        place_of_publication_search^1500
+      </str>
+      <str name="place_of_publication_pf">
+        place_of_publication_unstem_search^2500
+        place_of_publication_search^1000
+      </str>
+
+      <str name="publisher_number_qf">
+        publisher_number_search
+      </str>
+      <str name="publisher_number_pf">
+        publisher_number_search
+      </str>
+
+      <str name="contents_note_qf">
+        contents_note_unstem_search^2500
+        contents_note_search^1500
+      </str>
+      <str name="contents_note_pf">
+        contents_note_unstem_search^2500
+        contents_note_search^1000
+      </str>
+
+      <str name="conference_qf">
+        conference_unstem_search^2500
+        conferance_search^1500
+      </str>
+      <str name="conference_pf">
+        conference_unstem_search^2500
+        conferance_search^1000
+      </str>
+
+      <str name="corporate_author_qf">
+        corporate_author_unstem_search^2500
+        corporate_author_search^1500
+      </str>
+      <str name="corporate_author_pf">
+        corporate_author_unstem_search^2500
+        corporate_author_search^1000
       </str>
 
       <str name="facet">true</str>
