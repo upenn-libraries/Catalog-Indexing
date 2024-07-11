@@ -91,6 +91,7 @@ class PennMarcIndexer < Traject::Indexer
     define_field :isxn_search, :identifier_isxn_search
     define_field :series_search
     define_field :publisher_search, :production_search
+    define_field :publisher_number_search, :identifier_publisher_number_search
     define_field :place_of_publication_search, :production_place_of_publication_search
     define_field :corporate_author_search, :creator_corporate_search
     define_field :contents_note_search, :note_contents_values
