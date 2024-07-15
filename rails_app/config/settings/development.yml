@@ -4,5 +4,5 @@ solr:
 
 # Settings
 indexing:
-  max_skipped_per_file: 0
+  max_skipped_per_file: 1000
   max_errors_per_file: 100
