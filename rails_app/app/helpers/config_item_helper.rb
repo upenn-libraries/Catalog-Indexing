@@ -15,7 +15,7 @@ module ConfigItemHelper
   # @param selected [String|Array] currently selected element(s) from the options
   # @param multiple [Boolean] whether the select is multiple or single select
   def select_form(config_item:, selected: [], multiple: false)
-    options = options_for_select(ConfigItem::DETAILS[config_item.name.to_sym][:options], selected)
+    options = options_for_select(ConfigItem.details[config_item.name.to_sym][:options], selected)
     render partial: 'config_items/select', locals: { config_item: config_item,
                                                      options: options,
                                                      multiple: multiple }

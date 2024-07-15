@@ -15,16 +15,6 @@ class ConfigItem < ApplicationRecord
 
   VALID_TYPES = [ARRAY_TYPE, BOOLEAN_TYPE, STRING_TYPE].freeze
 
-  # controlled list of config entries, default value(s) and options. "default" is used when first initializing
-  # the entries. "options_method" is used when rendering the form to provide a list of permitted values, and should
-  # correspond to a rails helper method.
-  DETAILS = {
-    process_job_webhooks: { default: false },
-    process_bib_webhooks: { default: false },
-    webhook_target_collections: { default: [], options: SolrTools.collections },
-    adhoc_target_collections: { default: [], options: SolrTools.collections }
-  }.freeze
-
   validates :name, presence: true, uniqueness: true
   validates :config_type, presence: true, inclusion: { in: VALID_TYPES, message: 'must be a supported type' }
   validates :value, inclusion: { in: [true, false], message: 'must be boolean', if: :boolean? }
@@ -34,13 +24,28 @@ class ConfigItem < ApplicationRecord
   # @param name [String, Symbol] name of ConfigItem value
   # @raise [ArgumentError] if config item matching name is not found
   # @return [Object] configured value of config item
-  def self.value_for(name, details: DETAILS)
-    raise ArgumentError, "ConfigItem is not available: #{name}" unless details.key? name.to_sym
+  def self.value_for(name, detail_config: details)
+    raise ArgumentError, "ConfigItem is not available: #{name}" unless detail_config.key? name.to_sym
 
     config_item = ConfigItem.find_by(name: name)
     raise StandardError, "Config Item is not initialized for #{name}" unless config_item
 
     config_item.value
+  end
+
+  # controlled list of config entries, default value(s) and options. "default" is used when first initializing
+  # the entries. "options_method" is used when rendering the form to provide a list of permitted values, and should
+  # correspond to a rails helper method.
+  # @note we don't want to memoize this because we always want the latest Solr collection list
+  # @return [Hash]
+  def self.details
+    solr_collections = SolrTools.collections
+    {
+      process_job_webhooks: { default: false },
+      process_bib_webhooks: { default: false },
+      webhook_target_collections: { default: [], options: solr_collections },
+      adhoc_target_collections: { default: [], options: solr_collections }
+    }
   end
 
   private
