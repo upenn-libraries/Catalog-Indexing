@@ -12,7 +12,7 @@ Rails.application.config.to_prepare do
 
     Sidekiq.configure_server do |config|
       config.redis = redis_connection
-      config.error_handlers << proc { |e, context| Honeybadger.notify(e, context: context) }
+      config.error_handlers << proc { |e, context, _config| Honeybadger.notify(e, context: context) }
     end
 
     Sidekiq.configure_client do |config|
