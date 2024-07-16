@@ -70,13 +70,14 @@ namespace :tools do
 
   desc 'Add Configuration Items to the database with default values'
   task add_config_items: :environment do
+    config_item_details = ConfigItem.details
     ConfigItem.find_or_create_by name: 'process_job_webhooks', config_type: ConfigItem::BOOLEAN_TYPE,
-                                 value: ConfigItem::DETAILS.dig(:process_job_webhooks, :default)
+                                 value: config_item_details.dig(:process_job_webhooks, :default)
     ConfigItem.find_or_create_by name: 'process_bib_webhooks', config_type: ConfigItem::BOOLEAN_TYPE,
-                                 value: ConfigItem::DETAILS.dig(:process_bib_webhooks, :default)
+                                 value: config_item_details.dig(:process_bib_webhooks, :default)
     ConfigItem.find_or_create_by name: 'webhook_target_collections', config_type: ConfigItem::ARRAY_TYPE,
-                                 value: ConfigItem::DETAILS.dig(:webhook_target_collections, :default)
+                                 value: config_item_details.dig(:webhook_target_collections, :default)
     ConfigItem.find_or_create_by name: 'adhoc_target_collections', config_type: ConfigItem::ARRAY_TYPE,
-                                 value: ConfigItem::DETAILS.dig(:adhoc_target_collections, :default)
+                                 value: config_item_details.dig(:adhoc_target_collections, :default)
   end
 end
