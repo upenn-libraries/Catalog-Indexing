@@ -75,6 +75,8 @@ namespace :tools do
                                  value: config_item_details.dig(:process_job_webhooks, :default)
     ConfigItem.find_or_create_by name: 'process_bib_webhooks', config_type: ConfigItem::BOOLEAN_TYPE,
                                  value: config_item_details.dig(:process_bib_webhooks, :default)
+    ConfigItem.find_or_create_by name: 'incremental_target_collections', config_type: ConfigItem::ARRAY_TYPE,
+                                 value: config_item_details.dig(:incremental_target_collections, :default)
     ConfigItem.find_or_create_by name: 'webhook_target_collections', config_type: ConfigItem::ARRAY_TYPE,
                                  value: config_item_details.dig(:webhook_target_collections, :default)
     ConfigItem.find_or_create_by name: 'adhoc_target_collections', config_type: ConfigItem::ARRAY_TYPE,
