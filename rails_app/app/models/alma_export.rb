@@ -17,7 +17,7 @@ class AlmaExport < ApplicationRecord
   has_many :batch_files, dependent: :destroy
 
   validates :alma_source, inclusion: Sources::ALL, presence: true
-  validates :full, presence: true
+  validates :full, inclusion: [true, false]
   validates :webhook_body, presence: true
 
   scope :filter_status, ->(status) { where(status: status) }

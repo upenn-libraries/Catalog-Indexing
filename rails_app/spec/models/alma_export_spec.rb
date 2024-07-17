@@ -33,7 +33,7 @@ describe AlmaExport do
   it 'requires a full? value' do
     export = build(:alma_export, full: nil)
     expect(export.valid?).to be false
-    expect(export.errors[:full].join).to include "can't be blank"
+    expect(export.errors[:full].join).to include 'is not included in the list'
   end
 
   it 'can have multiple target_collection values' do
