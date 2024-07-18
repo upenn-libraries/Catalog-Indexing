@@ -2,9 +2,9 @@
 
 require 'dry/transaction'
 
-# Initialize and create a AlmaExport from a webhook body. Downloads all files from SFTP and enqueues jobs to
+# Handle AlmaExport processing for a full publish. Downloads all files from SFTP and enqueues jobs to
 # process BatchFiles
-class ProcessAlmaExport
+class ProcessFullAlmaExport
   SFTP_PARALLEL_DOWNLOADS = 20
 
   include Dry::Transaction(container: Container)

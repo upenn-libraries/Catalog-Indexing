@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ProcessAlmaExport do
+describe ProcessFullAlmaExport do
   include FixtureHelpers
   include SolrHelpers
 
@@ -11,7 +11,7 @@ describe ProcessAlmaExport do
 
   describe '#call' do
     let(:alma_export) do
-      create(:alma_export, webhook_body: JSON.parse(json_fixture('job_end_success_full_publish', :webhooks)))
+      create(:alma_export, :full, webhook_body: JSON.parse(json_fixture('job_end_success_full_publish', :webhooks)))
     end
     let(:outcome) { transaction.call(alma_export_id: alma_export.id) }
 

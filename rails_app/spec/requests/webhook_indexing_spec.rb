@@ -97,14 +97,14 @@ RSpec.describe 'Webhook Indexing requests' do
         allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
         post webhook_listen_path, params: json_fixture('job_end_success_full_publish', :webhooks), headers: headers
         expect(response).to have_http_status :accepted
-        expect(ProcessAlmaExportJob.jobs.size).to eq 1
+        expect(ProcessFullAlmaExportJob.jobs.size).to eq 1
       end
 
       it 'does not handle JOB_END events if process_job_webhooks is false' do
         allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(false)
         post webhook_listen_path, params: json_fixture('job_end_success_full_publish', :webhooks), headers: headers
         expect(response).to have_http_status :ok
-        expect(ProcessAlmaExportJob.jobs.size).to eq 0
+        expect(ProcessFullAlmaExportJob.jobs.size).to eq 0
       end
 
       context 'with incremental publishing webhook body' do

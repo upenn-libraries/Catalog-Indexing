@@ -3,7 +3,7 @@
 module Solr
   # Thin wrapper for RSolr commands
   class QueryClient
-    attr_accessor :solr, :collection
+    attr_reader :solr, :collection
 
     def initialize(collection:)
       @collection = collection
@@ -34,7 +34,7 @@ module Solr
     end
 
     # Delete a record by unique ID
-    # @param id [String]
+    # @param id [String, Array]
     # @param args [Hash] extra parameters for Solr request
     # @return [RSolr::HashWithResponse]
     def delete(id:, args:)

@@ -18,7 +18,7 @@ module Sftp
     end
 
     # list files on sftp server that match pattern, returning Sftp::File objects
-    # @todo eliminate matching param and have consumers filter returned entries (see usage in ProcessAlmaExport)
+    # @todo eliminate matching param and have consumers filter returned entries (see usage in ProcessFullAlmaExport)
     # @param [Regexp] matching regex to match files in directory
     # @return [Array<Sftp::File>] list of Sftp::File objects
     def files(matching:)
@@ -31,7 +31,7 @@ module Sftp
 
     # download single file from sftp server
     # @param [Sftp::File]
-    # @param [TrueClass | FalseClass] wait determines whether to run the event loop, allowing the download to progress
+    # @param [Boolean] wait determines whether to run the event loop, allowing the download to progress
     # @return [Net::SFTP::Operations::Download]
     def download(file, wait: true)
       ::File.truncate(file.local_path, 0) if file.downloaded?

@@ -5,11 +5,18 @@ FactoryBot.define do
     target_collections { ['catalog-indexing-test'] }
     status { Statuses::PENDING }
     alma_source { AlmaExport::Sources::PRODUCTION }
-    full { true }
     webhook_body do
       { 'job_instance' => {
         'id' => '12345678'
       } }
+    end
+
+    trait(:full) do
+      full { true }
+    end
+
+    trait(:incremental) do
+      full { false }
     end
 
     trait :finished do
