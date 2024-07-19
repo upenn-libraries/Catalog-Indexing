@@ -18,6 +18,7 @@ The behavior of the application can be modified using the `Settings` area in the
 * `Process Bib Webhooks` - When this is "On", this app will handle Alma `BIB` webhooks.
 * `Process Job Webhook` - When this is "On", this app will handle Alma `JOB` webhooks for jobs that match the `Settings.alma.publishing_job.name` value.
 * `Webhook Target Collections` - The selected Solr collections will receive updates via the `BIB` webhook jobs.
+* `Incremental Target Collections` - The selected Solr collections will receive incremental updates via `JOB` webhooks for jobs matching the the `Settings.alma.publishing_job.name` value indicating the presence of updated or deleted records.
 
 ## Local Development Environment
 

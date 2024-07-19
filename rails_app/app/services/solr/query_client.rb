@@ -37,7 +37,7 @@ module Solr
     # @param id [String, Array]
     # @param args [Hash] extra parameters for Solr request
     # @return [RSolr::HashWithResponse]
-    def delete(id:, args:)
+    def delete(id:, args: {})
       solr.delete_by_id id, args
     end
 

@@ -16,6 +16,8 @@ class TransactionJob
 
     failure = result.failure
 
+    Rails.logger.info { "Transaction failure: #{failure.inspect}" }
+
     raise failure[:exception] if failure[:exception]
 
     raise StandardError, failure[:error].to_s.titleize

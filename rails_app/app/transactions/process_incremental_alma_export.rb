@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry/transaction'
+require 'rubygems/package'
 
 # Handle AlmaExport processing for an incremental publish. Downloads all files from SFTP and enqueues jobs to
 # process BatchFiles and deletes.
@@ -13,6 +14,7 @@ class ProcessIncrementalAlmaExport
   step :load_alma_export
   step :initialize_sftp_session
   step :get_sftp_files_list
+  step :validate_target_collections
   step :update_alma_export
   step :accumulate_ids_for_deletion
   step :delete_from_solr
@@ -65,12 +67,25 @@ class ProcessIncrementalAlmaExport
     handle_error alma_export, "Unexpected error (#{e.class.name}) during SFTP list: #{e.message}"
   end
 
+  def validate_target_collections(**args)
+    collections = ConfigItem.value_for :incremental_target_collections
+    return Failure('No incremental target collections configured.') if collections.empty?
+
+    collections.each do |collection|
+      unless SolrTools.collection_exists? collection
+        return Failure("Configured incremental target collection '#{collection}' does not exist.")
+      end
+    end
+
+    Success(alma_export: args[:alma_export], collections: collections, sftp_session:args[:sftp_session0], **args)
+  end
+
   # Files are ready to process, update AlmaExport to IN_PROGRESS
   # @param [AlmaExport] alma_export
   # @param [Sftp::Client] sftp_session
   # @return [Dry::Monads::Result]
-  def update_alma_export(alma_export:, sftp_session:, **args)
-    alma_export.target_collections = ConfigItem.value_for :incremental_target_collections
+  def update_alma_export(alma_export:, collections:, sftp_session:, **args)
+    alma_export.target_collections = collections
     alma_export.status = Statuses::IN_PROGRESS
     alma_export.started_at = Time.zone.now
     alma_export.save!
@@ -92,13 +107,16 @@ class ProcessIncrementalAlmaExport
     delete_files = sftp_session.files matching: files_matching_regex(alma_export.alma_job_identifier, deletes: true)
     return Success(alma_export: alma_export, ids: [], **args) if delete_files.empty?
 
+    # TODO: will there always only be a single deleted file?
+    #       should i spin this off as it's own job? batch?
     ids = []
     delete_files.each do |delete_file|
       _wat = sftp_session.download(delete_file)
+      file = File.open(delete_file.local_path)
       tar = Zlib::GzipReader.new(file)
       io = Gem::Package::TarReader.new(tar).first
       records = MARC::XMLReader.new(io, parser: :nokogiri, ignore_namespace: true)
-      ids << records.map { |r| r['001'].first }
+      ids << records.map { |r| r['001'].value }
     end
     ids = ids.flatten.uniq
     Success(alma_export: alma_export, ids: ids, **args)
@@ -113,8 +131,8 @@ class ProcessIncrementalAlmaExport
 
     solrs = alma_export.target_collections.map { |collection| Solr::QueryClient.new(collection: collection) }
     solrs.each do |solr|
-      response = solr.delete ids
-      raise StandardError, "Unable to delete records from Solr collection #{solr.collection}" unless response.success?
+      response = solr.delete id: ids
+      raise StandardError, "Unable to delete records from Solr collection #{solr.collection}" unless response.response[:status] == 200
     end
     # Slack notification? "XXX records processed for deletion from __collection__"
     Success(alma_export: alma_export, **args)
@@ -159,8 +177,11 @@ class ProcessIncrementalAlmaExport
   # @param deletes [Boolean] whether to list _delete files. otherwise only _new files will be listed
   # @return [Regexp]
   def files_matching_regex(alma_job_identifier, deletes: false)
-    type = deletes ? 'delete' : 'new'
-    /_#{alma_job_identifier}_.*_#{type}_\d+.tar.gz/
+    if deletes
+      /_#{alma_job_identifier}_.*_delete.tar.gz/
+    else
+      /_#{alma_job_identifier}_.*_new_\d+.tar.gz/
+    end
   end
 
   private
@@ -173,9 +194,12 @@ class ProcessIncrementalAlmaExport
       BatchFile.create!(alma_export_id: alma_export.id, path: sftp_file.local_path,
                         status: Statuses::PENDING)
     end
+    # TODO: this executes the batch!
     batch_job.jobs do
       Sidekiq::Client.push_bulk('class' => ProcessBatchFileJob, 'args' => batch_files.map { |bf| [bf.id] })
     end
+    bid = batch.bid
+    # TODO: add bid to AlmaExport record? is it set before .jobs? we need it to monitor/report on batch status/outcome.
   end
 
   # @param [AlmaExport] alma_export
