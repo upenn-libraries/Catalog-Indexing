@@ -4,7 +4,7 @@ module Steps
   module Solr
     # Step to create a new Solr collection
     class CreateCollection
-      include Dry::Transaction[:result]
+      include Dry::Monads[:result]
 
       # Create a new collection, defaulting to SolrTools.new_collection_name
       # @param collection_name [String]
