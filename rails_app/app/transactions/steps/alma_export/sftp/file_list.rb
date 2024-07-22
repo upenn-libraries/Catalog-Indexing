@@ -29,6 +29,7 @@ module Steps
                                   "No #{@type} file(s) available for download for job ID: #{job_id}")
           end
 
+          sftp_sesion.close_channel
           Success(alma_export: alma_export, file_list: file_list, **args)
         rescue StandardError => e
           handle_error alma_export, "Unexpected error (#{e.class.name}) during SFTP list: #{e.message}"
