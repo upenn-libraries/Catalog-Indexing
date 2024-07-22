@@ -6,7 +6,7 @@ module Steps
       # Methods supporting the handling and logging of critical and non-critical errors during AlmaExport processing
       # transactions.
       module ErrorHandling
-        # @param [AlmaExport] alma_export
+        # @param [::AlmaExport] alma_export
         # @param [String] message
         # @return [Dry::Monads::Failure]
         def handle_failure(alma_export, message)
@@ -16,7 +16,7 @@ module Steps
           Failure(message)
         end
 
-        # @param [AlmaExport] alma_export
+        # @param [::AlmaExport] alma_export
         # @param [Array<String>, String] error_messages
         # @return [Boolean]
         def mark_as_failed(alma_export, error_messages)

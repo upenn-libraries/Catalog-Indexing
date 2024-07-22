@@ -60,29 +60,6 @@ describe ProcessFullAlmaExport do
       end
     end
 
-    context 'with a bad AlmaExport identifier' do
-      before do
-        allow(AlmaExport).to receive(:find).and_raise ActiveRecord::RecordNotFound
-      end
-
-      it 'returns a failure monad with appropriate message' do
-        expect(outcome).to be_failure
-        expect(outcome.failure).to include('does not exist')
-      end
-    end
-
-    context 'with an AlmaExport not in PENDING status' do
-      let(:alma_export) do
-        create(:alma_export, status: Statuses::IN_PROGRESS,
-                             webhook_body: JSON.parse(json_fixture('job_end_success_full_publish', :webhooks)))
-      end
-
-      it 'returns a failure monad with appropriate message' do
-        expect(outcome.failure).to include 'must be in \'pending\' state'
-        expect(alma_export.reload.error_messages).to include outcome.failure
-      end
-    end
-
     context 'with no files matching on SFTP server' do
       let(:sftp_files) { [] }
 

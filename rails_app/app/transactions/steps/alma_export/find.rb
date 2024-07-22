@@ -11,7 +11,7 @@ module Steps
       # @param alma_export_id [String]
       # @return [Dry::Monads::Result]
       def call(alma_export_id:, **args)
-        alma_export = AlmaExport.find alma_export_id
+        alma_export = ::AlmaExport.find alma_export_id
         unless alma_export.status == Statuses::PENDING
           return handle_failure(
             alma_export,
