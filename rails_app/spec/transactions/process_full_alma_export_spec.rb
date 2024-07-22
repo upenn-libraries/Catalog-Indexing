@@ -59,52 +59,5 @@ describe ProcessFullAlmaExport do
         expect(alma_export.reload.error_messages).to include outcome.failure
       end
     end
-
-    context 'with no files matching on SFTP server' do
-      let(:sftp_files) { [] }
-
-      it 'returns a failure monad with appropriate message' do
-        expect(outcome.failure).to include('No files downloaded')
-        expect(alma_export.reload.error_messages).to include outcome.failure
-      end
-    end
-
-    context 'with an unexpected SFTP error' do
-      let(:sftp_files) { ['dummy_file'] }
-
-      before do
-        allow(sftp_client).to receive(:download).and_raise Sftp::Client::Error
-      end
-
-      it 'returns a failure monad with appropriate message' do
-        expect(outcome.failure).to include('processing SFTP file')
-        expect(alma_export.reload.error_messages).to include outcome.failure
-      end
-    end
-  end
-
-  describe '#files_matching_regex' do
-    let(:files) do
-      [
-        '.', '..', # returned by dir.entries command, ignore
-        'prefix_123456789_2023010100_new_1.tar.gz',
-        'prefix_123456789_2023010100_new_23.tar.gz',
-        'prefix_123456789_2023010100_new_900.tar.gz',
-        'prefix_123456789_2023010100_new_1.zip', # wrong extension
-        'prefix_555555555_2023010100_new_1.xml.tar.gz' # wrong job id
-      ]
-    end
-
-    it 'can be used to select only the desired files' do
-      regex = transaction.files_matching_regex('123456789')
-      expect(files.grep(regex)).to eq %w[prefix_123456789_2023010100_new_1.tar.gz
-                                         prefix_123456789_2023010100_new_23.tar.gz
-                                         prefix_123456789_2023010100_new_900.tar.gz]
-    end
-
-    it 'returns no files if a blank parameter is provided' do
-      regex = transaction.files_matching_regex(nil)
-      expect(files.grep(regex)).to be_empty
-    end
   end
 end

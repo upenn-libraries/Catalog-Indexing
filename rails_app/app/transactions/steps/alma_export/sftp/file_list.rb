@@ -8,38 +8,40 @@ module Steps
         include Dry::Monads[:result]
         include Support::ErrorHandling
 
-        LIST_TYPES = %w[record delete].freeze
+        RECORD_TYPE = :record
+        DELETE_TYPE = :delete
+        LIST_TYPES = [RECORD_TYPE, DELETE_TYPE].freeze
 
         # @param type [Symbol]
         def initialize(type:)
-          raise ArgumentError("Unsupported type for SFTP file list: #{type}") unless type.in?(LIST_TYPES)
+          raise(ArgumentError, "Unsupported type for SFTP file list: #{type}") unless type.in?(LIST_TYPES)
 
           @type = type
         end
 
         # get Sftp::File objects via SFTP entries
-        # @param alma_export [AlmaExport]
+        # @param alma_export [::AlmaExport]
         # @param sftp_session [Sftp::Client]
         # @return [Dry::Monads::Result]
         def call(alma_export:, sftp_session:, **args)
           job_id = alma_export.alma_job_identifier
-          file_list = sftp_session.files matching: files_matching_regex(job_id: job_id)
+          files_matching = files_matching_regex(job_id: job_id)
+          file_list = sftp_session.files.select { |f| f.name =~ files_matching }
           if file_list.empty?
-            return handle_failure(alma_export,
-                                  "No #{@type} file(s) available for download for job ID: #{job_id}")
+            return handle_failure(alma_export, "No SFTP #{@type} file(s) available for job ID: #{job_id}")
           end
 
-          sftp_sesion.close_channel
+          sftp_session.close_channel
           Success(alma_export: alma_export, file_list: file_list, **args)
         rescue StandardError => e
-          handle_error alma_export, "Unexpected error (#{e.class.name}) during SFTP list: #{e.message}"
+          handle_failure alma_export, "Unexpected error (#{e.class.name}) during SFTP list: #{e.message}"
         end
 
         private
 
         # @param job_id [String]
         def files_matching_regex(job_id:)
-          case @type
+          case @type.to_sym
           when :delete then /_#{job_id}_.*_delete.tar.gz/
           when :record then /_#{job_id}_.*_new_\d+.tar.gz/
           end

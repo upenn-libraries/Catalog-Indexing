@@ -2,7 +2,7 @@
 
 module Steps
   module AlmaExport
-    class BatchJob
+    module BatchJob
       # Build a Sidekiq::Batch job to populating later, with desired callback events declared
       class Prepare
         include Dry::Monads[:result]

@@ -27,7 +27,7 @@ describe Steps::AlmaExport::Find do
       it 'updates the AlmaExport with failure message' do
         result
         expect(alma_export.reload.error_messages.first).to include error_message
-        expect(alma_export.status). to eq Statuses::FAILED
+        expect(alma_export.status).to eq Statuses::FAILED
       end
     end
   end

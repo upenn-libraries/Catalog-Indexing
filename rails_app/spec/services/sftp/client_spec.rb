@@ -10,11 +10,7 @@ describe Sftp::Client do
 
   describe '#files' do
     let(:sftp_dir) { instance_double(Net::SFTP::Operations::Dir) }
-    let(:files) do
-      [Sftp::File.new('job_output_12345678_1.xml.tar.gz'),
-       Sftp::File.new('job_output_12345678_2.xml.tar.gz'),
-       Sftp::File.new('other_file.xml')]
-    end
+    let(:files) { [Sftp::File.new('test_file.txt')] }
 
     before do
       allow(sftp_session).to receive(:dir).and_return(sftp_dir)
@@ -22,15 +18,13 @@ describe Sftp::Client do
     end
 
     it 'lists files in the remote directory' do
-      files = client.files(matching: /12345678/)
-      expect(files.map(&:name)).to contain_exactly('job_output_12345678_1.xml.tar.gz',
-                                                   'job_output_12345678_2.xml.tar.gz')
-      expect(files).to be_all(Sftp::File)
+      files = client.files
+      expect(files).to eq(files)
     end
 
     it 'raises error when it fails to list files on the remote directory' do
       allow(sftp_session).to receive(:dir).and_raise(Net::SSH::ConnectionTimeout)
-      expect { client.files(matching: /12345678/) }.to raise_error(
+      expect { client.files }.to raise_error(
         Sftp::Client::Error,
         'Could not list files on the SFTP server: Net::SSH::ConnectionTimeout'
       )

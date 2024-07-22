@@ -18,11 +18,10 @@ module Sftp
     end
 
     # list files on sftp server that match pattern, returning Sftp::File objects
-    # @param [Regexp] matching regex to match files in directory
     # @return [Array<Sftp::File>] list of Sftp::File objects
-    def files(matching:)
-      sftp.dir.entries(sftp_root).filter_map do |entry|
-        Sftp::File.new(entry.name) if entry.name.match?(matching)
+    def files
+      sftp.dir.entries(sftp_root).map do |entry|
+        Sftp::File.new(entry.name)
       end
     rescue RuntimeError => e
       raise Error, "Could not list files on the SFTP server: #{e.message}"

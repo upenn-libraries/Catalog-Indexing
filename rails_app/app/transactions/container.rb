@@ -5,74 +5,41 @@ class Container
   extend Dry::Core::Container::Mixin
 
   namespace 'alma_export' do
-    register 'find' do
-      Steps::AlmaExport::Find.new
-    end
-
-    register 'update' do
-      Steps::AlmaExport::Update.new
-    end
+    register('find') { Steps::AlmaExport::Find.new }
+    register('update') { Steps::AlmaExport::Update.new }
+    register('process_batch_files') { Steps::AlmaExport::ProcessBatchFiles.new }
 
     namespace 'batch_job' do
-      register 'prepare_batch_job' do
-        Steps::AlmaExport::Prepare.new
-      end
-
-      register 'populate_batch_job' do
-        Steps::AlmaExport::Populate.new
-      end
+      register('prepare') { Steps::AlmaExport::BatchJob::Prepare.new }
+      register('populate') { Steps::AlmaExport::BatchJob::Populate.new }
     end
 
     namespace 'sftp' do
-      register 'session' do
-        Steps::Sftp::Session.new
-      end
-
-      register 'file_list_record' do
-        Steps::Sftp::FileList.new(type: :record)
-      end
-
-      register 'file_list_delete' do
-        Steps::Sftp::FileList.new(type: :delete)
-      end
+      register('session') { Steps::AlmaExport::Sftp::Session.new }
+      register('file_list_record') { Steps::AlmaExport::Sftp::FileList.new(type: :record) }
+      register('file_list_delete') { Steps::AlmaExport::Sftp::FileList.new(type: :delete) }
     end
   end
 
   namespace 'solr' do
-    register 'create_collection' do
-      Steps::Solr::CreateCollection.new
-    end
-
-    register 'validate_collection' do
-      Steps::Solr::ValidateCollections.new
-    end
+    register('create_collection') { Steps::Solr::CreateCollection.new }
+    register('validate_collection') { Steps::Solr::ValidateCollections.new }
   end
 
   namespace 'config_item' do
-    register 'value' do
-      Steps::ConfigItemValue.new
-    end
+    register('value') { Steps::ConfigItemValue.new }
   end
 
   namespace 'traject' do
-    register 'index_records' do
-      Steps::IndexRecords.new
-    end
+    register('index_records') { Steps::IndexRecords.new }
   end
 
   namespace 'marcxml' do
-    register 'retrieve' do
-      Steps::RetrieveMARCXML.new
-    end
-
-    register 'prepare' do
-      Steps::PrepareMARCXML.new
-    end
+    register('retrieve') { Steps::RetrieveMARCXML.new }
+    register('prepare') { Steps::PrepareMARCXML.new }
   end
 
   namespace 'webhooks' do
-    register 'get_collections' do
-      Steps::GetCollections.new
-    end
+    register('get_collections') { Steps::GetCollections.new }
   end
 end
