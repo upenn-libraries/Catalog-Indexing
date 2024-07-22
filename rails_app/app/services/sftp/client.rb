@@ -18,7 +18,6 @@ module Sftp
     end
 
     # list files on sftp server that match pattern, returning Sftp::File objects
-    # @todo eliminate matching param and have consumers filter returned entries (see usage in ProcessFullAlmaExport)
     # @param [Regexp] matching regex to match files in directory
     # @return [Array<Sftp::File>] list of Sftp::File objects
     def files(matching:)
