@@ -17,7 +17,7 @@ module Steps
           end
         end
 
-        Success(**args)
+        Success(collections: collections, **args)
       end
     end
   end
