@@ -14,8 +14,7 @@ module Steps
         # @return [Dry::Monads::Result]
         def call(alma_export:, batch_job:, batch_files:, **args)
           batch_job.jobs do
-            Sidekiq::Client.push_bulk('class' => ProcessBatchFileJob,
-                                      'args' => batch_files.map { |bf| [bf.id] })
+            ProcessBatchFileJob.perform_bulk batch_files.pluck(:id).zip
           end
           Success(alma_export: alma_export, **args)
         end

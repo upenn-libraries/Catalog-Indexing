@@ -10,15 +10,16 @@ module Steps
       SFTP_PARALLEL_DOWNLOADS = 20
 
       # In batches, download files, build BatchFile objects
-      # @param [AlmaExport] alma_export
-      # @param [Array<Sftp::File>] sftp_files
+      # @param [::AlmaExport] alma_export
+      # @param [Array<Sftp::File>] file_list
       # @return [Dry::Monads::Result]
-      def call(alma_export:, sftp_files:, **args)
-        sftp_files.each_slice(SFTP_PARALLEL_DOWNLOADS).with_object([]) do |slice, batch_files|
+      def call(alma_export:, file_list:, **args)
+        batch_files = []
+        file_list.each_slice(SFTP_PARALLEL_DOWNLOADS) do |slice|
           download_files(slice)
           batch_files << build_batch_files(alma_export, slice)
         end
-        notify_slack(id: alma_export.id, count: sftp_files.count)
+        notify_slack(id: alma_export.id, count: file_list.count)
         Success(alma_export: alma_export, batch_files: batch_files.flatten, batch_job: args[:batch_job], **args)
       rescue StandardError => e
         message = "Error #{e.class.name} processing SFTP file: #{e.message}."
@@ -29,13 +30,13 @@ module Steps
 
       # @param files_slice [Array<Sftp::File]
       def download_files(files_slice)
-        sftp_session = Sftp::Client.new # initialize a new connection each batch to avoid connection being closed
+        sftp_session = ::Sftp::Client.new # initialize a new connection each batch to avoid connection being closed
         downloads = files_slice.map { |file| sftp_session.download(file, wait: false) }
         downloads.each(&:wait) # SFTP downloads occur concurrently here
         sftp_session.close_channel # close connection since we open a new once each iteration
       end
 
-      # @param id [String]
+      # @param id [Integer]
       # @param count [Integer]
       def notify_slack(id:, count:)
         SendSlackNotificationJob.perform_async(
@@ -43,8 +44,8 @@ module Steps
         )
       end
 
-      # @param [AlmaExport] alma_export
-      # @param [Array<Sftp::File>] sftp_files
+      # @param [::AlmaExport] alma_export
+      # @param [Array<::Sftp::File>] sftp_files
       # @return [Array<BatchFile>]
       def build_batch_files(alma_export, sftp_files)
         sftp_files.map do |sftp_file|

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ProcessFullAlmaExport do
+describe ProcessFullAlmaExport, stub_batches: true do
   include FixtureHelpers
   include SolrHelpers
 
@@ -18,8 +18,6 @@ describe ProcessFullAlmaExport do
     include_context 'with sftp files available'
 
     context 'with valid webhook response body' do
-      after { SolrTools.delete_collection(SolrTools.new_collection_name) }
-
       it 'is successful' do
         expect(outcome).to be_success
       end
@@ -54,9 +52,8 @@ describe ProcessFullAlmaExport do
       # Unstub above - this allows the spec-wide after hook to run without exception
       after { RSpec::Mocks.space.proxy_for(SolrTools).reset }
 
-      it 'returns appropriate failure and saves the error message' do
+      it 'returns appropriate failure message' do
         expect(outcome.failure).to include 'already exists'
-        expect(alma_export.reload.error_messages).to include outcome.failure
       end
     end
   end

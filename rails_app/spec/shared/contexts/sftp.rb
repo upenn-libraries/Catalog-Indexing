@@ -3,7 +3,7 @@
 # Stub SFTP connection to return files.
 shared_context 'with sftp files available' do
   let(:sftp_client) { instance_double Sftp::Client }
-  let(:sftp_files) { [Sftp::File.new('all_ub_ah_b_2023090100_12345678900000_new_001.xml.tar.gz')] }
+  let(:sftp_files) { [Sftp::File.new('AllTitles_Find_50746714710003681_20240716_010743[039]_new_1.tar.gz')] }
 
   before do
     allow(sftp_client).to receive(:files).and_return(sftp_files)

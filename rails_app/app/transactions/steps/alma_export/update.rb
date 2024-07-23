@@ -8,7 +8,7 @@ module Steps
       include Support::ErrorHandling
 
       # Update AlmaExport record with in progress or invalidity details
-      # @param alma_export [AlmaExport]
+      # @param alma_export [::AlmaExport]
       # @param collections [Array]
       # @param batch_job [Sidekiq::Batch]
       # @return [Dry::Monads::Result]
@@ -19,19 +19,19 @@ module Steps
         alma_export.batch_job_bid = batch_job.bid
         alma_export.save!
         SendSlackNotificationJob.perform_async("AlmaExport ##{alma_export.id}: off and running!")
-        Success(alma_export: alma_export, **args)
+        Success(alma_export: alma_export, batch_job: batch_job, **args)
       rescue StandardError => e
         reset_and_handle_error(alma_export, e)
       end
 
       private
 
-      # @param alma_export [AlmaExport]
+      # @param alma_export [::AlmaExport]
       # @param exception [Exception]
       def reset_and_handle_error(alma_export, exception)
         validation_messages = alma_export.errors&.full_messages&.to_sentence
         alma_export.reload # reload AlmaExport to resolve any issues from attributes set above so we can save
-        message = "Update failed with #{exception.class.name}: #{e.message}."
+        message = "Update failed with #{exception.class.name}: #{exception.message}."
         message += " Validation errors: #{validation_messages}" if validation_messages.present?
         handle_failure(alma_export, message)
       end

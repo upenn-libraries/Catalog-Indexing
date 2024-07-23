@@ -15,7 +15,7 @@ module Steps
         end
 
         SolrTools.create_collection(collection_name)
-        Success(collection: collection_name, **args)
+        Success(collections: [collection_name], **args)
       rescue SolrTools::CommandError => e
         Failure("Could not create new Solr collection '#{collection_name}': #{e.message}.")
       rescue StandardError => e
