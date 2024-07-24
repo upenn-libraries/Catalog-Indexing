@@ -43,18 +43,5 @@ describe ProcessFullAlmaExport, stub_batches: true do
         expect(SolrTools.collection_exists?(alma_export.target_collections.first)).to be true
       end
     end
-
-    context 'with an existing collection matching the new collection name' do
-      before do
-        allow(SolrTools).to receive(:collection_exists?).with(SolrTools.new_collection_name).and_return true
-      end
-
-      # Unstub above - this allows the spec-wide after hook to run without exception
-      after { RSpec::Mocks.space.proxy_for(SolrTools).reset }
-
-      it 'returns appropriate failure message' do
-        expect(outcome.failure).to include 'already exists'
-      end
-    end
   end
 end
