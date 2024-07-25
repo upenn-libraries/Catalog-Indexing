@@ -20,14 +20,7 @@ describe ProcessIncrementalAlmaExport, stub_batches: true do
     let(:outcome) { transaction.call(alma_export_id: alma_export.id) }
 
     include_context 'with incremental sftp files available'
-
-    before do
-      mock_client = instance_double Solr::QueryClient
-      mock_response = instance_double RSolr::HashWithResponse
-      allow(mock_response).to receive(:response).and_return({ status: 200 })
-      allow(mock_client).to receive(:delete).and_return(mock_response)
-      allow(Solr::QueryClient).to receive(:new).with(collection: collections.first).and_return(mock_client)
-    end
+    include_context 'with solr collections supporting deletes'
 
     context 'with valid webhook response body' do
       it 'is successful' do

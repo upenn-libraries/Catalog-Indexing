@@ -12,6 +12,7 @@ module BatchCallbacks
       SendSlackNotificationJob.perform_async(
         "AlmaExport ##{alma_export.id}: Solr commits to #{alma_export.target_collections.to_sentence} completed."
       )
+      # TODO: this might do nothing if some jobs aren't marked with a completed status
       alma_export.set_completion_status!
       # Move files?
     end
