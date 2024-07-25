@@ -6,9 +6,10 @@ module Steps
     class ValidateCollections
       include Dry::Monads[:result]
 
-      # @param collections [Array<String>] collections to validate
+      # @option collections [Array<String>] collections to validate
       # @return [Dry::Monads::Result]
-      def call(collections:, **args)
+      def call(args)
+        collections = args[:collections]
         return Failure('No target collections configured!') if collections.empty?
 
         collections.each do |collection|

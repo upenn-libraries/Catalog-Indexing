@@ -5,14 +5,21 @@ module Steps
   class ConfigItemValue
     include Dry::Monads[:result]
 
-    # Grab a ConfigItem value and return as config_value
-    # @param config_item_name [String|Symbol] collections to validate
-    # @return [Dry::Monads::Result]
-    def call(config_item_name:, **args)
-      value = ConfigItem.value_for config_item_name
-      return Failure("No ConfigItem value established for #{config_item_name}") if value.blank?
+    # @param name [String, Symbol] name of ConfigItem to lookup
+    # @param as [String, Symbol] parameter name to use in response
+    def initialize(name: nil, as: :config_value)
+      @name = name&.to_sym
+      @as = as.to_sym
+    end
 
-      Success(config_value: value, **args)
+    # Grab a ConfigItem value and return as config_value
+    # @return [Dry::Monads::Result]
+    def call(args)
+      name = args.delete(:config_item_name) || @name
+      value = ConfigItem.value_for name
+      return Failure("No ConfigItem value established for #{name}") if value.blank?
+
+      Success(@as => value, **args)
     end
   end
 end

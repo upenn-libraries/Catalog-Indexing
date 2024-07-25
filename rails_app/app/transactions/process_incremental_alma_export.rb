@@ -10,46 +10,34 @@ class ProcessIncrementalAlmaExport
   include Dry::Transaction(container: Container)
   include Steps::AlmaExport::Support::ErrorHandling
 
-  SFTP_PARALLEL_DOWNLOADS = 20
-
   step :load_alma_export, with: 'alma_export.find'
-  step :initialize_sftp_session, with: 'alma_export.sftp.session'
-  step :get_record_files, with: 'alma_export.sftp.file_list_record'
-  step :get_target_collections, with: 'config_item.value'
-  step :validate_config_collections, with: 'config_item.validate'
-  step :prepare_batch_job, with: 'alma_export.prepare_batch_job'
+  step :initialize_sftp_session, with: 'alma_export.sftp.open'
+  step :get_target_collections, with: 'config_item.incremental_target_collections'
+  step :validate_config_collections, with: 'solr.validate_collections'
+  step :prepare_batch_job, with: 'alma_export.batch_job.prepare'
   step :update_alma_export, with: 'alma_export.update'
+  step :list_delete_files, with: 'alma_export.sftp.file_list_delete'
   step :accumulate_ids_for_deletion
   step :delete_from_solr
+  step :list_record_files, with: 'alma_export.sftp.file_list_record'
+  step :close_sftp_session, with: 'alma_export.sftp.close'
   step :process_sftp_files, with: 'alma_export.process_batch_files'
   step :populate_batch_job, with: 'alma_export.batch_job.populate'
 
-  # Set desired ConfigItem value
-  # @return [Dry::Monads::Result]
-  def get_target_collections(**args)
-    super(config_item_name: :incremental_target_collections, **args)
-  end
-
-  # Pass ConfigItem values to validate step
-  # @param config_value [Array<String>]
-  # @return [Dry::Monads::Result]
-  def validate_config_collections(config_value:, **args)
-    super(collections: config_value, **args)
-  end
-
   # Download, read and extract MMS IDs for deleted records from _delete file(s)
-  # @param [AlmaExport] alma_export
-  # @param [Sftp::Client] sftp_session
+  # @param alma_export [AlmaExport]
+  # @param sftp_session [Sftp::Client]
+  # @param file_list [Array<::Sftp::File] delete files
   # @return [Dry::Monads::Result]
-  def accumulate_ids_for_deletion(alma_export:, sftp_session:, **args)
-    delete_files = sftp_session.files matching: files_matching_regex(alma_export.alma_job_identifier, deletes: true)
-    return Success(alma_export: alma_export, ids: [], **args) if delete_files.empty?
+  def accumulate_ids_for_deletion(alma_export:, sftp_session:, file_list:, **args)
+    return Success(alma_export: alma_export, ids: [], **args) if file_list.empty?
 
-    delete_files.each_with_object do |delete_file, ids|
+    ids = []
+    file_list.each do |delete_file|
       sftp_session.download(delete_file)
       ids << ids_from_file(delete_file)
     end
-    Success(alma_export: alma_export, ids: ids.flatten.uniq, **args)
+    Success(alma_export: alma_export, sftp_session: sftp_session, ids: ids.flatten.uniq, **args)
   rescue StandardError => e
     handle_failure(alma_export, "Problem handling delete file: #{e.message}")
   end

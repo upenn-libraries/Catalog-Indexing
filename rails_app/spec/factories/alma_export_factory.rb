@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :alma_export do
-    target_collections { ['catalog-indexing-test'] }
     status { Statuses::PENDING }
     alma_source { AlmaExport::Sources::PRODUCTION }
     webhook_body do

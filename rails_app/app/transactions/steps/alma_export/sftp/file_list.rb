@@ -31,8 +31,7 @@ module Steps
             return handle_failure(alma_export, "No SFTP #{@type} file(s) available for job ID: #{job_id}")
           end
 
-          sftp_session.close_channel
-          Success(alma_export: alma_export, file_list: file_list, **args)
+          Success(alma_export: alma_export, file_list: file_list, sftp_session: sftp_session, **args)
         rescue StandardError => e
           handle_failure alma_export, "Unexpected error (#{e.class.name}) during SFTP list: #{e.message}"
         end

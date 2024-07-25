@@ -15,7 +15,8 @@ class Container
     end
 
     namespace 'sftp' do
-      register('session') { Steps::AlmaExport::Sftp::Session.new }
+      register('open') { Steps::AlmaExport::Sftp::OpenSession.new }
+      register('close') { Steps::AlmaExport::Sftp::CloseSession.new }
       register('file_list_record') { Steps::AlmaExport::Sftp::FileList.new(type: :record) }
       register('file_list_delete') { Steps::AlmaExport::Sftp::FileList.new(type: :delete) }
     end
@@ -23,11 +24,14 @@ class Container
 
   namespace 'solr' do
     register('create_collection') { Steps::Solr::CreateCollection.new }
-    register('validate_collection') { Steps::Solr::ValidateCollections.new }
+    register('validate_collections') { Steps::Solr::ValidateCollections.new }
   end
 
   namespace 'config_item' do
     register('value') { Steps::ConfigItemValue.new }
+    register('incremental_target_collections') do
+      Steps::ConfigItemValue.new(name: :incremental_target_collections, as: :collections)
+    end
   end
 
   namespace 'traject' do

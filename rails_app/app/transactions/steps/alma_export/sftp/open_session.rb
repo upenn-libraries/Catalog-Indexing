@@ -4,7 +4,7 @@ module Steps
   module AlmaExport
     module Sftp
       # Step to initialize Sftp session to Alma files server
-      class Session
+      class OpenSession
         include Dry::Monads[:result]
 
         # @return [Dry::Monads::Result]
