@@ -1,0 +1,8 @@
+<div class="progress">
+  <% total = @alma_export.batch_files.count %>
+  <%= render 'progress_part', status: Statuses::PENDING, klass: 'bg-info', total: total %>
+  <%= render 'progress_part', status: Statuses::IN_PROGRESS, klass: '', total: total %>
+  <%= render 'progress_part', status: Statuses::COMPLETED, klass: 'bg-success', total: total %>
+  <%= render 'progress_part', status: Statuses::COMPLETED_WITH_ERRORS, klass: 'bg-warning', total: total %>
+  <%= render 'progress_part', status: Statuses::FAILED, klass: 'bg-danger', total: total %>
+</div>

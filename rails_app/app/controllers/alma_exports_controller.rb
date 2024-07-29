@@ -7,6 +7,7 @@ class AlmaExportsController < ApplicationController
   def index
     @alma_exports = AlmaExport.all.includes(:batch_files).page(params[:page])
     @alma_exports = @alma_exports.filter_status(filter('status')) if filter('status').present?
+    @alma_exports = @alma_exports.filter_full(filter('full')) if filter('full').present?
 
     return if filter('sort_value').blank?
 

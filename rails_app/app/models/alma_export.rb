@@ -21,11 +21,19 @@ class AlmaExport < ApplicationRecord
   validates :webhook_body, presence: true
 
   scope :filter_status, ->(status) { where(status: status) }
-  scope :filter_sort_by, ->(value, order) { order("#{value}": order) }
+  scope :filter_full, ->(full) { where(full: full == 'true') }
+  scope :filter_sort_by, ->(value, order) { order(value => order) }
 
   # @return [String, nil]
   def alma_job_identifier
     webhook_body.dig('job_instance', 'id')
+  end
+
+  # Count of BatchFiles for this AlmaExport matching status
+  # @param status [String]
+  # @return [Integer]
+  def status_count(status)
+    batch_files.filter_status(status).count
   end
 
   # query to see if all associated BatchFiles are in a completed state (completed, completed with errors, failed)
