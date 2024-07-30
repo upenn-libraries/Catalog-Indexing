@@ -26,7 +26,7 @@ class ProcessBatchFile
   rescue ActiveRecord::RecordNotFound => _e
     message = "BatchFile record with ID #{batch_file_id} does not exist."
     Rails.logger.info { "BatchFile processing failed: #{message}" }
-    Failure(message)
+    Failure(message: message)
   end
 
   # Perform some checks to help ensure BatchFile is ready to be processed
@@ -62,7 +62,8 @@ class ProcessBatchFile
   # @param [BatchFile] batch_file
   # @return [Dry::Monads::Result]
   def prepare_writer(batch_file:, **args)
-    settings = { 'skipped_record_limit' => 500, 'failed_record_limit' => 100 }
+    settings = { 'skipped_record_limit' => Settings.max_skipped_per_file,
+                 'failed_record_limit' => Settings.max_errors_per_file }
     writer = MultiCollectionWriter.new(collections: batch_file.alma_export.target_collections,
                                        settings: settings,
                                        commit_within: args.delete(:commit_within))
@@ -111,7 +112,7 @@ class ProcessBatchFile
   def handle_failure(batch_file, message)
     Rails.logger.error { "Batch file processing failed for ##{batch_file.id} @ #{batch_file.path}: #{message}" }
     mark_as_failed(batch_file, message)
-    Failure(message)
+    Failure(message: message)
   end
 
   # @param [BatchFile] batch_file

@@ -13,7 +13,7 @@ module Steps
           sftp_session.close_channel
           Success(**args)
         rescue ::Sftp::Client::Error => e
-          Failure("Problem closing SFTP connection: #{e.message}")
+          Failure(exception: e)
         end
       end
     end

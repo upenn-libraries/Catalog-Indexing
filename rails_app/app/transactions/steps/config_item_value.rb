@@ -17,7 +17,7 @@ module Steps
     def call(args)
       name = args.delete(:config_item_name) || @name
       value = ConfigItem.value_for name
-      return Failure("No ConfigItem value established for #{name}") if value.blank?
+      return Failure(message: "No ConfigItem value established for #{name}") if value.blank?
 
       Success(@as => value, **args)
     end

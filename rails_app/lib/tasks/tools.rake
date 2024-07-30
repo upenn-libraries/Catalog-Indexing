@@ -51,7 +51,8 @@ namespace :tools do
     webhook_response_fixture.gsub!('50746714710003681', job_id) if job_id
     alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
                                      webhook_body: JSON.parse(webhook_response_fixture))
-    ProcessFullAlmaExport.new.call(alma_export_id: alma_export.id)
+    result = ProcessFullAlmaExport.new.call(alma_export_id: alma_export.id)
+    puts result.inspect
   end
 
   # JOB_ID=55827228880003681 bundle exec rake tools:process_full_index
@@ -62,7 +63,8 @@ namespace :tools do
     webhook_response_fixture.gsub!('50746714710003681', job_id) if job_id
     alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
                                      webhook_body: JSON.parse(webhook_response_fixture), full: false)
-    ProcessIncrementalAlmaExport.new.call(alma_export_id: alma_export.id)
+    result = ProcessIncrementalAlmaExport.new.call(alma_export_id: alma_export.id)
+    puts result
   end
 
   desc 'Create Solr JSON from Alma set'

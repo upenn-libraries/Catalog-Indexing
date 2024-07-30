@@ -13,7 +13,7 @@ module Steps
       if collections.any?
         Success(collections: collections, **args)
       else
-        Failure('No target collections defined for operation.')
+        Failure(message: 'No target collections defined for operation.')
       end
     end
   end

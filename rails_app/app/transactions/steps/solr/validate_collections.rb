@@ -10,10 +10,10 @@ module Steps
       # @return [Dry::Monads::Result]
       def call(args)
         collections = args[:collections]
-        return Failure('No target collections configured!') if collections.empty?
+        return Failure(message: 'No target collections configured!') if collections.empty?
 
         collections.each do |collection|
-          return Failure("Collection '#{collection}' does not exist.") unless SolrTools.collection_exists? collection
+          return Failure(message: "Collection '#{collection}' does not exist.") unless SolrTools.collection_exists? collection
         end
         Success(collections: collections, **args)
       end

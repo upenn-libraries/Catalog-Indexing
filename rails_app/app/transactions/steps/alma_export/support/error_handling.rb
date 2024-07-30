@@ -13,7 +13,7 @@ module Steps
           Rails.logger.error { "Alma export processing failed for ##{alma_export.id}: #{message}" }
           SendSlackNotificationJob.perform_async("AlmaExport ##{alma_export.id}: Failed with message: #{message}")
           mark_as_failed(alma_export, message)
-          Failure(message)
+          Failure(message: message)
         end
 
         # @param [::AlmaExport] alma_export

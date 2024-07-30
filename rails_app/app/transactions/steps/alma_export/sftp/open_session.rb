@@ -11,7 +11,7 @@ module Steps
         def call(**args)
           Success(sftp_session: ::Sftp::Client.new, **args)
         rescue ::Sftp::Client::Error => e
-          Failure("Problem connecting to the SFTP server: #{e.message}")
+          Failure(exception: e)
         end
       end
     end

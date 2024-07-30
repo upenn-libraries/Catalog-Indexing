@@ -21,7 +21,7 @@ module Steps
 
         Success(alma_export: alma_export, **args)
       rescue ActiveRecord::RecordNotFound => _e
-        Failure("AlmaExport record with ID #{alma_export_id} does not exist.")
+        Failure(message: "AlmaExport record with ID #{alma_export_id} does not exist.")
       end
     end
   end
