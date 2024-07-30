@@ -19,14 +19,14 @@ shared_examples_for 'TransactionJob' do
 
   describe '#perform' do
     context 'when transaction returns a failure' do
-      context 'with an error message only' do
+      context 'with a message only' do
         before do
           allow(job).to receive(:transaction).with(*args)
-                                             .and_return(Dry::Monads::Failure.new(error: :oh_no_something_bad_happened))
+                                             .and_return(Dry::Monads::Failure.new(message: 'Oh no something happened'))
         end
 
         it 'raises an exception' do
-          expect { job.perform(*args) }.to raise_error StandardError, 'Oh No Something Bad Happened'
+          expect { job.perform(*args) }.to raise_error StandardError, 'Oh no something happened'
         end
       end
 

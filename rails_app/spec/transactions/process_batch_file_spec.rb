@@ -13,7 +13,7 @@ describe ProcessBatchFile do
 
       it 'returns a Failure monad with the appropriate message' do
         expect(outcome).to be_failure
-        expect(outcome.failure).to include 'record with ID 1 does not exist'
+        expect(outcome.failure[:message]).to include 'record with ID 1 does not exist'
       end
     end
 
@@ -22,7 +22,7 @@ describe ProcessBatchFile do
 
       it 'returns a Failure monad with the appropriate message' do
         expect(outcome).to be_failure
-        expect(outcome.failure).to include "BatchFile ##{batch_file.id} is in #{batch_file.status} state"
+        expect(outcome.failure[:message]).to include "BatchFile ##{batch_file.id} is in #{batch_file.status} state"
       end
 
       it 'sets the status of the BatchFile to failed and stores the failure message' do
@@ -38,7 +38,7 @@ describe ProcessBatchFile do
 
       it 'returns a Failure monad with the appropriate message' do
         expect(outcome).to be_failure
-        expect(outcome.failure).to include "expects a file present at #{batch_file.path}"
+        expect(outcome.failure[:message]).to include "expects a file present at #{batch_file.path}"
       end
     end
 
@@ -47,7 +47,7 @@ describe ProcessBatchFile do
 
       it 'returns a Failure monad with the appropriate message' do
         expect(outcome).to be_failure
-        expect(outcome.failure).to include 'Problem decompressing BatchFile'
+        expect(outcome.failure[:message]).to include 'Problem decompressing BatchFile'
       end
     end
   end

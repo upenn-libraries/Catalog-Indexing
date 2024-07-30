@@ -61,7 +61,7 @@ describe Steps::AlmaExport::Sftp::FileList do
     before { allow(sftp_client).to receive(:files).and_raise(Sftp::Client::Error, 'Kaboom') }
 
     it 'returns a failure monad with appropriate message' do
-      expect(result.failure).to include error_message
+      expect(result.failure[:message]).to include error_message
       expect(alma_export.reload.error_messages).to include error_message
     end
   end
@@ -73,8 +73,8 @@ describe Steps::AlmaExport::Sftp::FileList do
     before { allow(sftp_client).to receive(:files).and_return(sftp_files) }
 
     it 'returns a failure monad with appropriate message' do
-      expect(result.failure).to include("No SFTP #{type} file(s) available")
-      expect(alma_export.reload.error_messages).to include result.failure
+      expect(result.failure[:message]).to include "No SFTP #{type} file(s) available"
+      expect(alma_export.reload.error_messages).to include result.failure[:message]
     end
   end
 end

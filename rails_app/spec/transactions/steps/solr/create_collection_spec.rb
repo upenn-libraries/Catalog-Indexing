@@ -23,7 +23,7 @@ describe Steps::Solr::CreateCollection do
 
     it 'returns a Failure monad with message' do
       expect(result).to be_failure
-      expect(result.failure).to include 'Solr collection new-collection already exists'
+      expect(result.failure[:message]).to include 'Solr collection new-collection already exists'
     end
   end
 end

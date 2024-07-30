@@ -21,7 +21,7 @@ describe Steps::AlmaExport::Find do
 
       it 'returns a failure with appropriate message' do
         expect(result).to be_failure
-        expect(result.failure).to include error_message
+        expect(result.failure[:message]).to include error_message
       end
 
       it 'updates the AlmaExport with failure message' do
@@ -37,7 +37,7 @@ describe Steps::AlmaExport::Find do
 
     it 'returns a failure with appropriate message' do
       expect(result).to be_failure
-      expect(result.failure).to include 'does not exist'
+      expect(result.failure[:message]).to include 'does not exist'
     end
   end
 end

@@ -13,7 +13,9 @@ module Steps
         return Failure(message: 'No target collections configured!') if collections.empty?
 
         collections.each do |collection|
-          return Failure(message: "Collection '#{collection}' does not exist.") unless SolrTools.collection_exists? collection
+          unless SolrTools.collection_exists? collection
+            return Failure(message: "Collection '#{collection}' does not exist.")
+          end
         end
         Success(collections: collections, **args)
       end

@@ -12,7 +12,7 @@ describe Steps::Solr::ValidateCollections do
 
     it 'returns a Failure monad with expected message' do
       expect(result).to be_failure
-      expect(result.failure).to eq "Collection 'gone-collection' does not exist."
+      expect(result.failure[:message]).to eq "Collection 'gone-collection' does not exist."
     end
   end
 
@@ -36,7 +36,7 @@ describe Steps::Solr::ValidateCollections do
 
     it 'returns Failure monad with expected message' do
       expect(result).to be_failure
-      expect(result.failure).to eq 'No target collections configured!'
+      expect(result.failure[:message]).to eq 'No target collections configured!'
     end
   end
 end
