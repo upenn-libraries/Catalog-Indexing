@@ -1,0 +1,18 @@
+# Taken from Franklin's most common search queries
+pubmed => 9977665945003681
+hoovers => 9926082903503681
+pitchbook => 9977497628803681
+web of science => 9922023643503681
+inquirer,philadelphia inquirer => 9977047865203681
+atlantic => 9977047422803681
+new york times, nyt => 9977568423203681
+jstor => 9941439883503681
+chronicle, chronicle of higher ed, chronicle of higher education => 9977047066603681
+statista => 9957467153503681
+ancestry, ancestry.com => 9942524713503681
+oed => 9927543263503681
+nexis uni => 9977170353703681
+wall street journal, wsj => 9977049134403681
+economist, the economist => 9977048907203681
+new yorker => 9977047445803681
+nature => 9977047322103681
