@@ -36,7 +36,16 @@ describe ProcessIncrementalAlmaExport, stub_batches: true do
         expect(alma_export.batch_files.count).to eq 1
       end
 
-      it 'set the right attributes on the AlmaExport' do
+      # `satisfy` matcher used when checking that the expected IDs are deleted when using the delete file fixture
+      # @see https://rspec.info/features/3-12/rspec-mocks/setting-constraints/matching-arguments/
+      it 'sends DELETE to Solr with a hash containing an array of IDs' do
+        outcome
+        expect(mock_client).to have_received(:delete).with(
+          satisfy { |data| data[:id].length == 741 }
+        )
+      end
+
+      it 'sets the right attributes on the AlmaExport' do
         alma_export = outcome.success[:alma_export]
         expect(alma_export.target_collections).to eq collections
         expect(alma_export.started_at).to be_present

@@ -2,8 +2,9 @@
 
 # Stub Solr::QueryClient delete calls for collections to return success code.
 shared_context 'with solr collections supporting deletes' do
+  let(:mock_client) { instance_double Solr::QueryClient }
+
   before do
-    mock_client = instance_double Solr::QueryClient
     mock_response = instance_double RSolr::HashWithResponse
     allow(mock_response).to receive(:response).and_return({ status: 200 })
     allow(mock_client).to receive(:delete).and_return(mock_response)
