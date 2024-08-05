@@ -29,6 +29,7 @@ sftp:
   root: <%= ENV.fetch('SFTP_ROOT', '/almareload') %>
   username: <%= DockerSecrets.lookup(:sftp_username) %>
   password: <%= DockerSecrets.lookup(:sftp_password) %>
+  parallel_downloads: 20
 
 slack:
   api_key: '12345'

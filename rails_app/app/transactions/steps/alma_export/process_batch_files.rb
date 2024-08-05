@@ -7,15 +7,13 @@ module Steps
       include Dry::Monads[:result]
       include Support::ErrorHandling
 
-      SFTP_PARALLEL_DOWNLOADS = 20
-
       # In batches, download files, build BatchFile objects
       # @param alma_export [::AlmaExport]
       # @param file_list [Array<Sftp::File>]
       # @return [Dry::Monads::Result]
       def call(alma_export:, file_list:, **args)
         batch_files = []
-        file_list.each_slice(SFTP_PARALLEL_DOWNLOADS) do |slice|
+        file_list.each_slice(Settings.sftp.parallel_downloads) do |slice|
           download_files(slice)
           batch_files << build_batch_files(alma_export, slice)
         end
