@@ -39,6 +39,7 @@ module Steps
         private
 
         # @param job_id [String]
+        # @return [Regexp]
         def files_matching_regex(job_id:)
           case @type.to_sym
           when :delete then /_#{job_id}_.*_delete.tar.gz/
