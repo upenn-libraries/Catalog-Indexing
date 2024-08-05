@@ -17,7 +17,7 @@ module Sftp
       raise Error, "Could not connect to SFTP server: #{e.message}"
     end
 
-    # list files on sftp server that match pattern, returning Sftp::File objects
+    # List all files on the SFTP server and return Sftp::File objects
     # @return [Array<Sftp::File>] list of Sftp::File objects
     def files
       sftp.dir.entries(sftp_root).map do |entry|
