@@ -64,9 +64,10 @@
            documents -->
       <str name="q.alt">*:*</str>
 
-      <!-- see solr docs for more on the mm param: https://solr.apache.org/guide/solr/latest/query-guide/dismax-query-parser.html#mm-minimum-should-match-parameter
-           setting to 0% so that none of the optional values are required, this allows boolean searching to work as expected -->
-      <str name="mm">0%</str>
+      <!-- make all clauses mandatory unless 'OR' boolean operator specified.
+           when q.op is "AND", mm defaults to 100%. see solr docs for more on the mm param:
+           https://solr.apache.org/guide/solr/latest/query-guide/dismax-query-parser.html#mm-minimum-should-match-parameter -->
+      <str name="q.op">AND</str>
 
       <!-- "query slop" see guide for how slop functions https://solr.apache.org/guide/solr/latest/query-guide/edismax-query-parser.html#using-slop -->
       <int name="qs">1</int>
