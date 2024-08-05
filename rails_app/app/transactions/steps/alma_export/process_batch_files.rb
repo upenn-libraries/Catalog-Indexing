@@ -10,8 +10,8 @@ module Steps
       SFTP_PARALLEL_DOWNLOADS = 20
 
       # In batches, download files, build BatchFile objects
-      # @param [::AlmaExport] alma_export
-      # @param [Array<Sftp::File>] file_list
+      # @param alma_export [::AlmaExport]
+      # @param file_list [Array<Sftp::File>]
       # @return [Dry::Monads::Result]
       def call(alma_export:, file_list:, **args)
         batch_files = []

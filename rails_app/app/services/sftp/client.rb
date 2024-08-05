@@ -29,7 +29,7 @@ module Sftp
 
     # download single file from sftp server
     # @param [Sftp::File]
-    # @param [Boolean] wait determines whether to run the event loop, allowing the download to progress
+    # @param wait [Boolean] determines whether to run the event loop, allowing the download to progress
     # @return [Net::SFTP::Operations::Download]
     def download(file, wait: true)
       ::File.truncate(file.local_path, 0) if file.downloaded?

@@ -6,8 +6,8 @@ module Steps
       # Methods supporting the handling and logging of critical and non-critical errors during AlmaExport processing
       # transactions.
       module ErrorHandling
-        # @param [::AlmaExport] alma_export
-        # @param [String] message
+        # @param alma_export [::AlmaExport]
+        # @param message [String]
         # @return [Dry::Monads::Failure]
         def handle_failure(alma_export, message)
           Rails.logger.error { "Alma export processing failed for ##{alma_export.id}: #{message}" }
@@ -16,8 +16,8 @@ module Steps
           Failure(message: message)
         end
 
-        # @param [::AlmaExport] alma_export
-        # @param [Array<String>, String] error_messages
+        # @param alma_export [::AlmaExport]
+        # @param error_messages [Array<String>, String]
         # @return [Boolean]
         def mark_as_failed(alma_export, error_messages)
           alma_export.status = Statuses::FAILED

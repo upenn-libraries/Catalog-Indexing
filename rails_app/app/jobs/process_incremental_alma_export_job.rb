@@ -4,7 +4,7 @@
 class ProcessIncrementalAlmaExportJob < TransactionJob
   sidekiq_options queue: 'high'
 
-  # @param [String] alma_export_id
+  # @param alma_export_id [String]
   def transaction(alma_export_id)
     ProcessIncrementalAlmaExport.new.call(alma_export_id: alma_export_id)
   end

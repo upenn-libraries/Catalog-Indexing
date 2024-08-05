@@ -118,7 +118,7 @@ class WebhookIndexingController < ApplicationController
   end
 
   # Does the webhook job payload describe a full publish? Full publishes don't have updated or deleted records.
-  # @param [Hash] payload
+  # @param payload [Hash]
   # @return [Boolean]
   def full_publish?(payload)
     counters = payload.dig 'job_instance', 'counter'

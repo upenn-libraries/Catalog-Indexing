@@ -18,7 +18,7 @@ module BatchCallbacks
     end
 
     # Executed when all jobs in the batch have run once, successful or not
-    # @param [Sidekiq::Batch::Status] status
+    # @param status [Sidekiq::Batch::Status]
     # @param alma_export_id [String]
     def on_complete(status, alma_export_id)
       alma_export = AlmaExport.find(alma_export_id)
