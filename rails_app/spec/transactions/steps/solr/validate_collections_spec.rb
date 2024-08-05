@@ -3,7 +3,7 @@
 describe Steps::Solr::ValidateCollections do
   let(:result) { described_class.new.call(collections: collections) }
 
-  context 'with one existing nd not existing collection' do
+  context 'with one existing and not existing collection' do
     let(:collections) { %w[gone-collection collection] }
 
     before do

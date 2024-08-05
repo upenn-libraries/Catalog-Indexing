@@ -28,7 +28,7 @@ module Steps
 
       # @param files_slice [Array<Sftp::File]
       def download_files(files_slice)
-        sftp_session = ::Sftp::Client.new # initialize a new connection each batch to avoid connection being closed
+        sftp_session = ::Sftp::Client.new # initialize a new connection for each batch to avoid connection being closed
         downloads = files_slice.map { |file| sftp_session.download(file, wait: false) }
         downloads.each(&:wait) # SFTP downloads occur concurrently here
         sftp_session.close_channel # close connection since we open a new once each iteration
