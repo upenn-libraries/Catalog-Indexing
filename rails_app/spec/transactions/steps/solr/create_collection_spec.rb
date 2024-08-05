@@ -26,4 +26,19 @@ describe Steps::Solr::CreateCollection do
       expect(result.failure[:message]).to include 'Solr collection new-collection already exists'
     end
   end
+
+  context 'when a SolrTools::CommandError is raised' do
+    let(:error_message) { 'Bad collection configuration!' }
+
+    before do
+      allow(SolrTools).to receive(:collection_exists?).with(collection_name).and_return(false)
+      allow(SolrTools).to receive(:create_collection).with(collection_name)
+                                                     .and_raise(SolrTools::CommandError, error_message)
+    end
+
+    it 'includes exception message from the SolrTools::CommandError exception' do
+      expect(result).to be_failure
+      expect(result.failure[:message]).to include error_message
+    end
+  end
 end
