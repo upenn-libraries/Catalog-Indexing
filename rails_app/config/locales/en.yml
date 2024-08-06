@@ -2,4 +2,6 @@ en:
   config_item:
     process_job_webhooks: 'Enabling this will automatically process full Alma publishing output, writing data to the catalog-update alias.'
     process_bib_webhooks: 'Enabling this will activate the Bib webhook processing, writing the records to the configured webhook target collections.'
+    incremental_target_collections: 'These Solr collections will be updated via the incremental publish jobs executed by Alma.'
     webhook_target_collections: 'These Solr collections will be updated via the webhook processing stream, provided that process bib webhooks is active.'
+    adhoc_target_collections: 'These Solr collections will be updated via the "Index by Identifier" tool.'

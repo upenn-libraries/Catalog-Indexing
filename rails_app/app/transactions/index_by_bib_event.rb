@@ -29,6 +29,6 @@ class IndexByBibEvent
                                        commit_on_close: commit_on_close)
     Success(io: io, writer: writer, indexer: PennMarcIndexer.new, **args)
   rescue StandardError => e
-    Failure("Problem preparing writer: #{e.message}")
+    Failure(exception: e)
   end
 end

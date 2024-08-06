@@ -18,7 +18,7 @@ module Steps
       # act based on the returned errors accordingly
       Success(errors: index_service&.error_messages&.unshift(e.message) || [e.message], **args)
     rescue StandardError => e
-      Failure("Failure while indexing: #{e.message}")
+      Failure(exception: e)
     end
   end
 end

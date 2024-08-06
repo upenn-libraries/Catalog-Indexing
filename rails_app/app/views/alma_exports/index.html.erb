@@ -19,6 +19,7 @@
       <th scope="col">ID</th>
       <th scope="col">Started</th>
       <th scope="col">Status</th>
+      <th scope="col">Full?</th>
       <th scope="col">Batch Files</th>
     </tr>
     </thead>
@@ -30,6 +31,7 @@
         </th>
         <td class="started-at"><%= export.started_at&.to_fs(:display) || 'Not Started' %></td>
         <td class="status"><%= export.status.titleize %></td>
+        <td class="full"><%= export.full ? 'Yes' : 'No' %></td>
         <td class="batch-files"><%= link_to export.batch_files.length, alma_export_batch_files_path(export) %></td>
       </tr>
     <% end %>

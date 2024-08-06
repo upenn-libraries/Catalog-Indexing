@@ -62,6 +62,12 @@
       </div>
     </div>
     <div class="row my-3">
+      <dt>Files Status</dt>
+      <dd>
+        <%= render 'progress' %>
+      </dd>
+    </div>
+    <div class="row my-3">
       <dt>Webhook Body</dt>
       <dd class="webhook-body">
       <pre class="bg-light"><%= JSON.pretty_generate @alma_export.webhook_body %></pre>

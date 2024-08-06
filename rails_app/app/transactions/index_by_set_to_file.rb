@@ -31,7 +31,7 @@ class IndexBySetToFile
     writer = Traject::JsonWriter.new({ 'output_file' => filename })
     Success(io: io, writer: writer, filename: filename, **args)
   rescue StandardError => e
-    Failure("Problem preparing writer: #{e.message}")
+    Failure(exception: e)
   end
 
   ## index_via_traject
