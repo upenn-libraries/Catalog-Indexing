@@ -64,7 +64,7 @@
            documents -->
       <str name="q.alt">*:*</str>
 
-      <!-- make all clauses mandatory unless 'OR' boolean operator specified.
+      <!-- make all clauses mandatory unless boolean operators specified.
            when q.op is "AND", mm defaults to 100%. see solr docs for more on the mm param:
            https://solr.apache.org/guide/solr/latest/query-guide/dismax-query-parser.html#mm-minimum-should-match-parameter -->
       <str name="q.op">AND</str>
