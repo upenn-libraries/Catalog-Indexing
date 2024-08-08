@@ -36,6 +36,7 @@ class WebhookIndexingController < ApplicationController
       if ConfigItem.value_for(:process_job_webhooks) && completed_publishing_job?(payload)
         initialize_alma_export(payload)
       else
+        Rails.logger.info { 'Completed job is not interesting. No job enqueued.' }
         head(:ok)
       end
     else
@@ -77,6 +78,7 @@ class WebhookIndexingController < ApplicationController
     alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
                                      webhook_body: payload, full: full)
     job = full ? ProcessFullAlmaExportJob : ProcessIncrementalAlmaExportJob
+    Rails.logger.info { "Completed job is interesting! Enqueueing #{job}." }
     job.perform_async(alma_export.id)
 
     head :accepted

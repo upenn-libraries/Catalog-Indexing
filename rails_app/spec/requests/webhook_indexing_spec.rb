@@ -19,7 +19,6 @@ RSpec.describe 'Webhook Indexing requests' do
   context 'when receiving POST requests' do
     before do
       allow(Settings.alma).to receive(:webhook_secret).and_return('test')
-      allow(ENV).to receive(:fetch).with('SOLR_COLLECTION', 'catalog-indexing-test').and_return(nil)
     end
 
     context 'with BIB actions' do
@@ -91,7 +90,7 @@ RSpec.describe 'Webhook Indexing requests' do
     end
 
     context 'with JOB actions' do
-      let(:headers) { { 'X-Exl-Signature': 'QhwSbxLgOFFbbKlGT+v2okksabFaNQNTBZxXLOI4Jvs=' } }
+      let(:headers) { { 'X-Exl-Signature': 'nMEedNbhZIMTUEgThPAsdVX/yHMl37fWT3/N6FSFJjE=' } }
 
       it 'handles validated job completed events if process_job_webhooks is true' do
         allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
@@ -108,7 +107,7 @@ RSpec.describe 'Webhook Indexing requests' do
       end
 
       context 'with incremental publishing webhook body' do
-        let(:headers) { { 'X-Exl-Signature': '7/IVIVAijdJXjG69qW5cUxg49oAJnA6GtSohUqjhymM=' } }
+        let(:headers) { { 'X-Exl-Signature': 'rRG1vTqgt7wtZBLbkm3KHRL2IMXqNqliedDd5/C6AN0=' } }
 
         before do
           allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
