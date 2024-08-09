@@ -42,8 +42,8 @@ module Steps
         # @return [Regexp]
         def files_matching_regex(job_id:)
           case @type.to_sym
-          when :delete then /_#{job_id}_.*_delete.tar.gz/
-          when :record then /_#{job_id}_.*_new_\d+.tar.gz/
+          when :delete then /_#{job_id}_.*_delete_?\d*.tar.gz/
+          when :record then /_#{job_id}_.*_new_?\d*.tar.gz/
           end
         end
       end
