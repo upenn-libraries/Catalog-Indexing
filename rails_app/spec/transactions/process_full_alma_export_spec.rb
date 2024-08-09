@@ -15,9 +15,9 @@ describe ProcessFullAlmaExport, stub_batches: true do
     end
     let(:outcome) { transaction.call(alma_export_id: alma_export.id) }
 
-    include_context 'with sftp files available'
-
     context 'with valid webhook response body' do
+      include_context 'with sftp files available'
+
       it 'is successful' do
         expect(outcome).to be_success
       end
@@ -41,6 +41,17 @@ describe ProcessFullAlmaExport, stub_batches: true do
         alma_export = outcome.success[:alma_export]
         expect(alma_export.target_collections).to eq [SolrTools.new_collection_name]
         expect(SolrTools.collection_exists?(alma_export.target_collections.first)).to be true
+      end
+    end
+
+    context 'with no sftp files available' do
+      include_context 'with sftp files available'
+
+      let(:sftp_files) { [] }
+
+      it 'returns a failure monad and appropriate message' do
+        expect(outcome).to be_failure
+        expect(outcome.failure[:message]).to eq 'No SFTP files found!'
       end
     end
   end

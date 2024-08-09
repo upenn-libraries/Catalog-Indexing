@@ -98,9 +98,9 @@ describe Steps::AlmaExport::Sftp::FileList do
 
     before { allow(sftp_client).to receive(:files).and_return(sftp_files) }
 
-    it 'returns a failure monad with appropriate message' do
-      expect(result.failure[:message]).to include "No SFTP #{type} file(s) available"
-      expect(alma_export.reload.error_messages).to include result.failure[:message]
+    it 'returns a success monad and an empty array' do
+      expect(result).to be_success
+      expect(result.success[:file_list]).to eq []
     end
   end
 end

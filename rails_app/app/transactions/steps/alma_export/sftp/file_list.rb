@@ -27,9 +27,6 @@ module Steps
           job_id = alma_export.alma_job_identifier
           files_matching = files_matching_regex(job_id: job_id)
           file_list = sftp_session.files.select { |f| f.name =~ files_matching }
-          if file_list.empty?
-            return handle_failure(alma_export, "No SFTP #{@type} file(s) available for job ID: #{job_id}")
-          end
 
           Success(alma_export: alma_export, file_list: file_list, sftp_session: sftp_session, **args)
         rescue StandardError => e
