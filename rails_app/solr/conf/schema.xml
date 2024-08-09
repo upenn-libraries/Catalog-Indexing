@@ -473,7 +473,7 @@
       <tokenizer class="solr.WhitespaceTokenizerFactory" />
       <filter class="solr.ICUFoldingFilterFactory"/>
       <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
-      <filter class="solr.SynonymGraphFilterFactory" synonyms="best_bet_synonyms.txt" ignoreCase="true" expand="false"/>
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="best_bet_synonyms.txt" ignoreCase="true" expand="true"/>
       <filter class="solr.WordDelimiterGraphFilterFactory"
               splitOnCaseChange="1" generateWordParts="1" catenateWords="1"
               splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
