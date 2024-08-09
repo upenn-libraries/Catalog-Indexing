@@ -12,7 +12,7 @@ solr_custom_env_variables:
   SOLR_HEAP: "50G"
   SOLR_JAVA_MEM: "-Xms100G -Xmx100G"
 
-solr_docker_image_tag: 9.3.0
+solr_docker_image_tag: 9.4.1
 
 solr_docker_volume_settings:
   - node_label: solr-1
