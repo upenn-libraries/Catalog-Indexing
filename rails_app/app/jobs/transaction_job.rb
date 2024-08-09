@@ -18,8 +18,6 @@ class TransactionJob
 
     raise failure[:exception] if failure[:exception]
 
-    raise StandardError, failure[:error].to_s.titleize
-  rescue TypeError => e
-    Rails.logger.info { "TransactionJob error parsing problem (#{e.message}). Failure response is: #{failure}" }
+    raise StandardError, failure[:message]
   end
 end

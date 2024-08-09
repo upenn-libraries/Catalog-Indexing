@@ -5,7 +5,7 @@ class ConfigItemsController < ApplicationController
   before_action :set_config_item, only: :update
 
   def index
-    @config_items = ConfigItem.order(:name)
+    @config_items = ConfigItem.order(config_type: :desc, name: :asc)
   end
 
   def update

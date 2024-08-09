@@ -19,7 +19,6 @@ RSpec.describe 'Webhook Indexing requests' do
   context 'when receiving POST requests' do
     before do
       allow(Settings.alma).to receive(:webhook_secret).and_return('test')
-      allow(ENV).to receive(:fetch).with('SOLR_COLLECTION', 'catalog-indexing-test').and_return(nil)
     end
 
     context 'with BIB actions' do
@@ -91,20 +90,34 @@ RSpec.describe 'Webhook Indexing requests' do
     end
 
     context 'with JOB actions' do
-      let(:headers) { { 'X-Exl-Signature': 'QhwSbxLgOFFbbKlGT+v2okksabFaNQNTBZxXLOI4Jvs=' } }
+      let(:headers) { { 'X-Exl-Signature': 'nMEedNbhZIMTUEgThPAsdVX/yHMl37fWT3/N6FSFJjE=' } }
 
       it 'handles validated job completed events if process_job_webhooks is true' do
         allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
-        post webhook_listen_path, params: json_fixture('job_end_success', :webhooks), headers: headers
+        post webhook_listen_path, params: json_fixture('job_end_success_full_publish', :webhooks), headers: headers
         expect(response).to have_http_status :accepted
-        expect(ProcessAlmaExportJob.jobs.size).to eq 1
+        expect(ProcessFullAlmaExportJob.jobs.size).to eq 1
       end
 
       it 'does not handle JOB_END events if process_job_webhooks is false' do
         allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(false)
-        post webhook_listen_path, params: json_fixture('job_end_success', :webhooks), headers: headers
+        post webhook_listen_path, params: json_fixture('job_end_success_full_publish', :webhooks), headers: headers
         expect(response).to have_http_status :ok
-        expect(ProcessAlmaExportJob.jobs.size).to eq 0
+        expect(ProcessFullAlmaExportJob.jobs.size).to eq 0
+      end
+
+      context 'with incremental publishing webhook body' do
+        let(:headers) { { 'X-Exl-Signature': 'rRG1vTqgt7wtZBLbkm3KHRL2IMXqNqliedDd5/C6AN0=' } }
+
+        before do
+          allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
+          post webhook_listen_path, params: json_fixture('job_end_success_incremental', :webhooks), headers: headers
+        end
+
+        it 'properly sets the full value on the created AlmaExport' do
+          expect(response).to have_http_status :accepted
+          expect(AlmaExport.last.full).to be false
+        end
       end
     end
   end

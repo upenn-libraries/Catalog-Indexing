@@ -9,6 +9,13 @@
         %>
       </div>
       <div class="col-lg">
+        <%= form.select 'filter[full]',
+                        options_for_select([['Yes', true], ['No', false]], selected: params.dig('filter', 'full')),
+                        include_blank: true,
+                        label: 'Full?'
+        %>
+      </div>
+      <div class="col-lg">
         <%= form.select 'filter[sort_value]',
                         options_for_select(titleize_and_pair(%w[started_at completed_at]), selected: params.dig('filter', 'sort_value')),
                         include_blank: true,

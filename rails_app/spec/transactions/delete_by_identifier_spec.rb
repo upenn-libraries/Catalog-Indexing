@@ -36,7 +36,7 @@ describe DeleteByIdentifier do
 
       it 'returns the failure message in some informative way' do
         expect(outcome).to be_failure
-        expect(outcome.failure).to include 'bad-collection-name'
+        expect(outcome.failure[:exception].message).to include 'bad-collection-name'
       end
     end
   end

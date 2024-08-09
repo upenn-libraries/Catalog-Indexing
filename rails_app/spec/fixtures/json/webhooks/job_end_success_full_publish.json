@@ -1,0 +1,105 @@
+{
+  "id": "1234567891234567",
+  "action": "JOB_END",
+  "institution": {
+    "value": "01UPENN_INST",
+    "desc": "University of Pennsylvania"
+  },
+  "time": "2023-09-01T12:01:00.000Z",
+  "event": null,
+  "job_instance": {
+    "id": "50746714710003681",
+    "external_id": "50746714710003681",
+    "name": "Publishing Platform Job All Titles - Find Catalog - FTP",
+    "submitted_by": {
+      "value": "51999999",
+      "desc": "Administrator, Test"
+    },
+    "submit_time": "2023-09-01T09:00:00.000Z",
+    "start_time": "2023-09-01T09:10:00.000Z",
+    "end_time": "2023-09-01T12:00:00.000Z",
+    "progress": 100,
+    "status": {
+      "value": "COMPLETED_SUCCESS",
+      "desc": "Completed Successfully"
+    },
+    "status_date": "2023-09-01",
+    "alert": [
+      {
+        "value": "alert_general_success",
+        "desc": "The job completed successfully. For more information view the report details."
+      }
+    ],
+    "counter": [
+      {
+        "type": {
+          "value": "label.new.records",
+          "desc": "New Records"
+        },
+        "value": "12345"
+      },
+      {
+        "type": {
+          "value": "label.updated.records",
+          "desc": "Updated Records"
+        },
+        "value": "0"
+      },
+      {
+        "type": {
+          "value": "label.deleted.records",
+          "desc": "Deleted Records"
+        },
+        "value": "0"
+      },
+      {
+        "type": {
+          "value": "c.jobs.publishing.failed.publishing",
+          "desc": "Unpublished failed records"
+        },
+        "value": "0"
+      },
+      {
+        "type": {
+          "value": "c.jobs.publishing.skipped",
+          "desc": "Skipped records (update date changed but no data change)"
+        },
+        "value": "0"
+      },
+      {
+        "type": {
+          "value": "c.jobs.publishing.filtered_out",
+          "desc": "Filtered records (not published due to filter)"
+        },
+        "value": "0"
+      },
+      {
+        "type": {
+          "value": "c.jobs.publishing.totalRecordsWrittenToFile",
+          "desc": "Total records written to file"
+        },
+        "value": "0"
+      }
+    ],
+    "job_info": {
+      "id": "S50746714700003681",
+      "name": "Publishing Platform Job All Titles Full - FTP",
+      "description": "Publishing Platform Job",
+      "type": {
+        "value": "SCHEDULED",
+        "desc": "Scheduled"
+      },
+      "category": {
+        "value": "PUBLISHING",
+        "desc": "Publishing"
+      },
+      "link": "/almaws/v1/conf/jobs/50746714710003681"
+    },
+    "link": "/almaws/v1/conf/jobs/S50746714700003681/instances/50746714710003681"
+  },
+  "bib": null,
+  "holding": null,
+  "item": null,
+  "portfolio": null,
+  "representation": null
+}

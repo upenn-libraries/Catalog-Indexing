@@ -1,0 +1,8 @@
+<% count = @alma_export.status_count(status) %>
+<div class="progress-bar <%= klass %>" role="progressbar"
+     aria-label="<%= status.titleize %> files" aria-valuenow="<%= count %>" aria-valuemin="0" aria-valuemax="100"
+     style="width: <%= status_percentage(count, total) %>">
+  <span title="<%= count %> of <%= total %> are <%= status.titleize %>">
+    <%= count %> <%= status.titleize %>
+  </span>
+</div>

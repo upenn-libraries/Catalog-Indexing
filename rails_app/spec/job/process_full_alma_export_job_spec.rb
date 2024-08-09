@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ProcessAlmaExportJob do
+describe ProcessFullAlmaExportJob do
   include FixtureHelpers
 
   let(:alma_export_id) { '1234' }

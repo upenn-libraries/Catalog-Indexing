@@ -17,7 +17,7 @@ describe Steps::IndexRecords do
 
     it 'returns failure monad' do
       expect(outcome).to be_failure
-      expect(outcome.failure).to include 'must pass in path or File'
+      expect(outcome.failure[:exception].message).to include 'must pass in path or File'
     end
   end
 

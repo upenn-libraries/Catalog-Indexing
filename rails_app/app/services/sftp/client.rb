@@ -17,13 +17,11 @@ module Sftp
       raise Error, "Could not connect to SFTP server: #{e.message}"
     end
 
-    # list files on sftp server that match pattern, returning Sftp::File objects
-    # @todo eliminate matching param and have consumers filter returned entries (see usage in ProcessAlmaExport)
-    # @param [Regexp] matching regex to match files in directory
+    # List all files on the SFTP server and return Sftp::File objects
     # @return [Array<Sftp::File>] list of Sftp::File objects
-    def files(matching:)
-      sftp.dir.entries(sftp_root).filter_map do |entry|
-        Sftp::File.new(entry.name) if entry.name.match?(matching)
+    def files
+      sftp.dir.entries(sftp_root).map do |entry|
+        Sftp::File.new(entry.name)
       end
     rescue RuntimeError => e
       raise Error, "Could not list files on the SFTP server: #{e.message}"
@@ -31,7 +29,7 @@ module Sftp
 
     # download single file from sftp server
     # @param [Sftp::File]
-    # @param [TrueClass | FalseClass] wait determines whether to run the event loop, allowing the download to progress
+    # @param wait [Boolean] determines whether to run the event loop, allowing the download to progress
     # @return [Net::SFTP::Operations::Download]
     def download(file, wait: true)
       ::File.truncate(file.local_path, 0) if file.downloaded?

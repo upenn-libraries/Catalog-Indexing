@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_06_161455) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_09_124317) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,6 +25,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_06_161455) do
     t.datetime "updated_at", null: false
     t.jsonb "webhook_body"
     t.string "error_messages", default: [], array: true
+    t.string "batch_job_bid"
   end
 
   create_table "batch_files", force: :cascade do |t|

@@ -36,6 +36,7 @@ class WebhookIndexingController < ApplicationController
       if ConfigItem.value_for(:process_job_webhooks) && completed_publishing_job?(payload)
         initialize_alma_export(payload)
       else
+        Rails.logger.info { 'Completed job is not interesting. No job enqueued.' }
         head(:ok)
       end
     else
@@ -73,9 +74,12 @@ class WebhookIndexingController < ApplicationController
   # @param payload [Hash]
   # @return [TrueClass]
   def initialize_alma_export(payload)
+    full = full_publish?(payload)
     alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
-                                     webhook_body: payload)
-    ProcessAlmaExportJob.perform_async(alma_export.id)
+                                     webhook_body: payload, full: full)
+    job = full ? ProcessFullAlmaExportJob : ProcessIncrementalAlmaExportJob
+    Rails.logger.info { "Completed job is interesting! Enqueueing #{job}." }
+    job.perform_async(alma_export.id)
 
     head :accepted
   end
@@ -111,7 +115,17 @@ class WebhookIndexingController < ApplicationController
   # @param [Hash] payload
   # @return [Boolean]
   def suppressed_from_discovery?(payload)
-    (payload.dig(:bib, :suppress_from_publishing) == true) ||
-      (payload.dig(:bib, :suppress_from_external_search) == true)
+    (payload.dig('bib', 'suppress_from_publishing') == true) ||
+      (payload.dig('bib', 'suppress_from_external_search') == true)
+  end
+
+  # Does the webhook job payload describe a full publish? Full publishes don't have updated or deleted records.
+  # @param payload [Hash]
+  # @return [Boolean]
+  def full_publish?(payload)
+    counters = payload.dig 'job_instance', 'counter'
+    updated = counters.find { |val| val.dig('type', 'value') == 'label.updated.records' }['value']
+    deleted = counters.find { |val| val.dig('type', 'value') == 'label.deleted.records' }['value']
+    (updated == '0') && (deleted == '0')
   end
 end

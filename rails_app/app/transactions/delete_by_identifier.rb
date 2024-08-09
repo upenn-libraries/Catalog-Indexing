@@ -32,6 +32,6 @@ class DeleteByIdentifier
     end
     Success("Record #{id} removed from Solr")
   rescue StandardError => e
-    Failure(e.message)
+    Failure(exception: e)
   end
 end
