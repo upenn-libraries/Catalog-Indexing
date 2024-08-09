@@ -1,9 +1,9 @@
 # Two syntax options are available here:
 # word, another-word, and-so-on
-# This comma-seperated syntax add in additional tokens (at the same location) when encountered
+# This comma-seperated syntax will add in additional tokens (at the same location) when encountered
 # And:
 # word => another-word
-# This rocket syntax replaces and "word" tokens with "another-word" at the same location
+# This rocket syntax replaces any "word" tokens with "another-word" at the same location
 
 # Taken from Franklin's most common search queries
 pubmed, 9977665945003681
