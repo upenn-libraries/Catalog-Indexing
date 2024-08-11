@@ -30,7 +30,7 @@ class ProcessIncrementalAlmaExport
   # @param file_list [Array<::Sftp::File] delete files
   # @return [Dry::Monads::Result]
   def accumulate_ids_for_deletion(alma_export:, sftp_session:, file_list:, **args)
-    return Success(alma_export: alma_export, ids: [], **args) if file_list.empty?
+    return Success(alma_export: alma_export, sftp_session: sftp_session, ids: [], **args) if file_list.empty?
 
     ids = []
     file_list.each do |delete_file|
