@@ -79,7 +79,7 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def search_fields
-    define_field :creator_unstem_search
+    define_field :creator_unstem_search, :creator_search
     define_field :creator_aux_unstem_search, :creator_search_aux
     define_field :conference_unstem_search, :creator_conference_search
     define_field :title_search
