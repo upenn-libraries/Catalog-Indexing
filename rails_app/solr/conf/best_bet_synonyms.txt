@@ -1,0 +1,27 @@
+# Two syntax options are available here:
+# word, another-word, and-so-on
+# This comma-seperated syntax will add in additional tokens (at the same location) when encountered
+# And:
+# word => another-word
+# This rocket syntax replaces any "word" tokens with "another-word" at the same location
+
+# Taken from Franklin's most common search queries
+ancestry.com, 9942524713503681
+the atlantic, 9977047422803681
+chronicle of higher ed, 9977047066603681
+chronicle of higher education, 9977047066603681
+the economist, 9977048907203681
+hoovers, 9926082903503681
+jstor, 9941439883503681
+the new yorker, 9977047445803681
+nyt, 9977568423203681
+new york times, 9977568423203681
+nexis uni, 9977170353703681
+oed, 9927543263503681
+pitchbook, 9977497628803681
+philadelphia inquirer, 9977047865203681
+pubmed, 9977665945003681
+statista, 9957467153503681
+wall street journal, 9977049134403681
+web of science, 9922023643503681
+wsj, 9977049134403681
