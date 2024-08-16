@@ -31,8 +31,9 @@
     <updateLog>
       <str name="dir">${solr.core0.data.dir:}</str>
     </updateLog>
+    <!-- We're using explicit commits and commitWithin -->
     <autoCommit>
-      <maxTime>${solr.autoCommit.maxTime:15000}</maxTime>
+      <maxTime>${solr.autoCommit.maxTime:-1}</maxTime>
       <openSearcher>false</openSearcher>
     </autoCommit>
     <autoSoftCommit>
@@ -45,6 +46,56 @@
 <!--  <lib dir="${solr.install.dir:../../../..}/contrib/analysis-extras/lib" />-->
 
   <dataDir>${solr.data.dir:}</dataDir>
+
+  <query>
+    <!-- Filter Cache
+      see: https://solr.apache.org/guide/solr/9_3/configuration-guide/caches-warming.html#filter-cache
+      -->
+    <filterCache class="solr.CaffeineCache"
+                 size="8192"
+                 initialSize="8192"
+                 autowarmCount="0"/>
+
+    <!-- Query Cache
+      see: https://solr.apache.org/guide/solr/9_3/configuration-guide/caches-warming.html#query-result-cache
+      -->
+    <queryResultCache class="solr.CaffeineCache"
+                      size="1024"
+                      initialSize="1024"
+                      autowarmCount="0"/>
+
+    <!-- Document Cache
+      see: https://solr.apache.org/guide/solr/9_3/configuration-guide/caches-warming.html#query-result-cache
+      -->
+    <documentCache class="solr.CaffeineCache"
+                   size="1024"
+                   initialSize="1024"
+                   autowarmCount="0"/>
+
+    <!-- Lazy Field Loading
+
+         If true, stored fields that are not requested will be loaded
+         lazily.  This can result in a significant speed improvement
+         if the usual case is to not load all stored fields,
+         especially if the skipped fields are large compressed text
+         fields.
+    -->
+    <enableLazyFieldLoading>true</enableLazyFieldLoading>
+
+    <!-- Result Window Size
+
+         An optimization for use with the queryResultCache.  When a search
+         is requested, a superset of the requested number of document ids
+         are collected.  For example, if a search for a particular query
+         requests matching documents 10 through 19, and queryWindowSize is 50,
+         then documents 0 through 49 will be collected and cached.  Any further
+         requests in that range can be satisfied via the cache.
+      -->
+    <queryResultWindowSize>200</queryResultWindowSize>
+
+    <!-- see: https://solr.apache.org/guide/solr/9_3/configuration-guide/caches-warming.html#usefilterforsortedquery-element -->
+    <useFilterForSortedQuery>true</useFilterForSortedQuery>
+  </query>
 
   <!-- "search" request handler is used by Blacklight to handle all search requests -->
   <requestHandler name="search" class="solr.SearchHandler" default="true">
