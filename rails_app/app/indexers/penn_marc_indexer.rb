@@ -36,6 +36,7 @@ class PennMarcIndexer < Traject::Indexer
     stored_fields
     link_fields
     inventory_fields
+    call_number_fields
     marc_field
   end
 
@@ -162,6 +163,12 @@ class PennMarcIndexer < Traject::Indexer
     # end
     define_field :physical_holding_count_i, :inventory_physical_holding_count
     define_field :electronic_portfolio_count_i, :inventory_electronic_portfolio_count
+  end
+
+  def call_number_fields
+    define_field :call_number_unstem_search, :classification_call_number_search
+    define_field :call_number_callnum_search, :classification_call_number_search
+    define_field :call_number, :classification_call_number_search
   end
 
   def marc_field
