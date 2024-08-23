@@ -155,14 +155,12 @@
         creator_unstem_search^7000
         creator_aux_unstem_search^5000
         conference_unstem_search^5000
-        conference_search^3000
       </str>
       <str name="creator_pf">
         creator_ss^50000
         creator_unstem_search^7000
         creator_aux_unstem_search^5000
         conference_unstem_search^5000
-        conference_search^3000
       </str>
 
       <str name="subject_qf">
