@@ -153,20 +153,14 @@
       <str name="creator_qf">
         creator_ss^50000
         creator_unstem_search^7000
-        creator_search^5000
         creator_aux_unstem_search^5000
-        creator_aux_search^3000
         conference_unstem_search^5000
-        conference_search^3000
       </str>
       <str name="creator_pf">
         creator_ss^50000
         creator_unstem_search^7000
-        creator_search^5000
         creator_aux_unstem_search^5000
-        creator_aux_search^3000
         conference_unstem_search^5000
-        conference_search^3000
       </str>
 
       <str name="subject_qf">
@@ -207,11 +201,9 @@
 
       <str name="publisher_qf">
         publisher_unstem_search^2500
-        publisher_search^1500
       </str>
       <str name="publisher_pf">
         publisher_unstem_search^2500
-        publisher_search^1000
       </str>
 
       <str name="series_qf">
@@ -238,11 +230,9 @@
 
       <str name="place_of_publication_qf">
         place_of_publication_unstem_search^2500
-        place_of_publication_search^1500
       </str>
       <str name="place_of_publication_pf">
         place_of_publication_unstem_search^2500
-        place_of_publication_search^1000
       </str>
 
       <str name="publisher_number_qf">
@@ -272,11 +262,20 @@
 
       <str name="corporate_author_qf">
         corporate_author_unstem_search^2500
-        corporate_author_search^1500
       </str>
       <str name="corporate_author_pf">
         corporate_author_unstem_search^2500
-        corporate_author_search^1000
+      </str>
+
+      <str name="call_number_qf">
+        call_number^10000
+        call_number_callnum_search^5000
+<!--        call_number_unstem_search^1500-->
+      </str>
+      <str name="call_number_pf">
+        call_number^10000
+        call_number_callnum_search^5000
+<!--        call_number_unstem_search^1500-->
       </str>
 
       <str name="facet">true</str>

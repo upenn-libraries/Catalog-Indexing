@@ -15,11 +15,9 @@
   journal_title_search^1500
   series_anchored_search^50000
   series_unstem_search^3000
-  series_search^2000
+  series_search^1500
   creator_unstem_search^7000
-  creator_search^5000
   creator_aux_unstem_search^5000
-  creator_aux_search^3000
   conference_unstem_search^5000
   conference_search^3000
   subject_unstem_search^7500
@@ -49,9 +47,7 @@
   series_unstem_search^3000
   series_search^2000
   creator_unstem_search^7000
-  creator_search^5000
   creator_aux_unstem_search^5000
-  creator_aux_search^3000
   conference_unstem_search^5000
   conference_search^3000
   subject_unstem_search^7500

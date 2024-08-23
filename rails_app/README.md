@@ -20,6 +20,11 @@ The behavior of the application can be modified using the `Settings` area in the
 * `Webhook Target Collections` - The selected Solr collections will receive updates via the `BIB` webhook jobs.
 * `Incremental Target Collections` - The selected Solr collections will receive incremental updates via `JOB` webhooks for jobs matching the the `Settings.alma.publishing_job.name` value indicating the presence of updated or deleted records.
 
+To make these settings accessible from the interface, you must run the following rake task [inside the application container](#interacting-with-the-application):
+```bash
+rake tools:add_config_items
+```
+
 ## Local Development Environment
 
 Our local development environment uses vagrant in order to set up a consistent environment with the required services. Please see the root README for instructions on how to set up this environment.

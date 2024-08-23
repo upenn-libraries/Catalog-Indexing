@@ -36,6 +36,7 @@ class PennMarcIndexer < Traject::Indexer
     stored_fields
     link_fields
     inventory_fields
+    call_number_fields
     marc_field
   end
 
@@ -79,8 +80,8 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def search_fields
-    define_field :creator_search
-    define_field :creator_aux_search, :creator_search_aux
+    define_field :creator_unstem_search, :creator_search
+    define_field :creator_aux_unstem_search, :creator_search_aux
     define_field :conference_search, :creator_conference_search
     define_field :title_search
     define_field :title_aux_search, :title_search_aux
@@ -90,10 +91,10 @@ class PennMarcIndexer < Traject::Indexer
     define_field :genre_search
     define_field :isxn_search, :identifier_isxn_search
     define_field :series_search
-    define_field :publisher_search, :production_search
+    define_field :publisher_unstem_search, :production_search
     define_field :publisher_number_search, :identifier_publisher_number_search
-    define_field :place_of_publication_search, :production_place_of_publication_search
-    define_field :corporate_author_search, :creator_corporate_search
+    define_field :place_of_publication_unstem_search, :production_place_of_publication_search
+    define_field :corporate_author_unstem_search, :creator_corporate_search
     define_field :contents_note_search, :note_contents_values
   end
 
@@ -162,6 +163,12 @@ class PennMarcIndexer < Traject::Indexer
     # end
     define_field :physical_holding_count_i, :inventory_physical_holding_count
     define_field :electronic_portfolio_count_i, :inventory_electronic_portfolio_count
+  end
+
+  def call_number_fields
+    define_field :call_number_unstem_search, :classification_call_number_search
+    define_field :call_number_callnum_search, :classification_call_number_search
+    define_field :call_number, :classification_call_number_search
   end
 
   def marc_field
