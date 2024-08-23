@@ -80,8 +80,8 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def search_fields
-    define_field :creator_search
-    define_field :creator_aux_search, :creator_search_aux
+    define_field :creator_unstem_search, :creator_search
+    define_field :creator_aux_unstem_search, :creator_search_aux
     define_field :conference_search, :creator_conference_search
     define_field :title_search
     define_field :title_aux_search, :title_search_aux
@@ -91,10 +91,10 @@ class PennMarcIndexer < Traject::Indexer
     define_field :genre_search
     define_field :isxn_search, :identifier_isxn_search
     define_field :series_search
-    define_field :publisher_search, :production_search
+    define_field :publisher_unstem_search, :production_search
     define_field :publisher_number_search, :identifier_publisher_number_search
-    define_field :place_of_publication_search, :production_place_of_publication_search
-    define_field :corporate_author_search, :creator_corporate_search
+    define_field :place_of_publication_unstem_search, :production_place_of_publication_search
+    define_field :corporate_author_unstem_search, :creator_corporate_search
     define_field :contents_note_search, :note_contents_values
   end
 
