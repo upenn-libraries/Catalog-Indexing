@@ -1,59 +1,60 @@
 <str name="qf">
   <!-- highly boost exact match fields (identifier fields, anchored fields) -->
   mmsid^100000
-  title_anchored_search^80000
-  title_unstem_search^3000
-  title_search^2500
-  title_aux_anchored_search^50000
-  title_aux_unstem_search^2500
-  title_aux_search^2000
-  journal_title_anchored_search^75000
-  journal_title_unstem_search^3000
-  journal_title_search^2000
-  journal_title_aux_anchored_search^60000
-  journal_title_aux_unstem_search^2500
-  journal_title_search^1500
-  series_anchored_search^50000
-  series_unstem_search^3000
-  series_search^1500
-  creator_unstem_search^7000
-  creator_aux_unstem_search^5000
-  conference_unstem_search^5000
-  conference_search^3000
-  subject_unstem_search^7500
-  subject_search^6000
-  genre_unstem_search^6500
-  genre_search^5000
-  isxn_search^20000
-  doi_ss^90000
-  oclc_id_ss^90000
+  doi_ss^10000
+  oclc_id_ss^10000
+  isxn_search^8000
+  title_anchored_search^4000 title_unstem_search^300 title_search^250
+  title_aux_anchored_search^2000 title_aux_unstem_search^250 title_aux_search^200
+  journal_title_anchored_search^4000 journal_title_unstem_search^300 journal_title_search^200
+  journal_title_aux_anchored_search^1500 journal_title_aux_unstem_search^250 journal_title_search^150
+  series_anchored_search^1500 series_unstem_search^300 series_search^150
+  creator_unstem_search^700 creator_aux_unstem_search^500
+  conference_unstem_search^500 conference_search^300
+  subject_unstem_search^750 subject_search^600
+  genre_unstem_search^650 genre_search^500
   marcxml_marcxml
 </str>
 <str name="pf">
   <!-- no identifier fields, slightly boosted marcxml field -->
-  title_anchored_search^80000
-  title_unstem_search^3000
-  title_search^2500
-  title_aux_anchored_search^50000
-  title_aux_unstem_search^2500
-  title_aux_search^2000
-  journal_title_anchored_search^75000
-  journal_title_unstem_search^3000
-  journal_title_search^2000
-  journal_title_aux_anchored_search^60000
-  journal_title_aux_unstem_search^2500
-  journal_title_search^1500
-  series_anchored_search^50000
-  series_unstem_search^3000
-  series_search^2000
+  title_anchored_search^12000 title_unstem_search^10000 title_search^5000
+  title_aux_anchored_search^5000 title_aux_unstem_search^1000 title_aux_search^200
+  journal_title_anchored_search^7500 journal_title_unstem_search^1000 journal_title_search^200
+  journal_title_aux_anchored_search^6000 journal_title_aux_unstem_search^700 journal_title_search^150
+  series_anchored_search^5000 series_unstem_search^1500 series_search^200
+  creator_unstem_search^2000
+  creator_aux_unstem_search^500
+  conference_unstem_search^500 conference_search^75
+  subject_unstem_search^2000 subject_search^150
+  genre_unstem_search^1000 genre_search^150
+  marcxml_marcxml^100
+</str>
+<str name="pf2">
+  <!-- no anchored or identifier fields. notes field added -->
+  title_unstem_search^30000 title_search^10000
+  title_aux_unstem_search^1500 title_aux_search^200
+  journal_title_unstem_search^25000 journal_title_search^200
+  journal_title_aux_unstem_search^2500 journal_title_aux_search^150
+  series_unstem_search^3000 series_search^400
+  creator_unstem_search^4500
+  creator_aux_unstem_search^2000
+  conference_unstem_search^3000 conference_search^150
+  subject_unstem_search^4000 subject_search^500
+  genre_unstem_search^2500 genre_search^300
+  contents_note_search^150
+  marcxml_marcxml^200
+</str>
+<str name="pf3">
+  title_unstem_search^60000 title_search^15000
+  title_aux_unstem_search^2500 title_aux_search^200
+  journal_title_unstem_search^50000 journal_title_search^200
+  journal_title_aux_unstem_search^2500 journal_title_aux_search^150
+  series_unstem_search^10000 series_search^1000
   creator_unstem_search^7000
-  creator_aux_unstem_search^5000
-  conference_unstem_search^5000
-  conference_search^3000
-  subject_unstem_search^7500
-  subject_search^6000
-  genre_unstem_search^6500
-  genre_search^5000
-  isxn_search^9000
-  marcxml_marcxml^1000
+  creator_aux_unstem_search^4000
+  conference_unstem_search^5000 conference_search^300
+  subject_unstem_search^7500 subject_search^600
+  genre_unstem_search^6500 genre_search^500
+  contents_note_search^400
+  marcxml_marcxml^500
 </str>

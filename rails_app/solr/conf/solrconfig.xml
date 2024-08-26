@@ -73,7 +73,7 @@
       <int name="qs">1</int>
 
       <!-- "phrase slop" distance between tokens for a match in phrase query -->
-      <int name="ps">2</int>
+      <int name="ps">1</int>
       <float name="tie">0.01</float>
 
       <!-- import qf/pf -->
