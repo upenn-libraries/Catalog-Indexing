@@ -46,6 +46,11 @@
 
   <dataDir>${solr.data.dir:}</dataDir>
 
+  <query>
+    <!-- increase maxBooleanClauses while we have complex pf* configs -->
+    <maxBooleanClauses>2048</maxBooleanClauses>
+  </query>
+
   <!-- "search" request handler is used by Blacklight to handle all search requests -->
   <requestHandler name="search" class="solr.SearchHandler" default="true">
     <!-- default values for query parameters can be specified, these
