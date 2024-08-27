@@ -112,7 +112,6 @@
       &keyword_config;
 
       <str name="title_qf">
-        title_ss^100000
         title_anchored_search^80000
         title_unstem_search^3000
         title_search^2500
@@ -121,7 +120,6 @@
         title_aux_search^2000
       </str>
       <str name="title_pf">
-        title_ss^100000
         title_anchored_search^80000
         title_unstem_search^3000
         title_search^2500
@@ -151,13 +149,11 @@
       </str>
 
       <str name="creator_qf">
-        creator_ss^50000
         creator_unstem_search^7000
         creator_aux_unstem_search^5000
         conference_unstem_search^5000
       </str>
       <str name="creator_pf">
-        creator_ss^50000
         creator_unstem_search^7000
         creator_aux_unstem_search^5000
         conference_unstem_search^5000
@@ -183,13 +179,9 @@
 
       <str name="isxn_qf">
         isxn_search^2500
-        isbn_ss^1000
-        issn_ss^1000
       </str>
       <str name="isxn_pf">
         isxn_search^2500
-        isbn_ss^1000
-        issn_ss^1000
       </str>
 
       <str name="publication_date_qf">
@@ -207,13 +199,11 @@
       </str>
 
       <str name="series_qf">
-        series_ss^30000
         series_anchored_search^7000
         series_unstem_search^2500
         series_search^1500
       </str>
       <str name="series_pf">
-        series_ss^30000
         series_anchored_search^7000
         series_unstem_search^2000
         series_search^1000
