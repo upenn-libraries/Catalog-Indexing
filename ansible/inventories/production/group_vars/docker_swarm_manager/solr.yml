@@ -9,7 +9,7 @@ solr_custom_env_variables:
   SOLR_ADMIN_USERNAME: "{{ catalog_solr_vault_values.secret.username }}"
   SOLR_ADMIN_PASSWORD: "{{ catalog_solr_vault_values.secret.password }}"
   SOLR_ENABLE_AUTHENTICATION: "yes"
-  SOLR_HEAP: "50G"
+  SOLR_HEAP: "65G"
   SOLR_JAVA_MEM: "-Xms100G -Xmx100G"
 
 solr_docker_image_tag: 9.3.0

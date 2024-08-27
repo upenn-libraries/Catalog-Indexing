@@ -52,7 +52,7 @@
       see: https://solr.apache.org/guide/solr/9_3/configuration-guide/caches-warming.html#filter-cache
       -->
     <filterCache class="solr.CaffeineCache"
-                 size="8192"
+                 size="4096"
                  initialSize="8192"
                  autowarmCount="0"/>
 
@@ -60,7 +60,7 @@
       see: https://solr.apache.org/guide/solr/9_3/configuration-guide/caches-warming.html#query-result-cache
       -->
     <queryResultCache class="solr.CaffeineCache"
-                      size="1024"
+                      size="512"
                       initialSize="1024"
                       autowarmCount="0"/>
 
@@ -68,7 +68,7 @@
       see: https://solr.apache.org/guide/solr/9_3/configuration-guide/caches-warming.html#query-result-cache
       -->
     <documentCache class="solr.CaffeineCache"
-                   size="1024"
+                   size="512"
                    initialSize="1024"
                    autowarmCount="0"/>
 
