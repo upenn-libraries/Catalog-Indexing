@@ -53,7 +53,7 @@
       -->
     <filterCache class="solr.CaffeineCache"
                  size="4096"
-                 initialSize="8192"
+                 initialSize="4096"
                  autowarmCount="0"/>
 
     <!-- Query Cache
@@ -61,7 +61,7 @@
       -->
     <queryResultCache class="solr.CaffeineCache"
                       size="512"
-                      initialSize="1024"
+                      initialSize="512"
                       autowarmCount="0"/>
 
     <!-- Document Cache
@@ -69,7 +69,7 @@
       -->
     <documentCache class="solr.CaffeineCache"
                    size="512"
-                   initialSize="1024"
+                   initialSize="512"
                    autowarmCount="0"/>
 
     <!-- Lazy Field Loading
