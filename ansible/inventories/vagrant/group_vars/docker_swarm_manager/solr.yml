@@ -25,3 +25,4 @@ solr_custom_env_variables:
   SOLR_ENABLE_AUTHENTICATION: "yes"
   SOLR_ADMIN_USERNAME: "admin"
   SOLR_ADMIN_PASSWORD: "password"
+  SOLR_OPTS: "-Dsolr.max.booleanClauses=2048"
