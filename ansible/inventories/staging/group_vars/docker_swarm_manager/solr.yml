@@ -7,7 +7,7 @@ solr_custom_env_variables:
   SOLR_ADMIN_USERNAME: "{{ catalog_solr_vault_values.secret.username }}"
   SOLR_ADMIN_PASSWORD: "{{ catalog_solr_vault_values.secret.password }}"
   SOLR_ENABLE_AUTHENTICATION: "yes"
-  SOLR_HEAP: "8G"
+  SOLR_HEAP: "10G"
   SOLR_JAVA_MEM: "-Xms10G -Xmx10G"
   SOLR_OPTS: "-Dsolr.max.booleanClauses=2048"
 
