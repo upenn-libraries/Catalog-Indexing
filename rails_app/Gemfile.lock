@@ -299,7 +299,7 @@ GEM
     parser (3.3.0.5)
       ast (~> 2.4.1)
       racc
-    pennmarc (1.1.0)
+    pennmarc (1.2.0)
       activesupport (~> 7)
       library_stdnums (~> 1.6)
       marc (~> 1.2)
@@ -364,7 +364,7 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
-    rexml (3.3.5)
+    rexml (3.3.6)
       strscan
     rsolr (2.6.0)
       builder (>= 2.1.2)
