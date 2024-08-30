@@ -52,8 +52,8 @@
       see: https://solr.apache.org/guide/solr/9_3/configuration-guide/caches-warming.html#filter-cache
       -->
     <filterCache class="solr.CaffeineCache"
-                 size="8192"
-                 initialSize="8192"
+                 size="4096"
+                 initialSize="4096"
                  autowarmCount="0"/>
 
     <!-- Query Cache
