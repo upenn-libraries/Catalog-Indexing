@@ -49,7 +49,7 @@ class WebhookIndexingController < ApplicationController
   # @return [TrueClass]
   # rubocop:disable Metrics/AbcSize
   def handle_bib_action(payload)
-    return head(:no_content) if suppressed_from_discovery?(payload)
+    return head(:ok) if suppressed_from_discovery?(payload)
 
     marc_xml = payload.dig 'bib', 'anies'
     case payload.dig 'event', 'value'

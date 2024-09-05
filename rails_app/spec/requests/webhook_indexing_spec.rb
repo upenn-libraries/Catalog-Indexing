@@ -60,7 +60,7 @@ RSpec.describe 'Webhook Indexing requests' do
       it 'properly handles validated bib added events where the record is suppressed' do
         headers = { 'X-Exl-Signature': 'scrIyWhz1kSnOhL1f4c+4DxiytXe56yNgYo8MJG3L3Y=' }
         post webhook_listen_path, params: json_fixture('bib_created_suppressed', :webhooks), headers: headers
-        expect(response).to have_http_status :no_content
+        expect(response).to have_http_status :ok
         expect(IndexByBibEventJob.jobs.size).to eq 0
       end
 
