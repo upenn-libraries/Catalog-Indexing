@@ -49,7 +49,7 @@ class WebhookIndexingController < ApplicationController
   # @return [TrueClass]
   # rubocop:disable Metrics/AbcSize
   def handle_bib_action(payload)
-    head(:ok) if suppressed_from_discovery?(payload)
+    return head(:ok) if suppressed_from_discovery?(payload)
 
     marc_xml = payload.dig 'bib', 'anies'
     case payload.dig 'event', 'value'
@@ -115,8 +115,8 @@ class WebhookIndexingController < ApplicationController
   # @param [Hash] payload
   # @return [Boolean]
   def suppressed_from_discovery?(payload)
-    (payload.dig('bib', 'suppress_from_publishing') == true) ||
-      (payload.dig('bib', 'suppress_from_external_search') == true)
+    (payload.dig('bib', 'suppress_from_publishing') == 'true') ||
+      (payload.dig('bib', 'suppress_from_external_search') == 'true')
   end
 
   # Does the webhook job payload describe a full publish? Full publishes don't have updated or deleted records.
