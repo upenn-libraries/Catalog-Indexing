@@ -1,0 +1,42 @@
+{
+  "id" : "5964501992488853354",
+  "action" : "BIB",
+  "event" : {
+    "value" : "BIB_CREATED",
+    "desc" : "BIB record created"
+  },
+  "institution" : {
+    "value" : "01UPENN_INST",
+    "desc" : "University of Pennsylvania"
+  },
+  "time" : "2024-09-04T12:17:19.191Z",
+  "bib" : {
+    "mms_id" : "9979466021403681",
+    "record_format" : "marc21",
+    "linked_record_id" : {
+      "value" : ""
+    },
+    "title" : "Public finance and public policy",
+    "author" : "Jonathan Gruber",
+    "date_of_publication" : "2024",
+    "holdings" : {
+      "value" : "",
+      "link" : "/almaws/v1/bibs/9979466021403681/holdings"
+    },
+    "created_by" : "System",
+    "created_date" : "2024-09-04Z",
+    "last_modified_by" : "System",
+    "last_modified_date" : "2024-09-04Z",
+    "suppress_from_publishing" : "true",
+    "suppress_from_external_search" : "false",
+    "suppress_from_metadoor" : "false",
+    "rank" : "35",
+    "sync_with_oclc" : "NONE",
+    "sync_with_libraries_australia" : "NONE",
+    "brief_level" : {
+      "value" : "02",
+      "desc" : "02- Abbreviated level"
+    },
+    "anies" : [ "<?xml version=\"1.0\" encoding=\"UTF-16\"?><record><leader>00218nam  22000853u 4500</leader><controlfield tag=\"001\">9979466021403681</controlfield><controlfield tag=\"008\">240904s2024    xx            000 0     d</controlfield><controlfield tag=\"005\">20240904081717.0</controlfield><datafield ind1=\"1\" ind2=\" \" tag=\"100\"><subfield code=\"a\">Jonathan Gruber</subfield></datafield><datafield ind1=\"1\" ind2=\"0\" tag=\"245\"><subfield code=\"a\">Public finance and public policy</subfield></datafield></record>" ]
+  }
+}
