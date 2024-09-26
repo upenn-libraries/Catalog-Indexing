@@ -11,7 +11,7 @@ solr_custom_env_variables:
   SOLR_ENABLE_AUTHENTICATION: "yes"
   SOLR_HEAP: "65G"
   SOLR_JAVA_MEM: "-Xms100G -Xmx100G"
-  SOLR_OPTS: "-Dsolr.max.booleanClauses=4096"
+  SOLR_OPTS: "-Dsolr.max.booleanClauses=6144"
 
 solr_docker_image_tag: 9.3.0
 
