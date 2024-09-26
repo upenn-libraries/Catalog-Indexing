@@ -15,7 +15,7 @@
   marcxml_marcxml
 </str>
 <str name="pf">
-  title_anchored_search^1500 title_unstem_search^10000 title_search^5000
+  title_anchored_search^12000 title_unstem_search^10000 title_search^5000
   title_aux_anchored_search^1200 title_aux_unstem_search^1000 title_aux_search^200
   journal_title_anchored_search^1500 journal_title_unstem_search^1000 journal_title_search^200
   journal_title_aux_anchored_search^1100 journal_title_aux_unstem_search^700 journal_title_search^150
