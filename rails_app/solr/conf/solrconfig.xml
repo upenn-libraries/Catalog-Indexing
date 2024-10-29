@@ -24,7 +24,7 @@
   <schemaFactory class="ClassicIndexSchemaFactory" />
 
   <!-- Provides comparable IDF across distributed nodes -->
-  <statsCache class="solr.stats.ExactSharedStatsCache" />
+  <statsCache class="org.apache.solr.search.stats.LRUStatsCache" />
 
   <!-- auto/commit configurations -->
   <updateHandler class="solr.DirectUpdateHandler2">
