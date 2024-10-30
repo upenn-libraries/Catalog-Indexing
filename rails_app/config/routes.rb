@@ -25,8 +25,9 @@ Rails.application.routes.draw do
   resources :config_items, only: %w[index update]
 
   scope :indexing do
-    get 'by-id', to: 'alma_indexing#index', as: 'index_by_id'
-    post 'process', to: 'alma_indexing#process_ids', as: 'process_ids'
+    get 'adhoc', to: 'alma_indexing#index', as: 'adhoc_indexing'
+    post 'add', to: 'alma_indexing#add', as: 'add_by_id'
+    post 'delete', to: 'alma_indexing#delete', as: 'delete_by_id'
 
     scope :webhook do
       get 'listen', to: 'webhook_indexing#challenge', as: 'webhook_challenge'

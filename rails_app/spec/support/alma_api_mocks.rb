@@ -4,18 +4,6 @@
 module AlmaApiMocks
   # @param [Array<String>] bib_ids list of mms ids of alma bibliographic record
   # @param [String] alma_marc_xml MARC XML of given record
-  # @param [String] alma_api_key key to authorize alma api request
-  # @return [WebMock::RequestStub]
-  # def stub_bibs_request(bib_ids, alma_marc_xml, alma_api_key = '')
-  #   bib_ids = Array.wrap(bib_ids).join(',')
-  #   stub_request(
-  #     :get,
-  #     "#{alma_api_base_url}bibs/?mms_id=#{bib_ids}&expand=p_avail&apikey=#{alma_api_key}"
-  #   ).to_return(body: alma_marc_xml)
-  # end
-
-  # @param [Array<String>] bib_ids list of mms ids of alma bibliographic record
-  # @param [String] alma_marc_xml MARC XML of given record
   # @return [WebMock::RequestStub]
   def stub_bibs_request(bib_ids, alma_marc_xml)
     bib_ids = Array.wrap(bib_ids).join(',')

@@ -32,6 +32,9 @@ class Container
     register('incremental_target_collections') do
       Steps::ConfigItemValue.new(name: :incremental_target_collections, as: :collections)
     end
+    register('adhoc_target_collections') do
+      Steps::ConfigItemValue.new(name: :adhoc_target_collections, as: :collections)
+    end
   end
 
   namespace 'traject' do

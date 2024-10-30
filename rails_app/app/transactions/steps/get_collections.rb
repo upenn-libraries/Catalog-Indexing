@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Steps
-  # Step to get Solr collections for use with webhook indexing operations
+  # Step to get Solr collections for use with indexing operations
   class GetCollections
     include Dry::Monads[:result]
 

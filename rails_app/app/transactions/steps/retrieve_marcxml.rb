@@ -6,11 +6,11 @@ module Steps
     include Dry::Monads[:result]
 
     # Get MARCXML from Alma API
-    # @param [Array<String>] identifiers
+    # @param [Array<String>, String] identifiers
     # @return [Dry::Monads::Result]
     def call(identifiers:, **args)
       docs = []
-      identifiers.in_groups_of(AlmaApi::Client::MAX_BIBS_GET, false).each do |group|
+      Array.wrap(identifiers).in_groups_of(AlmaApi::Client::MAX_BIBS_GET, false).each do |group|
         response = AlmaApi::Client.new.bibs group
         docs += response['bib']&.filter_map do |bib_data|
           bib_data['anies'].first
