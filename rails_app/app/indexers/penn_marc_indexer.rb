@@ -118,11 +118,11 @@ class PennMarcIndexer < Traject::Indexer
       pub_date = parser.public_send :date_publication, record
       acc << (pub_date&.strftime('%Y') || '') # e.g., 1999
     end
-
     to_field('added_date_s') do |record, acc|
       date_added = parser.public_send :date_added, record
       acc << (date_added&.strftime('%F') || '') # e.g., 1999-1-30
     end
+    to_field('indexed_date_s') { |_, acc| acc << Time.current }
   end
 
   def stored_fields
