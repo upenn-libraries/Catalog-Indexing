@@ -153,6 +153,7 @@
       <str name="defType">lucene</str>
       <str name="echoParams">explicit</str>
       <str name="df">marcxml_marcxml</str>
+      <str name="q.op">AND</str>
 
       <str name="fl">
         *,
