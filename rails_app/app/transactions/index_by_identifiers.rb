@@ -18,5 +18,7 @@ class IndexByIdentifiers
     collections = ConfigItem.value_for :adhoc_target_collections
     writer = MultiCollectionWriter.new(collections: collections, commit_on_close: true)
     Success(writer: writer, **args)
+  rescue StandardError => e
+    Failure exception: e
   end
 end

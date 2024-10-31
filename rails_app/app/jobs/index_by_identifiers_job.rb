@@ -6,6 +6,6 @@ class IndexByIdentifiersJob < TransactionJob
 
   # @param [Array] identifiers
   def transaction(identifiers)
-    IndexByIdentifier.new.call(identifiers: identifiers)
+    IndexByIdentifiers.new.call(identifiers: identifiers)
   end
 end

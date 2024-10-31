@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   get 'login', to: 'login#index'
 
   authenticated do
-    root to: 'alma_indexing#index', as: 'authenticated_root'
+    root to: 'alma_exports#index', as: 'authenticated_root'
   end
 
   root to: redirect('/login')

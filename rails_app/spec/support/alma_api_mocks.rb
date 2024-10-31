@@ -46,6 +46,12 @@ module AlmaApiMocks
     ).to_return(status: 200, body: body)
   end
 
+  # @param marcxml [String]
+  # @return [String]
+  def alma_sample_json_response(marcxml)
+    JSON.generate({ 'bib': [{ 'mms_id': '9979201969103681', 'anies': [marcxml] }], 'total_record_count': 1 })
+  end
+
   # Mock alma api error
   # @return [String]
   def alma_api_mock_error

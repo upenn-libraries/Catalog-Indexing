@@ -51,7 +51,7 @@ class ProcessIncrementalAlmaExport
 
     solr_clients = alma_export.target_collections.map { |collection| Solr::QueryClient.new(collection: collection) }
     solr_clients.each do |solr|
-      unless solr.delete(id: ids).response[:status] == 200
+      unless solr.delete(ids: ids).response[:status] == 200
         raise StandardError, "Problem when deleting records from Solr collection #{solr.collection}"
       end
     end

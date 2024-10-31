@@ -26,6 +26,7 @@ class DeleteByIdentifiers
   # @param params [Hash]
   # @return [Dry::Monads::Result]
   def issue_deletes(mms_ids:, collections:, params:, **_args)
+    mms_ids = Array.wrap(mms_ids)
     collections.map do |collection|
       solr = Solr::QueryClient.new(collection: collection)
       solr.delete ids: mms_ids, args: { params: params }
