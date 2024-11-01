@@ -7,7 +7,7 @@ class AlmaIndexingController < ApplicationController
   def index; end
 
   def add
-    outcome = IndexByIdentifiers.new.call identifiers: mms_ids, commit: true
+    outcome = IndexByIdentifiers.new.call identifiers: mms_ids
     if outcome.success? && outcome.success[:errors].empty?
       redirect_to adhoc_indexing_path, notice: "Sent updates to Solr for #{mms_ids.to_sentence}."
     else
@@ -16,6 +16,7 @@ class AlmaIndexingController < ApplicationController
   end
 
   def delete
+    # run the transaction inline with a commit param that ensures the changes are effective immediately
     outcome = DeleteByIdentifiers.new.call mms_ids: mms_ids, commit: true
     if outcome.success?
       redirect_to adhoc_indexing_path, notice: outcome.success
