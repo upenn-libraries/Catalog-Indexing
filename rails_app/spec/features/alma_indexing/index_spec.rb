@@ -23,10 +23,10 @@ describe 'Alma Indexing Index Page' do
 
       it 'succeeds with all valid IDs' do
         within '#add-by-id-form' do
-          fill_in 'MMS IDs to Add or Update via Bibs API', with: id
+          fill_in I18n.t('ad_hoc.add.form.label'), with: id
           click_on 'Submit'
         end
-        expect(page).to have_text "Sent updates to Solr for #{id}"
+        expect(page).to have_text I18n.t('ad_hoc.add.success', ids: id)
       end
     end
 
@@ -35,10 +35,11 @@ describe 'Alma Indexing Index Page' do
 
       it 'fails with too many IDs' do
         within '#add-by-id-form' do
-          fill_in 'MMS IDs to Add', with: 'test, ' * 101
+          fill_in I18n.t('ad_hoc.delete.form.label'), with: 'test, ' * 101
           click_on 'Submit'
         end
-        expect(page).to have_text 'Number of MMS IDs (101) exceeds the limit (100)'
+        expect(page).to have_text I18n.t('ad_hoc.validation.too_many_ids', length: 101,
+                                                                           limit: AlmaApi::Client::MAX_BIBS_GET)
       end
     end
   end
@@ -48,7 +49,7 @@ describe 'Alma Indexing Index Page' do
 
     before do
       within '#delete-by-id-form' do
-        fill_in 'MMS IDs to delete', with: id
+        fill_in I18n.t('ad_hoc.delete.form.label'), with: id
         click_on 'Submit'
       end
     end

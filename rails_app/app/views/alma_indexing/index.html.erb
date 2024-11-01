@@ -13,8 +13,8 @@
 <%= bootstrap_form_tag url: add_by_id_path, id: 'add-by-id-form' do |form| %>
   <div class="row justify-content-center pt-5">
     <div class="col-md-6">
-      <%= form.text_area :mms_ids, label: 'MMS IDs to Add or Update via Bibs API', control_col: 'col-sm-4' %>
-      <%= form.submit "Submit", class: "btn btn-success" %>
+      <%= form.text_area :mms_ids, label: t('ad_hoc.add.form.label'), control_col: 'col-sm-4' %>
+      <%= form.submit 'Submit', class: 'btn btn-success' %>
     </div>
   </div>
 <% end %>
@@ -22,8 +22,8 @@
 <%= bootstrap_form_tag url: delete_by_id_path, id: 'delete-by-id-form' do |form| %>
   <div class="row justify-content-center pt-5">
     <div class="col-md-6">
-      <%= form.text_area :mms_ids, label: 'MMS IDs to delete', control_col: 'col-sm-4' %>
-      <%= form.submit "Submit", class: "btn btn-danger" %>
+      <%= form.text_area :mms_ids, label: t('ad_hoc.delete.form.label'), control_col: 'col-sm-4' %>
+      <%= form.submit 'Submit', class: 'btn btn-danger' %>
     </div>
   </div>
 <% end %>

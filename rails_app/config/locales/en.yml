@@ -5,3 +5,16 @@ en:
     incremental_target_collections: 'These Solr collections will be updated via the incremental publish jobs executed by Alma.'
     webhook_target_collections: 'These Solr collections will be updated via the webhook processing stream, provided that process bib webhooks is active.'
     adhoc_target_collections: 'These Solr collections will be updated via the "Index by Identifier" tool.'
+  ad_hoc:
+    validation:
+      no_ids: 'No MMS IDs provided.'
+      too_many_ids: "Number of MMS IDs (%{length}) exceeds the limit (%{limit})."
+    add:
+      form:
+        label: 'MMS IDs to Add or Update via Bibs API'
+      success: "Sent updates to Solr for %{ids}"
+      mixed: "Problem indexing some records: %{messages}"
+      failure: "Bad news: %{message}"
+    delete:
+      form:
+        label: 'MMS IDs to delete'

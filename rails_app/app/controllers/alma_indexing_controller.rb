@@ -9,9 +9,9 @@ class AlmaIndexingController < ApplicationController
   def add
     outcome = IndexByIdentifiers.new.call identifiers: mms_ids
     if outcome.success? && outcome.success[:errors].empty?
-      redirect_to adhoc_indexing_path, notice: "Sent updates to Solr for #{mms_ids.to_sentence}."
+      redirect_to adhoc_indexing_path, notice: t('ad_hoc.add.success', ids: mms_ids.to_sentence)
     else
-      redirect_to adhoc_indexing_path, notice: error_message_from(outcome)
+      redirect_to adhoc_indexing_path, alert: error_message_for(outcome)
     end
   end
 
@@ -21,7 +21,7 @@ class AlmaIndexingController < ApplicationController
     if outcome.success?
       redirect_to adhoc_indexing_path, notice: outcome.success
     else
-      redirect_to adhoc_indexing_path, notice: outcome.failure[:message] || outcome.failure[:exception]&.message
+      redirect_to adhoc_indexing_path, alert: outcome.failure[:message] || outcome.failure[:exception]&.message
     end
   end
 
@@ -34,9 +34,9 @@ class AlmaIndexingController < ApplicationController
   # @return [Boolean]
   def validate_mmsids
     alert = if mms_ids.length > AlmaApi::Client::MAX_BIBS_GET
-              "Number of MMS IDs (#{mms_ids.length}) exceeds the limit (#{AlmaApi::Client::MAX_BIBS_GET})"
+              t('ad_hoc.validation.too_many_ids', length: mms_ids.length, limit: AlmaApi::Client::MAX_BIBS_GET)
             elsif mms_ids.empty?
-              'No MMS IDs provided'
+              t('ad_hoc.validation.no_ids')
             end
     if alert
       redirect_to(adhoc_indexing_path, alert: alert)
@@ -46,11 +46,12 @@ class AlmaIndexingController < ApplicationController
   end
 
   # @param outcome [Dry::Monads::Result]
-  def error_message_from(outcome)
+  # @return [String]
+  def error_message_for(outcome)
     if outcome.success? && outcome.success[:errors].any?
-      "Problems indexing some records: #{outcome.success[:errors].join(',')}."
+      t('ad_hoc.add.mixed', messages: outcome.success[:errors].join(','))
     else
-      "Bad news: #{outcome.failure}"
+      t('ad_hoc.add.failure', message: outcome.failure)
     end
   end
 end
