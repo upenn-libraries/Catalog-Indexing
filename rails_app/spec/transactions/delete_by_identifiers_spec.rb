@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
-describe DeleteByIdentifier do
+describe DeleteByIdentifiers do
   include FixtureHelpers
   include SolrHelpers
 
   let(:sample_mmsid) { '9979201969103681' }
   let(:solr) { Solr::QueryClient.new(collection: test_collection) }
   let(:transaction) { described_class.new }
-  let(:outcome) { transaction.call(id: sample_mmsid, commit: true, collections: Array.wrap(solr.collection)) }
+  let(:outcome) { transaction.call(mms_ids: sample_mmsid, commit: true, collections: Array.wrap(solr.collection)) }
 
-  before { solr.delete_all }
+  before do
+    solr.delete_all
+    allow(ConfigItem).to receive(:value_for).with(:adhoc_target_collections).and_return('1234')
+  end
+
   after { solr.delete_all }
 
   describe '#call' do

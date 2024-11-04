@@ -41,7 +41,7 @@ describe ProcessIncrementalAlmaExport, stub_batches: true do
       it 'sends DELETE to Solr with a hash containing an array of IDs' do
         outcome
         expect(mock_client).to have_received(:delete).with(
-          satisfy { |data| data[:id].length == 741 }
+          satisfy { |data| data[:ids].length == 741 }
         )
       end
 

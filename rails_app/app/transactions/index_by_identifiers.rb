@@ -3,7 +3,7 @@
 require 'dry/transaction'
 
 # with an Array of MMSIDs as a parameter, get MARCXML from the Alma API and index via Traject
-class IndexByIdentifier
+class IndexByIdentifiers
   include Dry::Transaction(container: Container)
 
   step :retrieve_marcxml, with: 'marcxml.retrieve' # get MARCXML from Alma API
@@ -18,5 +18,7 @@ class IndexByIdentifier
     collections = ConfigItem.value_for :adhoc_target_collections
     writer = MultiCollectionWriter.new(collections: collections, commit_on_close: true)
     Success(writer: writer, **args)
+  rescue StandardError => e
+    Failure exception: e
   end
 end

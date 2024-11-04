@@ -58,7 +58,7 @@ class WebhookIndexingController < ApplicationController
       Rails.logger.info "Webhook: BIB_UPDATED job enqueued for #{payload['id']}"
       head :accepted
     when 'BIB_DELETED'
-      DeleteByIdentifierJob.perform_async(payload['id'])
+      DeleteByIdentifiersJob.perform_async(payload['id'])
       Rails.logger.info "Webhook: BIB_DELETED job enqueued for #{payload['id']}"
       head :accepted
     when 'BIB_CREATED'

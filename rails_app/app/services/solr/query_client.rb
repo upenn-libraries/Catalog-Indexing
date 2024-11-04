@@ -33,12 +33,12 @@ module Solr
       solr.add documents, add_attributes: attributes
     end
 
-    # Delete a record by unique ID
-    # @param id [String, Array]
+    # Delete records by ID
+    # @param ids [String, Array]
     # @param args [Hash] extra parameters for Solr request
     # @return [RSolr::HashWithResponse]
-    def delete(id:, args: {})
-      solr.delete_by_id id, args
+    def delete(ids:, args: {})
+      solr.delete_by_id ids, args
     end
 
     # Delete all records in the collection

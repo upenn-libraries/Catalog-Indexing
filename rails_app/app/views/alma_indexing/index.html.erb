@@ -1,17 +1,29 @@
 <nav aria-label="breadcrumb" class="mb-3 bg-light text-dark rounded">
   <ol class="breadcrumb py-2 px-3">
     <li class="breadcrumb-item"><a href="<%= root_path %>">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Index by Indentifier</li>
+    <li class="breadcrumb-item active" aria-current="page">Ad Hoc Indexing</li>
   </ol>
 </nav>
 
-<h1>Index by Identifier</h1>
+<div class="alert alert-info" role="alert">
+  Ad Hoc indexing actions are configured for the <strong><%= ConfigItem.value_for(:adhoc_target_collections).to_sentence %></strong> collection(s).
+  You may <%= link_to 'change target collections', config_items_path %>.
+</div>
 
-<%= bootstrap_form_tag url: process_ids_path do |form| %>
+<%= bootstrap_form_tag url: add_by_id_path, id: 'add-by-id-form' do |form| %>
   <div class="row justify-content-center pt-5">
     <div class="col-md-6">
-      <%= form.text_area :mms_ids, label: 'MMS IDs', control_col: 'col-sm-4' %>
-      <%= form.submit "Submit", class: "btn btn-primary" %>
+      <%= form.text_area :mms_ids, label: t('ad_hoc.add.form.label'), control_col: 'col-sm-4' %>
+      <%= form.submit 'Submit', class: 'btn btn-success' %>
+    </div>
+  </div>
+<% end %>
+
+<%= bootstrap_form_tag url: delete_by_id_path, id: 'delete-by-id-form' do |form| %>
+  <div class="row justify-content-center pt-5">
+    <div class="col-md-6">
+      <%= form.text_area :mms_ids, label: t('ad_hoc.delete.form.label'), control_col: 'col-sm-4' %>
+      <%= form.submit 'Submit', class: 'btn btn-danger' %>
     </div>
   </div>
 <% end %>
