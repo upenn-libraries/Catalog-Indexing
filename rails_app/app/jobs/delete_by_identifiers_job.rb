@@ -6,6 +6,6 @@ class DeleteByIdentifiersJob < TransactionJob
 
   # @param [String] ids
   def transaction(ids)
-    DeleteByIdentifiers.new.call(ids: ids)
+    DeleteByIdentifiers.new.call(mms_ids: ids)
   end
 end
