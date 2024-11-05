@@ -22,7 +22,7 @@ alma:
   api_key: <%= DockerSecrets.lookup(:alma_api_key) %>
   webhook_secret: <%= DockerSecrets.lookup(:alma_webhook_secret) %>
   publishing_job:
-    name: 'Publishing Platform Job Entire Repository - Find Catalog - Full FTP'
+    name: 'Publishing Platform Job All Titles - Find Catalog - FTP'
 
 sftp:
   host: <%= ENV.fetch('SFTP_HOST', 'move.library.upenn.edu') %>
