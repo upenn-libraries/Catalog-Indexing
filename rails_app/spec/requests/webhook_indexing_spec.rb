@@ -90,7 +90,7 @@ RSpec.describe 'Webhook Indexing requests' do
     end
 
     context 'with JOB actions' do
-      let(:headers) { { 'X-Exl-Signature': 'nMEedNbhZIMTUEgThPAsdVX/yHMl37fWT3/N6FSFJjE=' } }
+      let(:headers) { { 'X-Exl-Signature': 'cccf1bSPTzq0njLPx6NzszcnQUVnW81YknKYZ9ffY9M=' } }
 
       it 'handles validated job completed events if process_job_webhooks is true' do
         allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
@@ -107,7 +107,7 @@ RSpec.describe 'Webhook Indexing requests' do
       end
 
       context 'with incremental publishing webhook body' do
-        let(:headers) { { 'X-Exl-Signature': 'rRG1vTqgt7wtZBLbkm3KHRL2IMXqNqliedDd5/C6AN0=' } }
+        let(:headers) { { 'X-Exl-Signature': 'YEoG5iFhGEf6BYVZGIjIpKVP2jzcDz/+L09tk0Hi9zo=' } }
 
         before do
           allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
