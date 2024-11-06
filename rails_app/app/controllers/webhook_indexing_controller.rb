@@ -89,7 +89,7 @@ class WebhookIndexingController < ApplicationController
   def completed_publishing_job?(payload)
     job_name = payload.dig('job_instance', 'name')
     job_status = payload.dig('job_instance', 'status', 'value')
-    (job_name == Settings.alma.publishing_job.name) && (job_status == AlmaExport::JOB_SUCCESS_VALUE)
+    (job_name == Settings.alma.publishing_job.name) && job_status.in?(AlmaExport::JOB_SUCCESS_VALUES)
   end
 
   # Determines if the alma webhook signature header is valid to ensure request came from Alma

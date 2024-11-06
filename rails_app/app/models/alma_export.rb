@@ -6,7 +6,7 @@
 class AlmaExport < ApplicationRecord
   include Statuses
 
-  JOB_SUCCESS_VALUE = 'COMPLETED_SUCCESS'
+  JOB_SUCCESS_VALUES = %w[COMPLETED_SUCCESS COMPLETED_FAILED].freeze
 
   module Sources
     PRODUCTION = 'production'

@@ -90,23 +90,25 @@ RSpec.describe 'Webhook Indexing requests' do
     end
 
     context 'with JOB actions' do
-      let(:headers) { { 'X-Exl-Signature': 'nMEedNbhZIMTUEgThPAsdVX/yHMl37fWT3/N6FSFJjE=' } }
+      context 'with a successful full publish webhook body' do
+        let(:headers) { { 'X-Exl-Signature': 'nMEedNbhZIMTUEgThPAsdVX/yHMl37fWT3/N6FSFJjE=' } }
 
-      it 'handles validated job completed events if process_job_webhooks is true' do
-        allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
-        post webhook_listen_path, params: json_fixture('job_end_success_full_publish', :webhooks), headers: headers
-        expect(response).to have_http_status :accepted
-        expect(ProcessFullAlmaExportJob.jobs.size).to eq 1
+        it 'handles validated job completed events if process_job_webhooks is true' do
+          allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
+          post webhook_listen_path, params: json_fixture('job_end_success_full_publish', :webhooks), headers: headers
+          expect(response).to have_http_status :accepted
+          expect(ProcessFullAlmaExportJob.jobs.size).to eq 1
+        end
+
+        it 'does not handle JOB_END events if process_job_webhooks is false' do
+          allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(false)
+          post webhook_listen_path, params: json_fixture('job_end_success_full_publish', :webhooks), headers: headers
+          expect(response).to have_http_status :ok
+          expect(ProcessFullAlmaExportJob.jobs.size).to eq 0
+        end
       end
 
-      it 'does not handle JOB_END events if process_job_webhooks is false' do
-        allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(false)
-        post webhook_listen_path, params: json_fixture('job_end_success_full_publish', :webhooks), headers: headers
-        expect(response).to have_http_status :ok
-        expect(ProcessFullAlmaExportJob.jobs.size).to eq 0
-      end
-
-      context 'with incremental publishing webhook body' do
+      context 'with successful incremental publishing webhook body' do
         let(:headers) { { 'X-Exl-Signature': 'rRG1vTqgt7wtZBLbkm3KHRL2IMXqNqliedDd5/C6AN0=' } }
 
         before do
@@ -117,6 +119,20 @@ RSpec.describe 'Webhook Indexing requests' do
         it 'properly sets the full value on the created AlmaExport' do
           expect(response).to have_http_status :accepted
           expect(AlmaExport.last.full).to be false
+        end
+      end
+
+      context 'with completed with errors incremental publishing webhook body' do
+        let(:headers) { { 'X-Exl-Signature': 'mPDISk7xtEqmLgIT5m1YCF5lVpm/wzeD1WWvHk+ez6g=' } }
+
+        before do
+          allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
+          post webhook_listen_path, params: json_fixture('job_end_mixed_incremental', :webhooks), headers: headers
+        end
+
+        it 'enqueues a processing job' do
+          expect(response).to have_http_status :accepted
+          expect(ProcessIncrementalAlmaExportJob.jobs.size).to eq 1
         end
       end
     end
