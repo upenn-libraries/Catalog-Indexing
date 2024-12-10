@@ -151,6 +151,7 @@
   <dynamicField name="*_is"  type="pints"    indexed="true"  stored="true"/>
   <dynamicField name="*_s"   type="string"   indexed="true"  stored="true"/>
   <dynamicField name="*_ss"  type="strings"  indexed="true"  stored="true"/>
+  <dynamicField name="*_ssi" type="string"   indexed="true"  stored="true"  multiValued="false"/>
   <dynamicField name="*_l"   type="plong"    indexed="true"  stored="true"/>
   <dynamicField name="*_ls"  type="plongs"   indexed="true"  stored="true"/>
   <dynamicField name="*_b"   type="boolean"  indexed="true"  stored="true"/>
