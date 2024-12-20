@@ -101,6 +101,7 @@ class PennMarcIndexer < Traject::Indexer
   def sort_fields
     define_field :creator_sort
     define_field :title_sort
+    define_field :call_number_sort, :classification_sort
 
     to_field('publication_date_sort') do |record, acc|
       pub_date = parser.public_send :date_publication, record
