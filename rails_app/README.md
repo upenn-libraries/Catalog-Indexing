@@ -1,123 +1,174 @@
 # Catalog Indexing Rails App
 
-Rails app to build and maintain Solr collections for the Penn Libraries catalog. The application serves as the means for
-processing MARC and writing to the Solr infrastructure used by the [Find catalog frontend](https://gitlab.library.upenn.edu/dld/catalog/find).
+Rails app to build and maintain Solr collections for the Penn Libraries catalog. The application processes MARC records and writes to the Solr infrastructure used by the [Find catalog frontend](https://gitlab.library.upenn.edu/dld/catalog/find).
+
+---
+
+## Table of Contents
+
+1. [Functionality](#functionality)
+2. [Settings](#settings)
+3. [Local Development Environment](#local-development-environment)
+4. [Interacting with the Application](#interacting-with-the-application)
+5. [Working with Find](#working-with-find)
+6. [Running the Test Suite](#running-the-test-suite)
+7. [PennMARC](#pennmarc)
+8. [Code Linting and Formatting](#code-linting-and-formatting)
+9. [Contributing](#contributing)
+
+---
 
 ## Functionality
 
-Data is processed via three means:
-1. Alma Export processing - Bulk files of MARC are published by Alma via Publishing Profiles and moved onto a local SFTP location. A an Alma webhook is handled by this application that will trigger the initialization of a `ProcessAlmaExport` job that will download and prepare a `ProcessBatchFileJob` for each downloaded file. This process builds a brand new Solr collection each run.
-2. Bib Webhooks - Alma webhooks are handled for changes to Bib records. For each received and supported Bib event, a `IndexByBibEvent` job is initialized that creates or updates the record in the configured index. This does not run the Bibs through the Alma publishing enrichment process.
-3. Index by Identifier - A web form can receive a list of MMS IDs that will be retrieved from the Alma API and pushed to the configured index. This also does not run the Bibs through the Alma publishing enrichment process.
+The application processes MARC data using three main methods:
+
+### 1. Alma Export Processing
+- **Overview**: Bulk files of MARC are published by Alma via Publishing Profiles and moved to a local SFTP location.
+- **Workflow**:
+    - An Alma webhook triggers the `ProcessAlmaExport` job.
+    - Files are downloaded and prepared for the `ProcessBatchFileJob`.
+    - A new Solr collection is built for each run.
+
+### 2. Bib Webhooks
+- **Overview**: Processes Alma webhooks for changes to Bib records.
+- **Workflow**:
+    - For supported Bib events, an `IndexByBibEvent` job creates or updates records in the index.
+    - These records are not processed through Alma’s publishing enrichment.
+
+### 3. Index by Identifier
+- **Overview**: A web form accepts MMS IDs to be fetched from the Alma API and pushed to the index.
+- **Workflow**:
+    - Records are directly indexed without Alma’s publishing enrichment.
+
+---
 
 ## Settings
 
-The behavior of the application can be modified using the `Settings` area in the UI. The currently available parameters are:
+Modify the application's behavior using the **Settings** area in the UI. Available parameters:
 
-* `Adhoc Target Collection` - The selected Solr collections will receive updates via the "Index by Identifier" process
-* `Process Bib Webhooks` - When this is "On", this app will handle Alma `BIB` webhooks.
-* `Process Job Webhook` - When this is "On", this app will handle Alma `JOB` webhooks for jobs that match the `Settings.alma.publishing_job.name` value.
-* `Webhook Target Collections` - The selected Solr collections will receive updates via the `BIB` webhook jobs.
-* `Incremental Target Collections` - The selected Solr collections will receive incremental updates via `JOB` webhooks for jobs matching the the `Settings.alma.publishing_job.name` value indicating the presence of updated or deleted records.
+- **Adhoc Target Collection**: Specifies Solr collections to receive updates via "Index by Identifier."
+- **Process Bib Webhooks**: Enables processing of Alma `BIB` webhooks.
+- **Process Job Webhook**: Enables processing of Alma `JOB` webhooks matching `Settings.alma.publishing_job.name`.
+- **Webhook Target Collections**: Specifies Solr collections for updates via `BIB` webhook jobs.
+- **Incremental Target Collections**: Specifies Solr collections for incremental updates via `JOB` webhooks for matched records.
 
-To make these settings accessible from the interface, you must run the following rake task [inside the application container](#interacting-with-the-application):
+To make these settings accessible, run:
 ```bash
 rake tools:add_config_items
 ```
 
+---
+
 ## Local Development Environment
 
-Our local development environment uses vagrant in order to set up a consistent environment with the required services. Please see the root README for instructions on how to set up this environment.
-- The Rails application will be available at https://catalog-indexing-dev.library.upenn.edu.
-- The Sidekiq Web UI will be available at http://catalog-indexing-dev.library.upenn.edu/sidekiq.
-- The Solr admin console for the first instance will be available at http://catalog-indexing-dev.library.upenn.int/solr1/#/. Log-in with admin/password.
+Use Vagrant to set up a consistent local environment with required services.
+
+### Prerequisites
+- Install Vagrant and VirtualBox.
+
+### Setup
+1. Follow instructions in the root README for environment setup.
+2. Access the Rails application at [https://catalog-indexing-dev.library.upenn.edu](https://catalog-indexing-dev.library.upenn.edu).
+3. Access Sidekiq Web UI at [http://catalog-indexing-dev.library.upenn.edu/sidekiq](http://catalog-indexing-dev.library.upenn.edu/sidekiq).
+4. Access Solr admin console at [http://catalog-indexing-dev.library.upenn.int/solr1/#/](http://catalog-indexing-dev.library.upenn.int/solr1/#/). Log in with `admin/password`.
+
+---
 
 ## Interacting with the Application
-Once your local development environment is set up you can ssh into the vagrant box to interact with the application:
 
-Enter the running Vagrant VM by running `vagrant ssh` in the `/vagrant` directory
-Start a shell in the catalog-indexing container:
+### Accessing the Application Container
+1. SSH into the Vagrant VM:
+   ```bash
+   vagrant ssh
+   ```
+2. Start a shell in the application container:
+   ```bash
+   docker exec -it catalog-indexing_catalog_indexing.1.{container_id} bash
+   ```
+   *(Find the container ID using `docker ps`.)*
 
-```bash
-docker exec -it catalog-indexing_catalog_indexing.1.{whatever} bash
-```
+---
 
-## Working with `find`
+## Working with Find
 
-When [developing with find](https://gitlab.library.upenn.edu/dld/catalog/find#loading-data), you may need to generate a configset or some sample solr data from this app. Run these commands from the application container:
-
-### Packaging the Solr configset
-
+### Packaging the Solr Configset
+Generate a Solr configset:
 ```bash
 rake tools:package_configset
 ```
 
-### Generating SolrJSON of the Alma sample set
-
+### Generating SolrJSON from Alma Sample Set
+Generate SolrJSON:
 ```bash
 rake tools:generate_solr_json_from_set
 ```
+Use the resulting JSONL file to index records into your development instance of `find`.
 
-Using this JSONL file you can index records into your development instance of `find`.
+---
 
-## Running Test Suite
+## Running the Test Suite
 
-In order to run the test suite (currently):
+### Steps
+1. Start a shell in the app container (see [Interacting with the Application](#interacting-with-the-application)).
+2. Run the test suite:
+   ```bash
+   RAILS_ENV=test bundle exec rspec
+   ```
 
-1. Start a shell in the app container, see [interacting-with-the-application](#interacting-with-the-application)
-2. Run `rspec` command: `RAILS_ENV=test bundle exec rspec`
+---
 
 ## PennMARC
 
-This app uses the PennMARC gem to handle most of the MARC parsing logic.
+This application uses the PennMARC gem to handle MARC parsing logic.
 
-### Working with unpublished PennMARC versions
+### Using Unpublished Versions
+To use an unpublished version of PennMARC in development:
 
-Sometimes you might want to use an unpublished version of the PennMARC gem in development. Modify the gemfile like so:
-
-#### With a branch pushed to the remote (Gitlab)
+#### Using a Remote Branch
 ```ruby
 # Gemfile
-
-gem 'pennmarc', git: 'https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git', ref: 'some-remote-commit-sha'
-
-# or
-
-gem 'pennmarc', git: 'https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git', branch: 'some-remote-branch'
+gem 'pennmarc', git: 'https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git', branch: 'branch-name'
 ```
 
-#### With a local branch
-
-You can instruct bundler to look at a local path for the `pennmarc` gem. When using this, running `bundle install` will
-update your `Gemfile.lock` file to point to the specified `ref:` or `branch:` in your local `pennmarc` repo. Be very
-careful to undo this when pushing to a remote branch.
-
+#### Using a Local Branch
+Configure Bundler to use a local path:
 ```bash
 bundle config set local.pennmarc ~/Projects/pennmarc/
 ```
 
+Update the Gemfile:
 ```ruby
 # Gemfile
-
-gem 'pennmarc', git: 'https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git', branch: 'some-local-branch-name'
+gem 'pennmarc', git: 'https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git', branch: 'local-branch-name'
 ```
 
-Running `bundle install` should then show:
+Run `bundle install`. Ensure changes are reverted before pushing to remote.
 
-```bash
-Using pennmarc 1.0.0 from https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git (at /home/mk/Projects/pennmarc@ee38309)
-```
+---
 
 ## Code Linting and Formatting
-### Rubocop
-Rubocop is used to enforce style and formatting rules in our Ruby code. This application uses a custom set of rules contained within the [upennlib-rubocop](https://gitlab.library.upenn.edu/dld/upennlib-rubocop) gem.
 
-#### To check style and formatting run:
-```ruby
+### Rubocop
+This application uses the [upennlib-rubocop](https://gitlab.library.upenn.edu/dld/upennlib-rubocop) gem for style enforcement.
+
+#### Checking Style
+```bash
 bundle exec rubocop
 ```
 
-#### To regenerate `.rubocop_todo.yml`:
-```shell
-bundle exec rubocop --auto-gen-config  --auto-gen-only-exclude --exclude-limit 10000
+#### Regenerating `.rubocop_todo.yml`
+```bash
+bundle exec rubocop --auto-gen-config --auto-gen-only-exclude --exclude-limit 10000
 ```
+
+---
+
+## Contributing
+
+We welcome contributions! Please:
+- Open issues or merge requests on the GitLab repository.
+- Follow the style guidelines enforced by Rubocop.
+- Write tests for any new functionality.
+
+---
+
