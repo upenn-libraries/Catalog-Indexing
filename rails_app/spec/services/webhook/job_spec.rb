@@ -3,7 +3,7 @@
 describe Webhook::Job do
   include FixtureHelpers
 
-  subject { Webhook::Job.new data: payload }
+  subject { described_class.new data: payload }
 
   context 'with an uninteresting job (not publishing related)' do
     let(:payload) { JSON.parse json_fixture('job_end_uninteresting', :webhooks) }

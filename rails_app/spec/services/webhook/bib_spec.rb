@@ -3,7 +3,7 @@
 describe Webhook::Bib do
   include FixtureHelpers
 
-  subject { Webhook::Bib.new data: payload }
+  subject { described_class.new data: payload }
 
   context 'with an created bib' do
     let(:payload) { JSON.parse json_fixture('bib_created', :webhooks) }

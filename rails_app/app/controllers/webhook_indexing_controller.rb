@@ -25,16 +25,17 @@ class WebhookIndexingController < ApplicationController
 
   # @param payload [Hash]
   def handle_action_type(payload)
-    case payload['action']
-    when 'BIB'
+    webhook = Webhook::Payload.build payload: payload
+    case webhook
+    when Webhook::Bib
       if ConfigItem.value_for(:process_bib_webhooks)
-        handle_bib_action(payload)
+        handle_bib_action(webhook)
       else
         head(:ok)
       end
-    when 'JOB_END'
-      if ConfigItem.value_for(:process_job_webhooks) && completed_publishing_job?(payload)
-        initialize_alma_export(payload)
+    when Webhook::Job
+      if ConfigItem.value_for(:process_job_webhooks) && webhook.successful_publishing_job?
+        initialize_alma_export(webhook)
       else
         Rails.logger.info { 'Completed job is not interesting. No job enqueued.' }
         head(:ok)
@@ -45,25 +46,25 @@ class WebhookIndexingController < ApplicationController
   end
 
   # Handles alma webhook bib actions
-  # @param [Hash] payload action-specific data received from alma webhook post request
+  # @param [Webhook::Bib] webhook data
   # @return [TrueClass]
   # rubocop:disable Metrics/AbcSize
-  def handle_bib_action(payload)
-    return head(:ok) if suppressed_from_discovery?(payload)
+  def handle_bib_action(webhook)
+    return head(:ok) if webhook.suppress_from_discovery?
 
-    marc_xml = payload.dig 'bib', 'anies'
-    case payload.dig 'event', 'value'
+    case webhook.event
     when 'BIB_UPDATED'
-      IndexByBibEventJob.perform_async(marc_xml)
-      Rails.logger.info "Webhook: BIB_UPDATED job enqueued for #{payload['id']}"
+      IndexByBibEventJob.perform_async(webhook.marcxml)
+      Rails.logger.info "Webhook: BIB_UPDATED job enqueued for #{webhook.id}"
       head :accepted
     when 'BIB_DELETED'
-      DeleteByIdentifiersJob.perform_async(payload['id'])
-      Rails.logger.info "Webhook: BIB_DELETED job enqueued for #{payload['id']}"
+      # TODO: should we delete regardless of the suppression values?
+      DeleteByIdentifiersJob.perform_async(webhook.id)
+      Rails.logger.info "Webhook: BIB_DELETED job enqueued for #{webhook.id}"
       head :accepted
     when 'BIB_CREATED'
-      IndexByBibEventJob.perform_async(marc_xml)
-      Rails.logger.info "Webhook: BIB_CREATED job enqueued for #{payload['id']}"
+      IndexByBibEventJob.perform_async(webhook.marcxml)
+      Rails.logger.info "Webhook: BIB_CREATED job enqueued for #{webhook.id}"
       head :accepted
     else
       head :no_content
@@ -71,25 +72,16 @@ class WebhookIndexingController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
 
-  # @param payload [Hash]
+  # @param [Webhook::Job] webhook
   # @return [TrueClass]
-  def initialize_alma_export(payload)
-    full = full_publish?(payload)
+  def initialize_alma_export(webhook)
     alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
-                                     webhook_body: payload, full: full)
-    job = full ? ProcessFullAlmaExportJob : ProcessIncrementalAlmaExportJob
+                                     webhook_body: webhook.data, full: webhook.full_publish?)
+    job = webhook.full_publish? ? ProcessFullAlmaExportJob : ProcessIncrementalAlmaExportJob
     Rails.logger.info { "Completed job is interesting! Enqueueing #{job}." }
     job.perform_async(alma_export.id)
 
     head :accepted
-  end
-
-  # Ensure the webhook is telling us about a successfully completed Publishing job of the correct type
-  # @param payload [Hash]
-  def completed_publishing_job?(payload)
-    job_name = payload.dig('job_instance', 'name')
-    job_status = payload.dig('job_instance', 'status', 'value')
-    (job_name == Settings.alma.publishing_job.name) && job_status.in?(AlmaExport::JOB_SUCCESS_VALUES)
   end
 
   # Determines if the alma webhook signature header is valid to ensure request came from Alma
@@ -110,22 +102,5 @@ class WebhookIndexingController < ApplicationController
 
   def challenge_params
     params.permit(:challenge)
-  end
-
-  # @param [Hash] payload
-  # @return [Boolean]
-  def suppressed_from_discovery?(payload)
-    (payload.dig('bib', 'suppress_from_publishing') == 'true') ||
-      (payload.dig('bib', 'suppress_from_external_search') == 'true')
-  end
-
-  # Does the webhook job payload describe a full publish? Full publishes don't have updated or deleted records.
-  # @param payload [Hash]
-  # @return [Boolean]
-  def full_publish?(payload)
-    counters = payload.dig 'job_instance', 'counter'
-    updated = counters.find { |val| val.dig('type', 'value') == 'label.updated.records' }['value']
-    deleted = counters.find { |val| val.dig('type', 'value') == 'label.deleted.records' }['value']
-    (updated == '0') && (deleted == '0')
   end
 end

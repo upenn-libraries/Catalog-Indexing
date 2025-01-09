@@ -3,7 +3,7 @@
 module Webhook
   # Represent common properties of an Alma webhook response
   class Payload
-    attr_accessor :data
+    attr_reader :data
 
     BIB_ACTION = 'BIB'
     JOB_END_ACTION = 'JOB_END'
