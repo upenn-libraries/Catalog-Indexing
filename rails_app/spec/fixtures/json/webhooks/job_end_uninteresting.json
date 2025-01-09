@@ -1,0 +1,124 @@
+{
+  "id": "72600507420003666",
+  "action": "JOB_END",
+  "institution": {
+    "value": "01UPENN_INST",
+    "desc": "University of Pennsylvania"
+  },
+  "time": "2024-11-06T13:07:14.563Z",
+  "job_instance": {
+    "id": "72600507420003681",
+    "name": "An Uninteresting Job",
+    "progress": 100.3,
+    "status": {
+      "value": "COMPLETED_FAILED",
+      "desc": "Completed with Errors"
+    },
+    "external_id": "72600507420003666",
+    "submitted_by": {
+      "value": "System"
+    },
+    "submit_time": "2024-11-06T06:00:14.780Z",
+    "start_time": "2024-11-06T06:03:04.681Z",
+    "end_time": "2024-11-06T13:07:14.563Z",
+    "status_date": "2024-11-06Z",
+    "alert": [ {
+      "value": "alert_general_error_with_failed_number",
+      "desc": "Of the 14384 records processed, 3 errors found. For more information view the report details (or contact Support using the process ID)."
+    } ],
+    "counter": [ {
+      "type": {
+        "value": "label.new.records",
+        "desc": "New Records"
+      },
+      "value": "970"
+    }, {
+      "type": {
+        "value": "label.updated.records",
+        "desc": "Updated Records"
+      },
+      "value": "6342"
+    }, {
+      "type": {
+        "value": "label.deleted.records",
+        "desc": "Deleted Records"
+      },
+      "value": "5"
+    }, {
+      "type": {
+        "value": "c.jobs.publishing.failed.publishing",
+        "desc": "Unpublished failed records"
+      },
+      "value": "3"
+    }, {
+      "type": {
+        "value": "c.jobs.publishing.skipped",
+        "desc": "Skipped records (update date changed but no data change)"
+      },
+      "value": "7061"
+    }, {
+      "type": {
+        "value": "c.jobs.publishing.filtered_out",
+        "desc": "Filtered records (not published due to filter)"
+      },
+      "value": "0"
+    }, {
+      "type": {
+        "value": "c.jobs.publishing.totalRecordsWrittenToFile",
+        "desc": "Total records written to file"
+      },
+      "value": "0"
+    }, {
+      "type": {
+        "value": "Publishing error",
+        "desc": ""
+      },
+      "value": "Failed to parse marc record9979472923703681"
+    }, {
+      "type": {
+        "value": "Publishing error",
+        "desc": ""
+      },
+      "value": "Failed to parse marc record9979472923903681"
+    }, {
+      "type": {
+        "value": "Publishing error",
+        "desc": ""
+      },
+      "value": "Failed to parse marc record9979494724403681"
+    }, {
+      "type": {
+        "value": "Failed to process record",
+        "desc": ""
+      },
+      "value": "9979472923703681"
+    }, {
+      "type": {
+        "value": "Failed to process record",
+        "desc": ""
+      },
+      "value": "9979494724403681"
+    }, {
+      "type": {
+        "value": "Failed to process record",
+        "desc": ""
+      },
+      "value": "9979472923903681"
+    } ],
+    "job_info": {
+      "id": "S64183328440003666",
+      "name": "An Uninteresting Job",
+      "description": "Something Boring",
+      "type": {
+        "value": "SCHEDULED",
+        "desc": "Scheduled"
+      },
+      "category": {
+        "value": "BORING",
+        "desc": "Boring"
+      },
+      "link": "/almaws/v1/conf/jobs/S64183328440003666"
+    },
+    "link": "/almaws/v1/conf/jobs/S64183328440003666/instances/72600507420003666"
+  }
+}

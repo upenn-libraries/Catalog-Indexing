@@ -25,6 +25,7 @@ module Webhook
       @data = data
     end
 
+    # @return [String]
     def action
       data['action']
     end
