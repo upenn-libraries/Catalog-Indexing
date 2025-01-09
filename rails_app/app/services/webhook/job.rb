@@ -17,7 +17,7 @@ module Webhook
     def job_status
       data.dig 'job_instance', 'status', 'value'
     end
-    
+
     # @param [String] label
     # @return [String, nil]
     def job_counter_value(label)
@@ -33,7 +33,6 @@ module Webhook
     def job_counter_deleted_records
       job_counter_value('label.deleted.records')
     end
-
 
     # @return [Boolean]
     def full_publish?
