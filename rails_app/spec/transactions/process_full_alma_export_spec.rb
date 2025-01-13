@@ -11,7 +11,7 @@ describe ProcessFullAlmaExport, stub_batches: true do
 
   describe '#call' do
     let(:webhook) { Webhook::Job.new data: JSON.parse(json_fixture('job_end_success_full_publish', :webhooks)) }
-    let(:alma_export) { create(:alma_export, :full, webhook_body: webhook.data, job_identifier: webhook.id ) }
+    let(:alma_export) { create(:alma_export, :full, webhook_body: webhook.data, job_identifier: webhook.id) }
     let(:outcome) { transaction.call(alma_export_id: alma_export.id) }
 
     context 'with valid webhook response body' do

@@ -56,7 +56,8 @@ class WebhookIndexingController < ApplicationController
   # @return [TrueClass]
   def initialize_alma_export
     alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
-                                     webhook_body: @webhook.data, job_identifier: @webhook.id, full: @webhook.full_publish?)
+                                     webhook_body: @webhook.data, job_identifier: @webhook.id,
+                                     full: @webhook.full_publish?)
     job = @webhook.full_publish? ? ProcessFullAlmaExportJob : ProcessIncrementalAlmaExportJob
     job.perform_async(alma_export.id)
     head :accepted
