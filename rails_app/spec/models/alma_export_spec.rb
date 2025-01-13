@@ -43,6 +43,23 @@ describe AlmaExport do
     expect(export.target_collections).to eq target_collections
   end
 
+  xdescribe '.create_full!' do
+    xcontext 'with valid parameters'
+    xcontext 'with no job_id parameter'
+  end
+
+  xdescribe '.create_incremental!' do
+    xcontext 'with valid parameters'
+    xcontext 'with no job_id parameter'
+  end
+
+  xdescribe '#process!' do
+    xcontext 'with an AlmaExport in PENDING status'
+    xcontext 'with an AlmaExport not in PENDING status'
+    xcontext 'with inline true'
+    xcontext 'with inline false'
+  end
+
   describe '#set_completion_status!' do
     let(:alma_export) { create(:alma_export, *traits) }
 

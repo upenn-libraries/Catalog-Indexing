@@ -22,6 +22,37 @@ class AlmaExport < ApplicationRecord
   scope :filter_full, ->(full) { where(full: full == 'true') }
   scope :filter_sort_by, ->(value, order) { order(value => order) }
 
+  # @param job_id [String]
+  # @param alma_source [String (frozen)]
+  # @return [AlmaExport]
+  def self.create_full!(job_id:, alma_source: AlmaExport::Sources::PRODUCTION)
+    AlmaExport.create! status: Statuses::PENDING, alma_source: alma_source,
+                       job_identifier: job_id, full: true
+  end
+
+  # @param job_id [String]
+  # @param alma_source [String (frozen)]
+  # @return [AlmaExport]
+  def self.create_incremental!(job_id:, alma_source: AlmaExport::Sources::PRODUCTION)
+    AlmaExport.create! status: Statuses::PENDING, alma_source: alma_source,
+                       job_identifier: job_id, full: false
+  end
+
+  # @param inline [Boolean]
+  def process!(inline: false)
+    raise unless status == Statuses::PENDING
+
+    if full? && inline
+      ProcessFullAlmaExport.new.call alma_export_id: id
+    elsif full
+      ProcessFullAlmaExportJob.perform_async id
+    elsif inline
+      ProcessIncrementalAlmaExport.new.call alma_export_id: id
+    else
+      ProcessIncrementalAlmaExportJob.perform_async id
+    end
+  end
+
   # Count of BatchFiles for this AlmaExport matching status
   # @param status [String]
   # @return [Integer]
