@@ -3,6 +3,10 @@
 module Webhook
   # Represent an Alma Job webhook
   class Job < Payload
+    # Job output that has one of these values as the status will be processed. "completed" is good while "failed"
+    # indicates that there is an issue with at least 1 record.
+    JOB_SUCCESS_VALUES = %w[COMPLETED_SUCCESS COMPLETED_FAILED].freeze
+
     # @return [String]
     def id
       data['id']
@@ -42,7 +46,7 @@ module Webhook
     # @return [Boolean]
     def successful_publishing_job?
       (job_name == Settings.alma.publishing_job.name) &&
-        job_status.in?(AlmaExport::JOB_SUCCESS_VALUES)
+        job_status.in?(JOB_SUCCESS_VALUES)
     end
   end
 end

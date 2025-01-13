@@ -10,9 +10,8 @@ describe ProcessFullAlmaExport, stub_batches: true do
   after { remove_collections(SolrTools.new_collection_name) }
 
   describe '#call' do
-    let(:alma_export) do
-      create(:alma_export, :full, webhook_body: JSON.parse(json_fixture('job_end_success_full_publish', :webhooks)))
-    end
+    let(:webhook) { Webhook::Job.new data: JSON.parse(json_fixture('job_end_success_full_publish', :webhooks)) }
+    let(:alma_export) { create(:alma_export, :full, webhook_body: webhook.data, job_identifier: webhook.id ) }
     let(:outcome) { transaction.call(alma_export_id: alma_export.id) }
 
     context 'with valid webhook response body' do

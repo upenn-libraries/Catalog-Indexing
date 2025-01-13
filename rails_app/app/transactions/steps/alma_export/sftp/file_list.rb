@@ -24,8 +24,7 @@ module Steps
         # @param sftp_session [Sftp::Client]
         # @return [Dry::Monads::Result]
         def call(alma_export:, sftp_session:, **args)
-          job_id = alma_export.alma_job_identifier
-          files_matching = files_matching_regex(job_id: job_id)
+          files_matching = files_matching_regex(job_identifier: alma_export.job_identifier)
           file_list = sftp_session.files.select { |f| f.name =~ files_matching }
 
           Success(alma_export: alma_export, file_list: file_list, sftp_session: sftp_session, **args)
@@ -35,12 +34,12 @@ module Steps
 
         private
 
-        # @param job_id [String]
+        # @param job_identifier [String]
         # @return [Regexp]
-        def files_matching_regex(job_id:)
+        def files_matching_regex(job_identifier:)
           case @type.to_sym
-          when :delete then /_#{job_id}_.*_delete_?\d*.tar.gz/
-          when :record then /_#{job_id}_.*_new_?\d*.tar.gz/
+          when :delete then /_#{job_identifier}_.*_delete_?\d*.tar.gz/
+          when :record then /_#{job_identifier}_.*_new_?\d*.tar.gz/
           end
         end
       end

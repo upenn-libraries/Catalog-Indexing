@@ -18,16 +18,16 @@ describe AlmaExport do
     expect(export.errors[:status].join).to include 'is not included'
   end
 
+  it 'requires a job_identifier' do
+    export = build(:alma_export, job_identifier: nil)
+    expect(export.valid?).to be false
+    expect(export.errors[:job_identifier].join).to include "can't be blank"
+  end
+
   it 'requires a valid source' do
     export = build(:alma_export, alma_source: 'voyager')
     expect(export.valid?).to be false
     expect(export.errors[:alma_source].join).to include 'is not included'
-  end
-
-  it 'requires a webhook_body' do
-    export = build(:alma_export, webhook_body: nil)
-    expect(export.valid?).to be false
-    expect(export.errors[:webhook_body].join).to include "can't be blank"
   end
 
   it 'requires a full? value' do

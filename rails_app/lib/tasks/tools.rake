@@ -95,4 +95,14 @@ namespace :tools do
     ConfigItem.find_or_create_by name: 'adhoc_target_collections', config_type: ConfigItem::ARRAY_TYPE,
                                  value: config_item_details.dig(:adhoc_target_collections, :default)
   end
+
+  desc 'Set job_identifier values for AlmaExport entries from the stored webhook_body content'
+  task set_alma_export_job_id: :environment do
+    AlmaExport.where(job_id: nil).where.not(webhook_body: nil).each do |alma_export|
+      job_id = alma_export.webhook_body.dig('job_instance', 'id')
+      alma_export.job_id = job_id
+      puts "Setting job_identifier to #{job_id} for AlmaExport ##{alma_export.id}"
+      alma_export.save!
+    end
+  end
 end

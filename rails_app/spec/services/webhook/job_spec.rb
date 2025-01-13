@@ -8,7 +8,7 @@ describe Webhook::Job do
   context 'with an uninteresting job (not publishing related)' do
     let(:payload) { JSON.parse json_fixture('job_end_uninteresting', :webhooks) }
 
-    it { is_expected.to have_attributes id: '72600507420003666', job_name: 'An Uninteresting Job' }
+    it { is_expected.to have_attributes id: '1234567891234567', job_name: 'An Uninteresting Job' }
     it { is_expected.not_to be_successful_publishing_job }
     it { is_expected.not_to be_full_publish }
   end

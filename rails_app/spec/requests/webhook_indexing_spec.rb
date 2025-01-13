@@ -91,7 +91,7 @@ RSpec.describe 'Webhook Indexing requests' do
 
     context 'with JOB actions' do
       context 'with a successful full publish webhook body' do
-        let(:headers) { { 'X-Exl-Signature': 'nMEedNbhZIMTUEgThPAsdVX/yHMl37fWT3/N6FSFJjE=' } }
+        let(:headers) { { 'X-Exl-Signature': 'vP1gG1TFMJu5PhAjhGECVdOw7ehrqasuzg5T1j8jmVQ=' } }
 
         it 'handles validated job completed events if process_job_webhooks is true' do
           allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
@@ -109,7 +109,7 @@ RSpec.describe 'Webhook Indexing requests' do
       end
 
       context 'with successful incremental publishing webhook body' do
-        let(:headers) { { 'X-Exl-Signature': 'rRG1vTqgt7wtZBLbkm3KHRL2IMXqNqliedDd5/C6AN0=' } }
+        let(:headers) { { 'X-Exl-Signature': 'QANWsVKowvM6vCw2yoR5/zOl9NlxW0EsXRkcWVdeOTs=' } }
 
         before do
           allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)
@@ -123,7 +123,7 @@ RSpec.describe 'Webhook Indexing requests' do
       end
 
       context 'with completed with errors incremental publishing webhook body' do
-        let(:headers) { { 'X-Exl-Signature': 'mPDISk7xtEqmLgIT5m1YCF5lVpm/wzeD1WWvHk+ez6g=' } }
+        let(:headers) { { 'X-Exl-Signature': 'jyC/Dn8hgBulsYwiwi93EkZRmgrhhrlBgqmEiU9x+pU=' } }
 
         before do
           allow(ConfigItem).to receive(:value_for).with(:process_job_webhooks).and_return(true)

@@ -6,8 +6,6 @@
 class AlmaExport < ApplicationRecord
   include Statuses
 
-  JOB_SUCCESS_VALUES = %w[COMPLETED_SUCCESS COMPLETED_FAILED].freeze
-
   module Sources
     PRODUCTION = 'production'
     SANDBOX = 'sandbox'
@@ -18,16 +16,11 @@ class AlmaExport < ApplicationRecord
 
   validates :alma_source, inclusion: Sources::ALL, presence: true
   validates :full, inclusion: [true, false]
-  validates :webhook_body, presence: true
+  validates :job_identifier, presence: true
 
   scope :filter_status, ->(status) { where(status: status) }
   scope :filter_full, ->(full) { where(full: full == 'true') }
   scope :filter_sort_by, ->(value, order) { order(value => order) }
-
-  # @return [String, nil]
-  def alma_job_identifier
-    webhook_body.dig('job_instance', 'id')
-  end
 
   # Count of BatchFiles for this AlmaExport matching status
   # @param status [String]

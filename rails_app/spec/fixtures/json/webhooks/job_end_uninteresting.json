@@ -1,5 +1,5 @@
 {
-  "id": "72600507420003666",
+  "id": "1234567891234567",
   "action": "JOB_END",
   "institution": {
     "value": "01UPENN_INST",
@@ -7,14 +7,14 @@
   },
   "time": "2024-11-06T13:07:14.563Z",
   "job_instance": {
-    "id": "72600507420003681",
+    "id": "1234567891234567",
     "name": "An Uninteresting Job",
     "progress": 100.3,
     "status": {
       "value": "COMPLETED_FAILED",
       "desc": "Completed with Errors"
     },
-    "external_id": "72600507420003666",
+    "external_id": "1234567891234567",
     "submitted_by": {
       "value": "System"
     },
