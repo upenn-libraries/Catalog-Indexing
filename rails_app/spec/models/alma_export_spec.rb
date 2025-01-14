@@ -43,21 +43,83 @@ describe AlmaExport do
     expect(export.target_collections).to eq target_collections
   end
 
-  xdescribe '.create_full!' do
-    xcontext 'with valid parameters'
-    xcontext 'with no job_id parameter'
+  describe '.create_full!' do
+    context 'with valid parameters' do
+      it 'returns an alma_export with the expected attributes' do
+        export = described_class.create_full!(job_id: '123456')
+        expect(export.job_identifier).to eq '123456'
+        expect(export.full).to be true
+        export.destroy
+      end
+    end
+
+    context 'with no job_id parameter' do
+      it 'raises an exception' do
+        expect { described_class.create_full!(job_id: nil) }.to(
+          raise_error(ActiveRecord::RecordInvalid, "Validation failed: Job identifier can't be blank")
+        )
+      end
+    end
   end
 
-  xdescribe '.create_incremental!' do
-    xcontext 'with valid parameters'
-    xcontext 'with no job_id parameter'
+  describe '.create_incremental!' do
+    context 'with valid parameters' do
+      it 'returns an alma_export with the expected attributes' do
+        export = described_class.create_incremental!(job_id: '123456')
+        expect(export.job_identifier).to eq '123456'
+        expect(export.full).to be false
+        export.destroy
+      end
+    end
+
+    context 'with no job_id parameter' do
+      it 'raises an exception' do
+        expect { described_class.create_full!(job_id: nil) }.to(
+          raise_error(ActiveRecord::RecordInvalid, "Validation failed: Job identifier can't be blank")
+        )
+      end
+    end
   end
 
-  xdescribe '#process!' do
-    xcontext 'with an AlmaExport in PENDING status'
-    xcontext 'with an AlmaExport not in PENDING status'
-    xcontext 'with inline true'
-    xcontext 'with inline false'
+  describe '#process!' do
+    context 'with a full AlmaExport in PENDING status' do
+      let(:alma_export) { create(:alma_export, :pending) }
+
+      it 'enqueues a full processing job' do
+        expect {
+          alma_export.process!
+        }.to change { ProcessFullAlmaExportJob.jobs.count }.by 1
+      end
+    end
+
+    context 'with an incremental AlmaExport in PENDING status' do
+      let(:alma_export) { create(:alma_export, :incremental, :pending) }
+
+      it 'enqueues an incremental processing job' do
+        expect {
+          alma_export.process!
+        }.to change { ProcessIncrementalAlmaExportJob.jobs.count }.by 1
+      end
+    end
+
+    context 'with an AlmaExport not in PENDING status' do
+      let(:alma_export) { create(:alma_export, :in_progress) }
+
+      it 'raises an exception' do
+        expect { alma_export.process! }.to(
+          raise_error(AlmaExport::InvalidStatusError, /AlmaExport ##{alma_export.id} is in #{alma_export.status} state/)
+        )
+      end
+    end
+
+    context 'with inline true' do
+      let(:alma_export) { create(:alma_export, :pending) }
+
+      it 'runs the appropriate processing transaction' do
+        outcome = alma_export.process!(inline: true)
+        expect(outcome).to be_a Dry::Monads::Result
+      end
+    end
   end
 
   describe '#set_completion_status!' do

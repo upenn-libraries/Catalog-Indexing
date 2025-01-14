@@ -6,6 +6,8 @@
 class AlmaExport < ApplicationRecord
   include Statuses
 
+  class InvalidStatusError < StandardError; end
+
   module Sources
     PRODUCTION = 'production'
     SANDBOX = 'sandbox'
@@ -39,18 +41,15 @@ class AlmaExport < ApplicationRecord
   end
 
   # @param inline [Boolean]
+  # @return [TrueClass, Dry::Monads::Result, nil]
   def process!(inline: false)
-    raise unless status == Statuses::PENDING
-
-    if full? && inline
-      ProcessFullAlmaExport.new.call alma_export_id: id
-    elsif full
-      ProcessFullAlmaExportJob.perform_async id
-    elsif inline
-      ProcessIncrementalAlmaExport.new.call alma_export_id: id
-    else
-      ProcessIncrementalAlmaExportJob.perform_async id
+    unless status == Statuses::PENDING
+      raise InvalidStatusError, "AlmaExport ##{id} is in #{status} state. Only records in #{PENDING} can be processed."
     end
+
+    return process_inline if inline
+
+    enqueue_processing_job
   end
 
   # Count of BatchFiles for this AlmaExport matching status
@@ -100,5 +99,17 @@ class AlmaExport < ApplicationRecord
     ActiveRecord::Base.uncached do
       batch_files.reload.distinct.pluck(:status)
     end
+  end
+
+  # @return [Dry::Monads::Result]
+  def process_inline
+    transaction = full? ? ProcessFullAlmaExport : ProcessIncrementalAlmaExport
+    transaction.new.call(alma_export_id: id)
+  end
+
+  # @return [TrueClass, nil]
+  def enqueue_processing_job
+    job = full? ? ProcessFullAlmaExportJob : ProcessIncrementalAlmaExportJob
+    job.perform_async(id)
   end
 end
