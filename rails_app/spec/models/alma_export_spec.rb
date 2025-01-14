@@ -114,10 +114,16 @@ describe AlmaExport do
 
     context 'with inline true' do
       let(:alma_export) { create(:alma_export, :pending) }
+      let(:transaction) { instance_double ProcessFullAlmaExport }
+
+      before do
+        allow(transaction).to receive(:call).and_return(Dry::Monads::Success)
+        allow(ProcessFullAlmaExport).to receive(:new).and_return(transaction)
+      end
 
       it 'runs the appropriate processing transaction' do
-        outcome = alma_export.process!(inline: true)
-        expect(outcome).to be_a Dry::Monads::Result
+        alma_export.process!(inline: true)
+        expect(transaction).to have_received(:call).with(alma_export_id: alma_export.id)
       end
     end
   end
