@@ -24,6 +24,7 @@ class AlmaExport < ApplicationRecord
   scope :filter_full, ->(full) { where(full: full == 'true') }
   scope :filter_sort_by, ->(value, order) { order(value => order) }
 
+  # Create and AlmaExport representing an Alma full publish
   # @param job_id [String]
   # @param alma_source [String (frozen)]
   # @return [AlmaExport]
@@ -32,6 +33,7 @@ class AlmaExport < ApplicationRecord
                        job_identifier: job_id, full: true
   end
 
+  # Create an AlmaExport representing an Alma incremental publish
   # @param job_id [String]
   # @param alma_source [String (frozen)]
   # @return [AlmaExport]
@@ -40,7 +42,8 @@ class AlmaExport < ApplicationRecord
                        job_identifier: job_id, full: false
   end
 
-  # @param inline [Boolean]
+  # "Process" the AlmaExport by passing it to the Job or Transaction
+  # @param inline [Boolean] inline processing will occur if this is true
   # @return [TrueClass, Dry::Monads::Result, nil]
   def process!(inline: false)
     unless status == Statuses::PENDING
@@ -60,7 +63,7 @@ class AlmaExport < ApplicationRecord
   end
 
   # query to see if all associated BatchFiles are in a completed state (completed, completed with errors, failed)
-  # @param [Array<String>] statuses
+  # @param statuses [Array<String>]
   # @return [Boolean]
   def all_batch_files_finished?(statuses = unique_batch_file_statuses)
     statuses.none? { |status| status.in? Statuses::INCOMPLETE_STATUSES }
@@ -80,8 +83,8 @@ class AlmaExport < ApplicationRecord
 
   private
 
-  # @param [Array<String>] statuses
-  # @return [NilClass | String (frozen)]
+  # @param statuses [Array<String>]
+  # @return [NilClass, String (frozen)]
   def derive_completion_status(statuses = unique_batch_file_statuses)
     return unless all_batch_files_finished?(statuses)
 
