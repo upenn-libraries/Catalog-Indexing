@@ -3,6 +3,7 @@
   doi_ss^10000
   oclc_id_ss^10000
   isxn_search^8000
+  call_number_search^5000
   title_anchored_search^1000 title_unstem_search^300 title_search^250
   title_aux_anchored_search^700 title_aux_unstem_search^250 title_aux_search^200
   journal_title_anchored_search^1000 journal_title_unstem_search^300 journal_title_search^200
