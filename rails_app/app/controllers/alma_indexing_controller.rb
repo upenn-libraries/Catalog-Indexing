@@ -48,10 +48,10 @@ class AlmaIndexingController < ApplicationController
 
   # Ensure that ConfigItems are setup, otherwise indexing actions are bound to fail
   def validate_configuration
-    unless ConfigItem.any?
-      redirect_to config_items_path, alert: 'You must run the rake:add_config_items task to initialize config items.'
-      false
-    end
+    return true if ConfigItem.any?
+
+    redirect_to config_items_path, alert: 'You must run the rake:add_config_items task to initialize config items.'
+    false
   end
 
   # @param outcome [Dry::Monads::Result]
