@@ -2,6 +2,7 @@
 
 # actions surrounding ad hoc record indexing
 class AlmaIndexingController < ApplicationController
+  before_action :validate_configuration
   before_action :validate_mmsids, only: %i[add delete]
 
   def index; end
@@ -43,6 +44,14 @@ class AlmaIndexingController < ApplicationController
       false
     end
     true
+  end
+
+  # Ensure that ConfigItems are setup, otherwise indexing actions are bound to fail
+  def validate_configuration
+    unless ConfigItem.any?
+      redirect_to config_items_path, alert: 'You must run the rake:add_config_items task to initialize config items.'
+      false
+    end
   end
 
   # @param outcome [Dry::Monads::Result]
