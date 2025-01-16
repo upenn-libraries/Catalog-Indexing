@@ -26,27 +26,25 @@ class AlmaExport < ApplicationRecord
 
   # Create and AlmaExport representing an Alma full publish
   # @param job_id [String]
-  # @param alma_source [String (frozen)]
+  # @param alma_source [String]
   # @return [AlmaExport]
-  def self.create_full!(job_id:, alma_source: AlmaExport::Sources::PRODUCTION)
-    AlmaExport.create! status: Statuses::PENDING, alma_source: alma_source,
-                       job_identifier: job_id, full: true
+  def self.create_full!(job_id:, alma_source: Sources::PRODUCTION)
+    AlmaExport.create! status: PENDING, alma_source: alma_source, job_identifier: job_id, full: true
   end
 
   # Create an AlmaExport representing an Alma incremental publish
   # @param job_id [String]
-  # @param alma_source [String (frozen)]
+  # @param alma_source [String]
   # @return [AlmaExport]
-  def self.create_incremental!(job_id:, alma_source: AlmaExport::Sources::PRODUCTION)
-    AlmaExport.create! status: Statuses::PENDING, alma_source: alma_source,
-                       job_identifier: job_id, full: false
+  def self.create_incremental!(job_id:, alma_source: Sources::PRODUCTION)
+    AlmaExport.create! status: PENDING, alma_source: alma_source, job_identifier: job_id, full: false
   end
 
   # "Process" the AlmaExport by passing it to the Job or Transaction
   # @param inline [Boolean] inline processing will occur if this is true
   # @return [TrueClass, Dry::Monads::Result, nil]
   def process!(inline: false)
-    unless status == Statuses::PENDING
+    unless status == PENDING
       raise InvalidStatusError, "AlmaExport ##{id} is in #{status} state. Only records in #{PENDING} can be processed."
     end
 
@@ -66,11 +64,11 @@ class AlmaExport < ApplicationRecord
   # @param statuses [Array<String>]
   # @return [Boolean]
   def all_batch_files_finished?(statuses = unique_batch_file_statuses)
-    statuses.none? { |status| status.in? Statuses::INCOMPLETE_STATUSES }
+    statuses.none? { |status| status.in? INCOMPLETE_STATUSES }
   end
 
   # set to appropriate completed status and save
-  # @return [NilClass]
+  # @return [nil]
   def set_completion_status!
     new_status = derive_completion_status
     return unless new_status
@@ -84,16 +82,16 @@ class AlmaExport < ApplicationRecord
   private
 
   # @param statuses [Array<String>]
-  # @return [NilClass, String (frozen)]
+  # @return [nil, String]
   def derive_completion_status(statuses = unique_batch_file_statuses)
     return unless all_batch_files_finished?(statuses)
 
-    if statuses == [Statuses::FAILED]
-      Statuses::FAILED
-    elsif statuses == [Statuses::COMPLETED]
-      Statuses::COMPLETED
+    if statuses == [FAILED]
+      FAILED
+    elsif statuses == [COMPLETED]
+      COMPLETED
     else
-      Statuses::COMPLETED_WITH_ERRORS
+      COMPLETED_WITH_ERRORS
     end
   end
 
