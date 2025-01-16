@@ -54,6 +54,7 @@ class WebhookIndexingController < ApplicationController
   end
 
   # @return [TrueClass]
+  # Create an AlmaExport record with webhook data and kick off the appropriate job 
   def initialize_alma_export
     alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
                                      webhook_body: @webhook.data, job_identifier: @webhook.id,
