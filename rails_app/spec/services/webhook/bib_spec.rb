@@ -5,7 +5,7 @@ describe Webhook::Bib do
 
   subject { described_class.new data: payload }
 
-  context 'with an created bib' do
+  context 'with a bib created' do
     let(:payload) { JSON.parse json_fixture('bib_created', :webhooks) }
 
     it { is_expected.to have_attributes id: '7120811384122420557', event: 'BIB_CREATED' }

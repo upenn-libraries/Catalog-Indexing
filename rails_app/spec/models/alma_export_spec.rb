@@ -45,11 +45,11 @@ describe AlmaExport do
 
   describe '.create_full!' do
     context 'with valid parameters' do
+      let(:export) { described_class.create_full!(job_id: '123456') }
+
       it 'returns an alma_export with the expected attributes' do
-        export = described_class.create_full!(job_id: '123456')
         expect(export.job_identifier).to eq '123456'
         expect(export.full).to be true
-        export.destroy
       end
     end
 
@@ -64,11 +64,11 @@ describe AlmaExport do
 
   describe '.create_incremental!' do
     context 'with valid parameters' do
+      let(:export) { described_class.create_incremental!(job_id: '123456') }
+
       it 'returns an alma_export with the expected attributes' do
-        export = described_class.create_incremental!(job_id: '123456')
         expect(export.job_identifier).to eq '123456'
         expect(export.full).to be false
-        export.destroy
       end
     end
 
