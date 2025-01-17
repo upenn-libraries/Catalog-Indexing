@@ -9,6 +9,8 @@ en:
     validation:
       no_ids: 'No MMS IDs provided.'
       too_many_ids: "Number of MMS IDs (%{length}) exceeds the limit (%{limit})."
+      no_config_items: 'You must run the rake:add_config_items task to initialize config items.'
+      no_target_collection: 'You must set a collection for the adhoc_target_collections configuration.'
     add:
       form:
         label: 'MMS IDs to Add or Update via Bibs API'

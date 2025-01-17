@@ -48,16 +48,10 @@ class AlmaIndexingController < ApplicationController
 
   # Ensure that the expected ConfigItem is setup, otherwise indexing actions are bound to fail
   def validate_configuration
-    return true if ConfigItem.any? && ConfigItem.value_for(:adhoc_target_collections).any?
+    return if ConfigItem.any? && ConfigItem.value_for(:adhoc_target_collections).any?
 
-    message = if ConfigItem.none?
-                'You must run the rake:add_config_items task to initialize config items.'
-              else
-                'You must set a collection for the adhoc_target_collections configuration'
-              end
-
+    message = ConfigItem.none? ? t('ad_hoc.validation.no_config_items') : t('ad_hoc.validation.no_target_collection')
     redirect_to config_items_path, alert: message
-    false
   end
 
   # @param outcome [Dry::Monads::Result]
