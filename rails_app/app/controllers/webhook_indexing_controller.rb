@@ -15,12 +15,12 @@ class WebhookIndexingController < ApplicationController
   def listen
     case @webhook
     when Webhook::Bib
-      ConfigItem.value_for(:process_bib_webhooks) ? handle_bib_action : head(:ok)
+      ConfigItem.value_for(:process_bib_webhooks) ? handle_bib_action : head(:no_content)
     when Webhook::Job
       if ConfigItem.value_for(:process_job_webhooks) && @webhook.successful_publishing_job?
         initialize_alma_export
       else
-        head(:ok)
+        head(:no_content)
       end
     else
       head(:no_content)
@@ -35,7 +35,7 @@ class WebhookIndexingController < ApplicationController
   # Handles alma webhook bib actions
   # @return [TrueClass]
   def handle_bib_action
-    return head(:ok) if @webhook.suppress_from_discovery?
+    return head(:no_content) if @webhook.suppress_from_discovery?
 
     case @webhook.event
     when 'BIB_UPDATED'
