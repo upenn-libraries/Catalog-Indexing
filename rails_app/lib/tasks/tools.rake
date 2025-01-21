@@ -44,27 +44,17 @@ namespace :tools do
   end
 
   # JOB_ID=55827228880003681 bundle exec rake tools:process_full_index
-  desc 'Test full export processing'
+  desc 'Manually process a full export'
   task process_full_index: :environment do
-    job_id = ENV.fetch('JOB_ID', nil)
-    webhook_response_fixture = Rails.root.join('spec/fixtures/json/webhooks/job_end_success_full_publish.json').read
-    webhook_response_fixture.gsub!('50746714710003681', job_id) if job_id
-    alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
-                                     webhook_body: JSON.parse(webhook_response_fixture))
-    result = ProcessFullAlmaExport.new.call(alma_export_id: alma_export.id)
-    puts result.inspect
+    ae = AlmaExport.create_full! job_id: ENV.fetch('JOB_ID')
+    ae.process! inline: true
   end
 
   # JOB_ID=55827228880003681 bundle exec rake tools:process_full_index
-  desc 'Test incremental export processing'
+  desc 'Manually process an incremental export'
   task process_incremental_index: :environment do
-    job_id = ENV.fetch('JOB_ID', nil)
-    webhook_response_fixture = Rails.root.join('spec/fixtures/json/webhooks/job_end_success_incremental.json').read
-    webhook_response_fixture.gsub!('50746714710003681', job_id) if job_id
-    alma_export = AlmaExport.create!(status: Statuses::PENDING, alma_source: AlmaExport::Sources::PRODUCTION,
-                                     webhook_body: JSON.parse(webhook_response_fixture), full: false)
-    result = ProcessIncrementalAlmaExport.new.call(alma_export_id: alma_export.id)
-    puts result
+    ae = AlmaExport.create_incremental! job_id: ENV.fetch('JOB_ID')
+    ae.process! inline: true
   end
 
   desc 'Create Solr JSON from Alma set'
@@ -77,7 +67,7 @@ namespace :tools do
   task package_configset: :environment do
     datestamp = DateTime.current.strftime('%Y%m%d')
     filename = "storage/configset_#{datestamp}.zip"
-    File.write("storage/configset_#{datestamp}.zip", File.read(SolrTools.configset_zipfile))
+    File.write(filename, File.read(SolrTools.configset_zipfile))
     puts "Configset package saved to #{filename}"
   end
 
@@ -94,5 +84,15 @@ namespace :tools do
                                  value: config_item_details.dig(:webhook_target_collections, :default)
     ConfigItem.find_or_create_by name: 'adhoc_target_collections', config_type: ConfigItem::ARRAY_TYPE,
                                  value: config_item_details.dig(:adhoc_target_collections, :default)
+  end
+
+  desc 'Set job_identifier values for AlmaExport entries from the stored webhook_body content'
+  task set_alma_export_job_id: :environment do
+    AlmaExport.where(job_id: nil).where.not(webhook_body: nil).find_each do |alma_export|
+      job_id = alma_export.webhook_body.dig('job_instance', 'id')
+      alma_export.job_id = job_id
+      puts "Setting job_identifier to #{job_id} for AlmaExport ##{alma_export.id}"
+      alma_export.save!
+    end
   end
 end

@@ -12,10 +12,8 @@ describe ProcessIncrementalAlmaExport, stub_batches: true do
   end
 
   describe '#call' do
-    let(:alma_export) do
-      create(:alma_export, :incremental,
-             webhook_body: JSON.parse(json_fixture('job_end_success_incremental', :webhooks)))
-    end
+    let(:webhook) { Webhook::Job.new data: JSON.parse(json_fixture('job_end_success_incremental', :webhooks)) }
+    let(:alma_export) { create(:alma_export, :incremental, webhook_body: webhook.data, job_identifier: webhook.id) }
     let(:collections) { ['existing-collection'] }
     let(:outcome) { transaction.call(alma_export_id: alma_export.id) }
 

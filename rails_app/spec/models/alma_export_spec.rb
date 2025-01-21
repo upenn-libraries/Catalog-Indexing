@@ -18,16 +18,16 @@ describe AlmaExport do
     expect(export.errors[:status].join).to include 'is not included'
   end
 
+  it 'requires a job_identifier' do
+    export = build(:alma_export, job_identifier: nil)
+    expect(export.valid?).to be false
+    expect(export.errors[:job_identifier].join).to include "can't be blank"
+  end
+
   it 'requires a valid source' do
     export = build(:alma_export, alma_source: 'voyager')
     expect(export.valid?).to be false
     expect(export.errors[:alma_source].join).to include 'is not included'
-  end
-
-  it 'requires a webhook_body' do
-    export = build(:alma_export, webhook_body: nil)
-    expect(export.valid?).to be false
-    expect(export.errors[:webhook_body].join).to include "can't be blank"
   end
 
   it 'requires a full? value' do
@@ -41,6 +41,91 @@ describe AlmaExport do
     export = create(:alma_export, target_collections: target_collections)
     expect(export.valid?).to be true
     expect(export.target_collections).to eq target_collections
+  end
+
+  describe '.create_full!' do
+    context 'with valid parameters' do
+      let(:export) { described_class.create_full!(job_id: '123456') }
+
+      it 'returns an alma_export with the expected attributes' do
+        expect(export.job_identifier).to eq '123456'
+        expect(export.full).to be true
+      end
+    end
+
+    context 'with no job_id parameter' do
+      it 'raises an exception' do
+        expect { described_class.create_full!(job_id: nil) }.to(
+          raise_error(ActiveRecord::RecordInvalid, "Validation failed: Job identifier can't be blank")
+        )
+      end
+    end
+  end
+
+  describe '.create_incremental!' do
+    context 'with valid parameters' do
+      let(:export) { described_class.create_incremental!(job_id: '123456') }
+
+      it 'returns an alma_export with the expected attributes' do
+        expect(export.job_identifier).to eq '123456'
+        expect(export.full).to be false
+      end
+    end
+
+    context 'with no job_id parameter' do
+      it 'raises an exception' do
+        expect { described_class.create_full!(job_id: nil) }.to(
+          raise_error(ActiveRecord::RecordInvalid, "Validation failed: Job identifier can't be blank")
+        )
+      end
+    end
+  end
+
+  describe '#process!' do
+    context 'with a full AlmaExport in PENDING status' do
+      let(:alma_export) { create(:alma_export, :pending) }
+
+      it 'enqueues a full processing job' do
+        expect {
+          alma_export.process!
+        }.to change { ProcessFullAlmaExportJob.jobs.count }.by 1
+      end
+    end
+
+    context 'with an incremental AlmaExport in PENDING status' do
+      let(:alma_export) { create(:alma_export, :incremental, :pending) }
+
+      it 'enqueues an incremental processing job' do
+        expect {
+          alma_export.process!
+        }.to change { ProcessIncrementalAlmaExportJob.jobs.count }.by 1
+      end
+    end
+
+    context 'with an AlmaExport not in PENDING status' do
+      let(:alma_export) { create(:alma_export, :in_progress) }
+
+      it 'raises an exception' do
+        expect { alma_export.process! }.to(
+          raise_error(AlmaExport::InvalidStatusError, /AlmaExport ##{alma_export.id} is in #{alma_export.status} state/)
+        )
+      end
+    end
+
+    context 'with inline true' do
+      let(:alma_export) { create(:alma_export, :pending) }
+      let(:transaction) { instance_double ProcessFullAlmaExport }
+
+      before do
+        allow(transaction).to receive(:call).and_return(Dry::Monads::Success)
+        allow(ProcessFullAlmaExport).to receive(:new).and_return(transaction)
+      end
+
+      it 'runs the appropriate processing transaction' do
+        alma_export.process!(inline: true)
+        expect(transaction).to have_received(:call).with(alma_export_id: alma_export.id)
+      end
+    end
   end
 
   describe '#set_completion_status!' do

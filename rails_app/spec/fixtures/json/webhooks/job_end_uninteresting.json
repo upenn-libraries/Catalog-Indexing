@@ -8,7 +8,7 @@
   "time": "2024-11-06T13:07:14.563Z",
   "job_instance": {
     "id": "1234567891234567",
-    "name": "Publishing Platform Job All Titles - Find Catalog - FTP",
+    "name": "An Uninteresting Job",
     "progress": 100.3,
     "status": {
       "value": "COMPLETED_FAILED",
@@ -106,19 +106,19 @@
       "value": "9979472923903681"
     } ],
     "job_info": {
-      "id": "S64183328440003681",
-      "name": "Publishing Platform Job All Titles - Find Catalog - FTP",
-      "description": "Publishing Platform Job",
+      "id": "S64183328440003666",
+      "name": "An Uninteresting Job",
+      "description": "Something Boring",
       "type": {
         "value": "SCHEDULED",
         "desc": "Scheduled"
       },
       "category": {
-        "value": "PUBLISHING",
-        "desc": "Publishing"
+        "value": "BORING",
+        "desc": "Boring"
       },
-      "link": "/almaws/v1/conf/jobs/S64183328440003681"
+      "link": "/almaws/v1/conf/jobs/S64183328440003666"
     },
-    "link": "/almaws/v1/conf/jobs/S64183328440003681/instances/72600507420003681"
+    "link": "/almaws/v1/conf/jobs/S64183328440003666/instances/72600507420003666"
   }
 }
