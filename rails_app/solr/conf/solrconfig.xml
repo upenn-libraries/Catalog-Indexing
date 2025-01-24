@@ -244,10 +244,17 @@
       </str>
 
       <str name="isxn_qf">
-        isxn_search^2500
+        isxn_search
       </str>
       <str name="isxn_pf">
-        isxn_search^2500
+        isxn_search
+      </str>
+
+      <str name="oclc_id_qf">
+        oclc_id_ss
+      </str>
+      <str name="oclc_id_pf">
+        oclc_id_ss
       </str>
 
       <str name="publication_date_qf">
@@ -258,10 +265,10 @@
       </str>
 
       <str name="publisher_qf">
-        publisher_unstem_search^2500
+        publisher_unstem_search
       </str>
       <str name="publisher_pf">
-        publisher_unstem_search^2500
+        publisher_unstem_search
       </str>
 
       <str name="series_qf">
@@ -285,10 +292,10 @@
       </str>
 
       <str name="place_of_publication_qf">
-        place_of_publication_unstem_search^2500
+        place_of_publication_unstem_search
       </str>
       <str name="place_of_publication_pf">
-        place_of_publication_unstem_search^2500
+        place_of_publication_unstem_search
       </str>
 
       <str name="publisher_number_qf">
@@ -317,10 +324,10 @@
       </str>
 
       <str name="corporate_author_qf">
-        corporate_author_unstem_search^2500
+        corporate_author_unstem_search
       </str>
       <str name="corporate_author_pf">
-        corporate_author_unstem_search^2500
+        corporate_author_unstem_search
       </str>
 
       <str name="call_number_qf">
