@@ -250,6 +250,15 @@
         isxn_search^2500
       </str>
 
+      <str name="oclc_id_qf">
+        oclc_id_ss^2000
+        oclc_id_search
+      </str>
+      <str name="oclc_id_pf">
+        oclc_id_ss^2000
+        oclc_id_search
+      </str>
+
       <str name="publication_date_qf">
         publication_date_s
       </str>
