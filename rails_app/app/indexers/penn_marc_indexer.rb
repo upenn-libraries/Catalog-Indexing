@@ -90,7 +90,6 @@ class PennMarcIndexer < Traject::Indexer
     define_field :subject_search
     define_field :genre_search
     define_field :isxn_search, :identifier_isxn_search
-    define_field :oclc_id_search, :identifier_oclc_id_search
     define_field :series_search
     define_field :publisher_unstem_search, :production_search
     define_field :publisher_number_search, :identifier_publisher_number_search
