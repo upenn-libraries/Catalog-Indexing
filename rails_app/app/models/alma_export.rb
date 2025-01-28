@@ -79,7 +79,37 @@ class AlmaExport < ApplicationRecord
             })
   end
 
+  # Start time from webhook body
+  # @return [Time]
+  def job_started_at
+    parse_job_timestamp('start_time')
+  end
+
+  # End time from webhook body
+  # @return [Time]
+  def job_ended_at
+    parse_job_timestamp('end_time')
+  end
+
+  # Duration between job start and end
+  # @return [String]
+  def job_duration
+    return unless job_started_at && job_ended_at
+
+    Time.at(job_ended_at - job_started_at).utc.strftime('%H:%M:%S')
+  end
+
   private
+
+  # Parse a timestamp from the webhook body
+  # @param key [String]
+  # @return [nil, Time]
+  def parse_job_timestamp(key)
+    timestamp = webhook_body&.dig('job_instance', key)
+    return unless timestamp
+
+    Time.zone.parse(timestamp)
+  end
 
   # @param statuses [Array<String>]
   # @return [nil, String]
