@@ -38,17 +38,13 @@ describe 'Alma Export Show Page' do
         end
       end
 
-      # it 'displays target collections' do
-      #   within('.export-info') do
-      #     if alma_export.target_collections.any?
-      #       alma_export.target_collections.each do |collection|
-      #         expect(page).to have_content(collection)
-      #       end
-      #     else
-      #       expect(page).to have_content('None')
-      #     end
-      #   end
-      # end
+      it 'displays target collections when present' do
+        within('.export-info') do
+          alma_export.target_collections.each do |collection|
+            expect(page).to have_content(collection)
+          end
+        end
+      end
     end
 
     describe 'indexing details with additional values' do
