@@ -29,11 +29,17 @@ describe 'Alma Export Index Page' do
     end
 
     context 'with additional values' do
-      let(:additional_values) { { started_at: Time.current } }
+      let(:additional_values) { { started_at: Time.current, job_identifier: '1234' } }
 
       it 'displays started_at' do
         within('.started-at') do
           expect(page).to have_text(alma_export.started_at.to_fs(:display))
+        end
+      end
+
+      it 'displays job_identifier' do
+        within('.job-id') do
+          expect(page).to have_text(alma_export.job_identifier)
         end
       end
     end
