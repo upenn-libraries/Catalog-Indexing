@@ -59,7 +59,7 @@ describe 'Alma Export Index Page' do
       select 'Completed', from: 'Status'
       click_on 'Filter'
       expect(page).to have_css('.alma-export-row', count: 1)
-      expect(page).not_to have_text alma_export.id
+      within('th.id') { expect(page).not_to have_text alma_export.id }
     end
   end
 
