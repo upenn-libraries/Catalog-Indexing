@@ -2,6 +2,8 @@
 
 # Helper methods for extracting and parsing information from the Alma Export webhook body
 module JobDetails
+  extend ActiveSupport::Concern
+
   # Start time from webhook body
   # @return [Time, nil]
   def job_started_at

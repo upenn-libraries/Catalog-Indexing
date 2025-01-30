@@ -13,6 +13,14 @@ module Statuses
   INCOMPLETE_STATUSES = [PENDING, IN_PROGRESS].freeze
   PROBLEM_STATUSES = [COMPLETED_WITH_ERRORS, FAILED].freeze
 
+  module Style
+    PENDING = 'text-bg-info'
+    IN_PROGRESS = 'text-bg-primary'
+    COMPLETED = 'text-bg-success'
+    COMPLETED_WITH_ERRORS = 'text-bg-warning'
+    FAILED = 'text-bg-danger'
+  end
+
   included do
     validates :status, inclusion: Statuses::ALL, presence: true
   end
@@ -20,10 +28,10 @@ module Statuses
   # Class for status badge
   # @return [String]
   def badge_class
-    { PENDING => 'text-bg-secondary',
-      IN_PROGRESS => 'text-bg-primary',
-      COMPLETED => 'text-bg-success',
-      COMPLETED_WITH_ERRORS => 'text-bg-warning',
-      FAILED => 'text-bg-danger' }[status]
+    { PENDING => Style::PENDING,
+      IN_PROGRESS => Style::IN_PROGRESS,
+      COMPLETED => Style::COMPLETED,
+      COMPLETED_WITH_ERRORS => Style::COMPLETED_WITH_ERRORS,
+      FAILED => Style::FAILED }[status]
   end
 end
