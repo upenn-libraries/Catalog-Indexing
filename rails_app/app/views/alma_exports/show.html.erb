@@ -6,76 +6,9 @@
   </ol>
 </nav>
 
-<h1>Alma Export: <%= @alma_export.id %></h1>
 <div class="container">
-  <dl class="alma-export-list">
-    <div class="row my-3">
-      <div class="col">
-      <dt>ID</dt>
-        <dd class="id"><%= @alma_export.id %></dd>
-      </div>
-      <div class="col">
-      <dt>Status</dt>
-      <dd class="status"><%= @alma_export.status.titleize %></dd>
-      </div>
-      <div class="col">
-      <dt>Source</dt>
-      <dd class="source"><%= @alma_export.alma_source %></dd>
-      </div>
-      <div class="col">
-      <dt>Full?</dt>
-      <dd class="full"><%= @alma_export.full.to_s.titleize %></dd>
-      </div>
-    </div>
-    <div class="row my-3">
-      <div class="col">
-      <dt>Started At</dt>
-      <dd class="started-at"><%= @alma_export.started_at&.to_fs(:display) || 'Not Started' %></dd>
-      </div>
-      <div class="col">
-      <dt>Completed At</dt>
-      <dd class="completed-at"><%= @alma_export.completed_at&.to_fs(:display) || 'Not Completed' %></dd>
-      </div>
-      <div class="col">
-      <dt>Created At</dt>
-      <dd class="created-at"><%= @alma_export.created_at.to_fs(:display) %></dd>
-      </div>
-      <div class="col">
-      <dt>Updated At</dt>
-      <dd class="updated-at"><%= @alma_export.updated_at.to_fs(:display) %></dd>
-      </div>
-    </div>
-    <div class="row my-3">
-      <div class="col">
-        <dt>Target Collections</dt>
-        <dd class="target-collections">
-          <% if @alma_export.target_collections.any? %>
-            <ul>
-              <% @alma_export.target_collections.each do |collection| %>
-                <li><%= collection %></li>
-              <% end %>
-            </ul>
-          <% else %>
-            None
-          <% end %>
-        </dd>
-      </div>
-    </div>
-    <div class="row my-3">
-      <dt>Files Status</dt>
-      <dd>
-        <%= render 'progress' %>
-      </dd>
-    </div>
-    <div class="row my-3">
-      <dt>Webhook Body</dt>
-      <dd class="webhook-body">
-      <pre class="bg-light"><%= JSON.pretty_generate @alma_export.webhook_body %></pre>
-      </dd>
-    </div>
-  </dl>
-
-  <% unless @alma_export.batch_files.empty? %>
-    <%= link_to "Show Batch Files", alma_export_batch_files_path(@alma_export), class: 'btn btn-primary' %>
-  <% end %>
+  <h1 class="mb-4">Alma Export: <%= @alma_export.id %></h1>
+  <%= render 'alma_exports/details/export_details' %>
+  <%= render 'alma_exports/details/indexing_details' %>
+  <%= render 'alma_exports/details/job_details' %>
 </div>

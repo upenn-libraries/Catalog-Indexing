@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 require_relative 'concerns/statuses'
+require_relative 'concerns/job_details'
 
 describe AlmaExport do
+  include FixtureHelpers
+
   let(:alma_export) { create(:alma_export_with_files, files_count: 2) }
 
   it_behaves_like 'statuses'
+  it_behaves_like 'job_details'
 
   it 'has many BatchFiles' do
     expect(alma_export.batch_files.first).to be_a BatchFile

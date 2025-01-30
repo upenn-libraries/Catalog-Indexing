@@ -5,6 +5,7 @@
 # the exported records.
 class AlmaExport < ApplicationRecord
   include Statuses
+  include JobDetails
 
   class InvalidStatusError < StandardError; end
 
