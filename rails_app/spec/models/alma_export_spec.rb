@@ -3,6 +3,8 @@
 require_relative 'concerns/statuses'
 
 describe AlmaExport do
+  include FixtureHelpers
+
   let(:alma_export) { create(:alma_export_with_files, files_count: 2) }
 
   it_behaves_like 'statuses'
@@ -186,6 +188,49 @@ describe AlmaExport do
 
       it 'returns true' do
         expect(alma_export.all_batch_files_finished?).to be true
+      end
+    end
+  end
+
+  context 'with job details' do
+    let(:alma_export) { create(:alma_export, webhook_body: webhook_body) }
+    let(:webhook_body) do
+      JSON.parse(json_fixture('job_end_success_full_publish', :webhooks))
+    end
+
+    describe '#job_started_at' do
+      it 'returns timestamp' do
+        expect(alma_export.job_started_at).to be_a Time
+      end
+    end
+
+    describe '#job_ended_at' do
+      it 'returns timestamp' do
+        expect(alma_export.job_ended_at).to be_a Time
+      end
+    end
+
+    describe '#job_duration' do
+      it 'returns duration' do
+        expect(alma_export.job_duration).to be_a String
+      end
+    end
+
+    describe '#new_records' do
+      it 'returns new record count' do
+        expect(alma_export.new_records).to be_a String
+      end
+    end
+
+    describe '#updated_records' do
+      it 'returns updated record count' do
+        expect(alma_export.updated_records).to be_a String
+      end
+    end
+
+    describe '#deleted_records' do
+      it 'returns deleted record count' do
+        expect(alma_export.deleted_records).to be_a String
       end
     end
   end

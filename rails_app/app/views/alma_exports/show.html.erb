@@ -12,7 +12,7 @@
   <!-- Basic Export Information -->
   <div class="card mb-4 export-info">
     <div class="card-header">
-      <h2 class="h5 mb-0">Export Details</h2>
+      <h5 class="mb-0">Export Details</h5>
     </div>
     <div class="card-body">
       <div class="row g-3">
@@ -26,7 +26,7 @@
         </div>
         <div class="col-md-9">
           <div class="border rounded p-3">
-            <h3 class="h6 mb-3">Target Collections</h3>
+            <h6 class="mb-3">Target Collections</h6>
             <% if @alma_export.target_collections.any? %>
               <ul class="list-unstyled mb-0">
                 <% @alma_export.target_collections.each do |collection| %>
@@ -45,7 +45,7 @@
   <!-- Catalog Indexing Information -->
   <div class="card mb-4 indexing-info">
     <div class="card-header">
-      <h2 class="h5 mb-0">Indexing Progress</h2>
+      <h5 class="mb-0">Indexing Progress</h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -82,7 +82,7 @@
   <!-- Alma Publish Job Information -->
   <div class="card mb-4 job-info">
     <div class="card-header">
-      <h2 class="h5 mb-0">Job Details</h2>
+      <h5 class="mb-0">Job Details</h5>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -106,7 +106,26 @@
         </table>
       </div>
 
-      <h3 class="h6 mb-3">Webhook Response</h3>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="table-light">
+          <tr>
+            <th>New Records</th>
+            <th>Updated Records</th>
+            <th>Deleted Records</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td><%= @alma_export.new_records || 'None' %></td>
+            <td><%= @alma_export.updated_records || 'None' %></td>
+            <td><%= @alma_export.deleted_records || 'None' %></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h6 class="mb-3 text-bold">Webhook Response</h6>
       <pre class="bg-light p-3 rounded"><%= JSON.pretty_generate @alma_export.webhook_body %></pre>
     </div>
   </div>

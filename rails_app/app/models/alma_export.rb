@@ -99,7 +99,34 @@ class AlmaExport < ApplicationRecord
     Time.at(job_ended_at - job_started_at).utc.strftime('%H:%M:%S')
   end
 
+  # Amount of new records in the job
+  # @return [nil, String]
+  def new_records
+    counter_value('label.new.records')
+  end
+
+  # Amount of updated records in the job
+  # @return [nil, String]
+  def updated_records
+    counter_value('label.updated.records')
+  end
+
+  # Amount of deleted records in the job
+  # @return [nil, String]
+  def deleted_records
+    counter_value('label.deleted.records')
+  end
+
   private
+
+  # Parse the related `value` from the specified key from the `counter` from the webhook body
+  # @return [nil, String]
+  def counter_value(value_key)
+    counter = webhook_body&.dig('job_instance', 'counter')
+    return unless counter
+
+    counter.find { |item| item&.dig('type', 'value') == value_key }&.fetch('value')
+  end
 
   # Parse a timestamp from the webhook body
   # @param key [String]
