@@ -20,7 +20,7 @@
           <div class="border rounded p-3">
             <strong>ID:</strong> <%= @alma_export.id %><br>
             <strong>Source:</strong> <%= @alma_export.alma_source %><br>
-            <strong>Status: </strong><span class="badge <%= @alma_export.badge_class %>"><%= @alma_export.status.titleize %></span><br>
+            <strong>Status:</strong> <span class="badge <%= @alma_export.badge_class %>"><%= @alma_export.status.titleize %></span><br>
             <strong>Full Export:</strong> <%= @alma_export.full.to_s.titleize %>
           </div>
         </div>

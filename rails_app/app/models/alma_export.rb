@@ -80,19 +80,6 @@ class AlmaExport < ApplicationRecord
             })
   end
 
-  # Class for status badge
-  # @return [String]
-  def badge_class
-    case status
-    when PENDING
-      'text-bg-secondary'
-    when FAILED
-      'text-bg-danger'
-    when COMPLETED
-      'text-bg-success'
-    end
-  end
-
   private
 
   # @param statuses [Array<String>]

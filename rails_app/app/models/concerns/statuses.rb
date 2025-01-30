@@ -16,4 +16,14 @@ module Statuses
   included do
     validates :status, inclusion: Statuses::ALL, presence: true
   end
+
+  # Class for status badge
+  # @return [String]
+  def badge_class
+    { PENDING => 'text-bg-secondary',
+      IN_PROGRESS => 'text-bg-primary',
+      COMPLETED => 'text-bg-success',
+      COMPLETED_WITH_ERRORS => 'text-bg-warning',
+      FAILED => 'text-bg-danger' }[status]
+  end
 end
