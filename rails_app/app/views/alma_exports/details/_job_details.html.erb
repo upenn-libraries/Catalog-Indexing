@@ -1,0 +1,49 @@
+<div class="card mb-4 job-info">
+  <div class="card-header">
+    <h5 class="mb-0">Job Details</h5>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead class="table-light">
+        <tr>
+          <th>Job ID</th>
+          <th>Started At</th>
+          <th>Ended At</th>
+          <th>Duration</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><%= @alma_export.job_identifier %></td>
+          <td><%= @alma_export.job_started_at&.to_fs(:display) %></td>
+          <td><%= @alma_export.job_ended_at&.to_fs(:display) %></td>
+          <td><%= @alma_export.job_duration %></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead class="table-light">
+        <tr>
+          <th>New Records</th>
+          <th>Updated Records</th>
+          <th>Deleted Records</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><%= @alma_export.new_records || 'None' %></td>
+          <td><%= @alma_export.updated_records || 'None' %></td>
+          <td><%= @alma_export.deleted_records || 'None' %></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h6 class="mb-3 text-bold">Webhook Response</h6>
+    <pre class="bg-light p-3 rounded"><%= JSON.pretty_generate @alma_export.webhook_body %></pre>
+  </div>
+</div>

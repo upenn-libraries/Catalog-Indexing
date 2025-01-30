@@ -1,0 +1,31 @@
+<div class="card mb-4 export-info">
+  <div class="card-header">
+    <h5 class="mb-0">Export Details</h5>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="border rounded p-3">
+          <strong>ID:</strong> <%= @alma_export.id %><br>
+          <strong>Source:</strong> <%= @alma_export.alma_source %><br>
+          <strong>Status:</strong> <span class="badge <%= @alma_export.badge_class %>"><%= @alma_export.status.titleize %></span><br>
+          <strong>Full Export:</strong> <%= @alma_export.full.to_s.titleize %>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="border rounded p-3">
+          <h6 class="mb-3">Target Collections</h6>
+          <% if @alma_export.target_collections.any? %>
+            <ul class="list-unstyled mb-0">
+              <% @alma_export.target_collections.each do |collection| %>
+                <li><i class="bi bi-collection"></i> <%= collection %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="mb-0">None</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
