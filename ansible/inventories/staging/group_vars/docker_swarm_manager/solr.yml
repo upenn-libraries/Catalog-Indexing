@@ -11,7 +11,7 @@ solr_custom_env_variables:
   SOLR_JAVA_MEM: "-Xms10G -Xmx10G"
   SOLR_OPTS: "-Dsolr.max.booleanClauses=2048"
 
-solr_docker_image_tag: 9.3.0
+solr_docker_image_tag: 9.6.1
 
 solr_docker_volume_settings:
   - node_label: solr-1
