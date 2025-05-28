@@ -92,6 +92,7 @@ RUN apt-get update && apt-get install -y \
       git \
       gosu \
       libpq-dev \
+      libyaml-dev \
       nodejs \
       postgresql \
       postgresql-contrib && \
@@ -153,6 +154,7 @@ RUN apt-get update && apt-get install -y \
       git \
       gosu \
       libpq-dev \
+      libyaml-dev \
       nodejs \
       postgresql \
       postgresql-contrib && \
