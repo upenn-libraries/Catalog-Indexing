@@ -178,71 +178,122 @@
       &keyword_config;
 
       <str name="title_qf">
-        mmsid^100000
-        title_anchored_search^80000
-        title_unstem_search^3000
-        title_search^2500
-        title_aux_anchored_search^50000
-        title_aux_unstem_search^2500
-        title_aux_search^2000
+        mmsid^1000000
+        title_anchored_search^8000
+        title_unstem_search^500
+        title_search^250
+        title_aux_anchored_search^5000
+        title_aux_unstem_search^400
+        title_aux_search^200
+        series_anchored_search^100
+        series_unstem_search^70
+        series_search^50
       </str>
       <str name="title_pf">
-        title_anchored_search^80000
-        title_unstem_search^3000
-        title_search^2500
-        title_aux_anchored_search^50000
-        title_aux_unstem_search^2500
-        title_aux_search^2000
-        series_anchored_search^1000
-        series_unstem_search^500
-        series_search^2000
+        title_anchored_search^8000
+        title_unstem_search^500
+        title_search^250
+        title_aux_anchored_search^5000
+        title_aux_unstem_search^350
+        title_aux_search^200
+        series_anchored_search^100
+        series_unstem_search^70
+        series_search^50
+      </str>
+      <str name="title_pf2">
+        title_anchored_search^10000
+        title_unstem_search^800
+        title_search^600
+        title_aux_anchored_search^7000
+        title_aux_unstem_search^750
+        title_aux_search^400
+        series_anchored_search^200
+        series_unstem_search^100
+        series_search^80
+      </str>
+      <str name="title_pf3">
+        title_anchored_search^15000
+        title_unstem_search^1200
+        title_search^750
+        title_aux_anchored_search^10000
+        title_aux_unstem_search^250
+        title_aux_search^200
+        series_anchored_search^300
+        series_unstem_search^150
+        series_search^100
       </str>
 
       <str name="journal_title_qf">
-        mmsid^100000
-        journal_title_anchored_search^75000
-        journal_title_unstem_search^3000
-        journal_title_search^2000
-        journal_title_aux_anchored_search^60000
-        journal_title_aux_unstem_search^2500
-        journal_title_search^1500
+        mmsid^1000000
+        journal_title_anchored_search^7500
+        journal_title_unstem_search^300
+        journal_title_search^200
+        journal_title_aux_anchored_search^6000
+        journal_title_aux_unstem_search^250
+        journal_title_search^150
       </str>
       <str name="journal_title_pf">
-        journal_title_anchored_search^75000
-        journal_title_unstem_search^3000
-        journal_title_search^2000
-        journal_title_aux_anchored_search^60000
-        journal_title_aux_unstem_search^2500
-        journal_title_search^1500
+        journal_title_anchored_search^7500
+        journal_title_unstem_search^300
+        journal_title_search^200
+        journal_title_aux_anchored_search^6000
+        journal_title_aux_unstem_search^250
+        journal_title_search^150
+      </str>
+      <str name="journal_title_pf2">
+        journal_title_anchored_search^10000
+        journal_title_unstem_search^600
+        journal_title_search^400
+        journal_title_aux_anchored_search^9000
+        journal_title_aux_unstem_search^500
+        journal_title_search^250
+      </str>
+      <str name="journal_title_pf3">
+        journal_title_anchored_search^12500
+        journal_title_unstem_search^900
+        journal_title_search^600
+        journal_title_aux_anchored_search^10000
+        journal_title_aux_unstem_search^650
+        journal_title_search^350
       </str>
 
       <str name="creator_qf">
-        creator_unstem_search^7000
-        creator_aux_unstem_search^5000
-        conference_unstem_search^5000
+        creator_unstem_search^700
+        creator_aux_unstem_search^500
+        conference_unstem_search^500
       </str>
       <str name="creator_pf">
-        creator_unstem_search^7000
-        creator_aux_unstem_search^5000
-        conference_unstem_search^5000
+        creator_unstem_search^700
+        creator_aux_unstem_search^500
+        conference_unstem_search^500
+      </str>
+      <str name="creator_pf2">
+        creator_unstem_search^900
+        creator_aux_unstem_search^650
+        conference_unstem_search^650
+      </str>
+      <str name="creator_pf3">
+        creator_unstem_search^1100
+        creator_aux_unstem_search^800
+        conference_unstem_search^800
       </str>
 
       <str name="subject_qf">
-        subject_unstem_search^2500
-        subject_search^1500
+        subject_unstem_search^250
+        subject_search^150
       </str>
       <str name="subject_pf">
-        subject_unstem_search^2500
-        subject_search^1000
+        subject_unstem_search^250
+        subject_search^100
       </str>
 
       <str name="genre_qf">
-        genre_unstem_search^2500
-        genre_search^1500
+        genre_unstem_search^250
+        genre_search^150
       </str>
       <str name="genre_pf">
-        genre_unstem_search^2500
-        genre_search^1000
+        genre_unstem_search^250
+        genre_search^100
       </str>
 
       <str name="isxn_qf">
@@ -274,23 +325,33 @@
       </str>
 
       <str name="series_qf">
-        series_anchored_search^7000
-        series_unstem_search^2500
-        series_search^1500
+        series_anchored_search^700
+        series_unstem_search^250
+        series_search^150
       </str>
       <str name="series_pf">
-        series_anchored_search^7000
-        series_unstem_search^2000
-        series_search^1000
+        series_anchored_search^700
+        series_unstem_search^200
+        series_search^100
+      </str>
+      <str name="series_pf2">
+        series_anchored_search^900
+        series_unstem_search^400
+        series_search^200
+      </str>
+      <str name="series_pf3">
+        series_anchored_search^1100
+        series_unstem_search^500
+        series_search^250
       </str>
 
       <str name="language_qf">
-        language_facet^3000
-        language_search^1000
+        language_facet^300
+        language_search^100
       </str>
       <str name="language_pf">
-        language_facet^3000
-        language_search^1000
+        language_facet^300
+        language_search^100
       </str>
 
       <str name="place_of_publication_qf">
@@ -308,21 +369,37 @@
       </str>
 
       <str name="contents_note_qf">
-        contents_note_unstem_search^2500
-        contents_note_search^1500
+        contents_note_unstem_search^250
+        contents_note_search^150
       </str>
       <str name="contents_note_pf">
-        contents_note_unstem_search^2500
-        contents_note_search^1000
+        contents_note_unstem_search^250
+        contents_note_search^100
+      </str>
+      <str name="contents_note_pf2">
+        contents_note_unstem_search^450
+        contents_note_search^150
+      </str>
+      <str name="contents_note_pf3">
+        contents_note_unstem_search^750
+        contents_note_search^200
       </str>
 
       <str name="conference_qf">
-        conference_unstem_search^2500
-        conferance_search^1500
+        conference_unstem_search^250
+        conferance_search^150
       </str>
       <str name="conference_pf">
-        conference_unstem_search^2500
-        conferance_search^1000
+        conference_unstem_search^250
+        conferance_search^100
+      </str>
+      <str name="conference_pf2">
+        conference_unstem_search^450
+        conferance_search^150
+      </str>
+      <str name="conference_pf3">
+        conference_unstem_search^700
+        conferance_search^200
       </str>
 
       <str name="corporate_author_qf">
@@ -333,14 +410,12 @@
       </str>
 
       <str name="call_number_qf">
-        call_number^10000
-        call_number_callnum_search^5000
-<!--        call_number_unstem_search^1500-->
+        call_number^1000
+        call_number_callnum_search^500
       </str>
       <str name="call_number_pf">
-        call_number^10000
-        call_number_callnum_search^5000
-<!--        call_number_unstem_search^1500-->
+        call_number^1000
+        call_number_callnum_search^500
       </str>
 
       <str name="facet">true</str>
