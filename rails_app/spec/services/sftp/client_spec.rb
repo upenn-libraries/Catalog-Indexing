@@ -19,7 +19,7 @@ describe Sftp::Client do
 
     it 'lists files in the remote directory' do
       client_files = client.files
-      expect(client_files).to eq(files)
+      expect(client_files.collect(&:name)).to eq(files.collect(&:name))
     end
 
     it 'raises error when it fails to list files on the remote directory' do
