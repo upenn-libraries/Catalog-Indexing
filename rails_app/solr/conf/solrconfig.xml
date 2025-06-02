@@ -178,6 +178,7 @@
       &keyword_config;
 
       <str name="title_qf">
+        mmsid^100000
         title_anchored_search^80000
         title_unstem_search^3000
         title_search^2500
@@ -198,6 +199,7 @@
       </str>
 
       <str name="journal_title_qf">
+        mmsid^100000
         journal_title_anchored_search^75000
         journal_title_unstem_search^3000
         journal_title_search^2000
