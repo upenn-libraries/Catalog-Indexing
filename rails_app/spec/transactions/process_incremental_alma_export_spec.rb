@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ProcessIncrementalAlmaExport, stub_batches: true do
+describe ProcessIncrementalAlmaExport, :stub_batches do
   include FixtureHelpers
   include SolrHelpers
 

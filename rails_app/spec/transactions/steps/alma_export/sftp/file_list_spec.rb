@@ -59,7 +59,7 @@ describe Steps::AlmaExport::Sftp::FileList do
     end
 
     it 'returns only delete type files and the alma_export' do
-      expect(result.success[:file_list].map(&:name)).to match_array(['prefix_12345678_2023010100_delete.tar.gz'])
+      expect(result.success[:file_list].map(&:name)).to contain_exactly('prefix_12345678_2023010100_delete.tar.gz')
       expect(result.success[:alma_export]).to eq alma_export
     end
 
