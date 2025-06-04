@@ -1,48 +1,192 @@
 <str name="qf">
   mmsid^100000
-  doi_ss^10000
-  oclc_id_ss^10000
-  isxn_search^8000
-  call_number_search^5000
-  title_anchored_search^1000 title_unstem_search^300 title_search^250
-  title_aux_anchored_search^700 title_aux_unstem_search^250 title_aux_search^200
-  journal_title_anchored_search^1000 journal_title_unstem_search^300 journal_title_search^200
-  journal_title_aux_unstem_search^250 journal_title_search^150
-  series_anchored_search^700 series_unstem_search^300 series_search^150
-  creator_unstem_search^700 creator_aux_unstem_search^500
-  conference_unstem_search^500 conference_search^300
-  subject_unstem_search^750 subject_search^600
-  genre_unstem_search^650 genre_search^500
+  doi_ss^1000
+  oclc_id_ss^1000
+  isxn_search^800
+  call_number_search^500
+  title_anchored_search^100 title_unstem_search^30 title_search^25
+  title_aux_anchored_search^70 title_aux_unstem_search^25 title_aux_search^20
+  journal_title_anchored_search^100 journal_title_unstem_search^30 journal_title_search^20
+  journal_title_aux_unstem_search^25 journal_title_aux_search^15
+  series_anchored_search^70 series_unstem_search^30 series_search^15
+  creator_unstem_search^70 creator_aux_unstem_search^50
+  conference_unstem_search^50 conference_search^30
+  subject_unstem_search^75 subject_search^60
+  genre_unstem_search^65 genre_search^50
   marcxml_marcxml
 </str>
 <str name="pf">
-  title_anchored_search^12000 title_unstem_search^10000 title_search^5000
-  title_aux_anchored_search^1200 title_aux_unstem_search^1000 title_aux_search^200
-  journal_title_anchored_search^1500 journal_title_unstem_search^1000 journal_title_search^200
-  journal_title_aux_anchored_search^1100 journal_title_aux_unstem_search^700 journal_title_search^150
-  series_anchored_search^1800 series_unstem_search^1500 series_search^200
-  creator_unstem_search^2000
-  creator_aux_unstem_search^500
-  conference_unstem_search^500 conference_search^75
-  subject_unstem_search^2000 subject_search^150
-  genre_unstem_search^1000 genre_search^150
-  marcxml_marcxml^100
+  title_anchored_search^1200 title_unstem_search^1000 title_search^500
+  title_aux_anchored_search^120 title_aux_unstem_search^100 title_aux_search^20
+  journal_title_anchored_search^150 journal_title_unstem_search^100 journal_title_search^20
+  journal_title_aux_anchored_search^110 journal_title_aux_unstem_search^70 journal_title_aux_search^15
+  series_anchored_search^180 series_unstem_search^150 series_search^20
+  creator_unstem_search^200
+  creator_aux_unstem_search^50
+  conference_unstem_search^50 conference_search^10
+  subject_unstem_search^200 subject_search^15
+  genre_unstem_search^100 genre_search^15
+  marcxml_marcxml^10
 </str>
 <str name="pf2">
-  title_anchored_search^50000 title_unstem_search^30000 title_search^10000
-  title_aux_anchored_search^4000 title_aux_unstem_search^1500 title_aux_search^200
-  journal_title_aux_anchored_search^40000 journal_title_unstem_search^25000 journal_title_search^200
-  journal_title_aux_anchored_search^5000 journal_title_aux_unstem_search^2500 journal_title_aux_search^150
-  series_anchored_search^5000 series_unstem_search^3000 series_search^400
-  creator_unstem_search^4500
-  creator_aux_unstem_search^2000
+  title_anchored_search^5000 title_unstem_search^3000 title_search^1000
+  title_aux_anchored_search^400 title_aux_unstem_search^150 title_aux_search^20
+  journal_title_anchored_search^4000 journal_title_unstem_search^2500 journal_title_search^20
+  journal_title_aux_anchored_search^500 journal_title_aux_unstem_search^250 journal_title_aux_search^15
+  series_anchored_search^500 series_unstem_search^300 series_search^40
+  creator_unstem_search^450
+  creator_aux_unstem_search^200
 </str>
 <str name="pf3">
-  title_anchored_search^80000 title_unstem_search^60000 title_search^15000
-  title_aux_anchored_search^6000 title_aux_unstem_search^2500 title_aux_search^200
-  journal_title_anchored_search^80000 journal_title_unstem_search^50000 journal_title_search^200
-  journal_title_aux_anchored_search^6000 journal_title_aux_unstem_search^2500 journal_title_aux_search^150
-  series_anchored_search^15000 series_unstem_search^10000 series_search^1000
-  creator_unstem_search^7000
-  creator_aux_unstem_search^4000
+  title_anchored_search^8000 title_unstem_search^6000 title_search^1500
+  title_aux_anchored_search^600 title_aux_unstem_search^250 title_aux_search^40
+  journal_title_anchored_search^8000 journal_title_unstem_search^5000 journal_title_search^40
+  journal_title_aux_anchored_search^600 journal_title_aux_unstem_search^250 journal_title_aux_search^15
+  series_anchored_search^800 series_unstem_search^600 series_search^90
+  creator_unstem_search^700
+  creator_aux_unstem_search^400
+</str>
+
+<str name="noanchor_qf">
+  doi_ss^1000
+  oclc_id_ss^1000
+  isxn_search^800
+  call_number_search^500
+  title_unstem_search^30 title_search^25
+  title_aux_unstem_search^25 title_aux_search^20
+  journal_title_unstem_search^30 journal_title_search^20
+  journal_title_aux_unstem_search^25 journal_title_aux_search^15
+  series_unstem_search^30 series_search^15
+  creator_unstem_search^70 creator_aux_unstem_search^50
+  conference_unstem_search^50 conference_search^30
+  subject_unstem_search^75 subject_search^60
+  genre_unstem_search^65 genre_search^50
+  marcxml_marcxml
+</str>
+<str name="noanchor_pf">
+  title_unstem_search^1000 title_search^500
+  title_aux_unstem_search^100 title_aux_search^20
+  journal_title_unstem_search^100 journal_title_search^20
+  journal_title_aux_unstem_search^70 journal_title_aux_search^15
+  series_unstem_search^150 series_search^20
+  creator_unstem_search^200
+  creator_aux_unstem_search^50
+  conference_unstem_search^50 conference_search^10
+  subject_unstem_search^200 subject_search^15
+  genre_unstem_search^100 genre_search^15
+  marcxml_marcxml^10
+</str>
+<str name="noanchor_pf2">
+  title_unstem_search^3000 title_search^1000
+  title_aux_unstem_search^150 title_aux_search^20
+  journal_title_unstem_search^2500 journal_title_search^20
+  journal_title_aux_unstem_search^250 journal_title_aux_search^15
+  series_anchored_search^500 series_unstem_search^300 series_search^40
+  creator_unstem_search^450
+  creator_aux_unstem_search^200
+</str>
+<str name="noanchor_pf3">
+  title_unstem_search^6000 title_search^1500
+  title_aux_unstem_search^250 title_aux_search^20
+  journal_title_unstem_search^5000 journal_title_search^20
+  journal_title_aux_unstem_search^250 journal_title_aux_search^15
+  series_unstem_search^1000 series_search^100
+  creator_unstem_search^700
+  creator_aux_unstem_search^400
+</str>
+
+<str name="nounstem_qf">
+  doi_ss^1000
+  oclc_id_ss^1000
+  isxn_search^800
+  call_number_search^500
+  title_anchored_search^100 title_search^25
+  title_aux_anchored_search^70 title_aux_search^20
+  journal_title_anchored_search^100 journal_title_search^20
+  journal_title_aux_search^15
+  series_anchored_search^70 series_search^15
+  creator_unstem_search^70 creator_aux_unstem_search^50
+  conference_search^30
+  subject_search^60
+  genre_search^50
+  marcxml_marcxml
+</str>
+<str name="nounstem_pf">
+  title_anchored_search^1200 title_search^500
+  title_aux_anchored_search^120 title_aux_search^20
+  journal_title_anchored_search^150 journal_title_search^20
+  journal_title_aux_anchored_search^110 journal_title_aux_search^15
+  series_anchored_search^180 series_search^20
+  creator_unstem_search^200
+  creator_aux_unstem_search^50
+  conference_search^10
+  subject_search^15
+  genre_search^15
+  marcxml_marcxml^10
+</str>
+<str name="nounstem_pf2">
+  title_anchored_search^5000 title_search^1000
+  title_aux_anchored_search^400 title_aux_search^20
+  journal_title_anchored_search^4000 journal_title_search^20
+  journal_title_aux_anchored_search^500 journal_title_aux_search^15
+  series_anchored_search^500 series_search^40
+  creator_unstem_search^450
+  creator_aux_unstem_search^200
+</str>
+<str name="nounstem_pf3">
+  title_anchored_search^8000 title_search^1500
+  title_aux_anchored_search^600 title_aux_search^20
+  journal_title_anchored_search^8000 journal_title_search^20
+  journal_title_aux_anchored_search^600 journal_title_aux_search^15
+  series_anchored_search^1500 series_search^100
+  creator_unstem_search^700
+  creator_aux_unstem_search^400
+</str>
+
+<str name="basic_qf">
+  doi_ss^1000
+  oclc_id_ss^1000
+  isxn_search^800
+  call_number_search^500
+  title_search^25
+  title_aux_search^20
+  journal_title_search^20
+  journal_title_aux_search^15
+  series_search^15
+  creator_unstem_search^70 creator_aux_unstem_search^50
+  conference_search^30
+  subject_search^60
+  genre_search^50
+  marcxml_marcxml
+</str>
+<str name="basic_pf">
+  title_search^500
+  title_aux_search^20
+  journal_title_search^20
+  journal_title_aux_search^15
+  series_search^20
+  creator_unstem_search^200
+  creator_aux_unstem_search^50
+  conference_search^10
+  subject_search^15
+  genre_search^15
+  marcxml_marcxml^10
+</str>
+<str name="basic_pf2">
+  title_search^1000
+  title_aux_search^20
+  journal_title_search^20
+  journal_title_aux_search^15
+  series_search^40
+  creator_unstem_search^450
+  creator_aux_unstem_search^200
+</str>
+<str name="basic_pf3">
+  title_search^1500
+  title_aux_search^20
+  journal_title_search^20
+  journal_title_aux_search^15
+  series_search^100
+  creator_unstem_search^700
+  creator_aux_unstem_search^400
 </str>
