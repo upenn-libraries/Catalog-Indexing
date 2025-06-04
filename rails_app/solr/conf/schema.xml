@@ -519,11 +519,10 @@
   <!-- field used for searching over identifier with best bets synonyms enabled at query time -->
   <fieldtype name="mmsid" class="solr.TextField" autoGeneratePhraseQueries="false">
     <analyzer type="index">
-      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement="" />
       <tokenizer class="solr.KeywordTokenizerFactory" />
     </analyzer>
     <analyzer type="query">
-      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
       <tokenizer class="solr.WhitespaceTokenizerFactory" />
       <filter class="solr.SynonymGraphFilterFactory" synonyms="best_bet_synonyms.txt" ignoreCase="true" expand="true"/>
       <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
