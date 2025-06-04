@@ -39,10 +39,10 @@
 </str>
 <str name="pf3">
   title_anchored_search^8000 title_unstem_search^6000 title_search^1500
-  title_aux_anchored_search^600 title_aux_unstem_search^250 title_aux_search^20
-  journal_title_anchored_search^8000 journal_title_unstem_search^5000 journal_title_search^20
+  title_aux_anchored_search^600 title_aux_unstem_search^250 title_aux_search^40
+  journal_title_anchored_search^8000 journal_title_unstem_search^5000 journal_title_search^40
   journal_title_aux_anchored_search^600 journal_title_aux_unstem_search^250 journal_title_aux_search^15
-  series_anchored_search^1500 series_unstem_search^1000 series_search^100
+  series_anchored_search^800 series_unstem_search^600 series_search^90
   creator_unstem_search^700
   creator_aux_unstem_search^400
 </str>
@@ -159,11 +159,11 @@
   genre_search^50
   marcxml_marcxml
 </str>
-<str name="nounstem_pf">
+<str name="basic_pf">
   title_search^500
   title_aux_search^20
   journal_title_search^20
-  journal_title_search^15
+  journal_title_aux_search^15
   series_search^20
   creator_unstem_search^200
   creator_aux_unstem_search^50
@@ -172,7 +172,7 @@
   genre_search^15
   marcxml_marcxml^10
 </str>
-<str name="nounstem_pf2">
+<str name="basic_pf2">
   title_search^1000
   title_aux_search^20
   journal_title_search^20
@@ -181,7 +181,7 @@
   creator_unstem_search^450
   creator_aux_unstem_search^200
 </str>
-<str name="nounstem_pf3">
+<str name="basic_pf3">
   title_search^1500
   title_aux_search^20
   journal_title_search^20

@@ -194,7 +194,7 @@
         title_unstem_search^500
         title_search^250
         title_aux_anchored_search^5000
-        title_aux_unstem_search^350
+        title_aux_unstem_search^400
         title_aux_search^200
         series_anchored_search^100
         series_unstem_search^70
