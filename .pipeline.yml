@@ -63,6 +63,7 @@ build_and_push_base_app_image:
   stage: build_and_push:tmp_base_image
   extends:
     - .build_and_push_docker_images
+    - .vault_jwt_auth
   parallel:
     matrix:
       - RUNNER: build-arm
@@ -90,6 +91,7 @@ build_and_push_dev_app_image:
   stage: build_and_push:tmp_dev_image
   extends:
     - .build_and_push_docker_images
+    - .vault_jwt_auth
   parallel:
     matrix:
       - RUNNER: build-arm
@@ -239,6 +241,7 @@ build_and_push_prod_app_image:
   stage: build_and_push:tmp_prod_image
   extends:
     - .build_and_push_docker_images
+    - .vault_jwt_auth
   parallel:
     matrix:
       - RUNNER: build-arm
