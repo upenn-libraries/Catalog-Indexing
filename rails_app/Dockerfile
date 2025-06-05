@@ -94,6 +94,7 @@ RUN apt-get update && apt-get install -y \
       libpq-dev \
       libyaml-dev \
       nodejs \
+      procps \
       postgresql \
       postgresql-contrib && \
     addgroup app && useradd -m -d ${PROJECT_ROOT} -s /bin/bash -g app app && \
@@ -156,6 +157,7 @@ RUN apt-get update && apt-get install -y \
       libpq-dev \
       libyaml-dev \
       nodejs \
+      procps \
       postgresql \
       postgresql-contrib && \
     addgroup app && useradd -m -d ${PROJECT_ROOT} -s /bin/bash -g app app && \
