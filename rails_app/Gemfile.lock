@@ -89,7 +89,7 @@ GEM
     base64 (0.3.0)
     bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.0)
-    bigdecimal (3.2.1)
+    bigdecimal (3.2.2)
     bindex (0.8.1)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
@@ -300,7 +300,7 @@ GEM
     parser (3.3.8.0)
       ast (~> 2.4.1)
       racc
-    pennmarc (1.2.14)
+    pennmarc (1.2.21)
       activesupport (~> 7)
       lcsort (~> 0.9)
       library_stdnums (~> 1.6)
