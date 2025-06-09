@@ -147,7 +147,7 @@
   doi_ss^1000
   oclc_id_ss^1000
   isxn_search^800
-  call_number^500 call_number_callnum_search^250
+  call_number^500
   title_search^25
   title_aux_search^20
   journal_title_search^20
