@@ -145,7 +145,6 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def call_number_fields
-    define_field :call_number_unstem_search, :classification_call_number_search
     define_field :call_number_callnum_search, :classification_call_number_search
     define_field :call_number, :classification_call_number_search
   end
