@@ -261,21 +261,25 @@
         creator_unstem_search^700
         creator_aux_unstem_search^500
         conference_unstem_search^500
+        conference_search^400
       </str>
       <str name="creator_pf">
-        creator_unstem_search^700
-        creator_aux_unstem_search^500
-        conference_unstem_search^500
+        creator_unstem_search^750
+        creator_aux_unstem_search^550
+        conference_unstem_search^550
+        conference_search^450
       </str>
       <str name="creator_pf2">
         creator_unstem_search^900
         creator_aux_unstem_search^650
         conference_unstem_search^650
+        conference_search^700
       </str>
       <str name="creator_pf3">
         creator_unstem_search^1100
         creator_aux_unstem_search^800
         conference_unstem_search^800
+        conference_search^750
       </str>
 
       <str name="subject_qf">
@@ -387,19 +391,19 @@
 
       <str name="conference_qf">
         conference_unstem_search^250
-        conferance_search^150
+        conference_search^150
       </str>
       <str name="conference_pf">
         conference_unstem_search^250
-        conferance_search^100
+        conference_search^100
       </str>
       <str name="conference_pf2">
         conference_unstem_search^450
-        conferance_search^150
+        conference_search^150
       </str>
       <str name="conference_pf3">
         conference_unstem_search^700
-        conferance_search^200
+        conference_search^200
       </str>
 
       <str name="corporate_author_qf">
