@@ -6,22 +6,6 @@ class PennMarcIndexer < Traject::Indexer
     define_all_fields
   end
 
-  # shortcut for defining a simple field with appropriate handling for return type
-  # see: https://rubydoc.info/gems/traject/3.5.0/file/doc/indexing_rules.md
-  def define_field(name, parser_method = nil)
-    parser_signal = parser_method || name
-    raise(ArgumentError, "Parser does not respond to #{parser_signal}") unless parser.respond_to? parser_signal.to_sym
-
-    to_field(name.to_s) do |record, acc|
-      parser_output = parser.public_send(parser_signal.to_sym, record)
-      if parser_output.respond_to?(:each)
-        acc.concat(parser_output)
-      else
-        acc << parser_output
-      end
-    end
-  end
-
   def parser
     @parser ||= PennMARC::Parser.new
   end
@@ -101,17 +85,11 @@ class PennMarcIndexer < Traject::Indexer
   def sort_fields
     define_field :creator_sort
     define_field :title_sort
+    define_field :encoding_level_sort
     define_field :call_number_sort, :classification_sort
-
-    to_field('publication_date_sort') do |record, acc|
-      pub_date = parser.public_send :date_publication, record
-      valid_date?(pub_date) ? acc << pub_date.strftime('%FT%H:%M:%SZ') : acc # e.g., 1999-01-01T00::00::00Z
-    end
-
-    to_field('added_date_sort') do |record, acc|
-      date = parser.public_send :date_added, record
-      valid_date?(date) ? acc << date.strftime('%FT%H:%M:%SZ') : acc # e.g., 1999-01-01T00::00::00Z
-    end
+    define_date_sort_field :publication_date_sort, :date_publication
+    define_date_sort_field :added_date_sort, :date_added
+    define_date_sort_field :updated_date_sort, :date_last_updated
   end
 
   def date_fields
@@ -167,7 +145,6 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def call_number_fields
-    define_field :call_number_unstem_search, :classification_call_number_search
     define_field :call_number_callnum_search, :classification_call_number_search
     define_field :call_number, :classification_call_number_search
   end
@@ -179,6 +156,39 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   private
+
+  # shortcut for defining a simple field with appropriate handling for return type
+  # see: https://rubydoc.info/gems/traject/3.5.0/file/doc/indexing_rules.md
+  # @param name [String, Symbol] name of the field for Solr
+  # @param parser_method [String, Symbol, nil] if not matching the field name, the full name of the helper method on
+  #                                            the @parser object. this will include the helper class name.
+  def define_field(name, parser_method = nil)
+    parser_signal = parser_method || name
+    raise(ArgumentError, "Parser does not respond to #{parser_signal}") unless parser.respond_to? parser_signal.to_sym
+
+    to_field(name.to_s) do |record, acc|
+      parser_output = parser.public_send(parser_signal.to_sym, record)
+      if parser_output.respond_to?(:each)
+        acc.concat(parser_output)
+      else
+        acc << parser_output
+      end
+    end
+  end
+
+  # shortcut for defining a sortable date field, ensuring that only date values are stored and they are in the proper
+  # format for sorting.
+  # @param name [String, Symbol] name of the field for Solr
+  # @param parser_method [String, Symbol, nil] if not matching the field name, the full name of the helper method on
+  #                                            the @parser object. this will include the helper class name.
+  def define_date_sort_field(name, parser_method = nil)
+    raise(ArgumentError, "Parser does not respond to #{parser_method}") unless parser.respond_to? parser_method.to_sym
+
+    to_field(name.to_s) do |record, acc|
+      date = parser.public_send parser_method, record
+      valid_date?(date) ? acc << date.strftime('%FT%H:%M:%SZ') : acc # e.g., 1999-01-01T00::00::00Z
+    end
+  end
 
   # Encode a field as JSON
   # @todo implement Oj gem for speedup as needed

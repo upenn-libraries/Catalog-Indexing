@@ -198,8 +198,16 @@
   <copyField source="journal_title_aux_search" dest="journal_title_aux_anchored_search" />
   <copyField source="series_search" dest="series_anchored_search" />
 
-  <!-- all search values can benefit from representation in an unstemmed field -->
-  <copyField source="*_search" dest="*_unstem_search" />
+  <!-- add unstemmed search fields for some fields, to improve exact matching -->
+  <copyField source="title_search" dest="title_unstem_search" />
+  <copyField source="title_aux_search" dest="title_aux_unstem_search" />
+  <copyField source="journal_title_search" dest="journal_title_unstem_search" />
+  <copyField source="journal_title_aux_search" dest="journal_title_aux_unstem_search" />
+  <copyField source="series_search" dest="series_unstem_search" />
+  <copyField source="conference_search" dest="conference_unstem_search" />
+  <copyField source="subject_search" dest="subject_unstem_search" />
+  <copyField source="genre_search" dest="genre_unstem_search" />
+  <copyField source="contents_note_search" dest="contents_note_unstem_search" />
 
   <!-- field type definitions. The "name" attribute is
      just a label to be used by field definitions.  The "class"
@@ -499,7 +507,7 @@
               splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
               catenateAll="0" preserveOriginal="0" stemEnglishPossessive="1" />
       <filter class="solr.FlattenGraphFilterFactory"/>
-      <filter class="solr.SnowballPorterFilterFactory" language="English"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="English" />
       <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
     </analyzer>
     <analyzer type="query">
@@ -511,7 +519,7 @@
               splitOnCaseChange="1" generateWordParts="1" catenateWords="1"
               splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
               catenateAll="0" preserveOriginal="0" stemEnglishPossessive="1" />
-      <filter class="solr.SnowballPorterFilterFactory" language="English"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="English" />
       <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
     </analyzer>
   </fieldtype>
@@ -519,11 +527,10 @@
   <!-- field used for searching over identifier with best bets synonyms enabled at query time -->
   <fieldtype name="mmsid" class="solr.TextField" autoGeneratePhraseQueries="false">
     <analyzer type="index">
-      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement="" />
       <tokenizer class="solr.KeywordTokenizerFactory" />
     </analyzer>
     <analyzer type="query">
-      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
       <tokenizer class="solr.WhitespaceTokenizerFactory" />
       <filter class="solr.SynonymGraphFilterFactory" synonyms="best_bet_synonyms.txt" ignoreCase="true" expand="true"/>
       <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
