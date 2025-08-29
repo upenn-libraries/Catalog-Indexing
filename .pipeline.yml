@@ -145,7 +145,7 @@ rspec_app_test:
         POSTGRES_USER: "rspec_test"
     - name: browserless/chrome:latest
       alias: redis
-    - name: bitnami/solr:9.3.0
+    - name: bitnami/solr:9.4.1
       alias: solr
       entrypoint: [""]
       command: [
