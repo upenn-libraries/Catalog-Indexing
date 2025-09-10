@@ -175,9 +175,9 @@
   <dynamicField name="*_srpt"  type="location_rpt" indexed="true" stored="true"/>
 
   <!-- payloaded dynamic fields -->
-  <dynamicField name="*_dpf" type="delimited_payloads_float" indexed="true"  stored="true"/>
-  <dynamicField name="*_dpi" type="delimited_payloads_int" indexed="true"  stored="true"/>
-  <dynamicField name="*_dps" type="delimited_payloads_string" indexed="true"  stored="true"/>
+  <dynamicField name="*_dpf" type="delimited_payloads_float" indexed="true" stored="true"/>
+  <dynamicField name="*_dpi" type="delimited_payloads_int" indexed="true" stored="true"/>
+  <dynamicField name="*_dps" type="delimited_payloads_string" indexed="true" stored="true"/>
 
   <dynamicField name="attr_*" type="text_general" indexed="true" stored="true" multiValued="true"/>
 
@@ -634,6 +634,19 @@
               catenateAll="0" preserveOriginal="0" stemEnglishPossessive="1" />
     </analyzer>
   </fieldType>
+
+  <!-- Suggest fiel type for Title suggestions -->
+  <fieldType name="title_suggest_text" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.KeywordTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.KeywordTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+    </analyzer>
+  </fieldType>
+  <dynamicField name="*_title_suggest" type="title_suggest_text" indexed="true" stored="true" multiValued="true" />
 
   <!-- SortableTextField generally functions exactly like TextField,
        except that it supports, and by default uses, docValues for sorting (or faceting)

@@ -16,6 +16,7 @@ class PennMarcIndexer < Traject::Indexer
     database_fields
     search_fields
     sort_fields
+    suggest_fields
     date_fields
     stored_fields
     link_fields
@@ -90,6 +91,10 @@ class PennMarcIndexer < Traject::Indexer
     define_date_sort_field :publication_date_sort, :date_publication
     define_date_sort_field :added_date_sort, :date_added
     define_date_sort_field :updated_date_sort, :date_last_updated
+  end
+
+  def suggest_fields
+    define_field :main_title_title_suggest, :title_suggest
   end
 
   def date_fields

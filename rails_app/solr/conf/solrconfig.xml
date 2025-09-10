@@ -111,6 +111,28 @@
     <useFilterForSortedQuery>true</useFilterForSortedQuery>
   </query>
 
+  <searchComponent name="suggest" class="solr.SuggestComponent">
+    <lst name="main_title_suggester">
+      <str name="name">titleSuggester</str>
+      <str name="lookupImpl">FuzzyLookupFactory</str>
+      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+      <str name="field">main_title_title_suggest</str>
+      <str name="storeDir">main_title_suggester_data</str>
+      <str name="buildOnStartup">false</str>
+      <str name="buildOnCommit">false</str>
+    </lst>
+  </searchComponent>
+
+  <requestHandler name="/title_suggest" class="solr.SearchHandler" startup="lazy">
+    <lst name="defaults">
+      <str name="suggest">true</str>
+      <str name="suggest.count">10</str>
+    </lst>
+    <arr name="components">
+      <str>titleSuggester</str>
+    </arr>
+  </requestHandler>
+
   <!-- "search" request handler is used by Blacklight to handle all search requests -->
   <requestHandler name="search" class="solr.SearchHandler" default="true">
     <!-- default values for query parameters can be specified, these
