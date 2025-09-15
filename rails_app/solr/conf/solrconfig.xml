@@ -111,13 +111,14 @@
     <useFilterForSortedQuery>true</useFilterForSortedQuery>
   </query>
 
-  <searchComponent name="suggest" class="solr.SuggestComponent">
-    <lst name="main_title_suggester">
+  <searchComponent name="titleSuggester" class="solr.SuggestComponent">
+    <lst name="suggester">
       <str name="name">titleSuggester</str>
       <str name="lookupImpl">FuzzyLookupFactory</str>
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
       <str name="field">main_title_title_suggest</str>
       <str name="storeDir">main_title_suggester_data</str>
+      <str name="suggestAnalyzerFieldType">string</str>
       <str name="buildOnStartup">false</str>
       <str name="buildOnCommit">false</str>
     </lst>
@@ -126,6 +127,7 @@
   <requestHandler name="/title_suggest" class="solr.SearchHandler" startup="lazy">
     <lst name="defaults">
       <str name="suggest">true</str>
+      <str name="suggest.dictionary">titleSuggester</str>
       <str name="suggest.count">10</str>
     </lst>
     <arr name="components">
