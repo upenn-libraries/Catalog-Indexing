@@ -95,4 +95,25 @@ namespace :tools do
       alma_export.save!
     end
   end
+
+  desc 'Index a file in storage to collections specified in adhoc_target_collections '
+  task index_file: :environment do
+    require 'rubygems/package'
+    collections = ConfigItem.value_for(:adhoc_target_collections)
+    file = File.open(ENV['FILE_PATH'])
+    tar = Zlib::GzipReader.new(file)
+    io = Gem::Package::TarReader.new(tar).first
+    writer = MultiCollectionWriter.new(
+      collections: collections,
+      commit_on_close: true
+    )
+    outcome = Steps::IndexRecords.new.call(io: io, writer: writer)
+    if outcome.success?
+      puts "File indexed to #{collections.join(', ')}"
+    else
+      puts "Indexer failure: #{outcome.failure}"
+    end
+  rescue StandardError => e
+    puts "General failure when indexing: #{e.message}"
+  end
 end
