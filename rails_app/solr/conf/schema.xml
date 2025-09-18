@@ -635,7 +635,7 @@
     </analyzer>
   </fieldType>
 
-  <!-- Suggest fiel type for Title suggestions -->
+  <!-- Suggest field type for Title suggestions -->
   <fieldType name="title_suggest_text" class="solr.TextField" positionIncrementGap="100">
     <analyzer type="index">
       <tokenizer class="solr.KeywordTokenizerFactory" />

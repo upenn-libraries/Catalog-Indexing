@@ -111,27 +111,50 @@
     <useFilterForSortedQuery>true</useFilterForSortedQuery>
   </query>
 
-  <searchComponent name="titleSuggester" class="solr.SuggestComponent">
+  <searchComponent name="titleSuggesterBlended" class="solr.SuggestComponent">
     <lst name="suggester">
-      <str name="name">titleSuggester</str>
+      <str name="name">titleSuggesterBlended</str>
+      <str name="lookupImpl">BlendedInfixLookupFactory</str>
+      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+      <str name="field">main_title_title_suggest</str>
+      <str name="suggestAnalyzerFieldType">title_suggest_text</str>
+      <str name="buildOnStartup">false</str>
+      <str name="buildOnCommit">false</str>
+      <str name="contextField">access_facet</str>
+    </lst>
+  </searchComponent>
+
+  <searchComponent name="titleSuggesterFuzzy" class="solr.SuggestComponent">
+    <lst name="suggester">
+      <str name="name">titleSuggesterFuzzy</str>
       <str name="lookupImpl">FuzzyLookupFactory</str>
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
       <str name="field">main_title_title_suggest</str>
-      <str name="storeDir">main_title_suggester_data</str>
-      <str name="suggestAnalyzerFieldType">string</str>
+      <str name="suggestAnalyzerFieldType">title_suggest_text</str>
       <str name="buildOnStartup">false</str>
       <str name="buildOnCommit">false</str>
     </lst>
   </searchComponent>
 
-  <requestHandler name="/title_suggest" class="solr.SearchHandler" startup="lazy">
+  <requestHandler name="/title_suggest_fuzzy" class="solr.SearchHandler" startup="lazy">
     <lst name="defaults">
       <str name="suggest">true</str>
-      <str name="suggest.dictionary">titleSuggester</str>
-      <str name="suggest.count">10</str>
+      <str name="suggest.dictionary">titleSuggesterFuzzy</str>
+      <str name="suggest.count">5</str>
     </lst>
     <arr name="components">
-      <str>titleSuggester</str>
+      <str>titleSuggesterFuzzy</str>
+    </arr>
+  </requestHandler>
+
+  <requestHandler name="/title_suggest_blended" class="solr.SearchHandler" startup="lazy">
+    <lst name="defaults">
+      <str name="suggest">true</str>
+      <str name="suggest.dictionary">titleSuggesterBlended</str>
+      <str name="suggest.count">5</str>
+    </lst>
+    <arr name="components">
+      <str>titleSuggesterBlended</str>
     </arr>
   </requestHandler>
 
