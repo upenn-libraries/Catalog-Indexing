@@ -75,7 +75,6 @@ output = {
             "SWARM02",
             "SWARM03",
             "SWARM04",
-            "SWARM05",
             "SWARM06"
         ]
     },
@@ -85,7 +84,6 @@ output = {
             "SWARM02",
             "SWARM03",
             "SWARM04",
-            "SWARM05",
             "SWARM06"
         ]
     }
