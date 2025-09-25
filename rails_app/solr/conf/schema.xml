@@ -393,20 +393,24 @@
   <dynamicField name="*_marcxml" type="marcxml" indexed="true" stored="true" multiValued="false" />
   <fieldType name="marcxml" class="solr.TextField" sortMissingLast="true">
     <analyzer type="query">
-      <tokenizer name="standard"/>
+      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
       <filter name="CJKWidth"/>
       <filter name="lowercase"/>
       <filter name="CJKBigram"/>
+      <filter class="solr.ICUFoldingFilterFactory"/>
       <!-- see text_general notes for why this synonymGraph filter can't be used -->
 <!--      <filter name="synonymGraph" synonyms="synonyms.txt"/>-->
 <!--      <filter name="flattenGraph"/>-->
     </analyzer>
     <analyzer type="index">
       <charFilter name="htmlStrip" />
-      <tokenizer name="standard"/>
+      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
       <filter name="CJKWidth"/>
       <filter name="lowercase"/>
       <filter name="CJKBigram"/>
+      <filter class="solr.ICUFoldingFilterFactory"/>
     </analyzer>
   </fieldType>
 
