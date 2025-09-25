@@ -117,10 +117,12 @@
       <str name="lookupImpl">BlendedInfixLookupFactory</str>
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
       <str name="field">main_title_title_suggest</str>
-      <str name="suggestAnalyzerFieldType">title_suggest_text</str>
+      <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
+      <str name="minPrefixChars">4</str>
       <str name="buildOnStartup">false</str>
-      <str name="buildOnCommit">false</str>
-      <str name="contextField">access_facet</str>
+      <str name="buildOnCommit">true</str>
+      <str name="contextField">access_facet</str> <!-- try this with a stored field -->
+      <str name="payloadField">format_facet</str> <!-- try this with a stored field -->
     </lst>
   </searchComponent>
 
@@ -132,7 +134,7 @@
       <str name="field">main_title_title_suggest</str>
       <str name="suggestAnalyzerFieldType">title_suggest_text</str>
       <str name="buildOnStartup">false</str>
-      <str name="buildOnCommit">false</str>
+      <str name="buildOnCommit">true</str>
     </lst>
   </searchComponent>
 
