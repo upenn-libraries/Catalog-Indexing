@@ -108,6 +108,15 @@ class SolrTools
       tmp
     end
 
+    def load_configset(name, path)
+      outcome = connection.post('/solr/admin/configs') do |req|
+        req.params = { action: 'UPLOAD', name: name }
+        req.headers['Content-Type'] = 'octect/stream'
+        req.body = File.read(path)
+      end
+      raise CommandError, "Solr command failed with response: #{outcome.body}" unless outcome.success?
+    end
+
     # @return [Boolean]
     def collections_settings_present?
       Settings.solr.shards.present? && Settings.solr.replicas.present? && Settings.solr.configset.present?

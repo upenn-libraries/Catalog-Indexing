@@ -71,6 +71,15 @@ namespace :tools do
     puts "Configset package saved to #{filename}"
   end
 
+  desc 'Load the current solr config into a new Solr configset'
+  task load_configset: :environment do
+    name = "dev-configset-#{Time.now.strftime("%y%m%d%H%M")}"
+    SolrTools.load_configset name, SolrTools.configset_zipfile
+    puts "Configset loaded to Solr as #{name}."
+  rescue StandardError => e
+    puts "Loading configset failed: #{e.message}"
+  end
+
   desc 'Add Configuration Items to the database with default values'
   task add_config_items: :environment do
     config_item_details = ConfigItem.details
@@ -96,7 +105,7 @@ namespace :tools do
     end
   end
 
-  desc 'Index a file in storage to collections specified in adhoc_target_collections '
+  desc 'Index a .tar.gz file in storage to collections specified in adhoc_target_collections '
   task index_file: :environment do
     require 'rubygems/package'
     collections = ConfigItem.value_for(:adhoc_target_collections)
