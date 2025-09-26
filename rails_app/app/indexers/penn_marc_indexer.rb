@@ -95,6 +95,8 @@ class PennMarcIndexer < Traject::Indexer
 
   def suggest_fields
     define_field :main_title_title_suggest, :title_suggest
+    define_field :serial_title_title_suggest, :title_serial_suggest
+    define_field :monograph_title_title_suggest, :title_monograph_suggest
   end
 
   def date_fields

@@ -111,48 +111,48 @@
     <useFilterForSortedQuery>true</useFilterForSortedQuery>
   </query>
 
-  <searchComponent name="titleSuggesterBlended" class="solr.SuggestComponent">
+  <searchComponent class="solr.SuggestComponent" name="titleSuggesterBlended">
     <lst name="suggester">
-      <str name="name">titleSuggesterBlended</str>
+      <str name="name">mainTitleSuggesterBlended</str>
       <str name="lookupImpl">BlendedInfixLookupFactory</str>
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
       <str name="field">main_title_title_suggest</str>
       <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
       <str name="minPrefixChars">4</str>
-      <str name="buildOnStartup">false</str>
       <str name="buildOnCommit">true</str>
-      <str name="contextField">access_facet</str> <!-- try this with a stored field -->
-      <str name="payloadField">format_facet</str> <!-- try this with a stored field -->
+      <!-- <str name="contextField">access_facet</str> --> <!-- try this with a stored field -->
+      <str name="payloadField">id</str> <!-- try this with a stored field -->
     </lst>
-  </searchComponent>
-
-  <searchComponent name="titleSuggesterFuzzy" class="solr.SuggestComponent">
     <lst name="suggester">
-      <str name="name">titleSuggesterFuzzy</str>
-      <str name="lookupImpl">FuzzyLookupFactory</str>
+      <str name="name">monographTitleSuggesterBlended</str>
+      <str name="lookupImpl">BlendedInfixLookupFactory</str>
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">main_title_title_suggest</str>
-      <str name="suggestAnalyzerFieldType">title_suggest_text</str>
-      <str name="buildOnStartup">false</str>
+      <str name="field">monograph_title_title_suggest</str>
+      <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
+      <str name="minPrefixChars">4</str>
       <str name="buildOnCommit">true</str>
+      <!-- <str name="contextField">access_facet</str> --> <!-- try this with a stored field -->
+      <str name="payloadField">id</str> <!-- try this with a stored field -->
+    </lst>
+    <lst name="suggester">
+      <str name="name">serialTitleSuggesterBlended</str>
+      <str name="lookupImpl">BlendedInfixLookupFactory</str>
+      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+      <str name="field">serial_title_title_suggest</str>
+      <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
+      <str name="minPrefixChars">4</str>
+      <str name="buildOnCommit">true</str>
+      <!-- <str name="contextField">access_facet</str> --> <!-- try this with a stored field -->
+      <str name="payloadField">id</str> <!-- try this with a stored field -->
     </lst>
   </searchComponent>
 
-  <requestHandler name="/title_suggest_fuzzy" class="solr.SearchHandler" startup="lazy">
+  <requestHandler name="/title_suggest" class="solr.SearchHandler" startup="lazy">
     <lst name="defaults">
       <str name="suggest">true</str>
-      <str name="suggest.dictionary">titleSuggesterFuzzy</str>
-      <str name="suggest.count">5</str>
-    </lst>
-    <arr name="components">
-      <str>titleSuggesterFuzzy</str>
-    </arr>
-  </requestHandler>
-
-  <requestHandler name="/title_suggest_blended" class="solr.SearchHandler" startup="lazy">
-    <lst name="defaults">
-      <str name="suggest">true</str>
-      <str name="suggest.dictionary">titleSuggesterBlended</str>
+      <str name="suggest.dictionary">mainTitleSuggesterBlended</str>
+      <str name="suggest.dictionary">monographTitleSuggesterBlended</str>
+      <str name="suggest.dictionary">serialTitleSuggesterBlended</str>
       <str name="suggest.count">5</str>
     </lst>
     <arr name="components">
