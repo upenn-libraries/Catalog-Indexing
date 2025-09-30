@@ -107,7 +107,7 @@ class PennMarcIndexer < Traject::Indexer
   def stored_fields
     define_field :title_ss, :title_show
     define_field :format_ss, :format_show
-    define_field :creator_ss, :creator_show
+    define_field :creator_ss, :creator_extended_show
     define_field :edition_ss, :edition_show
     define_field :conference_ss, :creator_conference_show
     define_field :series_ss, :series_show
