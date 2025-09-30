@@ -36,13 +36,7 @@ output = {
                 "ansible_python_interpreter": "/usr/bin/python3",
                 "swarm_labels": [
                     "solr-2",
-                    "zookeeper-2"
-                ]
-            },
-            "SWARM05": {
-                "ansible_host": os.environ["SWARM05"],
-                "ansible_python_interpreter": "/usr/bin/python3",
-                "swarm_labels": [
+                    "zookeeper-2",
                     "solr-3",
                     "zookeeper-3"
                 ]
@@ -81,7 +75,6 @@ output = {
             "SWARM02",
             "SWARM03",
             "SWARM04",
-            "SWARM05",
             "SWARM06"
         ]
     },
@@ -91,7 +84,6 @@ output = {
             "SWARM02",
             "SWARM03",
             "SWARM04",
-            "SWARM05",
             "SWARM06"
         ]
     }

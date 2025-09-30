@@ -7,8 +7,8 @@ solr_custom_env_variables:
   SOLR_ADMIN_USERNAME: "{{ catalog_solr_vault_values.secret.username }}"
   SOLR_ADMIN_PASSWORD: "{{ catalog_solr_vault_values.secret.password }}"
   SOLR_ENABLE_AUTHENTICATION: "yes"
-  SOLR_HEAP: "10G"
-  SOLR_JAVA_MEM: "-Xms10G -Xmx10G"
+  SOLR_HEAP: "24G"
+  SOLR_JAVA_MEM: "-Xms76G -Xmx76G"
   SOLR_OPTS: "-Dsolr.max.booleanClauses=2048"
 
 solr_docker_image_tag: 9.4.1
@@ -19,27 +19,27 @@ solr_docker_volume_settings:
       driver_opts:
         type: none
         o: bind
-        device: "/solr_03/staging/backups/solr-1"
+        device: "/solr_01/staging/backups/solr-1"
       target_folder: /backups
     data_volume:
       driver: local
       driver_opts:
         type: none
         o: bind
-        device: "/solr_03/staging/data/solr-1"
+        device: "/solr_01/staging/data/solr-1"
   - node_label: solr-2
     backup_volume:
       driver_opts:
         type: none
         o: bind
-        device: "/solr_03/staging/backups/solr-2"
+        device: "/solr_02/staging/backups/solr-2"
       target_folder: /backups
     data_volume:
       driver: local
       driver_opts:
         type: none
         o: bind
-        device: "/solr_03/staging/data/solr-2"
+        device: "/solr_02/staging/data/solr-2"
   - node_label: solr-3
     backup_volume:
       driver_opts:
@@ -54,7 +54,7 @@ solr_docker_volume_settings:
         o: bind
         device: "/solr_03/staging/data/solr-3"
 
-solr_limits_cpu: "4"
-solr_limits_mem: "12G"
+solr_limits_cpu: "12"
+solr_limits_mem: "82G"
 
 solr_proxy_host: "catalog-manager-stg01.library.upenn.int"
