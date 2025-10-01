@@ -393,8 +393,7 @@
   <dynamicField name="*_marcxml" type="marcxml" indexed="true" stored="true" multiValued="false" />
   <fieldType name="marcxml" class="solr.TextField" sortMissingLast="true">
     <analyzer type="query">
-      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
-      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <tokenizer name="standard"/>
       <filter name="CJKWidth"/>
       <filter name="lowercase"/>
       <filter name="CJKBigram"/>
@@ -405,8 +404,7 @@
     </analyzer>
     <analyzer type="index">
       <charFilter name="htmlStrip" />
-      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
-      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      <tokenizer name="standard"/>
       <filter name="CJKWidth"/>
       <filter name="lowercase"/>
       <filter name="CJKBigram"/>
