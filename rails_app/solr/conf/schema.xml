@@ -397,6 +397,7 @@
       <filter name="CJKWidth"/>
       <filter name="lowercase"/>
       <filter name="CJKBigram"/>
+      <filter class="solr.ICUFoldingFilterFactory"/>
       <!-- see text_general notes for why this synonymGraph filter can't be used -->
 <!--      <filter name="synonymGraph" synonyms="synonyms.txt"/>-->
 <!--      <filter name="flattenGraph"/>-->
@@ -407,6 +408,7 @@
       <filter name="CJKWidth"/>
       <filter name="lowercase"/>
       <filter name="CJKBigram"/>
+      <filter class="solr.ICUFoldingFilterFactory"/>
     </analyzer>
   </fieldType>
 
