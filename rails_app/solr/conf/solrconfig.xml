@@ -115,36 +115,14 @@
     <lst name="suggester">
       <str name="name">mainTitleSuggesterBlended</str>
       <str name="lookupImpl">BlendedInfixLookupFactory</str>
-      <str name="dictionaryImpl">HighFrequencyDictionaryFactory</str>
-      <float name="threshold">0.001</float>
+      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
       <str name="field">main_title_title_suggest</str>
       <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
+      <str name="weightField">title_suggest_weight_is</str>
       <str name="minPrefixChars">4</str>
       <str name="buildOnCommit">true</str>
-      <!-- <str name="contextField">access_facet</str> --> <!-- try this with a stored field -->
-      <str name="payloadField">id</str> <!-- try this with a stored field -->
-    </lst>
-    <lst name="suggester">
-      <str name="name">monographTitleSuggesterBlended</str>
-      <str name="lookupImpl">BlendedInfixLookupFactory</str>
-      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">monograph_title_title_suggest</str>
-      <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
-      <str name="minPrefixChars">4</str>
-      <str name="buildOnCommit">true</str>
-      <!-- <str name="contextField">access_facet</str> --> <!-- try this with a stored field -->
-      <str name="payloadField">id</str> <!-- try this with a stored field -->
-    </lst>
-    <lst name="suggester">
-      <str name="name">serialTitleSuggesterBlended</str>
-      <str name="lookupImpl">BlendedInfixLookupFactory</str>
-      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">serial_title_title_suggest</str>
-      <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
-      <str name="minPrefixChars">4</str>
-      <str name="buildOnCommit">true</str>
-      <!-- <str name="contextField">access_facet</str> --> <!-- try this with a stored field -->
-      <str name="payloadField">id</str> <!-- try this with a stored field -->
+      <str name="contextField">access_facet</str>
+      <str name="payloadField">id</str>
     </lst>
     <lst name="suggester">
       <str name="name">curatedSuggesterFuzzy</str>
@@ -162,9 +140,7 @@
       <str name="suggest">true</str>
       <str name="suggest.dictionary">curatedSuggesterFuzzy</str>
       <str name="suggest.dictionary">mainTitleSuggesterBlended</str>
-      <str name="suggest.dictionary">monographTitleSuggesterBlended</str>
-      <str name="suggest.dictionary">serialTitleSuggesterBlended</str>
-      <str name="suggest.count">5</str>
+      <str name="suggest.count">20</str>
     </lst>
     <arr name="components">
       <str>titleSuggesterBlended</str>

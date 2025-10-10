@@ -1,7 +1,7 @@
 GIT
   remote: https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git
-  revision: b608d911f29c083b1bf237d5ac265b6a08e98acb
-  ref: b608d911f29c083b1bf237d5ac265b6a08e98acb
+  revision: 3221bbc1406cbdfa45825a78630e0e40ccf8f9cd
+  ref: 3221bbc1406cbdfa45825a78630e0e40ccf8f9cd
   specs:
     pennmarc (1.3.2)
       activesupport (~> 7)
@@ -99,7 +99,7 @@ GEM
     bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.0)
     benchmark (0.4.1)
-    bigdecimal (3.2.3)
+    bigdecimal (3.3.1)
     bindex (0.8.1)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
@@ -274,7 +274,7 @@ GEM
     marcel (1.0.4)
     matrix (0.4.2)
     mini_mime (1.1.5)
-    minitest (5.25.5)
+    minitest (5.26.0)
     msgpack (1.7.2)
     mutex_m (0.3.0)
     net-http (0.4.1)

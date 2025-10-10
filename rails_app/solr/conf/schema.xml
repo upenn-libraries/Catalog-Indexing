@@ -209,6 +209,8 @@
   <copyField source="genre_search" dest="genre_unstem_search" />
   <copyField source="contents_note_search" dest="contents_note_unstem_search" />
 
+  <copyfield source="access_facet" dest="title_suggest_context_ssi" />
+
   <!-- field type definitions. The "name" attribute is
      just a label to be used by field definitions.  The "class"
      attribute and any other attributes determine the real
