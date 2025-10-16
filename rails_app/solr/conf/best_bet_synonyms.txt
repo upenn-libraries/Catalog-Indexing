@@ -62,10 +62,10 @@ the new england journal of medicine, 9977077739703681
 nejm, 9977077739703681
 
 # New York Review of Books
-new york review of books, 9977123606003680
-ny review of books, 9977123606003680
-the new york review of books, 9977123606003680
-the ny review of books, 9977123606003680
+new york review of books, 9977123606003681
+ny review of books, 9977123606003681
+the new york review of books, 9977123606003681
+the ny review of books, 9977123606003681
 
 # The New York Times
 new york times, 9977568423203681
