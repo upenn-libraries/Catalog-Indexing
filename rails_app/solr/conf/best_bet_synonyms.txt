@@ -14,20 +14,28 @@ ancestrylibrary.com, 9942524713503681
 # The Atlantic
 atlantic, 9979746730903681
 atlantic monthly, 9979746730903681
+the atlantic, 9979746730903681
+the atlantic monthly, 9979746730903681
 
 # Bloomberg
 bloomberg.com, 9979042919703681
 bloomberg, 9979042919703681
 bloomberg business news, 9979042919703681
 
+# The Boston Globe
+boston globe, 9977052218603681
+the boston globe, 9977052218603681
+
 # The Chronicle of Higher Education
 che, 9977047066603681
 chronicle of higher ed, 9977047066603681
 chronicle of higher education, 9977047066603681
+the chronicle of higher education, 9977047066603681
 the chronicle, 9977047066603681
 
 # The Economist
 economist, 9977048907203681
+the economist, 9977048907203681
 economist.com, 9977048907203681
 
 # Harper's
@@ -46,41 +54,60 @@ hoover's, 9926082903503681
 ft, 9977716953103681
 ft.com, 9977716953103681
 financial times, 9977716953103681
+the financial times, 9977716953103681
+
+# The National Review
+national review, 9977047114403681
+the national review, 9977047114403681
 
 # New England Journal of Medicine
 new england journal of medicine, 9977077739703681
+the new england journal of medicine, 9977077739703681
 nejm, 9977077739703681
 
 # New York Review of Books
 new york review of books, 9977123606003680
 ny review of books, 9977123606003680
+the new york review of books, 9977123606003680
+the ny review of books, 9977123606003680
 
 # The New York Times
 new york times, 9977568423203681
+the new york times, 9977568423203681
 nyt, 9977568423203681
 the times, 9977568423203681
 ny times, 9977568423203681
 
+# The New Yorker
+new yorker, 9977047445803681
+the new yorker, 9977047445803681
+
 # The Oxford English Dictionary
 oed, 9927543263503681
 oxford english dictionary, 9927543263503681
+the oed, 9927543263503681
+the oxford english dictionary, 9927543263503681
 
 # The Philadelphia Inquirer
 philadelphia inquirer, 9977047865203681
 inquirer, 9977047865203681
+the philadelphia inquirer, 9977047865203681
+the inquirer, 9977047865203681
 
 # The Wall Street Journal
 wall street journal, 9977048989703681
 wsj, 9977048989703681
+the wall street journal, 9977048989703681
+the wsj, 9977048989703681
 
 # The Washington Post
 washington post, 9977047750803681
+the washington post, 9977047750803681
 washingtonpost.com, 9977047750803681
 
 # Others
 anesthesiology, 9977108105603681
 blood, 9977115591903681
-boston globe, 9977052218603681
 cell, 9977061241403681
 dynamed, 9949405903503681
 eric, 9921999873503681
@@ -89,9 +116,7 @@ jstor, 9979752131703681
 knovel, 9932015393503681
 medline, 9918247503503681
 le monde, 9977047827603681
-national review, 9977047114403681
 nature, 9977047322103681
-new yorker, 9977047445803681
 nexis uni, 9977170353703681
 pitchbook, 9977497628803681
 pnas, 9977043505303681
