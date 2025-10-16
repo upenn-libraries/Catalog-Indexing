@@ -3,7 +3,7 @@
 describe 'Batch Files Show Page' do
   let(:user) { create(:user) }
 
-  before { sign_in user }
+  before { login_as user }
 
   context 'when viewing batch files' do
     let(:alma_export) { create(:alma_export) }

@@ -29,6 +29,9 @@ module CatalogIndexing
     config.time_zone = 'Eastern Time (US & Canada)'
     # config.eager_load_paths << Rails.root.join("extras")
 
+    # Opt in to new (8.1 default) timezone behavior when using to_time
+    config.active_support.to_time_preserves_timezone = :zone
+
     # Don't generate system test files.
     config.generators.system_tests = nil
   end

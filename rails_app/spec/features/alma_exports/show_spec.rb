@@ -5,7 +5,7 @@ describe 'Alma Export Show Page' do
 
   let(:user) { create(:user) }
 
-  before { sign_in user }
+  before { login_as user }
 
   context 'when viewing an alma export' do
     let(:alma_export) { create(:alma_export_with_files, **additional_values) }

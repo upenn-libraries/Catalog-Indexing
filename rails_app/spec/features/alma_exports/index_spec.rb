@@ -3,7 +3,7 @@
 describe 'Alma Export Index Page' do
   let(:user) { create(:user) }
 
-  before { sign_in user }
+  before { login_as user }
 
   context 'when viewing Alma Exports' do
     let!(:alma_export) { create(:alma_export, **additional_values) }
