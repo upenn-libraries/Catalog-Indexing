@@ -105,7 +105,7 @@ namespace :tools do
     end
   end
 
-  desc 'Index a .tar.gz file in storage to collections specified in adhoc_target_collections '
+  desc 'Index a .tar.gz file in storage to collections specified in adhoc_target_collections'
   task index_file: :environment do
     require 'rubygems/package'
     collections = ConfigItem.value_for(:adhoc_target_collections)
@@ -124,5 +124,17 @@ namespace :tools do
     end
   rescue StandardError => e
     puts "General failure when indexing: #{e.message}"
+  end
+
+  desc 'Build title suggester on collection specified in adhoc_target_collections'
+  task enqueue_title_suggester_build_job: :environment do
+    collection = ConfigItem.value_for(:adhoc_target_collections)
+    next 'Ensure adhoc_target_collections is set to only a single collection' unless collection&.one?
+
+    BuildTitleSuggestDictionaryJob.perform_async(
+      collection: collection,
+      suggester: Settings.suggester.handlers.title,
+      dictionary: Settings.suggester.dictionaries.title
+    )
   end
 end

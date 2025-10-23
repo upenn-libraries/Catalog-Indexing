@@ -111,39 +111,29 @@
     <useFilterForSortedQuery>true</useFilterForSortedQuery>
   </query>
 
-  <searchComponent class="solr.SuggestComponent" name="titleSuggesterBlended">
+  <searchComponent class="solr.SuggestComponent" name="titleSuggester">
     <lst name="suggester">
-      <str name="name">mainTitleSuggesterBlended</str>
+      <str name="name">title</str>
       <str name="lookupImpl">BlendedInfixLookupFactory</str>
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
       <str name="field">main_title_title_suggest</str>
       <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
       <str name="weightField">title_suggest_weight_is</str>
       <str name="minPrefixChars">4</str>
-      <str name="buildOnCommit">true</str>
+      <str name="buildOnCommit">false</str>
       <str name="contextField">access_facet</str>
       <str name="payloadField">id</str>
     </lst>
-    <lst name="suggester">
-      <str name="name">curatedSuggesterFuzzy</str>
-      <str name="lookupImpl">FuzzyLookupFactory</str>
-      <str name="dictionaryImpl">FileDictionaryFactory</str>
-      <str name="sourceLocation">curated_suggestions.txt</str>
-      <str name="fieldDelimiter">,</str>
-      <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
-      <str name="buildOnCommit">true</str>
-    </lst>
   </searchComponent>
 
-  <requestHandler name="/title_suggest" class="solr.SearchHandler" startup="lazy">
+  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy">
     <lst name="defaults">
       <str name="suggest">true</str>
-      <str name="suggest.dictionary">curatedSuggesterFuzzy</str>
-      <str name="suggest.dictionary">mainTitleSuggesterBlended</str>
-      <str name="suggest.count">20</str>
+      <str name="suggest.dictionary">title</str>
+      <str name="suggest.count">10</str>
     </lst>
     <arr name="components">
-      <str>titleSuggesterBlended</str>
+      <str>titleSuggester</str>
     </arr>
   </requestHandler>
 
