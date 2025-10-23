@@ -13,6 +13,7 @@ solr_configsets:
   - name: "catalog-indexing"
     path: "roles/catalog-indexing/files/src/solr/conf/"
 
+solr_docker_image_name: bitnamilegacy/solr
 solr_docker_image_tag: 9.4.1
 
 solr_proxy_host: "catalog-indexing-dev.library.upenn.int"
