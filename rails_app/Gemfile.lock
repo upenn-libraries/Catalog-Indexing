@@ -1,10 +1,10 @@
 GIT
   remote: https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git
-  revision: 3221bbc1406cbdfa45825a78630e0e40ccf8f9cd
-  ref: 3221bbc1406cbdfa45825a78630e0e40ccf8f9cd
+  revision: 979ad840f7474bb2dc9f636c423953512baf6706
+  ref: 979ad840f7474bb2dc9f636c423953512baf6706
   specs:
-    pennmarc (1.3.2)
-      activesupport (~> 7)
+    pennmarc (1.3.4)
+      activesupport (>= 7)
       lcsort (~> 0.9)
       library_stdnums (~> 1.6)
       marc (~> 1.2)

@@ -23,7 +23,7 @@ gem 'omniauth'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-saml'
 gem 'pennmarc', git: 'https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git',
-                ref: '3221bbc1406cbdfa45825a78630e0e40ccf8f9cd'
+                ref: '7399183f787d6c62edc30ebde2b5672641e227b0'
 gem 'pg', '~> 1.1'
 gem 'puma', '~> 6.0'
 gem 'rails', '~> 7.2'
