@@ -1,7 +1,7 @@
 GIT
   remote: https://gitlab.library.upenn.edu/dld/catalog/pennmarc.git
-  revision: 7399183f787d6c62edc30ebde2b5672641e227b0
-  ref: 7399183f787d6c62edc30ebde2b5672641e227b0
+  revision: a1def9a1426921eb12ff54ef121e8ec55b689eea
+  ref: a1def9a1426921eb12ff54ef121e8ec55b689eea
   specs:
     pennmarc (1.3.4)
       activesupport (>= 7)
@@ -98,7 +98,7 @@ GEM
     base64 (0.3.0)
     bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.0)
-    benchmark (0.4.1)
+    benchmark (0.5.0)
     bigdecimal (3.3.1)
     bindex (0.8.1)
     bootsnap (1.18.3)
