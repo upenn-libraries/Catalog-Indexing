@@ -8,7 +8,6 @@ class BuildTitleSuggestDictionaryJob < TransactionJob
   def transaction(collection_name)
     BuildSuggestDictionary.new.call(
       collections: [collection_name]
-
     )
   end
 end

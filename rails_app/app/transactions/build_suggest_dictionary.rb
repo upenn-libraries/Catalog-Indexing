@@ -20,7 +20,7 @@ class BuildSuggestDictionary
     Success(collection: collections.first, **args)
   end
 
-  def prepare_solr_suggester_build_url(collection:, suggester:, dictionary:, **args)
+  def prepare_solr_suggester_build_url(collection:, suggester:, dictionary:, **_args)
     unless collection && dictionary && suggester
       return Failure(message: 'Collection, Suggester and Dictionary names must be provided')
     end
@@ -40,7 +40,7 @@ class BuildSuggestDictionary
 
   def build_dictionary(connection:, **_args)
     response = connection.get
-    return Success("Suggester built successfully") if response.success?
+    return Success('Suggester built successfully') if response.success?
 
     Failure(message: "Suggester build failed. Response: #{response.body}")
   rescue StandardError => e
