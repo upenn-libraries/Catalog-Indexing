@@ -28,7 +28,7 @@ describe BuildSuggestDictionary do
 
       it 'returns a failure' do
         expect(outcome).to be_failure
-        expect(outcome.failure[:message]).to be eq 'This transaction supports only a single collection name'
+        expect(outcome.failure[:message]).to eq 'This transaction supports only a single collection name'
       end
     end
 
@@ -39,7 +39,7 @@ describe BuildSuggestDictionary do
 
       it 'returns a failure' do
         expect(outcome).to be_failure
-        expect(outcome.failure[:message]).to be eq 'Collection, Suggester and Dictionary names must be provided'
+        expect(outcome.failure[:message]).to eq 'Collection, Suggester and Dictionary names must be provided'
       end
     end
 
