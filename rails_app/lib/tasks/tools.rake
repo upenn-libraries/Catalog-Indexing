@@ -131,10 +131,6 @@ namespace :tools do
     collection = ConfigItem.value_for(:adhoc_target_collections)
     next 'Ensure adhoc_target_collections is set to only a single collection' unless collection&.one?
 
-    BuildTitleSuggestDictionaryJob.perform_async(
-      collection: collection,
-      suggester: Settings.suggester.handlers.title,
-      dictionary: Settings.suggester.dictionaries.title
-    )
+    BuildTitleSuggestDictionaryJob.perform_async(collection)
   end
 end

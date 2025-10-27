@@ -4,7 +4,7 @@ suggester:
   handlers:
     title: suggest
   dictionaries:
-    title: titleSuggester
+    title: title
 
 # Internal Services
 solr:
