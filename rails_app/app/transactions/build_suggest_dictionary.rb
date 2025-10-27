@@ -15,15 +15,17 @@ class BuildSuggestDictionary
 
   private
 
-  # @param collections [Array, String]
+  # We only want to work with a single collection here, but some steps expect an Array of collection names,
+  # so we fail early on if we are given multiple collection names.
+  # @param collections [Array]
   # @return [Dry::Monads::Result]
   def use_only_one_collection(collections:, **args)
-    collection = Array.wrap(collections) # Support receiving either a string or array
-    return Failure(message: 'This transaction supports only a single collection name') unless collection.one?
+    return Failure(message: 'This transaction supports only a single collection name') unless collections.one?
 
-    Success(collection: collection.first, **args)
+    Success(collection: collections.first, **args)
   end
 
+  # Make sure we have the right parameters to build the Solr URL
   # @param collection [String] collection to contain the suggester
   # @param suggester [String] name of suggester, as define in solr config
   # @param dictionary [String] name of dictionary, as defined in solr config
@@ -36,8 +38,9 @@ class BuildSuggestDictionary
     Success(collection: collection, dictionary: dictionary, suggester: suggester, **args)
   end
 
+  # Construct URL for building the right suggester dictionary
   # @param collection [String] collection to contain the suggester
-  # @param suggester [String] name of suggester, as define in solr config
+  # @param suggester [String] name of suggester, as defined in solr config
   # @param dictionary [String] name of dictionary, as defined in solr config
   # @return [Dry::Monads::Result]
   def prepare_solr_suggester_build_url(collection:, suggester:, dictionary:, **args)
@@ -51,19 +54,37 @@ class BuildSuggestDictionary
     Success(url: solr_suggester_build_url, **args)
   end
 
+  # @param url [Object] URL used to build the suggester
+  # @param timeout [Integer] how long, in seconds, to wait for the HTTP request to complete
   # @return [Dry::Monads::Result]
   def prepare_solr_connection(url:, timeout: 3600, **args)
     connection = Faraday.new(url: url, request: { timeout: timeout }) do |conn|
       conn.response :raise_error
+      conn.response :json
     end
     Success(connection: connection, **args)
   end
 
+  # Tell Solr to build the suggester dictionary
+  # @param connection [Faraday::Connection]
   # @return [Dry::Monads::Result]
   def build_dictionary(connection:, **_args)
     response = connection.get
     Success('Suggester built successfully') if response.success?
   rescue StandardError => e
     Failure(message: "Suggester build failed with exception #{e.class.name}: #{e.message}. Response: #{response.body}")
+  end
+
+  # @param response [Faraday::Response]
+  # @return [Dry::Monads::Result]
+  def notify(response:, **_args)
+    q_time_ms = response.body.dig('responseHeader', 'QTime')
+    message = "Suggester built in #{q_time_ms} ms"
+    if Rails.env.production?
+      Honeybadger.notify(message)
+    else
+      Rails.logger.debug message
+    end
+    Success(message)
   end
 end
