@@ -133,7 +133,7 @@
       <str name="suggest.count">10</str>
     </lst>
     <arr name="components">
-      <str>title</str>
+      <str>titleSuggester</str>
     </arr>
   </requestHandler>
 

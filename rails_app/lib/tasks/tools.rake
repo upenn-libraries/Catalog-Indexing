@@ -73,7 +73,7 @@ namespace :tools do
 
   desc 'Load the current solr config into a new Solr configset'
   task load_configset: :environment do
-    name = "dev-configset-#{Time.now.strftime('%y%m%d%H%M')}"
+    name = "dev-configset-#{Time.zone.now.strftime('%y%m%d%H%M')}"
     SolrTools.load_configset name, SolrTools.configset_zipfile
     puts "Configset loaded to Solr as #{name}."
   rescue StandardError => e
