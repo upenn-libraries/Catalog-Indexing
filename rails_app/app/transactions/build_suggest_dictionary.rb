@@ -57,6 +57,7 @@ class BuildSuggestDictionary
   # @param timeout [Integer] how long, in seconds, to wait for the HTTP request to complete
   # @return [Dry::Monads::Result]
   def prepare_solr_connection(url:, timeout: 3600, **args)
+    puts "suggester url: #{url}"
     connection = SolrTools.connection url: url, timeout: timeout
     Success(connection: connection, **args)
   end
