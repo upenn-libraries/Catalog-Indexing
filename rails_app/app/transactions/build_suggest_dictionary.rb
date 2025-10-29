@@ -69,7 +69,7 @@ class BuildSuggestDictionary
     if response.success?
       Success('Suggester built successfully')
     else
-      Failure(message: "Suggester build failed with response code: #{response.status}")
+      Failure(message: "Suggester build failed with response code: #{response.status}. Debug: #{connection.inspect}")
     end
   rescue StandardError => e
     Failure(message: "Suggester build failed with exception #{e.class.name}: #{e.message}.")
