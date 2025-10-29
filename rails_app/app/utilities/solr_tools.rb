@@ -5,9 +5,11 @@ class SolrTools
   class CommandError < StandardError; end
 
   class << self
+    DEFAULT_CONNECTION_TIMEOUT_SEC = 60
+
     # @return [Faraday::Connection]
-    def connection
-      Faraday.new(base_url) do |faraday|
+    def connection(url: base_url, timeout: DEFAULT_CONNECTION_TIMEOUT_SEC)
+      Faraday.new(url, request: { timeout: timeout }) do |faraday|
         faraday.request :authorization, :basic, Settings.solr.user, Settings.solr.password
         faraday.adapter :net_http
         # faraday.response :raise_error
@@ -44,6 +46,24 @@ class SolrTools
     # @return [String (frozen)]
     def collections_url
       "#{Settings.solr.url}/solr/admin/collections"
+    end
+
+    # Return a URI object for a solr suggester request
+    # @param collection [String]
+    # @param suggester [String]
+    # @param dictionary [String]
+    # @param build [Boolean]
+    # @param query [String, NilClass]
+    # @return [URI::Generic]
+    def suggester_uri(suggester:, dictionary:, collection: default_collection, build: false, query: nil)
+      solr_uri = URI(Settings.solr.url)
+      uri_class = solr_uri.scheme == 'https' ? URI::HTTPS : URI::HTTP
+      query_params = { 'suggest.dictionary': dictionary, 'suggest.build': build, q: query }
+      uri_class.build(
+        scheme: solr_uri.scheme, host: solr_uri.host, port: solr_uri.port,
+        path: "/solr/#{collection}/#{suggester}", userinfo: "#{Settings.solr.user}:#{Settings.solr.password}",
+        query: URI.encode_www_form(query_params.compact)
+      )
     end
 
     # @param [String] collection_name

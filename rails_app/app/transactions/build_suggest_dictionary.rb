@@ -44,24 +44,15 @@ class BuildSuggestDictionary
   # @param dictionary [String] name of dictionary, as defined in solr config
   # @return [Dry::Monads::Result]
   def prepare_solr_suggester_build_url(collection:, suggester:, dictionary:, **args)
-    solr_uri = URI(Settings.solr.url)
-    uri_class = solr_uri.scheme == 'https' ? URI::HTTPS : URI::HTTP
-    solr_suggester_build_url = uri_class.build(
-      scheme: solr_uri.scheme, host: solr_uri.host, port: solr_uri.port,
-      path: "/solr/#{collection}/#{suggester}", userinfo: "#{Settings.solr.user}:#{Settings.solr.password}",
-      query: URI.encode_www_form('suggest.dictionary': dictionary, 'suggest.build': true)
-    )
-    Success(url: solr_suggester_build_url, **args)
+    uri = SolrTools.suggester_uri(collection: collection, suggester: suggester, dictionary: dictionary)
+    Success(url: uri.to_s, **args)
   end
 
-  # @param url [Object] URL used to build the suggester
+  # @param url [String] URL used to build the suggester
   # @param timeout [Integer] how long, in seconds, to wait for the HTTP request to complete
   # @return [Dry::Monads::Result]
   def prepare_solr_connection(url:, timeout: 3600, **args)
-    connection = Faraday.new(url: url, request: { timeout: timeout }) do |conn|
-      conn.response :raise_error
-      conn.response :json
-    end
+    connection = SolrTools.connection url: url, timeout: timeout
     Success(connection: connection, **args)
   end
 
@@ -70,9 +61,13 @@ class BuildSuggestDictionary
   # @return [Dry::Monads::Result]
   def build_dictionary(connection:, **_args)
     response = connection.get
-    Success('Suggester built successfully') if response.success?
+    if response.success?
+      Success('Suggester built successfully')
+    else
+      Failure(message: "Suggester build failed with response code: #{response.status}")
+    end
   rescue StandardError => e
-    Failure(message: "Suggester build failed with exception #{e.class.name}: #{e.message}. Response: #{response.body}")
+    Failure(message: "Suggester build failed with exception #{e.class.name}: #{e.message}.")
   end
 
   # @param response [Faraday::Response]
