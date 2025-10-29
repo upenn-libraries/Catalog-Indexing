@@ -69,6 +69,7 @@ class BuildSuggestDictionary
   # @return [Dry::Monads::Result]
   def build_dictionary(connection:, **_args)
     response = connection.get
+    puts "Solr response: #{response.body}"
     if response.success?
       Success('Suggester built successfully')
     else
