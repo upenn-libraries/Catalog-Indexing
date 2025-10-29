@@ -6,8 +6,8 @@ require 'dry/transaction'
 class BuildSuggestDictionary
   include Dry::Transaction(container: Container)
 
-  step :validate_collection, with: 'solr.validate_collections'
   step :use_only_one_collection
+  step :validate_collection, with: 'solr.validate_collections'
   step :validate_suggester_params
   step :prepare_solr_suggester_build_url
   step :prepare_solr_connection
@@ -15,22 +15,27 @@ class BuildSuggestDictionary
 
   private
 
-  # We only want to work with a single collection here, but some steps expect an Array of collection names,
-  # so we fail early on if we are given multiple collection names.
-  # @param collections [Array]
+  # We only want to work with a single collection
+  # @param collection [String]
   # @return [Dry::Monads::Result]
-  def use_only_one_collection(collections:, **args)
-    return Failure(message: 'This transaction supports only a single collection name') unless collections.one?
+  def use_only_one_collection(collection:, **args)
+    unless collection.is_a?(String)
+      return Failure(message: 'This transaction supports only a single collection name as a string')
+    end
 
-    Success(collection: collections.first, **args)
+    # validate_collections step expects an array
+    Success(collections: [collection], **args)
   end
 
+  # validate_collections
+
   # Make sure we have the right parameters to build the Solr URL
-  # @param collection [String] collection to contain the suggester
+  # @param collections [Array] single collection to contain the suggester
   # @param suggester [String] name of suggester, as define in solr config
   # @param dictionary [String] name of dictionary, as defined in solr config
   # @return [Dry::Monads::Result]
-  def validate_suggester_params(collection:, dictionary:, suggester:, **args)
+  def validate_suggester_params(collections:, dictionary:, suggester:, **args)
+    collection = collections.first
     unless collection && dictionary && suggester
       return Failure(message: 'Collection, Suggester and Dictionary names must be provided')
     end

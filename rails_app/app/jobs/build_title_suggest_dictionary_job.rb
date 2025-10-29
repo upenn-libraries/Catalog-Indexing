@@ -7,7 +7,7 @@ class BuildTitleSuggestDictionaryJob < TransactionJob
   # @param [String] collection_name
   def transaction(collection_name)
     BuildSuggestDictionary.new.call(
-      collections: collection_name,
+      collection: collection_name,
       suggester: Settings.suggester.handlers.title,
       dictionary: Settings.suggester.dictionaries.title
     )

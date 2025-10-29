@@ -4,12 +4,12 @@ describe BuildSuggestDictionary do
   include SolrHelpers
 
   let(:outcome) do
-    described_class.new.call(collections: collections, suggester: suggester, dictionary: dictionary)
+    described_class.new.call(collection: collection, suggester: suggester, dictionary: dictionary)
   end
 
   describe '#call' do
     context 'with a non-existent collection name' do
-      let(:collections) { ['nope'] }
+      let(:collection) { 'nope' }
       let(:suggester) { 'whatever' }
       let(:dictionary) { 'whatever' }
 
@@ -20,18 +20,18 @@ describe BuildSuggestDictionary do
     end
 
     context 'with multiple collection names' do
-      let(:collections) { SolrTools.collections }
+      let(:collection) { %w[a b] }
       let(:suggester) { 'whatever' }
       let(:dictionary) { 'whatever' }
 
       it 'returns a failure' do
         expect(outcome).to be_failure
-        expect(outcome.failure[:message]).to eq 'This transaction supports only a single collection name'
+        expect(outcome.failure[:message]).to eq 'This transaction supports only a single collection name as a string'
       end
     end
 
     context 'with missing suggester param' do
-      let(:collections) { [test_collection] }
+      let(:collection) { test_collection }
       let(:suggester) { nil }
       let(:dictionary) { 'whatever' }
 
@@ -42,7 +42,7 @@ describe BuildSuggestDictionary do
     end
 
     context 'with Solr having an issue due to a non-existent suggester configuration' do
-      let(:collections) { [test_collection] }
+      let(:collection) { test_collection }
       let(:suggester) { 'whatever' }
       let(:dictionary) { 'whatever' }
 
@@ -53,7 +53,7 @@ describe BuildSuggestDictionary do
     end
 
     context 'with the Solr request resulting in an exception' do
-      let(:collections) { [test_collection] }
+      let(:collection) { test_collection }
       let(:suggester) { Settings.suggester.handlers.title }
       let(:dictionary) { Settings.suggester.dictionaries.title }
 
@@ -71,7 +71,7 @@ describe BuildSuggestDictionary do
     end
 
     context 'with a valid suggester configuration' do
-      let(:collections) { [test_collection] }
+      let(:collection) { test_collection }
       let(:suggester) { Settings.suggester.handlers.title }
       let(:dictionary) { Settings.suggester.dictionaries.title }
 
@@ -87,7 +87,7 @@ describe BuildSuggestDictionary do
         expect(outcome).to be_success
         suggestions_resp = SolrTools.connection(
           url: SolrTools.suggester_uri(
-            collection: collections.first,
+            collection: collection,
             suggester: Settings.suggester.handlers.title,
             dictionary: Settings.suggester.dictionaries.title,
             build: true, query: 'T'
