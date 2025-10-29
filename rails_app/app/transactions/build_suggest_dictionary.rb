@@ -50,6 +50,9 @@ class BuildSuggestDictionary
   # @return [Dry::Monads::Result]
   def prepare_solr_suggester_build_url(collection:, suggester:, dictionary:, **args)
     uri = SolrTools.suggester_uri(collection: collection, suggester: suggester, dictionary: dictionary)
+    puts "Suggester URL: #{uri.to_s}"
+    puts "Solr URL from ENV: #{ENV['SOLR_URL']}"
+    puts "Solr URL from config: #{Config.solr.url}"
     Success(url: uri.to_s, **args)
   end
 
