@@ -61,7 +61,7 @@ class SolrTools
       query_params = { 'suggest.dictionary': dictionary, 'suggest.build': build, q: query }
       uri_class.build(
         scheme: solr_uri.scheme, host: solr_uri.host, port: solr_uri.port,
-        path: "/solr/#{collection}/#{suggester}", userinfo: "#{Settings.solr.user}:#{Settings.solr.password}",
+        path: "/solr/#{collection}/#{suggester}",
         query: URI.encode_www_form(query_params.compact)
       )
     end

@@ -57,7 +57,6 @@ class BuildSuggestDictionary
   # @param timeout [Integer] how long, in seconds, to wait for the HTTP request to complete
   # @return [Dry::Monads::Result]
   def prepare_solr_connection(url:, timeout: 3600, **args)
-    puts "suggester url: #{url}"
     connection = SolrTools.connection url: url, timeout: timeout
     Success(connection: connection, **args)
   end
@@ -70,7 +69,7 @@ class BuildSuggestDictionary
     if response.success?
       Success('Suggester built successfully')
     else
-      Failure(message: "Suggester build failed with response code: #{response.status}. Debug: #{connection.inspect}")
+      Failure(message: "Suggester build failed with response code: #{response.status}.")
     end
   rescue StandardError => e
     Failure(message: "Suggester build failed with exception #{e.class.name}: #{e.message}.")
