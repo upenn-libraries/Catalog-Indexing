@@ -637,6 +637,21 @@
     </analyzer>
   </fieldType>
 
+  <!-- Suggest field type for tokened suggestions, which allows for suggestion matches within a string without using
+       a Fuzzy matching implementation-->
+  <fieldType name="tokened_suggest_text" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.WhitespaceTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.WhitespaceTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+    </analyzer>
+  </fieldType>
+  <dynamicField name="*_tokened_suggest" type="tokened_suggest_text" indexed="true" stored="true" multiValued="true" />
+
+
   <!-- SortableTextField generally functions exactly like TextField,
        except that it supports, and by default uses, docValues for sorting (or faceting)
        on the first 1024 characters of the original field values (which is configurable).
