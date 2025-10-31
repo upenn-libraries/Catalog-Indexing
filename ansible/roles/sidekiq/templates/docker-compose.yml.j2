@@ -39,11 +39,7 @@ services:
           "CMD-SHELL",
           "ps aux | grep '[s]idekiq 7' || exit 1",
         ]
-{% if is_development == true %}
-      start_period: 3m
-{% else %}
       start_period: 1m
-{% endif %}
       interval: 30s
       retries: 3
       timeout: 30s
