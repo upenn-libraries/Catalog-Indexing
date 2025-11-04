@@ -71,6 +71,37 @@ namespace :tools do
     puts "Configset package saved to #{filename}"
   end
 
+  desc 'Load the Solr config files from the local system into a new Solr configset'
+  task load_configset: :environment do
+    name = "dev-configset-#{Time.zone.now.strftime('%y%m%d%H%M')}"
+    SolrTools.load_configset name, SolrTools.configset_zipfile
+    puts "Configset loaded to Solr as #{name}."
+  rescue StandardError => e
+    puts "Loading configset failed: #{e.message}"
+  end
+
+  desc 'Index a .tar.gz file specified in MARC_TAR_GZ_FILE_PATH to collections specified in adhoc_target_collections'
+  task index_file: :environment do
+    require 'rubygems/package'
+    collections = ConfigItem.value_for(:adhoc_target_collections)
+    file_path = ENV['MARC_TAR_GZ_FILE_PATH']
+    raise StandardError("No file found at: #{file_path}") unless File.exist?(file_path)
+
+    tar = Zlib::GzipReader.new(File.open(file_path))
+    io = Gem::Package::TarReader.new(tar).first
+    writer = MultiCollectionWriter.new(
+      collections: collections, commit_on_close: true
+    )
+    outcome = Steps::IndexRecords.new.call(io: io, writer: writer)
+    if outcome.success?
+      puts "File indexed to #{collections.join(', ')}"
+    else
+      puts "Indexer failure: #{outcome.failure}"
+    end
+  rescue StandardError => e
+    puts "General failure when indexing: #{e.message}"
+  end
+
   desc 'Add Configuration Items to the database with default values'
   task add_config_items: :environment do
     config_item_details = ConfigItem.details

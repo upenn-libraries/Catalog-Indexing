@@ -108,6 +108,18 @@ class SolrTools
       tmp
     end
 
+    # Use Solr Config admin API to load a new configset into Solr. Intended for use with #package_configset util
+    # @param name [String] intended name of configset in Solr
+    # @param path [String] location of packaged configset on the system
+    def load_configset(name, path)
+      outcome = connection.post('/solr/admin/configs') do |req|
+        req.params = { action: 'UPLOAD', name: name }
+        req.headers['Content-Type'] = 'octect/stream'
+        req.body = File.read(path)
+      end
+      raise CommandError, "Solr command failed with response: #{outcome.body}" unless outcome.success?
+    end
+
     # @return [Boolean]
     def collections_settings_present?
       Settings.solr.shards.present? && Settings.solr.replicas.present? && Settings.solr.configset.present?
