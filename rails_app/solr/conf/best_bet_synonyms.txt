@@ -56,6 +56,10 @@ ft.com, 9977716953103681
 financial times, 9977716953103681
 the financial times, 9977716953103681
 
+# Journal of Finance
+journal of finance, 9977051513103681
+the journal of finance, 9977051513103681
+
 # New England Journal of Medicine
 new england journal of medicine, 9977077739703681
 the new england journal of medicine, 9977077739703681
