@@ -85,7 +85,7 @@ namespace :tools do
     require 'rubygems/package'
     collections = ConfigItem.value_for(:adhoc_target_collections)
     file_path = ENV['MARC_TAR_GZ_FILE_PATH']
-    raise StandardError("No file found at: #{file_path}") unless File.exists?(file_path)
+    raise StandardError("No file found at: #{file_path}") unless File.exist?(file_path)
 
     tar = Zlib::GzipReader.new(File.open(file_path))
     io = Gem::Package::TarReader.new(tar).first
