@@ -80,16 +80,17 @@ namespace :tools do
     puts "Loading configset failed: #{e.message}"
   end
 
-  desc 'Index a .tar.gz file specified in FILE_PATH to collections specified in adhoc_target_collections'
+  desc 'Index a .tar.gz file specified in MARC_TAR_GZ_FILE_PATH to collections specified in adhoc_target_collections'
   task index_file: :environment do
     require 'rubygems/package'
     collections = ConfigItem.value_for(:adhoc_target_collections)
-    file = File.open(ENV['FILE_PATH'])
-    tar = Zlib::GzipReader.new(file)
+    file_path = ENV['MARC_TAR_GZ_FILE_PATH']
+    raise StandardError("No file found at: #{file_path}") unless File.exists?(file_path)
+
+    tar = Zlib::GzipReader.new(File.open(file_path))
     io = Gem::Package::TarReader.new(tar).first
     writer = MultiCollectionWriter.new(
-      collections: collections,
-      commit_on_close: true
+      collections: collections, commit_on_close: true
     )
     outcome = Steps::IndexRecords.new.call(io: io, writer: writer)
     if outcome.success?
