@@ -68,7 +68,6 @@ class SolrTools
       ).to_s
     end
 
-
     # @param [String] collection_name
     # @return [Boolean]
     def collection_exists?(collection_name)

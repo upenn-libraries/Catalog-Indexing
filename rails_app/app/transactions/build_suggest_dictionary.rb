@@ -49,7 +49,7 @@ class BuildSuggestDictionary
   # @param dictionary [String] name of dictionary, as defined in solr config
   # @return [Dry::Monads::Result]
   def prepare_solr_suggester_build_url(collection:, suggester:, dictionary:, **args)
-    uri = SolrTools.suggester_uri(collection: collection, suggester: suggester, dictionary: dictionary)
+    uri = SolrTools.suggester_url(collection: collection, suggester: suggester, dictionary: dictionary)
     Success(url: uri.to_s, **args)
   end
 
@@ -66,7 +66,6 @@ class BuildSuggestDictionary
   # @return [Dry::Monads::Result]
   def build_dictionary(connection:, **_args)
     response = connection.get
-    puts "Solr response: #{response.body}"
     if response.success?
       Success('Suggester built successfully')
     else
