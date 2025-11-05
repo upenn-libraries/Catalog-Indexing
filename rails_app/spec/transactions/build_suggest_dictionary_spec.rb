@@ -91,7 +91,7 @@ describe BuildSuggestDictionary do
           dictionary: Settings.suggester.dictionaries.title,
           build: true, query: 'T'
         )
-        puts "Solr suggester url: #{sug_url}"
+        expect(sug_url).to eq 'cheese'
         suggestions_resp = SolrTools.connection(
           url: sug_url
         ).get
