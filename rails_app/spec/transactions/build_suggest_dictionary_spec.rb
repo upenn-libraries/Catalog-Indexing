@@ -96,8 +96,8 @@ describe BuildSuggestDictionary do
         suggestions_resp = SolrTools.connection(
           url: sug_url
         ).get
-        count = suggestions_resp.body['suggest']['title']['T']['numFound']
         expect(suggestions_resp).to eq 'cheese'
+        count = suggestions_resp.body['suggest']['title']['T']['numFound']
         expect(count).to eq 1
       end
     end
