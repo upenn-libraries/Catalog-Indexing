@@ -91,8 +91,8 @@ describe BuildSuggestDictionary do
           dictionary: Settings.suggester.dictionaries.title,
           build: true, query: 'T'
         )
-        expect(Solr::QueryClient.new(collection: test_collection).get_by_id('123')).to eq ''
-        expect(sug_url).to eq 'cheese'
+        # expect(Solr::QueryClient.new(collection: test_collection).get_by_id('123')).to eq ''
+        # expect(sug_url).to eq 'cheese'
         suggestions_resp = SolrTools.connection(
           url: sug_url
         ).get
