@@ -97,6 +97,7 @@ describe BuildSuggestDictionary do
           url: sug_url
         ).get
         count = suggestions_resp.body['suggest']['title']['T']['numFound']
+        expect(suggestions_resp).to eq 'cheese'
         expect(count).to eq 1
       end
     end
