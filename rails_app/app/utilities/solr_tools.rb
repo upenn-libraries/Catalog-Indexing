@@ -58,16 +58,14 @@ class SolrTools
     # @param query [String, NilClass]
     # @return [String]
     def suggester_url(suggester:, dictionary:, collection: default_collection, build: false, query: nil)
-      # solr_uri = URI(Settings.solr.url)
-      # uri_class = solr_uri.scheme == 'https' ? URI::HTTPS : URI::HTTP
-      # query_params = { 'suggest.dictionary': dictionary, 'suggest.build': build, q: query }
-      # uri_class.build(
-      #   scheme: solr_uri.scheme, host: solr_uri.host, port: solr_uri.port,
-      #   path: "/solr/#{collection}/#{suggester}",
-      #   query: URI.encode_www_form(query_params.compact)
-      # ).to_s
-      base = collection_query_url_with_auth(collection: collection)
-      "#{base}/#{suggester}?suggest.dictionary=#{dictionary}&suggest.build=true&suggest.q=#{query}"
+      solr_uri = URI(Settings.solr.url)
+      uri_class = solr_uri.scheme == 'https' ? URI::HTTPS : URI::HTTP
+      query_params = { 'suggest.dictionary': dictionary, 'suggest.build': build, q: query }
+      uri_class.build(
+        scheme: solr_uri.scheme, host: solr_uri.host, port: solr_uri.port,
+        path: "/solr/#{collection}/#{suggester}",
+        query: URI.encode_www_form(query_params.compact)
+      ).to_s
     end
 
     # @param [String] collection_name

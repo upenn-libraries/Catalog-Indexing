@@ -84,19 +84,16 @@ describe BuildSuggestDictionary do
       end
 
       it 'returns one suggestion based on the one indexed record' do
-        # expect(outcome).to be_success
+        expect(outcome).to be_success
         sug_url = SolrTools.suggester_url(
           collection: collection,
           suggester: Settings.suggester.handlers.title,
           dictionary: Settings.suggester.dictionaries.title,
           build: true, query: 'T'
         )
-        # expect(Solr::QueryClient.new(collection: test_collection).get_by_id('123')).to eq ''
-        # expect(sug_url).to eq 'cheese'
         suggestions_resp = SolrTools.connection(
           url: sug_url
         ).get
-        expect(suggestions_resp).to eq 'cheese'
         count = suggestions_resp.body['suggest']['title']['T']['numFound']
         expect(count).to eq 1
       end
