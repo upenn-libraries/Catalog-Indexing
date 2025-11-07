@@ -5,6 +5,7 @@ require 'dry/transaction'
 # Issue request to Solr instance/collection/suggest handler to build a specified dictionary
 class BuildSuggestDictionary
   include Dry::Transaction(container: Container)
+  include ActionView::Helpers::DateHelper
 
   step :use_only_one_collection
   step :validate_collection, with: 'solr.validate_collections'
@@ -12,6 +13,7 @@ class BuildSuggestDictionary
   step :prepare_solr_suggester_build_url
   step :prepare_solr_connection
   step :build_dictionary
+  step :notify
 
   private
 
