@@ -67,7 +67,7 @@ class BuildSuggestDictionary
   def build_dictionary(connection:, **_args)
     response = connection.get
     if response.success?
-      Success('Suggester built successfully')
+      Success(query_time_ms: response.body.dig('responseHeader', 'QTime').to_i)
     else
       Failure(message: "Suggester build failed with response code: #{response.status}.")
     end
@@ -75,15 +75,15 @@ class BuildSuggestDictionary
     Failure(message: "Suggester build failed with exception #{e.class.name}: #{e.message}.")
   end
 
-  # @param response [Faraday::Response]
+  # @param query_time_ms [Integer]
   # @return [Dry::Monads::Result]
-  def notify(response:, **_args)
-    q_time_ms = response.body.dig('responseHeader', 'QTime')
-    message = "Suggester built in #{q_time_ms} ms"
-    if Rails.env.production?
-      Honeybadger.notify(message)
-    else
+  def notify(query_time_ms:, **_args)
+    q_time_humanized = distance_of_time_in_words(Time.zone.now, Time.zone.now + (query_time_ms / 1000).seconds)
+    message = "Title suggester built in #{q_time_humanized}."
+    if Rails.env.test? || Rails.env.development?
       Rails.logger.debug message
+    else
+      SendSlackNotificationJob.perform_async(message)
     end
     Success(message)
   end

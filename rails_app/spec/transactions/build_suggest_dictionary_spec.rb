@@ -97,6 +97,8 @@ describe BuildSuggestDictionary do
         count = suggestions_resp.body['suggest']['title']['T']['numFound']
         expect(count).to eq 1
       end
+
+      it
     end
   end
 end
