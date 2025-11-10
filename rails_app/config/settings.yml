@@ -1,5 +1,7 @@
 # Settings/Configuration shared among all environments.
 
+bootstrap_version: 5.3.8
+
 # Internal Services
 solr:
   user: <%= DockerSecrets.lookup(:solr_username) %>

@@ -6,6 +6,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/bootstrap@#{Settings.bootstrap_version}/dist/css/bootstrap.min.css" %>
     <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
