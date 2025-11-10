@@ -71,17 +71,18 @@ describe BuildSuggestDictionary do
     end
 
     context 'with a valid suggester configuration' do
-      let(:collection) { test_collection }
+      let(:collection) { 'suggester-test-collection' }
       let(:suggester) { Settings.suggester.handlers.title }
       let(:dictionary) { Settings.suggester.dictionaries.title }
 
       before do
-        solr = Solr::QueryClient.new(collection: test_collection)
-        solr.delete_all
-        solr.commit
+        SolrTools.create_collection collection
+        solr = Solr::QueryClient.new(collection: collection)
         solr.add(docs: { id: '123', main_title_title_suggest: 'Test' })
         solr.commit
       end
+
+      after { SolrTools.delete_collection collection }
 
       it 'returns one suggestion based on the one indexed record' do
         expect(outcome).to be_success
@@ -89,16 +90,12 @@ describe BuildSuggestDictionary do
           collection: collection,
           suggester: Settings.suggester.handlers.title,
           dictionary: Settings.suggester.dictionaries.title,
-          build: true, query: 'T'
+          query: 'T'
         )
-        suggestions_resp = SolrTools.connection(
-          url: sug_url
-        ).get
+        suggestions_resp = SolrTools.connection(url: sug_url).get
         count = suggestions_resp.body['suggest']['title']['T']['numFound']
         expect(count).to eq 1
       end
-
-      it
     end
   end
 end
