@@ -1,5 +1,11 @@
 # Settings/Configuration shared among all environments.
 
+suggester:
+  handlers:
+    title: suggest
+  dictionaries:
+    title: title
+
 bootstrap_version: 5.3.8
 
 # Internal Services

@@ -42,6 +42,29 @@ Start a shell in the catalog-indexing container:
 docker exec -it catalog-indexing_catalog_indexing.1.{whatever} bash
 ```
 
+## Working with the Solr configuration
+
+### Indexing an arbitrary .tar.gz file
+
+You can index any GZip'd TAR file using the following task:
+
+```bash
+MARC_TAR_GZ_FILE_PATH=/full/path/to/file/in/container rake tools:index_file
+```
+
+The records will be run through the indexer and indexed to the collection defined in the `adhoc_target_collections` configuration.
+
+### Loading a new configset into the development Solr instance
+
+When making changes to the Solr configuration, it can be helpful to load a new configset into the running Solr instance.
+
+```bash
+rake tools:load_configset
+```
+
+You can then create a new collection using this configset.
+
+
 ## Working with `find`
 
 When [developing with find](https://gitlab.library.upenn.edu/dld/catalog/find#loading-data), you may need to generate a configset or some sample solr data from this app. Run these commands from the application container:

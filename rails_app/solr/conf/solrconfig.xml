@@ -428,6 +428,32 @@
     </lst>
   </requestHandler>
 
+  <searchComponent class="solr.SuggestComponent" name="titleSuggester">
+    <lst name="suggester">
+      <str name="name">title</str>
+      <str name="lookupImpl">BlendedInfixLookupFactory</str>
+      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+      <str name="field">main_title_title_suggest</str>
+      <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
+      <str name="weightField">title_suggest_weight_is</str>
+      <str name="minPrefixChars">4</str>
+      <str name="buildOnCommit">false</str>
+      <str name="contextField">access_facet</str>
+      <str name="payloadField">id</str>
+    </lst>
+  </searchComponent>
+
+  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy">
+    <lst name="defaults">
+      <str name="suggest">true</str>
+      <str name="suggest.dictionary">title</str>
+      <str name="suggest.count">10</str>
+    </lst>
+    <arr name="components">
+      <str>titleSuggester</str>
+    </arr>
+  </requestHandler>
+
   <requestHandler name="standard" class="solr.SearchHandler">
     <lst name="defaults">
       <str name="echoParams">explicit</str>
