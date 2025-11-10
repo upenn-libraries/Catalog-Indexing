@@ -2,11 +2,11 @@
 
 # Wrappers for Solr API calls
 class SolrTools
+  DEFAULT_CONNECTION_TIMEOUT_SECONDS = 60
+
   class CommandError < StandardError; end
 
   class << self
-    DEFAULT_CONNECTION_TIMEOUT_SECONDS = 60
-
     # @param url [String]
     # @param timeout [Integer]
     # @return [Faraday::Connection]
