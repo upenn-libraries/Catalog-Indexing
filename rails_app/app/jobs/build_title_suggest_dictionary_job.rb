@@ -4,7 +4,7 @@
 class BuildTitleSuggestDictionaryJob < TransactionJob
   sidekiq_options queue: 'high'
 
-  # @param [String] collection_name
+  # @param collection_name [String]
   def transaction(collection_name)
     BuildSuggestDictionary.new.call(
       collection: collection_name,
