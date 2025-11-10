@@ -1,5 +1,11 @@
 # Settings/Configuration shared among all environments.
 
+suggester:
+  handlers:
+    title: suggest
+  dictionaries:
+    title: title
+
 # Internal Services
 solr:
   user: <%= DockerSecrets.lookup(:solr_username) %>

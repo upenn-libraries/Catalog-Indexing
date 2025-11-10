@@ -2,12 +2,16 @@
 
 # Wrappers for Solr API calls
 class SolrTools
+  DEFAULT_CONNECTION_TIMEOUT_SECONDS = 60
+
   class CommandError < StandardError; end
 
   class << self
+    # @param url [String]
+    # @param timeout [Integer]
     # @return [Faraday::Connection]
-    def connection
-      Faraday.new(base_url) do |faraday|
+    def connection(url: base_url, timeout: DEFAULT_CONNECTION_TIMEOUT_SECONDS)
+      Faraday.new(url, request: { timeout: timeout }) do |faraday|
         faraday.request :authorization, :basic, Settings.solr.user, Settings.solr.password
         faraday.adapter :net_http
         # faraday.response :raise_error
@@ -44,6 +48,23 @@ class SolrTools
     # @return [String (frozen)]
     def collections_url
       "#{Settings.solr.url}/solr/admin/collections"
+    end
+
+    # Return a URI object for a solr suggester request
+    # @param collection [String]
+    # @param suggester [String]
+    # @param dictionary [String]
+    # @param build [Boolean]
+    # @param query [String, NilClass]
+    # @return [String]
+    def suggester_url(suggester:, dictionary:, collection: default_collection, build: false, query: nil)
+      solr_uri = URI(Settings.solr.url)
+      query_params = { 'suggest.dictionary': dictionary, 'suggest.build': build, q: query }
+      URI::Generic.build(
+        scheme: solr_uri.scheme, host: solr_uri.host, port: solr_uri.port,
+        path: "/solr/#{collection}/#{suggester}",
+        query: URI.encode_www_form(query_params.compact)
+      ).to_s
     end
 
     # @param [String] collection_name
