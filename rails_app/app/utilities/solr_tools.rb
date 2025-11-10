@@ -5,12 +5,12 @@ class SolrTools
   class CommandError < StandardError; end
 
   class << self
-    DEFAULT_CONNECTION_TIMEOUT_SEC = 60
+    DEFAULT_CONNECTION_TIMEOUT_SECONDS = 60
 
     # @param url [String]
     # @param timeout [Integer]
     # @return [Faraday::Connection]
-    def connection(url: base_url, timeout: DEFAULT_CONNECTION_TIMEOUT_SEC)
+    def connection(url: base_url, timeout: DEFAULT_CONNECTION_TIMEOUT_SECONDS)
       Faraday.new(url, request: { timeout: timeout }) do |faraday|
         faraday.request :authorization, :basic, Settings.solr.user, Settings.solr.password
         faraday.adapter :net_http
