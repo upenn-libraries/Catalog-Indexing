@@ -7,6 +7,8 @@ class BuildSuggestDictionary
   include Dry::Transaction(container: Container)
   include ActionView::Helpers::DateHelper
 
+  SUGGESTER_BUILD_TIMEOUT_SECONDS = 3600
+
   step :use_only_one_collection
   step :validate_collection, with: 'solr.validate_collections'
   step :validate_suggester_params
@@ -38,7 +40,7 @@ class BuildSuggestDictionary
   # @return [Dry::Monads::Result]
   def validate_suggester_params(collections:, dictionary:, suggester:, **args)
     collection = collections.first
-    unless collection && dictionary && suggester
+    unless collection.present? && dictionary.present? && suggester.present?
       return Failure(message: 'Collection, Suggester and Dictionary names must be provided')
     end
 
@@ -51,14 +53,14 @@ class BuildSuggestDictionary
   # @param dictionary [String] name of dictionary, as defined in solr config
   # @return [Dry::Monads::Result]
   def prepare_solr_suggester_build_url(collection:, suggester:, dictionary:, **args)
-    uri = SolrTools.suggester_url(collection: collection, suggester: suggester, dictionary: dictionary)
+    uri = SolrTools.suggester_url(collection: collection, suggester: suggester, dictionary: dictionary, build: true)
     Success(url: uri.to_s, **args)
   end
 
   # @param url [String] URL used to build the suggester
   # @param timeout [Integer] how long, in seconds, to wait for the HTTP request to complete
   # @return [Dry::Monads::Result]
-  def prepare_solr_connection(url:, timeout: 3600, **args)
+  def prepare_solr_connection(url:, timeout: SUGGESTER_BUILD_TIMEOUT_SECONDS, **args)
     connection = SolrTools.connection url: url, timeout: timeout
     Success(connection: connection, **args)
   end
