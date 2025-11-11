@@ -67,12 +67,6 @@ FROM ruby:${IMAGE_TAG} AS development
 ARG RUBY_MAJOR
 ENV RUBY_MAJOR=3.4.0
 
-ARG NODE_VERSION
-ENV NODE_VERSION=22
-
-ARG YARN_VERSION
-ENV YARN_VERSION=1.22.22
-
 ARG BUNDLE_HOME
 ENV BUNDLE_HOME=${BUNDLE_HOME}
 
@@ -99,18 +93,13 @@ RUN apt-get update && apt-get install -y \
       gosu \
       libpq-dev \
       libyaml-dev \
+      nodejs \
       procps \
       postgresql \
       postgresql-contrib && \
     addgroup app && useradd -m -d ${PROJECT_ROOT} -s /bin/bash -g app app && \
     mkdir -p ${PROJECT_ROOT}/tmp/pids && \
     rm -rf /var/lib/apt/lists/*
-
-# Install Node and Yarn
-RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - \
-  && apt-get update \
-  && apt-get install --yes --no-install-recommends nodejs \
-  && npm install -g yarn@$YARN_VERSION
 
 COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
 
@@ -140,12 +129,6 @@ FROM ruby:${IMAGE_TAG} AS production
 ARG RUBY_MAJOR
 ENV RUBY_MAJOR=3.4.0
 
-ARG NODE_VERSION
-ENV NODE_VERSION=22
-
-ARG YARN_VERSION
-ENV YARN_VERSION=1.22.22
-
 ARG BUNDLE_HOME
 ENV BUNDLE_HOME=${BUNDLE_HOME}
 
@@ -173,18 +156,13 @@ RUN apt-get update && apt-get install -y \
       gosu \
       libpq-dev \
       libyaml-dev \
+      nodejs \
       procps \
       postgresql \
       postgresql-contrib && \
     addgroup app && useradd -m -d ${PROJECT_ROOT} -s /bin/bash -g app app && \
     mkdir -p ${PROJECT_ROOT}/tmp/pids && \
     rm -rf /var/lib/apt/lists/*
-
-# Install Node and Yarn
-RUN curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - \
-  && apt-get update \
-  && apt-get install --yes --no-install-recommends nodejs \
-  && npm install -g yarn@$YARN_VERSION
 
 COPY --from=base ${PROJECT_ROOT}/docker-entrypoint.sh /usr/local/bin/
 
