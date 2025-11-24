@@ -3,7 +3,7 @@
 describe 'User show page' do
   let(:user) { create(:user) }
 
-  before { sign_in user }
+  before { login_as user }
 
   context 'when viewing user show page' do
     before { visit user_path(user) }

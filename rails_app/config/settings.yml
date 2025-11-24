@@ -6,6 +6,8 @@ suggester:
   dictionaries:
     title: title
 
+bootstrap_version: 5.3.8
+
 # Internal Services
 solr:
   user: <%= DockerSecrets.lookup(:solr_username) %>

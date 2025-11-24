@@ -38,7 +38,7 @@ Vagrant.configure('2') do |config|
   config.vm.box = if arm_architecture?
                     'bento/ubuntu-22.04-arm64'
                   else
-                    'ubuntu/focal64'
+                    'ubuntu/jammy64'
                   end
 
   # Install parallels plugin if user is on mac
