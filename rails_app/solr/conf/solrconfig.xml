@@ -284,11 +284,9 @@
 
       <str name="subject_qf">
         subject_unstem_search^250
-        subject_search^150
       </str>
       <str name="subject_pf">
         subject_unstem_search^250
-        subject_search^100
       </str>
 
       <str name="genre_qf">
