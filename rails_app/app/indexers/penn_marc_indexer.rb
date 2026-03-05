@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 # Traject Indexer for Penn's Alma MARC
 class PennMarcIndexer < Traject::Indexer
   configure do
@@ -95,7 +97,13 @@ class PennMarcIndexer < Traject::Indexer
 
   def suggest_fields
     define_field :main_title_title_suggest, :title_suggest
-    define_field :title_suggest_weight_is, :title_suggest_weight
+    # define_field :title_suggest_weight_is, :title_suggest_weight
+    to_field 'title_suggest_weight_is' do |record, acc|
+      score = parser.public_send :title_suggest_weight, record
+      # if record is in inverted betbets mapping (e.g., mms ID matches) boost this score a lot
+      score += 200 if configured_as_bestbet?(record)
+      acc << score
+    end
   end
 
   def date_fields
@@ -206,8 +214,24 @@ class PennMarcIndexer < Traject::Indexer
 
   # Determine if parsed date values are valid
   # @param [Time, nil] date
-  # @return [TrueClass, FalseClass]
+  # @return [Boolean]
   def valid_date?(date)
     date.is_a?(Time) && date&.year&.positive?
+  end
+
+  # @param record [MARC::Record]
+  # @return [Boolean]
+  def configured_as_bestbet?(record)
+    bestbet_ids.include?(parser.identifier_mmsid(record))
+  end
+
+  # @return [Array]
+  def bestbet_ids
+    @bestbet_ids ||= CSV.read(
+      Rails.root.join('solr', 'conf', 'best_bet_synonyms.txt'),
+      skip_lines: /^#/, skip_blanks: true, strip: true
+    ).map { |row| row[1] }.compact.uniq
+  rescue StandardError
+    []
   end
 end
