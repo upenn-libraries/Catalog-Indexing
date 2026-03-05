@@ -228,7 +228,7 @@ class PennMarcIndexer < Traject::Indexer
   # @return [Array]
   def bestbet_ids
     @bestbet_ids ||= CSV.read(
-      Rails.root.join('solr', 'conf', 'best_bet_synonyms.txt'),
+      Rails.root.join('solr/conf/best_bet_synonyms.txt'),
       skip_lines: /^#/, skip_blanks: true, strip: true
     ).map { |row| row[1] }.compact.uniq
   rescue StandardError
