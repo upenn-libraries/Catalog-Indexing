@@ -18,9 +18,9 @@ class AlmaExportsController < ApplicationController
   def show; end
 
   def destroy
-    # TODO: under what conditions should we allow #destroy? only if completed? this would end up destroying all child
-    #       BatchFiles, which could end up deleting files from local storage and/or SFTP server
     @alma_export.destroy
+
+    redirect_to alma_exports_path, alert: "Alma Export ##{@alma_export.id} removed"
   end
 
   private
