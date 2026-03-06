@@ -1,6 +1,7 @@
 variables:
   FF_SCRIPT_SECTIONS: "true"
   GIT_CLONE_PATH: "${CI_BUILDS_DIR}/${CI_PROJECT_NAME}/${CI_JOB_ID}"
+  # CI_DEBUG_SERVICES: "true"
 
 include:
   - project: "devops/gitlab/ci-templates/ruby"
@@ -177,7 +178,6 @@ rspec_app_test:
     - .rspec
   variables:
     APP_URL: "indexing.test.com"
-    #    CI_DEBUG_SERVICES: "true"
     CHROME_URL: "http://chrome:3000"
     DATABASE_NAME: "indexing_test"
     DATABASE_PASSWORD: "rspec_test"
