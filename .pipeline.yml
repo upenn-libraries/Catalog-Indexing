@@ -147,8 +147,6 @@ rspec_app_test:
         POSTGRES_DB: "catalog_indexing_test"
         POSTGRES_PASSWORD: "rspec_test"
         POSTGRES_USER: "rspec_test"
-    - name: browserless/chrome:latest
-      alias: redis
     - name: bitnami/solr:9.4.1
       alias: solr
       entrypoint: [""]
@@ -187,7 +185,6 @@ rspec_app_test:
     FF_NETWORK_PER_BUILD: "true"
     RAILS_ENV: "test"
     RAILS_SYSTEM_TESTING_SCREENSHOT_HTML: "1"
-    REDIS_URL: "redis:6379"
     SOLR_URL: "http://solr:8983"
   script:
     - >
