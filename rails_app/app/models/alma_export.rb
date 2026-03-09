@@ -40,6 +40,9 @@ class AlmaExport < ApplicationRecord
     AlmaExport.create! status: PENDING, alma_source: alma_source, job_identifier: job_id, full: false
   end
 
+  # Apply a given sort order or use the default
+  # @param field [String, Symbol, nil] attribute to sort by
+  # @param direction [String, Symbol, nil] direction of sort
   def self.apply_sort(field, direction)
     if field.present? && direction.present?
       order(field => direction)
