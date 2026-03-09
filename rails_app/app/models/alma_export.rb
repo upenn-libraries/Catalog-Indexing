@@ -21,9 +21,8 @@ class AlmaExport < ApplicationRecord
   validates :full, inclusion: [true, false]
   validates :job_identifier, presence: true
 
-  scope :filter_status, ->(status) { where(status: status) }
-  scope :filter_full, ->(full) { where(full: full == 'true') }
-  scope :filter_sort_by, ->(value, order) { order(value => order) }
+  scope :by_status, ->(status) { where(status: status) if status.present? }
+  scope :by_full, ->(full) { where(full: full == 'true') if full.present? }
 
   # Create and AlmaExport representing an Alma full publish
   # @param job_id [String]
@@ -39,6 +38,14 @@ class AlmaExport < ApplicationRecord
   # @return [AlmaExport]
   def self.create_incremental!(job_id:, alma_source: Sources::PRODUCTION)
     AlmaExport.create! status: PENDING, alma_source: alma_source, job_identifier: job_id, full: false
+  end
+
+  def self.apply_sort(field, direction)
+    if field.present? && direction.present?
+      order(field => direction)
+    else
+      order(id: :desc)
+    end
   end
 
   # "Process" the AlmaExport by passing it to the Job or Transaction
