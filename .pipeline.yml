@@ -1,7 +1,7 @@
 variables:
   FF_SCRIPT_SECTIONS: "true"
   GIT_CLONE_PATH: "${CI_BUILDS_DIR}/${CI_PROJECT_NAME}/${CI_JOB_ID}"
-  # CI_DEBUG_SERVICES: "true"
+  CI_DEBUG_SERVICES: "true"
 
 include:
   - project: "devops/gitlab/ci-templates/ruby"
@@ -161,8 +161,9 @@ rspec_app_test:
           sleep '10s'; \n
         done \n
         ./opt/bitnami/solr/bin/solr create_collection -d ${CI_PROJECT_DIR}/rails_app/solr/conf -c ${SOLR_TEST_COLLECTION} -n ${SOLR_TEST_CONFIGNAME} \n
+        wait
         for ((i = 0; i <= 9; i += 1)); do \n
-          curl --silent http://solr:8983/solr/${SOLR_TEST_COLLECTION}/admin/ping && break; \n
+          curl http://solr:8983/solr/${SOLR_TEST_COLLECTION}/admin/ping && break; \n
           echo 'Waiting for test collection to be ready'; \n
           sleep '10s'; \n
         done \n
