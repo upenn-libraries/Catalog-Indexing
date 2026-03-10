@@ -22,7 +22,7 @@ class AlmaExport < ApplicationRecord
   validates :job_identifier, presence: true
 
   scope :by_status, ->(status) { where(status: status) if status.present? }
-  scope :by_full, ->(full) { where(full: full == 'true') if full.present? }
+  scope :by_full, ->(full) { where(full: ActiveModel::Type::Boolean.new.cast(full)) if full.present? }
 
   # Create and AlmaExport representing an Alma full publish
   # @param job_id [String]
