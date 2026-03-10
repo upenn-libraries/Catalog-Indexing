@@ -35,6 +35,6 @@ class AlmaExportsController < ApplicationController
   end
 
   def sort_direction
-    filter('sort_order') if filter('sort_order')&.in?(FilterHelper::SORT_DIRECTIONS.map { |dir| dir[1] })
+    filter('sort_order') if filter('sort_order')&.in?(FilterHelper::SORT_DIRECTIONS.values)
   end
 end

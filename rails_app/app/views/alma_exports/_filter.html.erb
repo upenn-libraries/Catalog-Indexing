@@ -24,7 +24,7 @@
       </div>
       <div class="col-lg-2">
         <%= form.select 'filter[sort_order]',
-                        options_for_select(FilterHelper::SORT_DIRECTIONS, selected: params.dig('filter', 'sort_order')),
+                        options_for_select(FilterHelper::SORT_DIRECTIONS.to_a, selected: params.dig('filter', 'sort_order')),
                         include_blank: true,
                         label: 'Order'
         %>
