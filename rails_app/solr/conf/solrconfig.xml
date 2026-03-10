@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE config [ <!ENTITY keyword_config SYSTEM "solrconfig/keyword_config.xml"> ]>
+<!DOCTYPE config [
+        <!ENTITY keyword_config SYSTEM "solrconfig/keyword_config.xml">
+        <!ENTITY advanced_search_config SYSTEM "solrconfig/advanced_search_config.xml">
+]>
 
 <config>
   <!-- NOTE: various comments and unused configuration possibilities have been purged
@@ -123,11 +126,14 @@
 
       <!-- determine which parameters to return with the responses. "explicit" means only return the parameters
            explicitly sent with the request, not any added by solr processing -->
-      <str name="echoParams">all</str>
+      <str name="echoParams">explicit</str>
 
-      <!-- "alternate" query - or, default query if the query is blank. here, we configure a blank query to return all
+      <!-- "alternate" query - or, default query if the query is blank when using edismax query parser. here, we configure a blank query to return all
            documents -->
       <str name="q.alt">*:*</str>
+      <!-- default query, if the query is blank, when using lucene query parser for advanced search. here, we configure
+      a blank query to return all documents -->
+      <str name="q">*:*</str>
 
       <!-- make all clauses mandatory unless boolean operators specified.
            when q.op is "AND", mm defaults to 100%. see solr docs for more on the mm param:
@@ -141,283 +147,15 @@
       <int name="ps">1</int>
       <float name="tie">0.01</float>
 
-      <!-- import qf/pf -->
+      <!-- import keyword search qf/pf -->
       &keyword_config;
+      <!-- import advanced search fields qf/pf -->
+      &advanced_search_config;
 
       <!-- "fl" is the "field list" param. simply it is the fields to return in the response -->
       <str name="fl">
         *,
         score
-      </str>
-
-      <str name="facet">true</str>
-      <str name="facet.mincount">1</str>
-      <str name="facet.limit">10</str>
-    </lst>
-  </requestHandler>
-
-  <requestHandler name="/advanced" class="solr.SearchHandler">
-    <!-- a lucene request handler for using the JSON Query DSL,
-         specifically for advanced search.
-         Using a separate requestHandler is a workaround to
-         https://issues.apache.org/jira/browse/SOLR-16916, although
-         it could be desirable for other reasons as well.
-      -->
-    <lst name="defaults">
-      <str name="defType">lucene</str>
-      <str name="echoParams">explicit</str>
-      <str name="df">marcxml_marcxml</str>
-      <str name="q.op">AND</str>
-
-      <str name="fl">
-        *,
-        score
-      </str>
-
-      <!-- import qf/pf -->
-      &keyword_config;
-
-      <str name="title_qf">
-        mmsid^1000000
-        title_anchored_search^8000
-        title_unstem_search^500
-        title_search^250
-        title_aux_anchored_search^5000
-        title_aux_unstem_search^400
-        title_aux_search^200
-        series_anchored_search^100
-        series_unstem_search^70
-        series_search^50
-      </str>
-      <str name="title_pf">
-        title_anchored_search^8000
-        title_unstem_search^500
-        title_search^250
-        title_aux_anchored_search^5000
-        title_aux_unstem_search^400
-        title_aux_search^200
-        series_anchored_search^100
-        series_unstem_search^70
-        series_search^50
-      </str>
-      <str name="title_pf2">
-        title_anchored_search^10000
-        title_unstem_search^800
-        title_search^600
-        title_aux_anchored_search^7000
-        title_aux_unstem_search^750
-        title_aux_search^400
-        series_anchored_search^200
-        series_unstem_search^100
-        series_search^80
-      </str>
-      <str name="title_pf3">
-        title_anchored_search^15000
-        title_unstem_search^1200
-        title_search^750
-        title_aux_anchored_search^10000
-        title_aux_unstem_search^250
-        title_aux_search^200
-        series_anchored_search^300
-        series_unstem_search^150
-        series_search^100
-      </str>
-
-      <str name="journal_title_qf">
-        mmsid^1000000
-        journal_title_anchored_search^7500
-        journal_title_unstem_search^300
-        journal_title_search^200
-        journal_title_aux_anchored_search^6000
-        journal_title_aux_unstem_search^250
-        journal_title_search^150
-      </str>
-      <str name="journal_title_pf">
-        journal_title_anchored_search^7500
-        journal_title_unstem_search^300
-        journal_title_search^200
-        journal_title_aux_anchored_search^6000
-        journal_title_aux_unstem_search^250
-        journal_title_search^150
-      </str>
-      <str name="journal_title_pf2">
-        journal_title_anchored_search^10000
-        journal_title_unstem_search^600
-        journal_title_search^400
-        journal_title_aux_anchored_search^9000
-        journal_title_aux_unstem_search^500
-        journal_title_search^250
-      </str>
-      <str name="journal_title_pf3">
-        journal_title_anchored_search^12500
-        journal_title_unstem_search^900
-        journal_title_search^600
-        journal_title_aux_anchored_search^10000
-        journal_title_aux_unstem_search^650
-        journal_title_search^350
-      </str>
-
-      <str name="creator_qf">
-        creator_unstem_search^700
-        creator_aux_unstem_search^500
-        conference_unstem_search^500
-        conference_search^400
-      </str>
-      <str name="creator_pf">
-        creator_unstem_search^750
-        creator_aux_unstem_search^550
-        conference_unstem_search^550
-        conference_search^450
-      </str>
-      <str name="creator_pf2">
-        creator_unstem_search^900
-        creator_aux_unstem_search^650
-        conference_unstem_search^650
-        conference_search^700
-      </str>
-      <str name="creator_pf3">
-        creator_unstem_search^1100
-        creator_aux_unstem_search^800
-        conference_unstem_search^800
-        conference_search^750
-      </str>
-
-      <str name="subject_qf">
-        subject_unstem_search^250
-      </str>
-      <str name="subject_pf">
-        subject_unstem_search^250
-      </str>
-
-      <str name="genre_qf">
-        genre_unstem_search^250
-        genre_search^150
-      </str>
-      <str name="genre_pf">
-        genre_unstem_search^250
-        genre_search^100
-      </str>
-
-      <str name="isxn_qf">
-        isxn_search
-      </str>
-      <str name="isxn_pf">
-        isxn_search
-      </str>
-
-      <str name="oclc_id_qf">
-        oclc_id_ss
-      </str>
-      <str name="oclc_id_pf">
-        oclc_id_ss
-      </str>
-
-      <str name="publication_date_qf">
-        publication_date_s
-      </str>
-      <str name="publication_date_pf">
-        publication_date_s
-      </str>
-
-      <str name="publisher_qf">
-        publisher_unstem_search
-      </str>
-      <str name="publisher_pf">
-        publisher_unstem_search
-      </str>
-
-      <str name="series_qf">
-        series_anchored_search^700
-        series_unstem_search^250
-        series_search^150
-      </str>
-      <str name="series_pf">
-        series_anchored_search^700
-        series_unstem_search^200
-        series_search^100
-      </str>
-      <str name="series_pf2">
-        series_anchored_search^900
-        series_unstem_search^400
-        series_search^200
-      </str>
-      <str name="series_pf3">
-        series_anchored_search^1100
-        series_unstem_search^500
-        series_search^250
-      </str>
-
-      <str name="language_qf">
-        language_facet^300
-        language_search^100
-      </str>
-      <str name="language_pf">
-        language_facet^300
-        language_search^100
-      </str>
-
-      <str name="place_of_publication_qf">
-        place_of_publication_unstem_search
-      </str>
-      <str name="place_of_publication_pf">
-        place_of_publication_unstem_search
-      </str>
-
-      <str name="publisher_number_qf">
-        publisher_number_search
-      </str>
-      <str name="publisher_number_pf">
-        publisher_number_search
-      </str>
-
-      <str name="contents_note_qf">
-        contents_note_unstem_search^250
-        contents_note_search^150
-      </str>
-      <str name="contents_note_pf">
-        contents_note_unstem_search^250
-        contents_note_search^100
-      </str>
-      <str name="contents_note_pf2">
-        contents_note_unstem_search^450
-        contents_note_search^150
-      </str>
-      <str name="contents_note_pf3">
-        contents_note_unstem_search^750
-        contents_note_search^200
-      </str>
-
-      <str name="conference_qf">
-        conference_unstem_search^250
-        conference_search^150
-      </str>
-      <str name="conference_pf">
-        conference_unstem_search^250
-        conference_search^100
-      </str>
-      <str name="conference_pf2">
-        conference_unstem_search^450
-        conference_search^150
-      </str>
-      <str name="conference_pf3">
-        conference_unstem_search^700
-        conference_search^200
-      </str>
-
-      <str name="corporate_author_qf">
-        corporate_author_unstem_search
-      </str>
-      <str name="corporate_author_pf">
-        corporate_author_unstem_search
-      </str>
-
-      <str name="call_number_qf">
-        call_number^1000
-        call_number_callnum_search^500
-      </str>
-      <str name="call_number_pf">
-        call_number^1000
-        call_number_callnum_search^500
       </str>
 
       <str name="facet">true</str>
