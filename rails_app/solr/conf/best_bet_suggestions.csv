@@ -1,2 +1,128 @@
-nyt	1	{"disp": "The New York Times (Online)", "id": "12345"}
-philadelphia inquirer	1	{"disp": "The Philadelphia Inquirer (Online)", "id": "98765"}
+ancestry	1	{"disp": "Ancestry Library Edition", "id": "9942524713503681"}
+ancestry.com	1	{"disp": "Ancestry Library Edition", "id": "9942524713503681"}
+ancestry library	1	{"disp": "Ancestry Library Edition", "id": "9942524713503681"}
+ancestrylibrary.com	1	{"disp": "Ancestry Library Edition", "id": "9942524713503681"}
+
+
+atlantic	1	{"disp": "The Atlantic (online)", "id": "9979746730903681"}
+atlantic monthly	1	{"disp": "The Atlantic (online)", "id": "9979746730903681"}
+the atlantic	1	{"disp": "The Atlantic (online)", "id": "9979746730903681"}
+the atlantic monthly	1	{"disp": "The Atlantic (online)", "id": "9979746730903681"}
+
+
+bloomberg.com	1	{"disp": "Bloomberg.com (online)", "id": "9979042919703681"}
+bloomberg	1	{"disp": "Bloomberg.com (online)", "id": "9979042919703681"}
+bloomberg business news	1	{"disp": "Bloomberg.com (online)", "id": "9979042919703681"}
+
+
+boston globe	1	{"disp": "The Boston globe (online)", "id": "9977052218603681"}
+the boston globe	1	{"disp": "The Boston globe (online)", "id": "9977052218603681"}
+
+
+che	1	{"disp": "The chronicle of higher education (online)", "id": "9977047066603681"}
+chronicle of higher ed	1	{"disp": "The chronicle of higher education (online)", "id": "9977047066603681"}
+chronicle of higher education	1	{"disp": "The chronicle of higher education (online)", "id": "9977047066603681"}
+the chronicle of higher education	1	{"disp": "The chronicle of higher education (online)", "id": "9977047066603681"}
+the chronicle	1	{"disp": "The chronicle of higher education (online)", "id": "9977047066603681"}
+
+
+economist	1	{"disp": "The Economist (online)", "id": "9977048907203681"}
+the economist	1	{"disp": "The Economist (online)", "id": "9977048907203681"}
+economist.com	1	{"disp": "The Economist (online)", "id": "9977048907203681"}
+
+
+ft	1	{"disp": "Financial times (online)", "id": "9977716953103681"}
+ft.com	1	{"disp": "Financial times (online)", "id": "9977716953103681"}
+financial times	1	{"disp": "Financial times (online)", "id": "9977716953103681"}
+the financial times	1	{"disp": "Financial times (online)", "id": "9977716953103681"}
+
+
+foreign policy	1	{"disp": "Foreign policy (online journal)", "id": "9977047121303681"}
+foriegn policy	1	{"disp": "Foreign policy (online journal)", "id": "9977047121303681"}
+
+
+harpers	1	{"disp": "Harper's magazine (online)", "id": "9979750733103681"}
+harpers weekly	1	{"disp": "Harper's magazine (online)", "id": "9979750733103681"}
+harper's	1	{"disp": "Harper's magazine (online)", "id": "9979750733103681"}
+harper's weekly	1	{"disp": "Harper's magazine (online)", "id": "9979750733103681"}
+harper's new monthly magazine	1	{"disp": "Harper's magazine (online)", "id": "9979750733103681"}
+harper's monthly magazine	1	{"disp": "Harper's magazine (online)", "id": "9979750733103681"}
+
+
+hoovers	1	{"disp": "Hoovers (online)", "id": "9926082903503681"}
+hoover's	1	{"disp": "Hoovers (online)", "id": "9926082903503681"}
+
+
+journal of finance	1	{"disp": "The journal of finance (online journal)", "id": "9977051513103681"}
+the journal of finance	1	{"disp": "The journal of finance (online journal)", "id": "9977051513103681"}
+
+
+lancet	1	{"disp": "The lancet (online journal)", "id": "9977122357103681"}
+the lancet	1	{"disp": "The lancet (online journal)", "id": "9977122357103681"}
+
+
+new england journal of medicine	1	{"disp": "The New England journal of medicine (online journal)", "id": "9977077739703681"}
+the new england journal of medicine	1	{"disp": "The New England journal of medicine (online journal)", "id": "9977077739703681"}
+nejm	1	{"disp": "The New England journal of medicine (online journal)", "id": "9977077739703681"}
+
+
+new york review of books	1	{"disp": "The New York review of books (online)", "id": "9977123606003681"}
+ny review of books	1	{"disp": "The New York review of books (online)", "id": "9977123606003681"}
+the new york review of books	1	{"disp": "The New York review of books (online)", "id": "9977123606003681"}
+the ny review of books	1	{"disp": "The New York review of books (online)", "id": "9977123606003681"}
+
+
+new york times	1	{"disp": "The New York Times (online)", "id": "9977568423203681"}
+the new york times	1	{"disp": "The New York Times (online)", "id": "9977568423203681"}
+nyt	1	{"disp": "The New York Times (online)", "id": "9977568423203681"}
+the times	1	{"disp": "The New York Times (online)", "id": "9977568423203681"}
+ny times	1	{"disp": "The New York Times (online)", "id": "9977568423203681"}
+
+
+new yorker	1	{"disp": "The New Yorker (online)", "id": "9977047445803681"}
+the new yorker	1	{"disp": "The New Yorker (online)", "id": "9977047445803681"}
+
+
+oed	1	{"disp": "OED: Oxford English Dictionary (online)", "id": "9927543263503681"}
+oxford english dictionary	1	{"disp": "OED: Oxford English Dictionary (online)", "id": "9927543263503681"}
+the oed	1	{"disp": "OED: Oxford English Dictionary (online)", "id": "9927543263503681"}
+the oxford english dictionary	1	{"disp": "OED: Oxford English Dictionary (online)", "id": "9927543263503681"}
+
+
+philadelphia inquirer	1	{"disp": "The Philadelphia inquirer (online)", "id": "9977047865203681"}
+inquirer	1	{"disp": "The Philadelphia inquirer (online)", "id": "9977047865203681"}
+the philadelphia inquirer	1	{"disp": "The Philadelphia inquirer (online)", "id": "9977047865203681"}
+the inquirer	1	{"disp": "The Philadelphia inquirer (online)", "id": "9977047865203681"}
+
+
+wall street journal	1	{"disp": "The Wall Street journal (online)", "id": "9977048989703681"}
+wsj	1	{"disp": "The Wall Street journal (online)", "id": "9977048989703681"}
+the wall street journal	1	{"disp": "The Wall Street journal (online)", "id": "9977048989703681"}
+the wsj	1	{"disp": "The Wall Street journal (online)", "id": "9977048989703681"}
+
+
+washington post	1	{"disp": "The Washington post (online)", "id": "9977047750803681"}
+the washington post	1	{"disp": "The Washington post (online)", "id": "9977047750803681"}
+washingtonpost.com	1	{"disp": "The Washington post (online)", "id": "9977047750803681"}
+
+
+anesthesiology	1	{"disp": "Anesthesiology (online journal)", "id": "9977108105603681"}
+blood	1	{"disp": "Blood (online journal)", "id": "9977115591903681"}
+cell	1	{"disp": "Cell (online journal)", "id": "9977061241403681"}
+eric	1	{"disp": "ERIC: Education Resources Information Center (online)", "id": "9921999873503681"}
+journal of neuroscience	1	{"disp": "The journal of neuroscience (online journal)", "id": "9977044664903681"}
+jstor	1	{"disp": "JSTOR database (online)", "id": "9979752131703681"}
+knovel	1	{"disp": "Knovel (online)", "id": "9932015393503681"}
+medline	1	{"disp": "MEDLINE (online)", "id": "9918247503503681"}
+national review	1	{"disp": "National review (online)", "id": "9977047114403681"}
+le monde	1	{"disp": "Le monde (online)", "id": "9977047827603681"}
+nature	1	{"disp": "Nature (online journal)", "id": "9977047322103681"}
+nexis uni	1	{"disp": "Nexis Uni (online)", "id": "9977170353703681"}
+pitchbook	1	{"disp": "PitchBook (online)", "id": "9977497628803681"}
+pnas	1	{"disp": "Proceedings of the National Academy of Sciences (US) (online journal)", "id": "9977043505303681"}
+pubmed	1	{"disp": "PubMed (online)", "id": "9941483183503681"}
+science	1	{"disp": "Science (online journal)", "id": "9977049253003681"}
+scopus	1	{"disp": "Scopus (online)", "id": "9943162163503681"}
+statista	1	{"disp": "Statista (online)", "id": "9957467153503681"}
+web of science	1	{"disp": "ISI web of science (online)", "id": "9922023643503681"}
+worldcat	1	{"disp": "WorldCat (online)", "id": "9919491523503681"}
