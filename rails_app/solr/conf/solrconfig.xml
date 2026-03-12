@@ -131,9 +131,6 @@
       <!-- "alternate" query - or, default query if the query is blank when using edismax query parser. here, we configure a blank query to return all
            documents -->
       <str name="q.alt">*:*</str>
-      <!-- default query, if the query is blank, when using lucene query parser for advanced search. here, we configure
-      a blank query to return all documents -->
-      <str name="q">*:*</str>
 
       <!-- make all clauses mandatory unless boolean operators specified.
            when q.op is "AND", mm defaults to 100%. see solr docs for more on the mm param:
@@ -146,6 +143,11 @@
       <!-- "phrase slop" distance between tokens for a match in phrase query -->
       <int name="ps">1</int>
       <float name="tie">0.01</float>
+
+      <!-- when using lucene query parser -->
+      <str name="df">marcxml_marcxml</str>
+      <!-- here, we configure a default query to return all documents -->
+      <str name="q">*:*</str>
 
       <!-- import keyword search qf/pf -->
       &keyword_config;
