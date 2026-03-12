@@ -23,10 +23,10 @@ module BatchCallbacks
     def on_complete(status, alma_export_id)
       alma_export = AlmaExport.find(alma_export_id)
       SendSlackNotificationJob.perform_async("AlmaExport ##{alma_export.id}: All jobs executed.")
-      return unless status.failure_jids.any?
+      return unless status.failed_jids.any?
 
       SendSlackNotificationJob.perform_async(
-        "AlmaExport ##{alma_export.id}: Job Failures: ```#{status.failure_jids}```"
+        "AlmaExport ##{alma_export.id}: Job Failures: ```#{status.failed_jids}```"
       )
     end
   end
