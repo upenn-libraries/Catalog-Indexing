@@ -4,6 +4,8 @@ require 'csv'
 
 # Traject Indexer for Penn's Alma MARC
 class PennMarcIndexer < Traject::Indexer
+  BESTBETS_FILE_PATH = 'solr/conf/best_bet_synonyms.txt'
+
   configure do
     define_all_fields
   end
@@ -97,10 +99,8 @@ class PennMarcIndexer < Traject::Indexer
 
   def suggest_fields
     define_field :main_title_title_suggest, :title_suggest
-    # define_field :title_suggest_weight_is, :title_suggest_weight
     to_field 'title_suggest_weight_is' do |record, acc|
       score = parser.public_send :title_suggest_weight, record
-      # if record is in inverted betbets mapping (e.g., mms ID matches) boost this score a lot
       score += 200 if configured_as_bestbet?(record)
       acc << score
     end
@@ -205,7 +205,6 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   # Encode a field as JSON
-  # @todo implement Oj gem for speedup as needed
   # @param [Object] value
   # @return [String]
   def json_encode(value)
@@ -219,16 +218,19 @@ class PennMarcIndexer < Traject::Indexer
     date.is_a?(Time) && date&.year&.positive?
   end
 
+  # Is the record's identifier included in the bestbets file?
   # @param record [MARC::Record]
   # @return [Boolean]
   def configured_as_bestbet?(record)
     bestbet_ids.include?(parser.identifier_mmsid(record))
   end
 
+
+  # Parse and memoize an Array of "bet bet" record IDs from the configuration file used by Solr
   # @return [Array]
   def bestbet_ids
     @bestbet_ids ||= CSV.read(
-      Rails.root.join('solr/conf/best_bet_synonyms.txt'),
+      Rails.root.join(BESTBETS_FILE_PATH),
       skip_lines: /^#/, skip_blanks: true, strip: true
     ).map { |row| row[1] }.compact.uniq
   rescue StandardError
