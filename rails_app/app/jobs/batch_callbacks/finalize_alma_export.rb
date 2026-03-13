@@ -26,7 +26,7 @@ module BatchCallbacks
       return unless status.failed_jids.any?
 
       SendSlackNotificationJob.perform_async(
-        "AlmaExport ##{alma_export.id}: Job Failures: ```#{status.failed_jids}```"
+        "AlmaExport ##{alma_export.id}: Job Failure IDs: ```#{status.failed_jids}```"
       )
     end
   end
