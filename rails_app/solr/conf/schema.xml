@@ -534,7 +534,6 @@
     </analyzer>
     <analyzer type="query">
       <tokenizer class="solr.WhitespaceTokenizerFactory" />
-      <filter class="solr.SynonymGraphFilterFactory" synonyms="best_bet_synonyms.txt" ignoreCase="true" expand="true"/>
       <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
     </analyzer>
   </fieldtype>
