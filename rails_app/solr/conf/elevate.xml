@@ -24,19 +24,135 @@
 
 -->
 <elevate>
- <!-- Query elevation examples
-  <query text="foo bar">
-    <doc id="1" />
-    <doc id="2" />
-    <doc id="3" />
-  </query>
+  <!-- Ancestry -->
+  <query text="ancestry"><doc id="9942524713503681"/></query>
+  <query text="ancestry.com"><doc id="9942524713503681"/></query>
+  <query text="ancestry library"><doc id="9942524713503681"/></query>
+  <query text="ancestrylibrary.com"><doc id="9942524713503681"/></query>
 
-for use with techproducts example
+    <!-- The Atlantic -->
+  <query text="atlantic"><doc id="9979746730903681"/></query>
+  <query text="atlantic monthly"><doc id="9979746730903681"/></query>
+  <query text="the atlantic"><doc id="9979746730903681"/></query>
+  <query text="the atlantic monthly"><doc id="9979746730903681"/></query>
 
-  <query text="ipod">
-    <doc id="MA147LL/A" />  put the actual ipod at the top
-    <doc id="IW-02" exclude="true" /> exclude this cable
-  </query>
--->
+    <!-- Bloomberg -->
+  <query text="bloomberg.com"><doc id="9979042919703681"/></query>
+  <query text="bloomberg"><doc id="9979042919703681"/></query>
+  <query text="bloomberg business news"><doc id="9979042919703681"/></query>
 
+  <!-- The Boston Globe -->
+  <query text="boston globe"><doc id="9977052218603681"/></query>
+  <query text="the boston globe"><doc id="9977052218603681"/></query>
+
+    <!-- The Chronicle of Higher Education -->
+  <query text="che"><doc id="9977047066603681"/></query>
+  <query text="chronicle of higher ed"><doc id="9977047066603681"/></query>
+  <query text="chronicle of higher education"><doc id="9977047066603681"/></query>
+  <query text="the chronicle of higher education"><doc id="9977047066603681"/></query>
+  <query text="the chronicle"><doc id="9977047066603681"/></query>
+
+    <!-- The Economist -->
+  <query text="economist"><doc id="9977048907203681"/></query>
+  <query text="the economist"><doc id="9977048907203681"/></query>
+  <query text="economist.com"><doc id="9977048907203681"/></query>
+
+    <!-- The Financial Times -->
+  <query text="ft"><doc id="9977716953103681"/></query>
+  <query text="ft.com"><doc id="9977716953103681"/></query>
+  <query text="financial times"><doc id="9977716953103681"/></query>
+  <query text="the financial times"><doc id="9977716953103681"/></query>
+
+    <!-- Foreign Policy -->
+  <query text="foreign policy"><doc id="9977047121303681"/></query>
+  <query text="foriegn policy"><doc id="9977047121303681"/></query>
+
+    <!-- Harper's -->
+  <query text="harpers"><doc id="9979750733103681"/></query>
+  <query text="harpers weekly"><doc id="9979750733103681"/></query>
+  <query text="harper's"><doc id="9979750733103681"/></query>
+  <query text="harper's weekly"><doc id="9979750733103681"/></query>
+  <query text="harper's new monthly magazine"><doc id="9979750733103681"/></query>
+  <query text="harper's monthly magazine"><doc id="9979750733103681"/></query>
+
+    <!-- Hoover's -->
+  <query text="hoovers"><doc id="9926082903503681"/></query>
+  <query text="hoover's"><doc id="9926082903503681"/></query>
+
+    <!-- Journal of Finance -->
+  <query text="journal of finance"><doc id="9977051513103681"/></query>
+  <query text="the journal of finance"><doc id="9977051513103681"/></query>
+
+    <!-- The Lancet -->
+  <query text="lancet"><doc id="9977122357103681"/></query>
+  <query text="the lancet"><doc id="9977122357103681"/></query>
+
+    <!-- New England Journal of Medicine -->
+  <query text="new england journal of medicine"><doc id="9977077739703681"/></query>
+  <query text="the new england journal of medicine"><doc id="9977077739703681"/></query>
+  <query text="nejm"><doc id="9977077739703681"/></query>
+
+    <!-- New York Review of Books -->
+  <query text="new york review of books"><doc id="9977123606003681"/></query>
+  <query text="ny review of books"><doc id="9977123606003681"/></query>
+  <query text="the new york review of books"><doc id="9977123606003681"/></query>
+  <query text="the ny review of books"><doc id="9977123606003681"/></query>
+
+    <!-- The New York Times -->
+  <query text="new york times"><doc id="9977568423203681"/></query>
+  <query text="the new york times"><doc id="9977568423203681"/></query>
+  <query text="nyt"><doc id="9977568423203681"/></query>
+  <query text="the times"><doc id="9977568423203681"/></query>
+  <query text="ny times"><doc id="9977568423203681"/></query>
+
+    <!-- The New Yorker -->
+  <query text="new yorker"><doc id="9977047445803681"/></query>
+  <query text="the new yorker"><doc id="9977047445803681"/></query>
+
+    <!-- The Oxford English Dictionary -->
+  <query text="oed"><doc id="9927543263503681"/></query>
+  <query text="oxford english dictionary"><doc id="9927543263503681"/></query>
+  <query text="the oed"><doc id="9927543263503681"/></query>
+  <query text="the oxford english dictionary"><doc id="9927543263503681"/></query>
+
+    <!-- The Philadelphia Inquirer -->
+  <query text="philadelphia inquirer"><doc id="9977047865203681"/></query>
+  <query text="inquirer"><doc id="9977047865203681"/></query>
+  <query text="the philadelphia inquirer"><doc id="9977047865203681"/></query>
+  <query text="the inquirer"><doc id="9977047865203681"/></query>
+
+    <!-- The Wall Street Journal -->
+  <query text="wall street journal"><doc id="9977048989703681"/></query>
+  <query text="wsj"><doc id="9977048989703681"/></query>
+  <query text="the wall street journal"><doc id="9977048989703681"/></query>
+  <query text="the wsj"><doc id="9977048989703681"/></query>
+
+    <!-- The Washington Post -->
+  <query text="washington post"><doc id="9977047750803681"/></query>
+  <query text="the washington post"><doc id="9977047750803681"/></query>
+  <query text="washingtonpost.com"><doc id="9977047750803681"/></query>
+
+    <!-- Others -->
+  <query text="anesthesiology"><doc id="9977108105603681"/></query>
+  <query text="blood"><doc id="9977115591903681"/></query>
+  <query text="cell"><doc id="9977061241403681"/></query>
+  <query text="dynamed"><doc id="9949405903503681"/></query>
+  <query text="eric"><doc id="9921999873503681"/></query>
+  <query text="journal of neuroscience"><doc id="9977044664903681"/></query>
+  <query text="jstor"><doc id="9979752131703681"/></query>
+  <query text="knovel"><doc id="9932015393503681"/></query>
+  <query text="medline"><doc id="9918247503503681"/></query>
+  <query text="national review"><doc id="9977047114403681"/></query>
+  <query text="le monde"><doc id="9977047827603681"/></query>
+  <query text="nature"><doc id="9977047322103681"/></query>
+  <query text="nexis uni"><doc id="9977170353703681"/></query>
+  <query text="pitchbook"><doc id="9977497628803681"/></query>
+  <query text="pnas"><doc id="9977043505303681"/></query>
+  <query text="pubmed"><doc id="9941483183503681"/></query>
+  <query text="science"><doc id="9977049253003681"/></query>
+  <query text="scopus"><doc id="9943162163503681"/></query>
+  <query text="statista"><doc id="9957467153503681"/></query>
+  <query text="syria"><doc id="99311773503681"/></query>
+  <query text="web of science"><doc id="9922023643503681"/></query>
+  <query text="worldcat"><doc id="9919491523503681"/></query>
 </elevate>

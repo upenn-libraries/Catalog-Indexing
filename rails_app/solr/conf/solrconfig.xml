@@ -164,6 +164,10 @@
       <str name="facet.mincount">1</str>
       <str name="facet.limit">10</str>
     </lst>
+
+    <arr name="last-components">
+      <str>queryElevator</str>
+    </arr>
   </requestHandler>
 
   <requestHandler name="/advanced" class="solr.SearchHandler">
@@ -198,8 +202,16 @@ a blank query to return all documents -->
       <str name="facet.mincount">1</str>
       <str name="facet.limit">10</str>
     </lst>
+
+    <arr name="last-components">
+      <str>queryElevator</str>
+    </arr>
   </requestHandler>
 
+  <searchComponent name="queryElevator" class="solr.QueryElevationComponent">
+    <str name="queryFieldType">title_suggest_text</str>
+    <str name="config-file">elevate.xml</str>
+  </searchComponent>
 
   <searchComponent class="solr.SuggestComponent" name="titleSuggester">
     <lst name="suggester">
