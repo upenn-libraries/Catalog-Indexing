@@ -225,7 +225,6 @@ class PennMarcIndexer < Traject::Indexer
     bestbet_ids.include?(parser.identifier_mmsid(record))
   end
 
-
   # Parse and memoize an Array of "bet bet" record IDs from the configuration file used by Solr
   # @return [Array]
   def bestbet_ids
