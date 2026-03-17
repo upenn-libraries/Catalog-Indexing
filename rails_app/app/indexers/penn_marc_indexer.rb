@@ -223,6 +223,6 @@ class PennMarcIndexer < Traject::Indexer
   # Memoize the best bet configuration as a hash
   # @return [Hash]
   def bestbet_mapping
-    @bestbet_ids || YAML.safe_load(File.read(Rails.root.join(BESTBET_FILE_PATH)))
+    @bestbet_mapping ||= YAML.safe_load(File.read(Rails.root.join(BESTBET_FILE_PATH)))
   end
 end
