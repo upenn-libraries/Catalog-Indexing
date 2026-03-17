@@ -4,7 +4,8 @@ require 'csv'
 
 # Traject Indexer for Penn's Alma MARC
 class PennMarcIndexer < Traject::Indexer
-  BESTBETS_FILE_PATH = 'solr/conf/best_bet_synonyms.txt'
+  BESTBET_FILE_PATH = 'solr/conf/best_bet_synonyms.txt'
+  BESTBET_SUGGESTION_WEIGHT_BOOST = 200
 
   configure do
     define_all_fields
@@ -101,7 +102,7 @@ class PennMarcIndexer < Traject::Indexer
     define_field :main_title_title_suggest, :title_suggest
     to_field 'title_suggest_weight_is' do |record, acc|
       score = parser.public_send :title_suggest_weight, record
-      score += 200 if configured_as_bestbet?(record)
+      score += BESTBET_SUGGESTION_WEIGHT_BOOST if configured_as_bestbet?(record)
       acc << score
     end
   end
@@ -229,7 +230,7 @@ class PennMarcIndexer < Traject::Indexer
   # @return [Array]
   def bestbet_ids
     @bestbet_ids ||= CSV.read(
-      Rails.root.join(BESTBETS_FILE_PATH),
+      Rails.root.join(BESTBET_FILE_PATH),
       skip_lines: /^#/, skip_blanks: true, strip: true
     ).map { |row| row[1] }.compact.uniq
   rescue StandardError
