@@ -32,4 +32,15 @@ describe PennMarcIndexer do
       expect(result['marcxml_marcxml'].first).to include('<record>')
     end
   end
+
+  context 'with a best bet record' do
+    let(:fields) do
+      [marc_control_field(tag: '001', value: '9979746730903681')]
+    end
+
+    it 'includes a best_bet_queries_sim field' do
+      expect(result['best_bet_queries_sim']).to eq(['atlantic', 'atlantic monthly', 'the atlantic',
+                                                    'the atlantic monthly'])
+    end
+  end
 end
