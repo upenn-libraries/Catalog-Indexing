@@ -2,6 +2,7 @@
 
 describe PennMarcIndexer do
   include PennMARC::Test::MarcHelpers
+  include FixtureHelpers
 
   let(:indexer) { described_class.new }
   let(:result) { indexer.map_record(record) }
@@ -30,6 +31,21 @@ describe PennMarcIndexer do
 
     it 'includes an "marcxml_marcxml" field' do
       expect(result['marcxml_marcxml'].first).to include('<record>')
+    end
+  end
+
+  context 'with a boosted record' do
+    let(:fields) do
+      [marc_control_field(tag: '001', value: '12345'),
+       marc_field(tag: '245', subfields: { a: 'Blah' })]
+    end
+
+    before { allow(CSV).to receive(:read).and_return([%w[term 12345]]) }
+
+    it 'has a boosted title_suggest_weight field' do
+      expect(result['title_suggest_weight_is'].first).to(
+        be_within(10).of(described_class::BESTBET_SUGGESTION_WEIGHT_BOOST)
+      )
     end
   end
 end
