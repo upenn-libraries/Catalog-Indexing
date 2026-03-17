@@ -1,3 +1,9 @@
+# Each row here is a potential suggester response, containing three values, tab-seperated
+# Column 1 - the term to match a given suggester query
+# Column 2 - the weight for this suggestion
+# Column 3 - The suggester payload, a JSON object including "disp" and "id" values. Consumers of these suggestions
+#            can use these vales to display a nice link to the record corresponding to the "id".
+
 ancestry	1	{"disp": "Ancestry Library Edition", "id": "9942524713503681"}
 ancestry.com	1	{"disp": "Ancestry Library Edition", "id": "9942524713503681"}
 ancestry library	1	{"disp": "Ancestry Library Edition", "id": "9942524713503681"}

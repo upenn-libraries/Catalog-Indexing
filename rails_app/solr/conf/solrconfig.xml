@@ -442,7 +442,7 @@
       <str name="name">notable_title</str>
       <str name="lookupImpl">AnalyzingLookupFactory</str>
       <str name="dictionaryImpl">FileDictionaryFactory</str>
-      <str name="sourceLocation">best_bet_suggestions.csv</str>
+      <str name="sourceLocation">best_bet_suggestions.tsv</str>
       <str name="suggestAnalyzerFieldType">string</str>
       <str name="weightField">title_suggest_weight_is</str>
       <str name="minPrefixChars">4</str>
