@@ -2,6 +2,8 @@
 
 # Traject Indexer for Penn's Alma MARC
 class PennMarcIndexer < Traject::Indexer
+  BESTBET_FILE_PATH = 'config/best_bet.yml'
+
   configure do
     define_all_fields
   end
@@ -23,6 +25,7 @@ class PennMarcIndexer < Traject::Indexer
     inventory_fields
     call_number_fields
     marc_field
+    query_fields
   end
 
   def identifier_fields
@@ -161,6 +164,12 @@ class PennMarcIndexer < Traject::Indexer
     end
   end
 
+  def query_fields
+    to_field 'best_bet_queries_sim' do |record, acc|
+      acc.concat bestbet_mapping.fetch(parser.identifier_mmsid(record), [])
+    end
+  end
+
   private
 
   # shortcut for defining a simple field with appropriate handling for return type
@@ -209,5 +218,11 @@ class PennMarcIndexer < Traject::Indexer
   # @return [TrueClass, FalseClass]
   def valid_date?(date)
     date.is_a?(Time) && date&.year&.positive?
+  end
+
+  # Memoize the best bet configuration as a hash
+  # @return [Hash]
+  def bestbet_mapping
+    @bestbet_mapping ||= YAML.safe_load(File.read(Rails.root.join(BESTBET_FILE_PATH)))
   end
 end
