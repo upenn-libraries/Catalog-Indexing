@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
-require 'csv'
-
 # Traject Indexer for Penn's Alma MARC
 class PennMarcIndexer < Traject::Indexer
-  BESTBET_FILE_PATH = 'solr/conf/best_bet_synonyms.txt'
-  BESTBET_SUGGESTION_WEIGHT_BOOST = 200
+  BESTBET_FILE_PATH = 'config/best_bet.yml'
 
   configure do
     define_all_fields
@@ -28,6 +25,7 @@ class PennMarcIndexer < Traject::Indexer
     inventory_fields
     call_number_fields
     marc_field
+    query_fields
   end
 
   def identifier_fields
@@ -100,11 +98,7 @@ class PennMarcIndexer < Traject::Indexer
 
   def suggest_fields
     define_field :main_title_title_suggest, :title_suggest
-    to_field 'title_suggest_weight_is' do |record, acc|
-      score = parser.public_send :title_suggest_weight, record
-      score += BESTBET_SUGGESTION_WEIGHT_BOOST if configured_as_bestbet?(record)
-      acc << score
-    end
+    define_field :title_suggest_weight_is, :title_suggest_weight
   end
 
   def date_fields
@@ -170,6 +164,12 @@ class PennMarcIndexer < Traject::Indexer
     end
   end
 
+  def query_fields
+    to_field 'best_bet_queries_sim' do |record, acc|
+      acc.concat bestbet_mapping.fetch(parser.identifier_mmsid(record), [])
+    end
+  end
+
   private
 
   # shortcut for defining a simple field with appropriate handling for return type
@@ -219,21 +219,9 @@ class PennMarcIndexer < Traject::Indexer
     date.is_a?(Time) && date&.year&.positive?
   end
 
-  # Is the record's identifier included in the bestbets file?
-  # @param record [MARC::Record]
-  # @return [Boolean]
-  def configured_as_bestbet?(record)
-    bestbet_ids.include?(parser.identifier_mmsid(record))
-  end
-
-  # Parse and memoize an Array of "bet bet" record IDs from the configuration file used by Solr
-  # @return [Array]
-  def bestbet_ids
-    @bestbet_ids ||= CSV.read(
-      Rails.root.join(BESTBET_FILE_PATH),
-      skip_lines: /^#/, skip_blanks: true, strip: true
-    ).map { |row| row[1] }.compact.uniq
-  rescue StandardError
-    []
+  # Memoize the best bet configuration as a hash
+  # @return [Hash]
+  def bestbet_mapping
+    @bestbet_mapping ||= YAML.safe_load(File.read(Rails.root.join(BESTBET_FILE_PATH)))
   end
 end

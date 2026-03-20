@@ -539,6 +539,17 @@
     </analyzer>
   </fieldtype>
 
+  <!-- field used for indexing and searching over best bet queries (bbq)  -->
+  <fieldType name="bbq" class="solr.TextField">
+  <analyzer>
+    <tokenizer class="solr.KeywordTokenizerFactory" />
+    <filter class="solr.LowerCaseFilterFactory" />
+    <filter class="solr.TrimFilterFactory" />
+  </analyzer>
+</fieldType>
+<field name="best_bet_queries_sim" type="bbq" indexed="true" stored="true" multiValued="true" />
+
+
   <!-- an "unstemmed" text field type. this should mirror our default search field type but without the stemming filter
        see: https://solr.apache.org/guide/solr/latest/indexing-guide/filters.html#stemming
        Also, see notes in text_anchored field definition about chaining graph filters
