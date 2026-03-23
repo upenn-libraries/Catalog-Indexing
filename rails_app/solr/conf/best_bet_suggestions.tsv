@@ -1,14 +1,14 @@
-# Each row here is a potential suggester response, containing three values, tab-seperated
-# Column 1 - the term to match a given suggester query
-# Column 2 - the weight for this suggestion
-# Column 3 - The suggester payload, a JSON object including "disp" and "id" values. Consumers of these suggestions
-#            can use these vales to display a nice link to the record corresponding to the "id".
-
 ancestry	1	{"disp": "Ancestry Library Edition", "id": "9942524713503681"}
 ancestry.com	1	{"disp": "Ancestry library.", "id": "9942524713503681"}
 ancestry library	1	{"disp": "Ancestry library.", "id": "9942524713503681"}
 ancestrylibrary.com	1	{"disp": "Ancestry library.", "id": "9942524713503681"}
 
+# Each row here is a potential suggester response, containing three values, tab-seperated
+# Column 1 - the term to match a given suggester query
+# Column 2 - the weight for this suggestion
+# Column 3 - The suggester payload, a JSON object including "disp" and "id" values. Consumers of these suggestions
+#            can use these vales to display a nice link to the record corresponding to the "id".
+# These comments are here, rather than at the top, because the first line of this file must define a payload!
 
 atlantic	1	{"disp": "The Atlantic (1857-Present)", "id": "9979746730903681"}
 atlantic monthly	1	{"disp": "The Atlantic (1857-Present)", "id": "9979746730903681"}
@@ -78,11 +78,11 @@ the new york review of books	1	{"disp": "The New York review of books.", "id": "
 the ny review of books	1	{"disp": "The New York review of books.", "id": "9977123606003681"}
 
 
-new york times	1	{"disp": "The New York Times", "id": "9977568423203681"}
-the new york times	1	{"disp": "The New York Times", "id": "9977568423203681"}
-nyt	1	{"disp": "The New York Times", "id": "9977568423203681"}
-the times	1	{"disp": "The New York Times", "id": "9977568423203681"}
-ny times	1	{"disp": "The New York Times", "id": "9977568423203681"}
+new york times	10	{"disp": "The New York Times", "id": "9977568423203681"}
+the new york times	10	{"disp": "The New York Times", "id": "9977568423203681"}
+nyt	10	{"disp": "The New York Times", "id": "9977568423203681"}
+the times	10	{"disp": "The New York Times", "id": "9977568423203681"}
+ny times	10	{"disp": "The New York Times", "id": "9977568423203681"}
 
 
 new yorker	1	{"disp": "The New Yorker.", "id": "9977047445803681"}
