@@ -96,9 +96,22 @@ class PennMarcIndexer < Traject::Indexer
     define_date_sort_field :updated_date_sort, :date_last_updated
   end
 
+  # Define fields for returning in Solr suggesters. Here we exclude "best bet" records because
+  # they are returned by their own suggester.
   def suggest_fields
-    define_field :main_title_title_suggest, :title_suggest
-    define_field :title_suggest_weight_is, :title_suggest_weight
+    to_field('main_title_title_suggest') do |record, acc|
+      next if configured_as_bet_bet?(record)
+    
+      parser_output = parser.public_send(:title_suggest, record)
+      acc.concat(Array.wrap(parser_output))
+    end
+  
+    to_field('title_suggest_weight_is') do |record, acc|
+      next if configured_as_bet_bet?(record)
+    
+      parser_output = parser.public_send(:title_suggest_weight, record)
+      acc.concat(Array.wrap(parser_output))
+    end
   end
 
   def date_fields
@@ -172,22 +185,17 @@ class PennMarcIndexer < Traject::Indexer
 
   private
 
-  # shortcut for defining a simple field with appropriate handling for return type
+  # Shortcut for defining a simple field with the appropriate handling for the return type
   # see: https://rubydoc.info/gems/traject/3.5.0/file/doc/indexing_rules.md
   # @param name [String, Symbol] name of the field for Solr
   # @param parser_method [String, Symbol, nil] if not matching the field name, the full name of the helper method on
   #                                            the @parser object. this will include the helper class name.
   def define_field(name, parser_method = nil)
-    parser_signal = parser_method || name
-    raise(ArgumentError, "Parser does not respond to #{parser_signal}") unless parser.respond_to? parser_signal.to_sym
+    parser_signal = (parser_method || name).to_sym
+    raise(ArgumentError, "Parser does not respond to #{parser_signal}") unless parser.respond_to?(parser_signal)
 
     to_field(name.to_s) do |record, acc|
-      parser_output = parser.public_send(parser_signal.to_sym, record)
-      if parser_output.respond_to?(:each)
-        acc.concat(parser_output)
-      else
-        acc << parser_output
-      end
+      acc.concat(Array(parser.public_send(parser_signal, record)))
     end
   end
 
@@ -223,5 +231,12 @@ class PennMarcIndexer < Traject::Indexer
   # @return [Hash]
   def bestbet_mapping
     @bestbet_mapping ||= YAML.safe_load(File.read(Rails.root.join(BESTBET_FILE_PATH)))
+  end
+
+  # Is the record noted in the best bet files?
+  # @param record [MARC::Record]
+  # @return [Boolean]
+  def configured_as_bet_bet?(record)
+    bestbet_mapping.key?(parser.identifier_mmsid(record))
   end
 end
