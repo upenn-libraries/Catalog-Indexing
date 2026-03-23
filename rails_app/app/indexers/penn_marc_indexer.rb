@@ -101,14 +101,14 @@ class PennMarcIndexer < Traject::Indexer
   def suggest_fields
     to_field('main_title_title_suggest') do |record, acc|
       next if configured_as_bet_bet?(record)
-    
+
       parser_output = parser.public_send(:title_suggest, record)
       acc.concat(Array.wrap(parser_output))
     end
-  
+
     to_field('title_suggest_weight_is') do |record, acc|
       next if configured_as_bet_bet?(record)
-    
+
       parser_output = parser.public_send(:title_suggest_weight, record)
       acc.concat(Array.wrap(parser_output))
     end
