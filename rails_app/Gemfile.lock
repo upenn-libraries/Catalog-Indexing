@@ -114,6 +114,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
+    csv (3.3.5)
     date (3.5.0)
     debug (1.9.1)
       irb (~> 1.10)
@@ -517,6 +518,7 @@ DEPENDENCIES
   byebug
   capybara
   config
+  csv
   debug
   devise
   dry-transaction

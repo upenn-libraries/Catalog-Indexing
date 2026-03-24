@@ -10,6 +10,7 @@ gem 'bcrypt_pbkdf'
 gem 'bootsnap', require: false
 gem 'bootstrap_form', '~> 5.0'
 gem 'config'
+gem 'csv'
 gem 'devise'
 gem 'dry-transaction'
 gem 'ed25519'

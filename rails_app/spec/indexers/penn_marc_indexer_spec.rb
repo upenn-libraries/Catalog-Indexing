@@ -42,5 +42,10 @@ describe PennMarcIndexer do
       expect(result['best_bet_queries_sim']).to eq(['atlantic', 'atlantic monthly', 'the atlantic',
                                                     'the atlantic monthly'])
     end
+
+    it 'does not set title suggester fields' do
+      expect(result).not_to have_key('main_title_title_suggest')
+      expect(result).not_to have_key('title_suggest_weight_is')
+    end
   end
 end
