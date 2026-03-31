@@ -148,7 +148,7 @@ rspec_app_test:
         POSTGRES_DB: "catalog_indexing_test"
         POSTGRES_PASSWORD: "rspec_test"
         POSTGRES_USER: "rspec_test"
-    - name: bitnami/solr:9.4.1
+    - name: bitnamilegacy/solr:9.6.1
       alias: solr
       entrypoint: [""]
       command: [
