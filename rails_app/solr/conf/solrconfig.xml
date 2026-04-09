@@ -146,8 +146,6 @@
 
       <!-- when using lucene query parser -->
       <str name="df">marcxml_marcxml</str>
-      <!-- here, we configure a default query to return all documents -->
-      <str name="q">*:*</str>
 
       <!-- import keyword search qf/pf -->
       &keyword_config;
@@ -178,9 +176,6 @@
       <str name="echoParams">explicit</str>
       <str name="df">marcxml_marcxml</str>
       <str name="q.op">AND</str>
-      <!-- default query, if the query is blank, when using lucene query parser for advanced search. here, we configure
-a blank query to return all documents -->
-      <str name="q">*:*</str>
 
       <str name="fl">
         *,
