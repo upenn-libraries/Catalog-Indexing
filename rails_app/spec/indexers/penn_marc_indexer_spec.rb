@@ -33,19 +33,18 @@ describe PennMarcIndexer do
     end
   end
 
-  context 'with a best bet record' do
+  context 'with a boosted record' do
     let(:fields) do
-      [marc_control_field(tag: '001', value: '9979746730903681')]
+      [marc_control_field(tag: '001', value: '12345'),
+       marc_field(tag: '245', subfields: { a: 'Blah' })]
     end
 
-    it 'includes a best_bet_queries_sim field' do
-      expect(result['best_bet_queries_sim']).to eq(['atlantic', 'atlantic monthly', 'the atlantic',
-                                                    'the atlantic monthly'])
-    end
+    before { allow(YAML).to receive(:safe_load).and_return({'12345' => ['Blah']}) }
 
-    it 'does not set title suggester fields' do
-      expect(result).not_to have_key('main_title_title_suggest')
-      expect(result).not_to have_key('title_suggest_weight_is')
+    it 'has a boosted title_suggest_weight field' do
+      expect(result['title_suggest_weight_is'].first).to(
+        be_within(10).of(described_class::BESTBET_SUGGESTION_WEIGHT_BOOST)
+      )
     end
   end
 end
