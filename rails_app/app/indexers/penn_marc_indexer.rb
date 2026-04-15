@@ -231,6 +231,6 @@ class PennMarcIndexer < Traject::Indexer
   # @param record [MARC::Record]
   # @return [Boolean, nil]
   def configured_as_best_bet?(record)
-    bestbet_mapping&.keys&.include?(parser.identifier_mmsid(record))
+    bestbet_mapping&.key?(parser.identifier_mmsid(record))
   end
 end

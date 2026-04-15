@@ -39,7 +39,7 @@ describe PennMarcIndexer do
        marc_field(tag: '245', subfields: { a: 'Blah' })]
     end
 
-    before { allow(YAML).to receive(:safe_load).and_return({'12345' => ['Blah']}) }
+    before { allow(YAML).to receive(:safe_load).and_return({ '12345' => ['Blah'] }) }
 
     it 'has a boosted title_suggest_weight field' do
       expect(result['title_suggest_weight_is'].first).to(
