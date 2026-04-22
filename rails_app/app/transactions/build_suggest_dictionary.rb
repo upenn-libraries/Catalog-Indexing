@@ -9,81 +9,80 @@ class BuildSuggestDictionary
 
   SUGGESTER_BUILD_TIMEOUT_SECONDS = 3600
 
-  step :use_only_one_collection
-  step :validate_collection, with: 'solr.validate_collections'
+  step :get_target_collections, with: 'config_item.incremental_target_collections'
+  step :validate_config_collections, with: 'solr.validate_collections'
   step :validate_suggester_params
-  step :prepare_solr_suggester_build_url
-  step :prepare_solr_connection
-  step :build_dictionary
+  step :compose_build_urls_for_collections
+  step :execute_suggester_builds_in_serial
   step :notify
 
   private
 
-  # We only want to work with a single collection
-  # @param collection [String]
-  # @return [Dry::Monads::Result]
-  def use_only_one_collection(collection:, **args)
-    unless collection.is_a?(String)
-      return Failure(message: 'This transaction supports only a single collection name as a string')
-    end
-
-    # validate_collections step expects an array
-    Success(collections: [collection], **args)
-  end
-
-  # validate_collections
-
-  # Make sure we have the right parameters to build the Solr URL
-  # @param collections [Array] single collection to contain the suggester
-  # @param suggester [String] name of suggester, as define in solr config
-  # @param dictionary [String] name of dictionary, as defined in solr config
+  # Ensure we have the parameters required to build the Solr suggester URLs.
+  #
+  # @param collections [Array<String>] collections we want to build the suggester for
+  # @param dictionary [String] name of dictionary, as defined in config
+  # @param suggester [String] name of suggester, as defined in config
   # @return [Dry::Monads::Result]
   def validate_suggester_params(collections:, dictionary:, suggester:, **args)
-    collection = collections.first
-    unless collection.present? && dictionary.present? && suggester.present?
+    unless collections.any? && dictionary.present? && suggester.present?
       return Failure(message: 'Collection, Suggester and Dictionary names must be provided')
     end
 
-    Success(collection: collection, dictionary: dictionary, suggester: suggester, **args)
+    Success(collections: collections, dictionary: dictionary, suggester: suggester, **args)
   end
 
-  # Construct URL for building the right suggester dictionary
-  # @param collection [String] collection to contain the suggester
-  # @param suggester [String] name of suggester, as defined in solr config
-  # @param dictionary [String] name of dictionary, as defined in solr config
+  # Build a hash mapping each collection to its array of Solr suggester build URLs.
+  #
+  # Working syntax, staging example:
+  #   http://catalog-manager-stg01.library.upenn.int/solr1/catalog-staging/suggest?suggest.build=true&distrib=false
+  #
+  # @param collections [Array<String>] collections we want to build the suggester for
   # @return [Dry::Monads::Result]
-  def prepare_solr_suggester_build_url(collection:, suggester:, dictionary:, **args)
-    uri = SolrTools.suggester_url(collection: collection, suggester: suggester, dictionary: dictionary, build: true)
-    Success(url: uri.to_s, **args)
-  end
-
-  # @param url [String] URL used to build the suggester
-  # @param timeout [Integer] how long, in seconds, to wait for the HTTP request to complete
-  # @return [Dry::Monads::Result]
-  def prepare_solr_connection(url:, timeout: SUGGESTER_BUILD_TIMEOUT_SECONDS, **args)
-    connection = SolrTools.connection url: url, timeout: timeout
-    Success(connection: connection, **args)
-  end
-
-  # Tell Solr to build the suggester dictionary
-  # @param connection [Faraday::Connection]
-  # @return [Dry::Monads::Result]
-  def build_dictionary(connection:, **_args)
-    response = connection.get
-    if response.success?
-      Success(query_time_ms: response.body.dig('responseHeader', 'QTime').to_i)
-    else
-      Failure(message: "Suggester build failed with response code: #{response.status}.")
+  def compose_build_urls_for_collections(collections:, **args)
+    collection_build_urls = collections.each_with_object({}) do |collection, map|
+      map[collection] = Settings.solr.nodes.map do |node|
+        SolrTools.suggester_build_url(suggester: suggester, dictionary: dictionary, node: node, collection: collection)
+      end
     end
+
+    Success(collection_build_urls: collection_build_urls, **args)
   rescue StandardError => e
-    Failure(message: "Suggester build failed with exception #{e.class.name}: #{e.message}.")
+    Failure(message: "Could not compose suggester build URLs: #{e.message}")
   end
 
-  # @param query_time_ms [Integer]
+  # Tell Solr to build the suggester dictionary on each node.
+  #
+  # @param collection_build_urls [Hash{String => Array<String>}] map of collection name to build URLs
   # @return [Dry::Monads::Result]
-  def notify(query_time_ms:, **_args)
-    q_time_humanized = distance_of_time_in_words(Time.zone.now, Time.zone.now + (query_time_ms / 1000).seconds)
-    message = "Title suggester built in #{q_time_humanized}."
+  def execute_suggester_builds_in_serial(collection_build_urls:, **args)
+    build_time_in_sec = Benchmark.realtime do
+      collection_build_urls.each_value do |urls|
+        urls.each do |url|
+          response = Faraday.get(url) do |req|
+            req.options.timeout = SUGGESTER_BUILD_TIMEOUT_SECONDS
+            req.options.open_timeout = 10
+          end
+          unless response.success?
+            raise StandardError,
+                  "Solr build call #{url} failed: #{response.body}"
+          end
+        end
+      end
+    end
+    Success(build_time_in_sec: build_time_in_sec, **args)
+  rescue StandardError => e
+    Failure(message: "Problem building suggester: #{e.message}")
+  end
+
+  # Notify via Slack (or log in non-production environments) that the suggester build has completed.
+  #
+  # @param build_time_in_sec [Float] elapsed build time in seconds
+  # @param suggester [String] name of the suggester that was built
+  # @return [Dry::Monads::Result]
+  def notify(build_time_in_sec:, suggester:, **_args)
+    build_time_humanized = distance_of_time_in_words(Time.zone.now, Time.zone.now + build_time_in_sec.seconds)
+    message = "#{suggester} suggester built in #{build_time_humanized}."
     if Rails.env.test? || Rails.env.development?
       Rails.logger.debug message
     else

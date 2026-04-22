@@ -19,6 +19,8 @@ solr:
   shards: <%= ENV['SOLR_COLLECTION_SHARDS'] %>
   replicas: <%= ENV['SOLR_COLLECTION_REPLICAS'] %>
   webhook_action_commit_within_time_ms: 600000 # 10 min
+  nodes:
+    - solr
 
 redis:
   url: <%= ENV['REDIS_URL'] %>
