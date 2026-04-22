@@ -3,6 +3,7 @@
 # Traject Indexer for Penn's Alma MARC
 class PennMarcIndexer < Traject::Indexer
   BESTBET_FILE_PATH = 'config/best_bet.yml'
+  BESTBET_SUGGESTION_WEIGHT_BOOST = 200
 
   configure do
     define_all_fields
@@ -96,21 +97,14 @@ class PennMarcIndexer < Traject::Indexer
     define_date_sort_field :updated_date_sort, :date_last_updated
   end
 
-  # Define fields for returning in Solr suggesters. Here we exclude "best bet" records because
-  # they are returned by their own suggester.
+  # Define fields for returning in Solr suggesters. Here we boost the weight of "best bet" records to give them
+  # priority in the response.
   def suggest_fields
-    to_field('main_title_title_suggest') do |record, acc|
-      next if configured_as_bet_bet?(record)
-
-      parser_output = parser.public_send(:title_suggest, record)
-      acc.concat(Array.wrap(parser_output))
-    end
-
-    to_field('title_suggest_weight_is') do |record, acc|
-      next if configured_as_bet_bet?(record)
-
-      parser_output = parser.public_send(:title_suggest_weight, record)
-      acc.concat(Array.wrap(parser_output))
+    define_field :main_title_title_suggest, :title_suggest
+    to_field 'title_suggest_weight_is' do |record, acc|
+      score = parser.public_send :title_suggest_weight, record
+      score += BESTBET_SUGGESTION_WEIGHT_BOOST if configured_as_best_bet?(record)
+      acc << score
     end
   end
 
@@ -235,8 +229,8 @@ class PennMarcIndexer < Traject::Indexer
 
   # Is the record noted in the best bet files?
   # @param record [MARC::Record]
-  # @return [Boolean]
-  def configured_as_bet_bet?(record)
-    bestbet_mapping.key?(parser.identifier_mmsid(record))
+  # @return [Boolean, nil]
+  def configured_as_best_bet?(record)
+    bestbet_mapping&.key?(parser.identifier_mmsid(record))
   end
 end
