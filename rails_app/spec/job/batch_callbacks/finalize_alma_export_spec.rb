@@ -14,6 +14,10 @@ describe BatchCallbacks::FinalizeAlmaExport do
       expect(alma_export.status).to eq Statuses::COMPLETED
       expect(alma_export.completed_at).to be_present
     end
+
+    it 'enqueues a jub to build the title suggester' do
+      expect(BuildTitleSuggestDictionaryJob).to have_enqueued_sidekiq_job
+    end
   end
 
   describe '#on_complete' do

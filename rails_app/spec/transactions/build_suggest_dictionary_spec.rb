@@ -47,8 +47,8 @@ describe BuildSuggestDictionary do
 
     context 'with the Solr request resulting in an exception' do
       let(:collections) { [test_collection] }
-      let(:suggester) { Settings.suggester.handlers.title }
-      let(:dictionary) { Settings.suggester.dictionaries.title }
+      let(:suggester) { Settings.suggester.title.handler }
+      let(:dictionary) { Settings.suggester.title.dictionary }
 
       before { allow(Faraday).to receive(:get).and_raise(StandardError.new('terrible')) }
 
@@ -60,8 +60,8 @@ describe BuildSuggestDictionary do
 
     context 'with a valid suggester configuration' do
       let(:collections) { ['suggester-test-collection'] }
-      let(:suggester) { Settings.suggester.handlers.title }
-      let(:dictionary) { Settings.suggester.dictionaries.title }
+      let(:suggester) { Settings.suggester.title.handler }
+      let(:dictionary) { Settings.suggester.title.dictionary }
 
       before do
         SolrTools.create_collection collections.first
@@ -76,8 +76,8 @@ describe BuildSuggestDictionary do
         expect(outcome).to be_success
         sug_url = SolrTools.suggester_query_url(
           collection: collections.first,
-          suggester: Settings.suggester.handlers.title,
-          dictionary: Settings.suggester.dictionaries.title,
+          suggester: Settings.suggester.title.handler,
+          dictionary: Settings.suggester.title.dictionary,
           query: 'T'
         )
         suggestions_resp = SolrTools.connection(url: sug_url).get

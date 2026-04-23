@@ -4,11 +4,10 @@
 class BuildTitleSuggestDictionaryJob < TransactionJob
   sidekiq_options queue: 'high'
 
-  # @param collection_name [String]
   def transaction
     BuildSuggestDictionary.new.call(
-      suggester: Settings.suggester.handlers.title,
-      dictionary: Settings.suggester.dictionaries.title
+      suggester: Settings.suggester.title.handler,
+      dictionary: Settings.suggester.title.dictionary
     )
   end
 end

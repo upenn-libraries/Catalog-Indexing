@@ -1,10 +1,11 @@
 # Settings/Configuration shared among all environments.
 
 suggester:
-  handlers:
-    title: suggest
-  dictionaries:
-    title: title
+  title:
+    handler: suggest
+    build_after_incremental: false
+    build_after_full: false
+    dictionary: title
 
 bootstrap_version: 5.3.8
 
