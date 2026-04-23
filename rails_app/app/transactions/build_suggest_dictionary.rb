@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry/transaction'
+require 'benchmark'
 
 # Issue request to Solr instance/collection/suggest handler to build a specified dictionary
 class BuildSuggestDictionary
@@ -39,14 +40,14 @@ class BuildSuggestDictionary
   #
   # @param collections [Array<String>] collections we want to build the suggester for
   # @return [Dry::Monads::Result]
-  def compose_build_urls_for_collections(collections:, **args)
+  def compose_build_urls_for_collections(collections:, suggester:, dictionary:, **args)
     collection_build_urls = collections.each_with_object({}) do |collection, map|
       map[collection] = Settings.solr.nodes.map do |node|
         SolrTools.suggester_build_url(suggester: suggester, dictionary: dictionary, node: node, collection: collection)
       end
     end
 
-    Success(collection_build_urls: collection_build_urls, **args)
+    Success(collection_build_urls: collection_build_urls, suggester: suggester, **args)
   rescue StandardError => e
     Failure(message: "Could not compose suggester build URLs: #{e.message}")
   end
@@ -59,18 +60,13 @@ class BuildSuggestDictionary
     build_time_in_sec = Benchmark.realtime do
       collection_build_urls.each_value do |urls|
         urls.each do |url|
-          response = Faraday.get(url) do |req|
-            req.options.timeout = SUGGESTER_BUILD_TIMEOUT_SECONDS
-            req.options.open_timeout = 10
-          end
-          unless response.success?
-            raise StandardError,
-                  "Solr build call #{url} failed: #{response.body}"
-          end
+          response = perform_build_request(url)
+          raise StandardError, "Solr build call #{url} failed: #{response.body}" unless response.success?
         end
       end
     end
-    Success(build_time_in_sec: build_time_in_sec, **args)
+
+    Success(build_time_in_sec: build_time_in_sec, suggester: args[:suggester], **args)
   rescue StandardError => e
     Failure(message: "Problem building suggester: #{e.message}")
   end
@@ -89,5 +85,15 @@ class BuildSuggestDictionary
       SendSlackNotificationJob.perform_async(message)
     end
     Success(message)
+  end
+
+  # @param url [String] URL for suggester build
+  # @return [Faraday::Response]
+  def perform_build_request(url)
+    Faraday.get(url) do |req|
+      req.headers['Authorization'] = Faraday::Utils.basic_header_from(Settings.solr.user, Settings.solr.password)
+      req.options.timeout = SUGGESTER_BUILD_TIMEOUT_SECONDS
+      req.options.open_timeout = 10
+    end
   end
 end

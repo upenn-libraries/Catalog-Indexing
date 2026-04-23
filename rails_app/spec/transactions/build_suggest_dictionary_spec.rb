@@ -41,21 +41,16 @@ describe BuildSuggestDictionary do
 
       it 'returns a failure with exception information' do
         expect(outcome).to be_failure
-        expect(outcome.failure[:message]).to include '404'
+        expect(outcome.failure[:message]).to include 'Searching for Solr?'
       end
     end
 
-    xcontext 'with the Solr request resulting in an exception' do
+    context 'with the Solr request resulting in an exception' do
       let(:collections) { [test_collection] }
       let(:suggester) { Settings.suggester.handlers.title }
       let(:dictionary) { Settings.suggester.dictionaries.title }
 
-      before do
-        mock_connection = instance_double(Faraday::Connection)
-        allow(mock_connection).to receive(:get).and_raise(StandardError.new('terrible'))
-        allow(SolrTools).to receive(:connection).and_call_original
-        allow(SolrTools).to receive(:connection).with(hash_including(url: /title/)).and_return(mock_connection)
-      end
+      before { allow(Faraday).to receive(:get).and_raise(StandardError.new('terrible')) }
 
       it 'returns a failure with exception information' do
         expect(outcome).to be_failure
@@ -63,24 +58,24 @@ describe BuildSuggestDictionary do
       end
     end
 
-    xcontext 'with a valid suggester configuration' do
+    context 'with a valid suggester configuration' do
       let(:collections) { ['suggester-test-collection'] }
       let(:suggester) { Settings.suggester.handlers.title }
       let(:dictionary) { Settings.suggester.dictionaries.title }
 
       before do
-        SolrTools.create_collection collection
-        solr = Solr::QueryClient.new(collection: collection)
+        SolrTools.create_collection collections.first
+        solr = Solr::QueryClient.new(collection: collections.first)
         solr.add(docs: { id: '123', main_title_title_suggest: 'Test' })
         solr.commit
       end
 
-      after { SolrTools.delete_collection collection }
+      after { SolrTools.delete_collection collections.first }
 
       it 'returns one suggestion based on the one indexed record' do
         expect(outcome).to be_success
-        sug_url = SolrTools.suggester_url(
-          collection: collection,
+        sug_url = SolrTools.suggester_query_url(
+          collection: collections.first,
           suggester: Settings.suggester.handlers.title,
           dictionary: Settings.suggester.dictionaries.title,
           query: 'T'
