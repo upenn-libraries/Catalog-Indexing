@@ -78,7 +78,7 @@ class BuildSuggestDictionary
   # @return [Dry::Monads::Result]
   def notify(build_time_in_sec:, suggester:, **_args)
     build_time_humanized = distance_of_time_in_words(Time.zone.now, Time.zone.now + build_time_in_sec.seconds)
-    message = "#{suggester} suggester built in #{build_time_humanized}."
+    message = "`#{suggester}` suggester built in #{build_time_humanized}."
     if Rails.env.test? || Rails.env.development?
       Rails.logger.debug message
     else
