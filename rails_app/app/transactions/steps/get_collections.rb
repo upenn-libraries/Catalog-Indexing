@@ -5,7 +5,7 @@ module Steps
   class GetCollections
     include Dry::Monads[:result]
 
-    # Get the collections names either from args or from the ConfigItem
+    # Get the collection names either from args or from the ConfigItem
     # @option collections [Array]
     # @return [Dry::Monads::Result]
     def call(**args)

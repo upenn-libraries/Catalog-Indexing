@@ -45,7 +45,9 @@ class ConfigItem < ApplicationRecord
       process_bib_webhooks: { default: false },
       incremental_target_collections: { default: [], options: solr_collections },
       webhook_target_collections: { default: [], options: solr_collections },
-      adhoc_target_collections: { default: [], options: solr_collections }
+      adhoc_target_collections: { default: [], options: solr_collections },
+      build_suggesters_after_incremental: { default: false },
+      build_suggesters_after_full: { default: false }
     }
   end
 

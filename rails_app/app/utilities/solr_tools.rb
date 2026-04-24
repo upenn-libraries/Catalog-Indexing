@@ -54,15 +54,24 @@ class SolrTools
     # @param collection [String]
     # @param suggester [String]
     # @param dictionary [String]
-    # @param build [Boolean]
     # @param query [String, NilClass]
     # @return [String]
-    def suggester_url(suggester:, dictionary:, collection: default_collection, build: false, query: nil)
+    def suggester_query_url(suggester:, dictionary:, collection: default_collection, query: nil)
       solr_uri = URI(Settings.solr.url)
-      query_params = { 'suggest.dictionary': dictionary, 'suggest.build': build, q: query }
+      query_params = { 'suggest.dictionary': dictionary, q: query }
       URI::Generic.build(
         scheme: solr_uri.scheme, host: solr_uri.host, port: solr_uri.port,
         path: "/solr/#{collection}/#{suggester}",
+        query: URI.encode_www_form(query_params.compact)
+      ).to_s
+    end
+
+    def suggester_build_url(suggester:, dictionary:, node: 'solr', collection: default_collection)
+      solr_uri = URI(Settings.solr.url)
+      query_params = { 'suggest.dictionary': dictionary, 'suggest.build': true, distrib: 'false' }
+      URI::Generic.build(
+        scheme: solr_uri.scheme, host: solr_uri.host, port: solr_uri.port,
+        path: "/#{node}/#{collection}/#{suggester}",
         query: URI.encode_www_form(query_params.compact)
       ).to_s
     end

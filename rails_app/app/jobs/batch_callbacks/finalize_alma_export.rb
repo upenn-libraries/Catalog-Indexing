@@ -14,7 +14,7 @@ module BatchCallbacks
       )
       # TODO: this might do nothing if some jobs aren't marked with a completed status
       alma_export.set_completion_status!
-      # Move files?
+      EnqueueSuggesterBuilds.new.call(alma_export: alma_export)
     end
 
     # Executed when all jobs in the batch have run once, successful or not

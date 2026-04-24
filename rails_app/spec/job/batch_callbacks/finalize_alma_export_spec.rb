@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe BatchCallbacks::FinalizeAlmaExport do
+  before { allow(ConfigItem).to receive(:value_for).with(:build_suggesters_after_full).and_return(false) }
+
   describe '#on_success' do
     let(:collections) { %w[collection1 collection2] }
     let(:alma_export) { create(:alma_export, :with_files_all_completed, target_collections: collections) }
