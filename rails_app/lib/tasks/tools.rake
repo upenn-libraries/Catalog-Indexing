@@ -115,6 +115,10 @@ namespace :tools do
                                  value: config_item_details.dig(:webhook_target_collections, :default)
     ConfigItem.find_or_create_by name: 'adhoc_target_collections', config_type: ConfigItem::ARRAY_TYPE,
                                  value: config_item_details.dig(:adhoc_target_collections, :default)
+    ConfigItem.find_or_create_by name: 'build_suggesters_after_incrementals', config_type: ConfigItem::BOOLEAN_TYPE,
+                                 value: config_item_details.dig(:build_suggesters_after_incrementals, :default)
+    ConfigItem.find_or_create_by name: 'build_suggesters_after_full', config_type: ConfigItem::BOOLEAN_TYPE,
+                                 value: config_item_details.dig(:build_suggesters_after_full, :default)
   end
 
   desc 'Set job_identifier values for AlmaExport entries from the stored webhook_body content'

@@ -5,6 +5,8 @@ en:
     incremental_target_collections: 'These Solr collections will be updated via the incremental publish jobs executed by Alma.'
     webhook_target_collections: 'These Solr collections will be updated via the webhook processing stream, provided that process bib webhooks is active.'
     adhoc_target_collections: 'These Solr collections will be updated via the "Index by Identifier" tool.'
+    build_suggesters_after_full: 'Enabling this will automatically enqueue a job to build all configured suggesters after a full index is successful. Individual suggesters can be enabled/disabled via application config.'
+    build_suggesters_after_incrementals: 'Enabling this will automatically enqueue a job to build all configured suggesters after an incremental index is successful. Individual suggesters can be enabled/disabled via application config.'
   ad_hoc:
     validation:
       no_ids: 'No MMS IDs provided.'
