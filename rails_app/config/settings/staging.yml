@@ -21,6 +21,6 @@ indexing:
   max_errors_per_file: 10
 
 suggester:
-  handlers:
+  title:
     build_after_incremental: true
     build_after_full: true
