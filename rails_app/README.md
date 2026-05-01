@@ -14,7 +14,6 @@ Rails app to build and maintain Solr collections for the Penn Libraries catalog.
 6. [Running the Test Suite](#running-the-test-suite)
 7. [PennMARC](#pennmarc)
 8. [Code Linting and Formatting](#code-linting-and-formatting)
-9. [Contributing](#contributing)
 
 ---
 
