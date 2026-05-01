@@ -51,8 +51,10 @@ Modify the application's behavior using the **Settings** area in the UI. Availab
 - **Process Job Webhook**: Enables processing of Alma `JOB` webhooks matching `Settings.alma.publishing_job.name`.
 - **Webhook Target Collections**: Specifies Solr collections for updates via `BIB` webhook jobs.
 - **Incremental Target Collections**: Specifies Solr collections for incremental updates via `JOB` webhooks for matched records.
+- **Build Suggesters After Incremental**: Enable the enqueueing of suggester build jobs after the successful completion of an incremental Alma Export.
+- **Build Suggesters After Full**: Enable the enqueuing of suggester build jobs after the successful completion of a full Alma Export.
 
-To make these settings accessible, run:
+To load or update these settings, run:
 ```bash
 rake tools:add_config_items
 ```
@@ -108,9 +110,6 @@ rake tools:load_configset
 ```
 
 You can then create a new collection using this configset.
-
-
-## Working with `find`
 
 ## Working with Find
 
