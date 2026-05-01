@@ -4,13 +4,13 @@ source 'https://rubygems.org'
 
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.3.5'
+ruby '3.4.7'
 
 gem 'bcrypt_pbkdf'
 gem 'bootsnap', require: false
-gem 'bootstrap', '~> 5.2.3'
 gem 'bootstrap_form', '~> 5.0'
 gem 'config'
+gem 'csv'
 gem 'devise'
 gem 'dry-transaction'
 gem 'ed25519'
@@ -20,18 +20,15 @@ gem 'importmap-rails'
 gem 'kaminari'
 gem 'net-sftp'
 gem 'omniauth'
-gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-saml'
-gem 'pennmarc', '~> 1'
+gem 'pennmarc', '~> 1.4'
 gem 'pg', '~> 1.1'
+gem 'propshaft'
 gem 'puma', '~> 6.0'
-gem 'rails', '~> 7.1'
+gem 'rails', '~> 8'
 gem 'rsolr'
 gem 'rubyzip'
-gem 'sassc-rails'
-gem 'sidekiq-pro', '~> 7', source: 'https://gems.contribsys.com'
-gem 'sprockets-rails'
-gem 'stimulus-rails'
+gem 'sidekiq-pro', '~> 8', source: 'https://gems.contribsys.com'
 gem 'traject'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'upennlib-rubocop', require: false

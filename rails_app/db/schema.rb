@@ -10,52 +10,53 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_09_124317) do
+ActiveRecord::Schema[8.1].define(version: 2025_01_10_125158) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "alma_exports", force: :cascade do |t|
-    t.string "target_collections", default: [], array: true
-    t.string "status"
     t.string "alma_source"
-    t.boolean "full", default: true, null: false
-    t.datetime "started_at"
+    t.string "batch_job_bid"
     t.datetime "completed_at"
     t.datetime "created_at", null: false
+    t.string "error_messages", default: [], array: true
+    t.boolean "full", default: true, null: false
+    t.string "job_identifier"
+    t.datetime "started_at"
+    t.string "status"
+    t.string "target_collections", default: [], array: true
     t.datetime "updated_at", null: false
     t.jsonb "webhook_body"
-    t.string "error_messages", default: [], array: true
-    t.string "batch_job_bid"
   end
 
   create_table "batch_files", force: :cascade do |t|
     t.bigint "alma_export_id"
-    t.string "path"
-    t.string "status"
-    t.datetime "started_at"
     t.datetime "completed_at"
-    t.string "error_messages", default: [], array: true
     t.datetime "created_at", null: false
+    t.string "error_messages", default: [], array: true
+    t.string "path"
+    t.datetime "started_at"
+    t.string "status"
     t.datetime "updated_at", null: false
     t.index ["alma_export_id"], name: "index_batch_files_on_alma_export_id"
   end
 
   create_table "config_items", force: :cascade do |t|
-    t.string "name"
     t.string "config_type"
-    t.jsonb "value"
     t.datetime "created_at", null: false
+    t.string "name"
     t.datetime "updated_at", null: false
+    t.jsonb "value"
     t.index ["name"], name: "index_config_items_on_name", unique: true
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", null: false
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "email", null: false
     t.string "provider"
     t.string "uid"
+    t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end

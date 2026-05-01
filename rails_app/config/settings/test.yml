@@ -9,3 +9,7 @@ solr:
 indexing:
   max_skipped_per_file: 0
   max_errors_per_file: 0
+
+suggester:
+  title:
+    build_after_full: true

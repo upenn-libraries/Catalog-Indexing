@@ -2,6 +2,7 @@
 
 # actions surrounding ad hoc record indexing
 class AlmaIndexingController < ApplicationController
+  before_action :validate_configuration
   before_action :validate_mmsids, only: %i[add delete]
 
   def index; end
@@ -43,6 +44,14 @@ class AlmaIndexingController < ApplicationController
       false
     end
     true
+  end
+
+  # Ensure that the expected ConfigItem is setup, otherwise indexing actions are bound to fail
+  def validate_configuration
+    return if ConfigItem.any? && ConfigItem.value_for(:adhoc_target_collections).any?
+
+    message = ConfigItem.none? ? t('ad_hoc.validation.no_config_items') : t('ad_hoc.validation.no_target_collection')
+    redirect_to config_items_path, alert: message
   end
 
   # @param outcome [Dry::Monads::Result]

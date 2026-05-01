@@ -14,7 +14,7 @@ module BatchCallbacks
       )
       # TODO: this might do nothing if some jobs aren't marked with a completed status
       alma_export.set_completion_status!
-      # Move files?
+      EnqueueSuggesterBuilds.new.call(alma_export: alma_export)
     end
 
     # Executed when all jobs in the batch have run once, successful or not
@@ -23,10 +23,10 @@ module BatchCallbacks
     def on_complete(status, alma_export_id)
       alma_export = AlmaExport.find(alma_export_id)
       SendSlackNotificationJob.perform_async("AlmaExport ##{alma_export.id}: All jobs executed.")
-      return unless status.failure_info.any?
+      return unless status.failed_jids.any?
 
       SendSlackNotificationJob.perform_async(
-        "AlmaExport ##{alma_export.id}: Job Failures: ```#{status.failure_info}```"
+        "AlmaExport ##{alma_export.id}: Job Failure IDs: ```#{status.failed_jids}```"
       )
     end
   end

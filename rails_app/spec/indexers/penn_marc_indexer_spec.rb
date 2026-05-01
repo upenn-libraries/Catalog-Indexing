@@ -32,4 +32,19 @@ describe PennMarcIndexer do
       expect(result['marcxml_marcxml'].first).to include('<record>')
     end
   end
+
+  context 'with a boosted record' do
+    let(:fields) do
+      [marc_control_field(tag: '001', value: '12345'),
+       marc_field(tag: '245', subfields: { a: 'Blah' })]
+    end
+
+    before { allow(YAML).to receive(:safe_load).and_return({ '12345' => ['Blah'] }) }
+
+    it 'has a boosted title_suggest_weight field' do
+      expect(result['title_suggest_weight_is'].first).to(
+        be_within(10).of(described_class::BESTBET_SUGGESTION_WEIGHT_BOOST)
+      )
+    end
+  end
 end

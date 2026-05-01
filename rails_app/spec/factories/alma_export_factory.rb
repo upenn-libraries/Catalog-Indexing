@@ -4,9 +4,7 @@ FactoryBot.define do
   factory :alma_export do
     status { Statuses::PENDING }
     alma_source { AlmaExport::Sources::PRODUCTION }
-    webhook_body do
-      { 'job_instance' => { 'id' => '12345678' } }
-    end
+    job_identifier { '12345678' }
 
     trait(:full) do
       full { true }

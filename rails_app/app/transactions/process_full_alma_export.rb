@@ -20,7 +20,7 @@ class ProcessFullAlmaExport
 
   # Ensure that we have some files to work with. In a full export context, it's an error case if we don't have any
   # files.
-  # @param [Array] file_list
+  # @param file_list [Array]
   # @return [Dry::Monads::Result]
   def ensure_files_present(file_list:, **args)
     return Failure(message: 'No SFTP files found!') if file_list.empty?

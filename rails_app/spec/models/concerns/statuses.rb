@@ -14,4 +14,9 @@ shared_examples_for 'statuses' do
     expect(obj_with_status.valid?).to be false
     expect(obj_with_status.errors[:status].join).to include 'is not included'
   end
+
+  it 'assigns the correct badge class' do
+    obj_with_status.status = Statuses::COMPLETED
+    expect(obj_with_status.badge_class).to be Statuses::Style::COMPLETED
+  end
 end

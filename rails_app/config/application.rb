@@ -6,7 +6,7 @@ require 'rails'
 # Pick the frameworks you want:
 require 'active_model/railtie'
 require 'active_record/railtie'
-require 'active_storage/engine'
+# require 'active_storage/engine'
 require 'action_controller/railtie'
 require 'action_mailer/railtie'
 require 'action_view/railtie'
@@ -18,8 +18,7 @@ Bundler.require(*Rails.groups)
 module CatalogIndexing
   # Rails.application class
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.1
+    config.load_defaults 8.1
 
     # Configuration for the application, engines, and railties goes here.
     #

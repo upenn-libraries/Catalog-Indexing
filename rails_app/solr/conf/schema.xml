@@ -198,8 +198,16 @@
   <copyField source="journal_title_aux_search" dest="journal_title_aux_anchored_search" />
   <copyField source="series_search" dest="series_anchored_search" />
 
-  <!-- all search values can benefit from representation in an unstemmed field -->
-  <copyField source="*_search" dest="*_unstem_search" />
+  <!-- add unstemmed search fields for some fields, to improve exact matching -->
+  <copyField source="title_search" dest="title_unstem_search" />
+  <copyField source="title_aux_search" dest="title_aux_unstem_search" />
+  <copyField source="journal_title_search" dest="journal_title_unstem_search" />
+  <copyField source="journal_title_aux_search" dest="journal_title_aux_unstem_search" />
+  <copyField source="series_search" dest="series_unstem_search" />
+  <copyField source="conference_search" dest="conference_unstem_search" />
+  <copyField source="subject_search" dest="subject_unstem_search" />
+  <copyField source="genre_search" dest="genre_unstem_search" />
+  <copyField source="contents_note_search" dest="contents_note_unstem_search" />
 
   <!-- field type definitions. The "name" attribute is
      just a label to be used by field definitions.  The "class"
@@ -389,6 +397,7 @@
       <filter name="CJKWidth"/>
       <filter name="lowercase"/>
       <filter name="CJKBigram"/>
+      <filter class="solr.ICUFoldingFilterFactory"/>
       <!-- see text_general notes for why this synonymGraph filter can't be used -->
 <!--      <filter name="synonymGraph" synonyms="synonyms.txt"/>-->
 <!--      <filter name="flattenGraph"/>-->
@@ -399,6 +408,7 @@
       <filter name="CJKWidth"/>
       <filter name="lowercase"/>
       <filter name="CJKBigram"/>
+      <filter class="solr.ICUFoldingFilterFactory"/>
     </analyzer>
   </fieldType>
 
@@ -499,7 +509,7 @@
               splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
               catenateAll="0" preserveOriginal="0" stemEnglishPossessive="1" />
       <filter class="solr.FlattenGraphFilterFactory"/>
-      <filter class="solr.SnowballPorterFilterFactory" language="English"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="English" />
       <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
     </analyzer>
     <analyzer type="query">
@@ -511,7 +521,7 @@
               splitOnCaseChange="1" generateWordParts="1" catenateWords="1"
               splitOnNumerics="0" generateNumberParts="1" catenateNumbers="1"
               catenateAll="0" preserveOriginal="0" stemEnglishPossessive="1" />
-      <filter class="solr.SnowballPorterFilterFactory" language="English"/>
+      <filter class="solr.SnowballPorterFilterFactory" language="English" />
       <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
     </analyzer>
   </fieldtype>
@@ -519,16 +529,26 @@
   <!-- field used for searching over identifier with best bets synonyms enabled at query time -->
   <fieldtype name="mmsid" class="solr.TextField" autoGeneratePhraseQueries="false">
     <analyzer type="index">
-      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
+      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement="" />
       <tokenizer class="solr.KeywordTokenizerFactory" />
     </analyzer>
     <analyzer type="query">
-      <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s+(\p{Punct}+)\s+" replacement=" " />
       <tokenizer class="solr.WhitespaceTokenizerFactory" />
       <filter class="solr.SynonymGraphFilterFactory" synonyms="best_bet_synonyms.txt" ignoreCase="true" expand="true"/>
       <filter class="solr.RemoveDuplicatesTokenFilterFactory" />
     </analyzer>
   </fieldtype>
+
+  <!-- field used for indexing and searching over best bet queries (bbq)  -->
+  <fieldType name="bbq" class="solr.TextField">
+  <analyzer>
+    <tokenizer class="solr.KeywordTokenizerFactory" />
+    <filter class="solr.LowerCaseFilterFactory" />
+    <filter class="solr.TrimFilterFactory" />
+  </analyzer>
+</fieldType>
+<field name="best_bet_queries_sim" type="bbq" indexed="true" stored="true" multiValued="true" />
+
 
   <!-- an "unstemmed" text field type. this should mirror our default search field type but without the stemming filter
        see: https://solr.apache.org/guide/solr/latest/indexing-guide/filters.html#stemming
@@ -627,6 +647,33 @@
               catenateAll="0" preserveOriginal="0" stemEnglishPossessive="1" />
     </analyzer>
   </fieldType>
+
+  <!-- Suggest field type for Title suggestions, used with stored field values -->
+  <fieldType name="title_suggest_text" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.KeywordTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.KeywordTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+    </analyzer>
+  </fieldType>
+  <dynamicField name="*_title_suggest" type="title_suggest_text" indexed="true" stored="true" multiValued="true" />
+
+  <!-- Suggest field type for tokened suggestions, which allows for suggestion matches within a string without using
+       a Fuzzy matching implementation. Used at suggester dictionary build and suggester query time. -->
+  <fieldType name="tokened_suggest_text" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.WhitespaceTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.WhitespaceTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+    </analyzer>
+  </fieldType>
+  <dynamicField name="*_tokened_suggest" type="tokened_suggest_text" indexed="true" stored="true" multiValued="true" />
 
   <!-- SortableTextField generally functions exactly like TextField,
        except that it supports, and by default uses, docValues for sorting (or faceting)

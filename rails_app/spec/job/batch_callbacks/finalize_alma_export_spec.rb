@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe BatchCallbacks::FinalizeAlmaExport do
+  before { allow(ConfigItem).to receive(:value_for).with(:build_suggesters_after_full).and_return(false) }
+
   describe '#on_success' do
     let(:collections) { %w[collection1 collection2] }
     let(:alma_export) { create(:alma_export, :with_files_all_completed, target_collections: collections) }
@@ -13,6 +15,32 @@ describe BatchCallbacks::FinalizeAlmaExport do
       alma_export.reload
       expect(alma_export.status).to eq Statuses::COMPLETED
       expect(alma_export.completed_at).to be_present
+    end
+  end
+
+  describe '#on_complete' do
+    let(:alma_export) { create(:alma_export) }
+    let(:mock_status) { instance_double(Sidekiq::Batch::Status, failed_jids: []) }
+
+    before do
+      described_class.new.on_complete(mock_status, alma_export.id)
+    end
+
+    it 'sends a Slack notification that all jobs have executed' do
+      expect(SendSlackNotificationJob).to have_enqueued_sidekiq_job(
+        a_string_including(alma_export.id.to_s)
+      )
+    end
+
+    context 'when there are job failures' do
+      let(:failed_jids) { %w[abc123 def456] }
+      let(:mock_status) { instance_double(Sidekiq::Batch::Status, failed_jids: failed_jids) }
+
+      it 'sends a Slack notification about the failures' do
+        expect(SendSlackNotificationJob).to have_enqueued_sidekiq_job(
+          a_string_including(alma_export.id.to_s, *failed_jids)
+        )
+      end
     end
   end
 end

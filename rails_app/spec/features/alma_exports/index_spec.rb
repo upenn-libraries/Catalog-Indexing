@@ -3,7 +3,7 @@
 describe 'Alma Export Index Page' do
   let(:user) { create(:user) }
 
-  before { sign_in user }
+  before { login_as user }
 
   context 'when viewing Alma Exports' do
     let!(:alma_export) { create(:alma_export, **additional_values) }
@@ -29,11 +29,17 @@ describe 'Alma Export Index Page' do
     end
 
     context 'with additional values' do
-      let(:additional_values) { { started_at: Time.current } }
+      let(:additional_values) { { started_at: Time.current, job_identifier: '1234' } }
 
       it 'displays started_at' do
         within('.started-at') do
           expect(page).to have_text(alma_export.started_at.to_fs(:display))
+        end
+      end
+
+      it 'displays job_identifier' do
+        within('.job-id') do
+          expect(page).to have_text(alma_export.job_identifier)
         end
       end
     end
@@ -59,7 +65,7 @@ describe 'Alma Export Index Page' do
       select 'Completed', from: 'Status'
       click_on 'Filter'
       expect(page).to have_css('.alma-export-row', count: 1)
-      expect(page).not_to have_text alma_export.id
+      within('th.id') { expect(page).not_to have_text alma_export.id }
     end
   end
 

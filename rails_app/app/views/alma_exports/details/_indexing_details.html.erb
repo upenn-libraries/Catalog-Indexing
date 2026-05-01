@@ -1,0 +1,35 @@
+<div class="card mb-4 indexing-info">
+  <div class="card-header">
+    <h5 class="mb-0">Indexing Progress</h5>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead class="table-light">
+        <tr>
+          <th>Started At</th>
+          <th>Completed At</th>
+          <th>Created At</th>
+          <th>Updated At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><%= @alma_export.started_at&.to_fs(:display) || 'Not Started' %></td>
+          <td><%= @alma_export.completed_at&.to_fs(:display) || 'Not Completed' %></td>
+          <td><%= @alma_export.created_at.to_fs(:display) %></td>
+          <td><%= @alma_export.updated_at.to_fs(:display) %></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="h6 mb-3">Files Status</h3>
+    <%= render 'progress' %>
+    <% unless @alma_export.batch_files.empty? %>
+      <div class="mt-4">
+        <%= link_to "Show Batch Files", alma_export_batch_files_path(@alma_export), class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

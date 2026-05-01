@@ -2,24 +2,11 @@
 
 # Traject Indexer for Penn's Alma MARC
 class PennMarcIndexer < Traject::Indexer
+  BESTBET_FILE_PATH = 'config/best_bet.yml'
+  BESTBET_SUGGESTION_WEIGHT_BOOST = 200
+
   configure do
     define_all_fields
-  end
-
-  # shortcut for defining a simple field with appropriate handling for return type
-  # see: https://rubydoc.info/gems/traject/3.5.0/file/doc/indexing_rules.md
-  def define_field(name, parser_method = nil)
-    parser_signal = parser_method || name
-    raise(ArgumentError, "Parser does not respond to #{parser_signal}") unless parser.respond_to? parser_signal.to_sym
-
-    to_field(name.to_s) do |record, acc|
-      parser_output = parser.public_send(parser_signal.to_sym, record)
-      if parser_output.respond_to?(:each)
-        acc.concat(parser_output)
-      else
-        acc << parser_output
-      end
-    end
   end
 
   def parser
@@ -32,12 +19,14 @@ class PennMarcIndexer < Traject::Indexer
     database_fields
     search_fields
     sort_fields
+    suggest_fields
     date_fields
     stored_fields
     link_fields
     inventory_fields
     call_number_fields
     marc_field
+    query_fields
   end
 
   def identifier_fields
@@ -101,16 +90,21 @@ class PennMarcIndexer < Traject::Indexer
   def sort_fields
     define_field :creator_sort
     define_field :title_sort
+    define_field :encoding_level_sort
     define_field :call_number_sort, :classification_sort
+    define_date_sort_field :publication_date_sort, :date_publication
+    define_date_sort_field :added_date_sort, :date_added
+    define_date_sort_field :updated_date_sort, :date_last_updated
+  end
 
-    to_field('publication_date_sort') do |record, acc|
-      pub_date = parser.public_send :date_publication, record
-      valid_date?(pub_date) ? acc << pub_date.strftime('%FT%H:%M:%SZ') : acc # e.g., 1999-01-01T00::00::00Z
-    end
-
-    to_field('added_date_sort') do |record, acc|
-      date = parser.public_send :date_added, record
-      valid_date?(date) ? acc << date.strftime('%FT%H:%M:%SZ') : acc # e.g., 1999-01-01T00::00::00Z
+  # Define fields for returning in Solr suggesters. Here we boost the weight of "best bet" records to give them
+  # priority in the response.
+  def suggest_fields
+    define_field :main_title_title_suggest, :title_suggest
+    to_field 'title_suggest_weight_is' do |record, acc|
+      score = parser.public_send :title_suggest_weight, record
+      score += BESTBET_SUGGESTION_WEIGHT_BOOST if configured_as_best_bet?(record)
+      acc << score
     end
   end
 
@@ -129,7 +123,7 @@ class PennMarcIndexer < Traject::Indexer
   def stored_fields
     define_field :title_ss, :title_show
     define_field :format_ss, :format_show
-    define_field :creator_ss, :creator_show
+    define_field :creator_ss, :creator_extended_show
     define_field :edition_ss, :edition_show
     define_field :conference_ss, :creator_conference_show
     define_field :series_ss, :series_show
@@ -167,7 +161,6 @@ class PennMarcIndexer < Traject::Indexer
   end
 
   def call_number_fields
-    define_field :call_number_unstem_search, :classification_call_number_search
     define_field :call_number_callnum_search, :classification_call_number_search
     define_field :call_number, :classification_call_number_search
   end
@@ -178,10 +171,43 @@ class PennMarcIndexer < Traject::Indexer
     end
   end
 
+  def query_fields
+    to_field 'best_bet_queries_sim' do |record, acc|
+      acc.concat bestbet_mapping.fetch(parser.identifier_mmsid(record), [])
+    end
+  end
+
   private
 
+  # Shortcut for defining a simple field with the appropriate handling for the return type
+  # see: https://rubydoc.info/gems/traject/3.5.0/file/doc/indexing_rules.md
+  # @param name [String, Symbol] name of the field for Solr
+  # @param parser_method [String, Symbol, nil] if not matching the field name, the full name of the helper method on
+  #                                            the @parser object. this will include the helper class name.
+  def define_field(name, parser_method = nil)
+    parser_signal = (parser_method || name).to_sym
+    raise(ArgumentError, "Parser does not respond to #{parser_signal}") unless parser.respond_to?(parser_signal)
+
+    to_field(name.to_s) do |record, acc|
+      acc.concat(Array(parser.public_send(parser_signal, record)))
+    end
+  end
+
+  # shortcut for defining a sortable date field, ensuring that only date values are stored and they are in the proper
+  # format for sorting.
+  # @param name [String, Symbol] name of the field for Solr
+  # @param parser_method [String, Symbol, nil] if not matching the field name, the full name of the helper method on
+  #                                            the @parser object. this will include the helper class name.
+  def define_date_sort_field(name, parser_method = nil)
+    raise(ArgumentError, "Parser does not respond to #{parser_method}") unless parser.respond_to? parser_method.to_sym
+
+    to_field(name.to_s) do |record, acc|
+      date = parser.public_send parser_method, record
+      valid_date?(date) ? acc << date.strftime('%FT%H:%M:%SZ') : acc # e.g., 1999-01-01T00::00::00Z
+    end
+  end
+
   # Encode a field as JSON
-  # @todo implement Oj gem for speedup as needed
   # @param [Object] value
   # @return [String]
   def json_encode(value)
@@ -190,8 +216,21 @@ class PennMarcIndexer < Traject::Indexer
 
   # Determine if parsed date values are valid
   # @param [Time, nil] date
-  # @return [TrueClass, FalseClass]
+  # @return [Boolean]
   def valid_date?(date)
     date.is_a?(Time) && date&.year&.positive?
+  end
+
+  # Memoize the best bet configuration as a hash
+  # @return [Hash]
+  def bestbet_mapping
+    @bestbet_mapping ||= YAML.safe_load(File.read(Rails.root.join(BESTBET_FILE_PATH)))
+  end
+
+  # Is the record noted in the best bet files?
+  # @param record [MARC::Record]
+  # @return [Boolean, nil]
+  def configured_as_best_bet?(record)
+    bestbet_mapping&.key?(parser.identifier_mmsid(record))
   end
 end

@@ -1,5 +1,14 @@
 # Settings/Configuration shared among all environments.
 
+suggester:
+  title:
+    handler: suggest
+    build_after_incremental: false
+    build_after_full: false
+    dictionary: title
+
+bootstrap_version: 5.3.8
+
 # Internal Services
 solr:
   user: <%= DockerSecrets.lookup(:solr_username) %>
@@ -11,6 +20,8 @@ solr:
   shards: <%= ENV['SOLR_COLLECTION_SHARDS'] %>
   replicas: <%= ENV['SOLR_COLLECTION_REPLICAS'] %>
   webhook_action_commit_within_time_ms: 600000 # 10 min
+  nodes:
+    - solr
 
 redis:
   url: <%= ENV['REDIS_URL'] %>

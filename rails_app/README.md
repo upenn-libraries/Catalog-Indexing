@@ -87,7 +87,30 @@ Use Vagrant to set up a consistent local environment with required services.
    ```
    *(Find the container ID using `docker ps`.)*
 
----
+## Working with the Solr configuration
+
+### Indexing an arbitrary .tar.gz file
+
+You can index any GZip'd TAR file using the following task:
+
+```bash
+MARC_TAR_GZ_FILE_PATH=/full/path/to/file/in/container rake tools:index_file
+```
+
+The records will be run through the indexer and indexed to the collection defined in the `adhoc_target_collections` configuration.
+
+### Loading a new configset into the development Solr instance
+
+When making changes to the Solr configuration, it can be helpful to load a new configset into the running Solr instance.
+
+```bash
+rake tools:load_configset
+```
+
+You can then create a new collection using this configset.
+
+
+## Working with `find`
 
 ## Working with Find
 
@@ -160,15 +183,3 @@ bundle exec rubocop
 ```bash
 bundle exec rubocop --auto-gen-config --auto-gen-only-exclude --exclude-limit 10000
 ```
-
----
-
-## Contributing
-
-We welcome contributions! Please:
-- Open issues or merge requests on the GitLab repository.
-- Follow the style guidelines enforced by Rubocop.
-- Write tests for any new functionality.
-
----
-

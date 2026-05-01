@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+# Builds title suggest dictionary using the single collection name specified as the parameter
+class BuildTitleSuggestDictionaryJob < TransactionJob
+  sidekiq_options queue: 'high'
+
+  def transaction
+    BuildSuggestDictionary.new.call(
+      suggester: Settings.suggester.title.handler,
+      dictionary: Settings.suggester.title.dictionary
+    )
+  end
+end

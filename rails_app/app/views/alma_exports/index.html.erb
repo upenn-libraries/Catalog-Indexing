@@ -21,6 +21,7 @@
       <th scope="col">Status</th>
       <th scope="col">Full?</th>
       <th scope="col">Batch Files</th>
+      <th scope="col">Job ID</th>
     </tr>
     </thead>
     <tbody>
@@ -33,6 +34,7 @@
         <td class="status"><%= export.status.titleize %></td>
         <td class="full"><%= export.full ? 'Yes' : 'No' %></td>
         <td class="batch-files"><%= link_to export.batch_files.length, alma_export_batch_files_path(export) %></td>
+        <td class="job-id"><%= export.job_identifier %></td>
       </tr>
     <% end %>
     </tbody>

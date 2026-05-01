@@ -4,7 +4,7 @@ describe 'User Index page' do
   let(:user) { create(:user) }
   let(:inactive_user) { create(:user, :inactive, uid: 'some_dev', email: 'some_dev@library.upenn.edu') }
 
-  before { sign_in user }
+  before { login_as user }
 
   context 'when viewing Users Index page' do
     before do

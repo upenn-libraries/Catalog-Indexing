@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE config [ <!ENTITY keyword_config SYSTEM "solrconfig/keyword_config.xml"> ]>
+<!DOCTYPE config [
+        <!ENTITY keyword_config SYSTEM "solrconfig/keyword_config.xml">
+        <!ENTITY advanced_search_config SYSTEM "solrconfig/advanced_search_config.xml">
+]>
 
 <config>
   <!-- NOTE: various comments and unused configuration possibilities have been purged
@@ -123,9 +126,9 @@
 
       <!-- determine which parameters to return with the responses. "explicit" means only return the parameters
            explicitly sent with the request, not any added by solr processing -->
-      <str name="echoParams">all</str>
+      <str name="echoParams">explicit</str>
 
-      <!-- "alternate" query - or, default query if the query is blank. here, we configure a blank query to return all
+      <!-- "alternate" query - or, default query if the query is blank when using edismax query parser. here, we configure a blank query to return all
            documents -->
       <str name="q.alt">*:*</str>
 
@@ -141,8 +144,15 @@
       <int name="ps">1</int>
       <float name="tie">0.01</float>
 
-      <!-- import qf/pf -->
+      <!-- when using lucene query parser -->
+      <str name="df">marcxml_marcxml</str>
+      <!-- here, we configure a default query to return all documents -->
+      <str name="q">*:*</str>
+
+      <!-- import keyword search qf/pf -->
       &keyword_config;
+      <!-- import advanced search fields qf/pf -->
+      &advanced_search_config;
 
       <!-- "fl" is the "field list" param. simply it is the fields to return in the response -->
       <str name="fl">
@@ -168,176 +178,61 @@
       <str name="echoParams">explicit</str>
       <str name="df">marcxml_marcxml</str>
       <str name="q.op">AND</str>
+      <!-- default query, if the query is blank, when using lucene query parser for advanced search. here, we configure
+a blank query to return all documents -->
+      <str name="q">*:*</str>
 
       <str name="fl">
         *,
         score
       </str>
 
-      <!-- import qf/pf -->
+      <!-- import keyword qf/pf -->
       &keyword_config;
 
-      <str name="title_qf">
-        title_anchored_search^80000
-        title_unstem_search^3000
-        title_search^2500
-        title_aux_anchored_search^50000
-        title_aux_unstem_search^2500
-        title_aux_search^2000
-      </str>
-      <str name="title_pf">
-        title_anchored_search^80000
-        title_unstem_search^3000
-        title_search^2500
-        title_aux_anchored_search^50000
-        title_aux_unstem_search^2500
-        title_aux_search^2000
-        series_anchored_search^1000
-        series_unstem_search^500
-        series_search^2000
-      </str>
+      <!-- import advanced search fields qf/pf -->
+      &advanced_search_config;
 
-      <str name="journal_title_qf">
-        journal_title_anchored_search^75000
-        journal_title_unstem_search^3000
-        journal_title_search^2000
-        journal_title_aux_anchored_search^60000
-        journal_title_aux_unstem_search^2500
-        journal_title_search^1500
-      </str>
-      <str name="journal_title_pf">
-        journal_title_anchored_search^75000
-        journal_title_unstem_search^3000
-        journal_title_search^2000
-        journal_title_aux_anchored_search^60000
-        journal_title_aux_unstem_search^2500
-        journal_title_search^1500
-      </str>
-
-      <str name="creator_qf">
-        creator_unstem_search^7000
-        creator_aux_unstem_search^5000
-        conference_unstem_search^5000
-      </str>
-      <str name="creator_pf">
-        creator_unstem_search^7000
-        creator_aux_unstem_search^5000
-        conference_unstem_search^5000
-      </str>
-
-      <str name="subject_qf">
-        subject_unstem_search^2500
-        subject_search^1500
-      </str>
-      <str name="subject_pf">
-        subject_unstem_search^2500
-        subject_search^1000
-      </str>
-
-      <str name="genre_qf">
-        genre_unstem_search^2500
-        genre_search^1500
-      </str>
-      <str name="genre_pf">
-        genre_unstem_search^2500
-        genre_search^1000
-      </str>
-
-      <str name="isxn_qf">
-        isxn_search^2500
-      </str>
-      <str name="isxn_pf">
-        isxn_search^2500
-      </str>
-
-      <str name="publication_date_qf">
-        publication_date_s
-      </str>
-      <str name="publication_date_pf">
-        publication_date_s
-      </str>
-
-      <str name="publisher_qf">
-        publisher_unstem_search^2500
-      </str>
-      <str name="publisher_pf">
-        publisher_unstem_search^2500
-      </str>
-
-      <str name="series_qf">
-        series_anchored_search^7000
-        series_unstem_search^2500
-        series_search^1500
-      </str>
-      <str name="series_pf">
-        series_anchored_search^7000
-        series_unstem_search^2000
-        series_search^1000
-      </str>
-
-      <str name="language_qf">
-        language_facet^3000
-        language_search^1000
-      </str>
-      <str name="language_pf">
-        language_facet^3000
-        language_search^1000
-      </str>
-
-      <str name="place_of_publication_qf">
-        place_of_publication_unstem_search^2500
-      </str>
-      <str name="place_of_publication_pf">
-        place_of_publication_unstem_search^2500
-      </str>
-
-      <str name="publisher_number_qf">
-        publisher_number_search
-      </str>
-      <str name="publisher_number_pf">
-        publisher_number_search
-      </str>
-
-      <str name="contents_note_qf">
-        contents_note_unstem_search^2500
-        contents_note_search^1500
-      </str>
-      <str name="contents_note_pf">
-        contents_note_unstem_search^2500
-        contents_note_search^1000
-      </str>
-
-      <str name="conference_qf">
-        conference_unstem_search^2500
-        conferance_search^1500
-      </str>
-      <str name="conference_pf">
-        conference_unstem_search^2500
-        conferance_search^1000
-      </str>
-
-      <str name="corporate_author_qf">
-        corporate_author_unstem_search^2500
-      </str>
-      <str name="corporate_author_pf">
-        corporate_author_unstem_search^2500
-      </str>
-
-      <str name="call_number_qf">
-        call_number^10000
-        call_number_callnum_search^5000
-<!--        call_number_unstem_search^1500-->
-      </str>
-      <str name="call_number_pf">
-        call_number^10000
-        call_number_callnum_search^5000
-<!--        call_number_unstem_search^1500-->
-      </str>
 
       <str name="facet">true</str>
       <str name="facet.mincount">1</str>
       <str name="facet.limit">10</str>
     </lst>
+  </requestHandler>
+
+
+  <searchComponent class="solr.SuggestComponent" name="titleSuggester">
+    <lst name="suggester">
+      <str name="name">title</str>
+      <str name="lookupImpl">BlendedInfixLookupFactory</str>
+      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+      <str name="field">main_title_title_suggest</str>
+      <str name="suggestAnalyzerFieldType">tokened_suggest_text</str>
+      <str name="weightField">title_suggest_weight_is</str>
+      <str name="minPrefixChars">4</str>
+      <str name="buildOnCommit">false</str>
+      <str name="payloadField">id</str>
+    </lst>
+<!--    <lst name="suggester">-->
+<!--      <str name="name">notable_title</str>-->
+<!--      <str name="lookupImpl">AnalyzingLookupFactory</str>-->
+<!--      <str name="dictionaryImpl">FileDictionaryFactory</str>-->
+<!--      <str name="sourceLocation">best_bet_suggestions.tsv</str>-->
+<!--      <str name="suggestAnalyzerFieldType">string</str>-->
+<!--      <str name="buildOnCommit">true</str>-->
+<!--    </lst>-->
+  </searchComponent>
+
+  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy">
+    <lst name="defaults">
+      <str name="suggest">true</str>
+      <str name="suggest.dictionary">title</str>
+<!--      <str name="suggest.dictionary">notable_title</str>-->
+      <str name="suggest.count">10</str>
+    </lst>
+    <arr name="components">
+      <str>titleSuggester</str>
+    </arr>
   </requestHandler>
 
   <requestHandler name="standard" class="solr.SearchHandler">

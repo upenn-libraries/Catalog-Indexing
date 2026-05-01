@@ -8,6 +8,7 @@ describe 'Alma Indexing Index Page' do
   let(:mock_transaction_instance) { instance_double(transaction) }
 
   before do
+    allow(ConfigItem).to receive(:any?).and_return(true)
     allow(ConfigItem).to receive(:value_for).with(:adhoc_target_collections).and_return(['test-collection'])
     allow(transaction).to receive(:new).and_return(mock_transaction_instance)
     allow(mock_transaction_instance).to receive(:call).and_return(outcome)

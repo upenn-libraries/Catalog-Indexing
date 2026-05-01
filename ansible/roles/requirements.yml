@@ -21,7 +21,7 @@ roles:
   - name: solr
     src: https://gitlab.library.upenn.edu/devops/ansible/roles/solr.git
     scm: git
-    version: main
+    version: 2.1.0
 
   - name: zoonavigator
     src: https://gitlab.library.upenn.edu/devops/ansible/roles/zoonavigator.git

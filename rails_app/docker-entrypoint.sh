@@ -14,7 +14,7 @@ if [ "$1" = "bundle" -a "$2" = "exec" -a "$3" = "puma" ] || [ "$1" = "bundle" -a
         bundle install -j$(nproc) --retry 3
 
         # since we are running a dev env we remove node_modules and install our dependencies
-        # su - app -c $(rm -rf node_modules && yarn install --no-bin-links)
+#         su - app -c $(rm -rf node_modules && yarn install --no-bin-links)
     fi
 
     # remove puma server.pid
@@ -30,13 +30,17 @@ if [ "$1" = "bundle" -a "$2" = "exec" -a "$3" = "puma" ] || [ "$1" = "bundle" -a
             bundle exec rake db:create RAILS_ENV=test
             bundle exec rake db:migrate RAILS_ENV=test
         fi
+
+        if [ "${RAILS_ENV}" = "development" ]; then
+          bundle exec rake tools:add_config_items
+        fi
     fi
 
     # chown all dirs
-    find . -type d -exec chown app:app {} \;
+    find . -type d -exec chown app:app {} +
 
     # chown all files except keys
-    find . -type f \( ! -name "*.key" \) -exec chown app:app {} \;
+    find . -type f \( ! -name "*.key" \) -exec chown app:app {} +
 
     # run the application as the app user
     exec gosu app "$@"
