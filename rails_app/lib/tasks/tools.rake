@@ -80,6 +80,14 @@ namespace :tools do
     puts "Loading configset failed: #{e.message}"
   end
 
+  desc 'Pull a bib from the Alma API using MMSID and output the indexer JSON output'
+  task mmsid_json: :environment do
+    xml = AlmaApi::Client.new.bibs([ENV['MMSID']])['bib'].first['anies']
+    prepared_marcxml_io = Steps::PrepareMARCXML.new.call(docs: xml).success[:io]
+    record = MARC::XMLReader.new(prepared_marcxml_io, parser: :nokogiri, ignore_namespace: true).first
+    puts JSON.pretty_generate(PennMarcIndexer.new.map_record(record))
+  end
+
   desc 'Index a .tar.gz file specified in MARC_TAR_GZ_FILE_PATH to collections specified in adhoc_target_collections'
   task index_file: :environment do
     require 'rubygems/package'
