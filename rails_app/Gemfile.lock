@@ -87,6 +87,7 @@ GEM
     base64 (0.3.0)
     bcrypt (3.1.22)
     bcrypt_pbkdf (1.1.0)
+    benchmark (0.5.0)
     bigdecimal (3.3.1)
     bindex (0.8.1)
     bootsnap (1.18.3)
@@ -298,6 +299,7 @@ GEM
       omniauth (~> 2.1)
       ruby-saml (~> 1.18)
     orm_adapter (0.5.0)
+    ostruct (0.6.3)
     parallel (2.0.1)
     parser (3.3.11.1)
       ast (~> 2.4.1)
@@ -518,6 +520,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt_pbkdf
+  benchmark
   bootsnap
   bootstrap_form (~> 5.0)
   byebug
@@ -536,6 +539,7 @@ DEPENDENCIES
   net-sftp
   omniauth
   omniauth-saml
+  ostruct
   pennmarc (~> 1.4)
   pg (~> 1.1)
   propshaft
