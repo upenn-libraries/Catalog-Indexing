@@ -1,57 +1,134 @@
 ---
+variables:
+  FF_SCRIPT_SECTIONS: "true"
+  GIT_CLONE_PATH: "${CI_BUILDS_DIR}/${CI_JOB_ID}/${CI_PIPELINE_ID}/${CI_PROJECT_NAME}"
+  WAIT_FOR_SERVICES_TIMEOUT: "120"
+
 include:
-  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/sast/secret_scan@2.5.0
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/docker/stage_build@~latest
+    inputs:
+      ci_requirements_file: ".gitlab/ci-requirements.yml"
+      docker_build_context: "rails_app/"
+      docker_build_secrets: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
+      docker_target: "base"
+      job_suffix: "_base"
+      matrix:
+        - RUNNER: build
+          DOCKER_BUILD_PLATFORM: "linux/amd64"
+      needs_build:
+        - secret_detection
+      platforms: '["linux/amd64"]'
+      stage: "build_base"
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/docker/stage_build@~latest
+    inputs:
+      ci_requirements_file: ".gitlab/ci-requirements.yml"
+      docker_build_args: "--build-arg RAILS_ENV=development"
+      docker_build_context: "rails_app/"
+      docker_build_secrets: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
+      docker_target: "development"
+      job_suffix: "_development"
+      matrix:
+        - RUNNER: build
+          DOCKER_BUILD_PLATFORM: "linux/amd64"
+      platforms: '["linux/amd64"]'
+      stage: "build_development"
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/docker/stage_build@~latest
+    inputs:
+      amend_tag_with_docker_target: "false"
+      ci_requirements_file: ".gitlab/ci-requirements.yml"
+      docker_build_args: "--build-arg RAILS_ENV=production"
+      docker_build_context: "rails_app/"
+      docker_build_secrets: "--secret id=sidekiq_pro_credentials,env=SIDEKIQ_PRO_CREDENTIALS"
+      docker_target: "production"
+      job_suffix: "_production"
+      matrix:
+        - RUNNER: build
+          DOCKER_BUILD_PLATFORM: "linux/amd64"
+      platforms: '["linux/amd64"]'
+      stage: "build_production"
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/general/vault_jwt_auth@~latest
+    inputs:
+      ci_requirements_file: ".gitlab/ci-requirements.yml"
+      vault_auth_role: "sidekiq_pro_ro"
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/tests/rubocop@~latest
+    inputs:
+      app_dir: "rails_app"
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/tests/rspec@~latest
+    inputs:
+      ci_requirements_file: ".gitlab/ci-requirements.yml"
+      needs:
+        - "amend_manifest_development"
+      service_database_name: "catalog_indexing_test"
+      service_solr_collection_name: "catalog-indexing-test"
+      service_solr_configset_name: "catalog-indexing"
+      service_solr_image_tag: "9.6.1"
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/sast/trivy@2.5.0
+    inputs:
+      ci_requirements_file: ".gitlab/ci-requirements.yml"
+      docker_tag_to_scan: "${CI_COMMIT_SHA}"
+      needs:
+        - "amend_manifest_production"
+      stage: "test"
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/docker/stage_finalize@~latest
+    inputs:
+      ci_requirements_file: ".gitlab/ci-requirements.yml"
+      needs_copy:
+        - rspec
+        - rubocop
+        - trivy_scan
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/deploy/deploy@~latest
+    inputs:
+      ci_requirements_file: ".gitlab/ci-requirements.yml"
+      deploy_environment: "staging"
+      deploy_environment_url: "https://indexing-staging.library.upenn.edu"
+      deploy_host: ${DEPLOY_HOST}
+      job_suffix: "staging"
+      valid_principals: ${VALID_PRINCIPALS}
+      vault_auth_role: ${JWT_ROLE}
+      vault_ssh_client_role: ${VAULT_SSH_CLIENT_ROLE}
+  - component: gitlab.library.upenn.edu/devops/gitlab/components/deploy/deploy@~latest
+    inputs:
+      ci_requirements_file: ".gitlab/ci-requirements.yml"
+      deploy_environment: "production"
+      deploy_environment_url: "https://indexing.library.upenn.edu"
+      deploy_host: ${DEPLOY_HOST}
+      image_tag: "${CI_COMMIT_TAG}"
+      job_suffix: "production"
+      valid_principals: ${VALID_PRINCIPALS}
+      vault_auth_role: ${JWT_ROLE}
+      vault_ssh_client_role: ${VAULT_SSH_CLIENT_ROLE}
 
 stages:
   - secret_check
-  - main_pipeline
+  - build_base
+  - build_development
+  - build_production
+  - test
+  - finalize
+  - deploy
 
-secret_detection:
-  stage: secret_check
-  allow_failure: false
-  artifacts:
-    paths:
-      - .pipeline.yml
-      - gl-secret-detection-report.json
-    reports:
-      secret_detection: gl-secret-detection-report.json
-    expire_in: 1 day
-  tags:
-    - deploy
+.sidekiq_pro_from_vault: &sidekiq_pro_from_vault
+  extends: .vault_jwt_auth
+  before_script:
+    - !reference [.vault_jwt_auth, before_script]
+    - export SIDEKIQ_PRO_CREDENTIALS="$(vault kv get -field=credentials dld/sidekiq_pro)"
+
+build_and_push_docker_images_base: *sidekiq_pro_from_vault
+build_and_push_docker_images_development: *sidekiq_pro_from_vault
+build_and_push_docker_images_production: *sidekiq_pro_from_vault
+
+rspec:
+  variables:
+    APP_URL: "indexing.test.com"
+    SOLR_URL: "http://solr:8983"
+
+deploy_staging:
   rules:
-  when: always
+    - if: $CI_COMMIT_BRANCH == "main"
 
-
-#This job fails when secrets are detected in the repo.
-validate_secret:
-  stage: secret_check
-  allow_failure: false
+deploy_production:
   needs:
-    - secret_detection
-  script:
-    - apk add jq
-    - export VULNERABILTIES=$(jq .vulnerabilities[0] gl-secret-detection-report.json) 
-    - |
-      if [ "$VULNERABILTIES" != "null" ]
-      then 
-        exit 1
-      fi
-  tags:
-    - deploy
+    - copy_docker_images
   rules:
-  when: always
-
-main:
-  stage: main_pipeline
-  needs:
-    - secret_detection
-  allow_failure: false
-  trigger:
-    include:
-      - artifact: .pipeline.yml
-        job: secret_detection
-    strategy: depend
-  rules:
-    - if: "$CI_MERGE_REQUEST_IID"
-    - if: "$CI_COMMIT_TAG"
-    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+(\.[a-zA-Z0-9]+)?$/
