@@ -1,0 +1,16 @@
+version: "3"
+
+includes:
+  app:
+    taskfile: https://gitlab.library.upenn.edu/devops/taskfile/-/raw/main/DevEnvTasks.yml?ref_type=heads
+    flatten: true
+    vars:
+      PROJECT_NAME: "catalog-indexing"
+      DOMAINS:
+        - catalog-indexing-dev
+      DOCKER_NETWORK_SUBNET: 172.16.12.0/24
+      DOCKER_CONTAINER_IP: "172.16.12.10"
+      DOCKER_CONTAINER_NAME: "catalog-indexing"
+      DOCKER_API_TLS_PORT_EXT: 127.0.0.1:2392
+      DOCKER_CONTEXT_HOST: tcp://127.0.0.1:2392
+      ANSIBLE_REQUIREMENTS_FILE: "requirements.dev.yml"

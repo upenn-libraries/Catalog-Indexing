@@ -21,55 +21,38 @@ When swapping alias destinations, don't forget that you may also want to make a 
 
 ## Development
 
-> Caveat: The vagrant development environment has only been tested in the local environments our developers currently have. This currently includes Linux, Intel-based Macs and M1 Macs.
+The development environment uses Taskfile and Docker. `task up` starts a Docker-in-Docker container (`catalog-indexing`, on `172.16.12.0/24`, Docker API on `127.0.0.1:2392`) and runs the Ansible playbook inside it against a single-node Docker Swarm. The repository is mounted at `/home/app` in that container, and the Rails app at `/home/app/rails_app` is bind-mounted into the app and Sidekiq services.
 
-In order to use the integrated development environment you will need to install [Vagrant](https://www.vagrantup.com/docs/installation) [do *not* use the Vagrant version that may be available for your distro repository - explicitly follow instructions at the Vagrant homepage] and the appropriate virtualization software. If you are running Linux or Mac x86 then install [VirtualBox](https://www.virtualbox.org/wiki/Linux_Downloads), if you are using a Mac with ARM processors then install [Parallels](https://www.parallels.com/).
+### Requirements
 
-You may need to update the VirtualBox configuration for the creation of a host-only network. This can be done by creating a file `/etc/vbox/networks.conf` containing:
+1. Install [Task](https://taskfile.dev/) (`go-task`):
+   - **Linux:** Follow the [Task installation instructions](https://taskfile.dev/docs/installation) for your package manager.
+   - **macOS:** `brew install go-task`
 
-```
-* 10.0.0.0/8
-```
+2. Install Docker:
+   - **macOS:** [Install Docker Desktop](https://docs.docker.com/desktop/install/mac-install/).
+     You should also request access to the Penn Libraries Docker Team license via [IT Helpdesk](https://ithelp.library.upenn.edu/support/home) for full functionality.
+   - **Linux:** [Install Docker Engine](https://docs.docker.com/engine/install/).
 
-#### Starting
+### Starting the environment
 
-From the [vagrant](vagrant) directory run:
+From the `.dev` directory run:
 
-if running with Virtualbox:
-```
-vagrant up --provision
-```
-
-if running with Parallels:
-```
-vagrant up --provider=parallels --provision
+```bash
+task up
 ```
 
-This will run the [vagrant/Vagrantfile](vagrant/Vagrantfile) which will bring up an Ubuntu VM and run the Ansible script which will provision a single node Docker Swarm behind nginx with a self-signed certificate to mimic a load balancer. Your hosts file will be modified; the domain `catalog-indexing-dev.library.upenn.edu` will be added and mapped to the Ubuntu VM. Once the Ansible script has completed and the Docker Swarm is deployed you can access the application by navigating to [https://catalog-indexing-dev.library.upenn.edu](https://catalog-indexing-dev.library.upenn.edu).
+On first run, Task fetches the remote taskfiles and asks for confirmation (`Y`). During startup you may be prompted for your local machine password (to add `catalog-indexing-dev.library.upenn.edu` and `catalog-indexing-dev.library.upenn.int` to `/etc/hosts`) and your LDAP credentials (to read secrets from HashiCorp Vault).
 
-#### Stopping
+When provisioning finishes, the app is at [https://catalog-indexing-dev.library.upenn.edu](https://catalog-indexing-dev.library.upenn.edu) and the Solr admin at [http://catalog-indexing-dev.library.upenn.int/solr1/#/](http://catalog-indexing-dev.library.upenn.int/solr1/#/).
 
-To stop the development environment, from the `vagrant` directory run:
+### Stopping and removing
 
-```
-vagrant halt
-```
+From the `.dev` directory, `task down` stops and removes the environment and keeps its data volume; `task purge` also removes the volume.
 
-#### Destroying
+### Docker context
 
-To destroy the development environment, from the `vagrant` directory run:
-
-```
-vagrant destroy -f
-```
-
-#### SSH
-
-You may ssh into the Vagrant VM by running:
-
-```
-vagrant ssh
-```
+When the environment is running, switch the Docker context to it with `task docker:context:use:app`; local `docker` commands then run against the development swarm. Switch back with `task docker:context:use:default`.
 
 #### Rails Application
 For information about the Rails application, see the [README](rails_app/README.md) in the Rails application root. This includes information about running the test suite, performing indexing operations, development styleguide and general application information.

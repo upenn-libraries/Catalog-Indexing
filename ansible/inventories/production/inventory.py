@@ -9,8 +9,7 @@ output = {
                 "ansible_host": os.environ["SWARM01"],
                 "ansible_python_interpreter": "/usr/bin/python3",
                 "swarm_labels": [
-                    "traefik",
-                    "zoonavigator"
+                    "traefik"
                 ]
             },
             "SWARM02": {
@@ -68,8 +67,8 @@ output = {
     "all": {
         "children": [
             "docker_engine",
-            "docker_swarm_manager",
-            "docker_swarm_worker"
+            "docker_swarm_managers",
+            "docker_swarm_workers"
         ]
     },
     "docker_engine": {
@@ -77,12 +76,12 @@ output = {
             "production"
         ]
     },
-    "docker_swarm_manager": {
+    "docker_swarm_managers": {
         "hosts": [
             "SWARM01"
         ]
     },
-    "docker_swarm_worker": {
+    "docker_swarm_workers": {
         "hosts": [
             "SWARM02",
             "SWARM03",

@@ -1,12 +1,13 @@
 ---
-- name: "Provision Docker Swarm Cluster"
+- name: "Set up Docker and Docker Swarm"
   hosts: all
   become: true
-  collections:
-    - ansible.utils
-    - ansible.netcommon
+  gather_facts: true
   tasks:
-    - ansible.builtin.import_tasks: "provision_docker.yml"
+    - name: Set up the development swarm
+      ansible.builtin.include_role:
+        name: docker-swarm
+      when: is_development | default(false, true)
 
 - name: "Bootstrap Solr server/s"
   hosts: all
@@ -39,13 +40,19 @@
             mode: "0775"
           loop: "{{ volumes }}"
       vars:
-        swarm_manager_host: "{{ groups | dict2items | selectattr('key', 'search', 'docker_swarm_manager') | map(attribute='value') | flatten | first }}"
+        swarm_manager_host: "{{ groups['docker_swarm_managers'] | first }}"
         swarm_manager_solr_docker_volume_settings: "{{ hostvars[swarm_manager_host].solr_docker_volume_settings | default({}) }}"
 
 - name: "Deploy application"
-  hosts: docker_swarm_manager
+  hosts: docker_swarm_managers
   become: true
   gather_facts: true
+  pre_tasks:
+    - name: Resolve Vault secrets once, before the roles downgrade requests
+      ansible.builtin.set_fact:
+        "{{ item }}": "{{ lookup('ansible.builtin.vars', item) }}"
+      loop: "{{ hostvars[inventory_hostname] | select('match', '.+_vault_values$') }}"
+      no_log: true
   tasks:
     - ansible.builtin.import_role:
         name: catalog-indexing
@@ -57,10 +64,6 @@
     - ansible.builtin.import_role:
         name: zookeeper
       tags: zookeeper
-    - ansible.builtin.import_role:
-        name: zoonavigator
-      tags: zoonavigator
-      when: not is_development | default (false, true)
     - ansible.builtin.import_role:
         name: solr
       tags: solr

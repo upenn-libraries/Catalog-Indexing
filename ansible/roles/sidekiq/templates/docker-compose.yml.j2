@@ -75,7 +75,7 @@ services:
 
     volumes:
 {% if is_development == true %}
-      - /catalog-indexing/ansible/roles/catalog-indexing/files/src/:/home/app
+      - /home/app/rails_app/:/home/app
 {% else %}
       - app_storage:/home/app/storage
 {% endif %}

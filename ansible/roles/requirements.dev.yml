@@ -1,0 +1,16 @@
+---
+roles:
+  - name: docker-swarm
+    src: https://gitlab.library.upenn.edu/devops/ansible/roles/docker-swarm.git
+    scm: git
+    version: main
+
+  - name: postgres
+    src: https://gitlab.library.upenn.edu/devops/ansible/roles/postgres.git
+    scm: git
+    version: main
+
+  - name: solr
+    src: https://gitlab.library.upenn.edu/devops/ansible/roles/solr.git
+    scm: git
+    version: dind

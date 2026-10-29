@@ -32,7 +32,7 @@ services:
     secrets:
       - sidekiq_pro_credentials
     volumes:
-      - /catalog-indexing/ansible/roles/catalog-indexing/files/src/:/home/app
+      - /home/app/rails_app/:/home/app
 
 
 secrets:

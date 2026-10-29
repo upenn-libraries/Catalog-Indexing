@@ -4,11 +4,10 @@ collections:
   - name: community.docker
 
 roles:
-  # the original repo can't handle python3 so we will use a fork until it can
-  - name: atosatto.docker-swarm
-    src: https://gitlab.library.upenn.edu/devops/ansible/ansible-dockerswarm.git
+  - name: docker-swarm
+    src: https://gitlab.library.upenn.edu/devops/ansible/roles/docker-swarm.git
     scm: git
-    version: master
+    version: main
 
   - name: postgres
     src: https://gitlab.library.upenn.edu/devops/ansible/roles/postgres.git
@@ -19,8 +18,3 @@ roles:
     src: https://gitlab.library.upenn.edu/devops/ansible/roles/solr.git
     scm: git
     version: 2.1.0
-
-  - name: zoonavigator
-    src: https://gitlab.library.upenn.edu/devops/ansible/roles/zoonavigator.git
-    scm: git
-    version: main

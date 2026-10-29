@@ -62,10 +62,10 @@ rake tools:add_config_items
 
 ## Local Development Environment
 
-Use Vagrant to set up a consistent local environment with required services.
+Use the Taskfile development environment (`task up` in `.dev`) to run the app with its required services.
 
 ### Prerequisites
-- Install Vagrant and VirtualBox.
+- Install Task and Docker.
 
 ### Setup
 1. Follow instructions in the root README for environment setup.
@@ -78,9 +78,9 @@ Use Vagrant to set up a consistent local environment with required services.
 ## Interacting with the Application
 
 ### Accessing the Application Container
-1. SSH into the Vagrant VM:
+1. Switch to the development Docker context (from `.dev`):
    ```bash
-   vagrant ssh
+   task docker:context:use:app
    ```
 2. Start a shell in the application container:
    ```bash
