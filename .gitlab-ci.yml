@@ -57,7 +57,9 @@ include:
     inputs:
       ci_requirements_file: ".gitlab/ci-requirements.yml"
       needs:
-        - "amend_manifest_development"
+        - "build_and_push_docker_images_development"
+        - job: "amend_manifest_development"
+          optional: true
       service_database_name: "catalog_indexing_test"
       service_solr_collection_name: "catalog-indexing-test"
       service_solr_configset_name: "catalog-indexing"
@@ -67,7 +69,9 @@ include:
       ci_requirements_file: ".gitlab/ci-requirements.yml"
       docker_tag_to_scan: "${CI_COMMIT_SHA}"
       needs:
-        - "amend_manifest_production"
+        - "build_and_push_docker_images_production"
+        - job: "amend_manifest_production"
+          optional: true
       stage: "test"
   - component: gitlab.library.upenn.edu/devops/gitlab/components/docker/stage_finalize@~latest
     inputs:
