@@ -264,9 +264,9 @@ GEM
     marcel (1.2.1)
     matrix (0.4.3)
     mini_mime (1.1.5)
-    minitest (6.0.6)
+    minitest (6.1.0)
       drb (~> 2.0)
-      prism (~> 1.5)
+      prism (>= 1.5, < 3)
     msgpack (1.8.5)
     mutex_m (0.3.0)
     net-http (0.9.1)
@@ -284,11 +284,11 @@ GEM
       net-protocol
     net-ssh (7.2.1)
     nio4r (2.7.5)
-    nokogiri (1.19.4-aarch64-linux-gnu)
+    nokogiri (1.19.7-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.4-arm64-darwin)
+    nokogiri (1.19.7-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.4-x86_64-linux-gnu)
+    nokogiri (1.19.7-x86_64-linux-gnu)
       racc (~> 1.4)
     omniauth (2.1.4)
       hashie (>= 3.4.6)
@@ -304,7 +304,7 @@ GEM
     parser (3.3.11.1)
       ast (~> 2.4.1)
       racc
-    pennmarc (1.4.9)
+    pennmarc (1.4.12)
       activesupport (>= 8)
       lcsort (~> 0.9)
       library_stdnums (~> 1.6)
@@ -491,7 +491,7 @@ GEM
       rubocop-rails
       rubocop-rake
       rubocop-rspec
-    uri (1.1.1)
+    uri (1.1.2)
     useragent (0.16.11)
     warden (1.2.9)
       rack (>= 2.0.9)
